@@ -1,0 +1,20 @@
+{
+  "name": "jquery.flot.spline",
+  "version": "1.0.0",
+  "description": "",
+  "main": "jquery.flot.spline.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/themicon/jquery.flot.spline.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/themicon/jquery.flot.spline/issues"
+  },
+  "homepage": "https://github.com/themicon/jquery.flot.spline#readme"
+}

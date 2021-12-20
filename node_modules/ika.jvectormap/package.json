@@ -1,0 +1,20 @@
+{
+  "name": "ika.jvectormap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "jquery-jvectormap-1.2.2.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/themicon/ika.jvectormap.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/themicon/ika.jvectormap/issues"
+  },
+  "homepage": "https://github.com/themicon/ika.jvectormap#readme"
+}

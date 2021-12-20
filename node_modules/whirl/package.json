@@ -1,0 +1,10 @@
+{
+  "name": "whirl",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/themicon/whirl.git"
+  },
+  "author": "@jh3y/whirl",
+  "license": "MIT"
+}
