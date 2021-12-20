@@ -19,7 +19,7 @@ const FormValidator = {
         input = input.toUpperCase();
         while (i--) {
             var char = input.charAt(i);
-            if (!alpha.includes(char) && (char != '\'' && char != '-')) {
+            if (!alpha.includes(char) && (char !== '\'' && char !== '-')) {
                 return false;
             }
         }
@@ -45,7 +45,7 @@ const FormValidator = {
         while (i--) {
             var char = input.charAt(i);
             if (!alpha.includes(char) && !num.includes(char)) {
-                if (char != '-') {
+                if (char !== '-') {
                     return false;
                 }
             }

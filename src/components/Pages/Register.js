@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Input, CustomInput } from 'reactstrap';
+import { Input } from 'reactstrap';
+// import { CustomInput } from 'reactstrap';
 
 import FormValidator from '../Forms/FormValidator.js';
 
