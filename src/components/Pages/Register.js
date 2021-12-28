@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap';
+import DatePicker from "../Common/DatePicker";
+
 // import { CustomInput } from 'reactstrap';
 
 import FormValidator from '../Forms/FormValidator.js';
@@ -12,6 +14,7 @@ class Register extends Component {
             email: '',
             firstName: '',
             lastName: '',
+            dob: '',
             podName: '',
             password: '',
             confirmedPassword: '',
@@ -156,6 +159,12 @@ class Register extends Component {
                                     { this.hasError('formRegister','lastName','required') && <span className="invalid-feedback">Last name is required</span> }
                                     { this.hasError('formRegister','lastName','minlen') && <span className="invalid-feedback">Last name must have at least 2 characters</span> }
                                     { this.hasError('formRegister','lastName','name') && <span className="invalid-feedback">Last name must contain alpha characters only</span> }
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label className="text-muted" htmlFor="signupInputPassword1">Date of birth</label>
+                                <div className="input-group with-focus">
+                                    <DatePicker />
                                 </div>
                             </div>
                             <div className="form-group">
