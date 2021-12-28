@@ -14,11 +14,6 @@ export default function TableDatePicker() {
             selected={date} 
             onChange={date => setDate(date)}
             placeholderText="Enter date of birth"
-            filterDate={d => {
-                var today = new Date(),
-                    threeYearsToday = new Date(today.getFullYear()-3, today.getMonth(), today.getDate());
-                return threeYearsToday > d;
-            }}
             maxDate={threeYearsToday}
             isClearable
         />
