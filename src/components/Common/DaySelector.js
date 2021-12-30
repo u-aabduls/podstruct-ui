@@ -1,5 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
+import "../../styles/app/widgets/select.css";
 
 const options = [
   { value: '1', label: '1' },
@@ -38,7 +39,8 @@ const options = [
 const customStyles = {
   container: provided => ({
     ...provided,
-    width: `30%`
+    width: `28.5%`,
+    margin: `0% 1.5% 0% 0%`,
   })
 };
 
