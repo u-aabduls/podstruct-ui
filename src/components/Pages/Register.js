@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap';
-import DatePicker from "../Common/DatePicker";
+import MonthSelector from "../Common/MonthSelector";
+import DaySelector from "../Common/DaySelector";
+import YearSelector from "../Common/YearSelector";
 
 // import { CustomInput } from 'reactstrap';
 
@@ -164,7 +166,9 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPassword1">Date of birth</label>
                                 <div className="input-group with-focus">
-                                    <DatePicker />
+                                    <MonthSelector />
+                                    <DaySelector />
+                                    <YearSelector />
                                 </div>
                             </div>
                             <div className="form-group">
