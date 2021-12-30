@@ -6,7 +6,7 @@ const options = [];
 const customStyles = {
   container: provided => ({
     ...provided,
-    width: `35%`
+    width: `30%`
   })
 };
 
@@ -23,6 +23,7 @@ export default function YearSelector() {
     setOptions();
     return (
       <Select
+        placeholder={`Year`}
         styles={customStyles}
         options={options} 
       />

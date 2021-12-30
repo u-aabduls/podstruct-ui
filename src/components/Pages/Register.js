@@ -214,6 +214,7 @@ class Register extends Component {
                                         onChange={this.validateOnChange}
                                         data-validate='["required", "password"]'
                                         value={this.state.formRegister.password}
+                                        autoComplete='off'
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -240,6 +241,7 @@ class Register extends Component {
                                         data-validate='["equalto"]'
                                         value={this.state.formRegister.confirmedPassword}
                                         data-param="id-password"
+                                        autoComplete='off'
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">

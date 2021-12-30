@@ -38,13 +38,14 @@ const options = [
 const customStyles = {
   container: provided => ({
     ...provided,
-    width: `25%`
+    width: `30%`
   })
 };
 
 export default function DaySelector() {
     return (
       <Select
+        placeholder={`Day`}
         styles={customStyles}
         options={options} 
       />

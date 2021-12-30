@@ -26,6 +26,7 @@ const customStyles = {
 export default function MonthSelector() {
     return (
       <Select
+        placeholder={`Month`}
         styles={customStyles}
         options={options} 
       />
