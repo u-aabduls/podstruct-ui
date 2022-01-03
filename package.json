@@ -14,7 +14,8 @@
     "build-modernizr": "modernizr -c modernizr-config.json -d src/modernizr.js -u",
     "build-themes": "node-sass-chokidar src/styles/themes -o public/themes -w",
     "lint": "react-app-rewired lint",
-    "postinstall-heroku": "npm run build"
+    "postinstall-heroku": "npm run build",
+    "deploy": "aws s3 sync build/ s3://podstruct-ui-test"
   },
   "eslintConfig": {
     "extends": "react-app"

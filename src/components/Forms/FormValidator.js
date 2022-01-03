@@ -28,6 +28,17 @@ const FormValidator = {
 
     /**
      * Returns true iff:
+     *     1) month, day, year together form a valid date of birth
+     */
+     isValidDateOfBirth(month, day, year) {
+        const monthsWith30Days = ["1", "3", "5", "8", "10"];
+        const monthsWith31Days = ["0", "2", "4", "6", "7", "9"];
+
+        return (monthsWith30Days.includes(month) && day <= 30) || monthsWith31Days.includes(month) && day <= 31;
+    },
+
+    /**
+     * Returns true iff:
      *     1) input is alphanumeric
      *     2) input's only special character (if exists) is hyphen (-) 
      */

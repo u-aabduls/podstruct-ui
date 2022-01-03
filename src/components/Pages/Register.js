@@ -169,6 +169,7 @@ class Register extends Component {
                                     <MonthSelector />
                                     <DaySelector />
                                     <YearSelector />
+                                    { true && <span className="invalid-feedback">Last name is required</span> }
                                 </div>
                             </div>
                             <div className="form-group">
