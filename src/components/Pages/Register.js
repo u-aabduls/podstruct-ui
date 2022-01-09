@@ -16,7 +16,11 @@ class Register extends Component {
             email: '',
             firstName: '',
             lastName: '',
-            dob: '',
+            dob: {
+                month: '',
+                day: '',
+                year: ''
+            },
             podName: '',
             password: '',
             confirmedPassword: '',
