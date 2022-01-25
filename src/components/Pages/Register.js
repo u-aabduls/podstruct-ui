@@ -102,7 +102,6 @@ class Register extends Component {
             },
             "password": this.state.formRegister.password
         }
-
     }
 
     render() {
