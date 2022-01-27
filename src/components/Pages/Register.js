@@ -233,7 +233,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPassword1">Password</label>
                                 <div className="input-group with-focus">
-                                    <Input type="text"
+                                    <Input type="password"
                                         id="id-password"
                                         name="password"
                                         className="border-right-0"
@@ -263,7 +263,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputRePassword1">Confirm Password</label>
                                 <div className="input-group with-focus">
-                                    <Input type="text"
+                                    <Input type="password"
                                         name="confirmedPassword"
                                         className="border-right-0"
                                         placeholder="Retype assword"
