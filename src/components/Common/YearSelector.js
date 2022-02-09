@@ -14,7 +14,7 @@ const customStyles = {
 function setOptions() {
   const firstValidYear = new Date().getFullYear();
   var year = firstValidYear;
-  while (year >= (firstValidYear - 70)) {
+  while (year >= (firstValidYear - 100)) {
     options.push({ value: year.toString(), label: year.toString() });
     year--;
   }
