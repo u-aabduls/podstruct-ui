@@ -17,7 +17,7 @@ function send(requestBody) {
 function _initialize() {
     request.open("POST", "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/podstruct/api/rest/pod", true);
     // request.open("POST", "https://d1vp98nn3zy5j1.cloudfront.net/podstruct/api/rest/pod", true);
-    // request.setRequestHeader("accept", "*/*");
+    request.setRequestHeader("accept", "*/*");
     // request.setRequestHeader("Content-Type", "application/json");
     request.onload = __execute;
 }

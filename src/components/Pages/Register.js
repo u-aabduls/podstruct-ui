@@ -15,18 +15,54 @@ class Register extends Component {
     state = {
         formRegister: {
             email: '',
+            valid_email: false,
             firstName: '',
+            valid_firstName: false,
             lastName: '',
+            valid_lastName: false,
             dob: {
                 month: '',
                 day: '',
                 year: ''
             },
+            // TODO: valid_dob: false,
             podName: '',
+            valid_podName: false,
             password: '',
+            valid_password: false,
             confirmedPassword: '',
             terms: false
         }
+    }
+
+    /**
+     * Update valid input state, used for input validation
+     * on form submission
+     */
+    setValid = (formField, validity) => {
+        var stateCopy = this.state.formRegister;
+        switch(formField) {
+            case "email":
+                stateCopy.valid_email = validity;
+                break;
+            case "firstName":
+                stateCopy.valid_firstName = validity;
+                break;
+            case "lastName":
+                stateCopy.valid_lastName = validity;
+                break;
+            // TODO:
+                // case "dob":
+                //     this.state.formRegister.valid_firstName = validity;
+                //     break;
+            case "podName":
+                stateCopy.valid_podName = validity;
+                break;
+            case "password":
+                stateCopy.valid_password = validity;
+                break;
+        }
+        this.setState(stateCopy);
     }
 
     /**
@@ -51,6 +87,8 @@ class Register extends Component {
                 }
             }
         });
+        
+        this.setValid(input.name, !Object.values(result).some((v) => v));
     }
 
     onSubmit = e => {
@@ -199,7 +237,7 @@ class Register extends Component {
                                     <MonthSelector />
                                     <DaySelector />
                                     <YearSelector />
-                                    {true && <span className="invalid-feedback">Last name is required</span>}
+                                    {/* {true && <span className="invalid-feedback">Last name is required</span>} */}
                                 </div>
                             </div>
                             <div className="form-group">
@@ -296,6 +334,7 @@ class Register extends Component {
                                 type="submit" 
                                 onClick={(e) => {
                                         e.preventDefault();
+                                        // this.onSubmit();
                                         send(this.constructRequestPayload)
                                     }}>
                                     Create account
