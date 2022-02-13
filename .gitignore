@@ -8,4 +8,4 @@ node_modules/
 build/
 
 # vscode
-.vscode/
+.vscode/launch.json

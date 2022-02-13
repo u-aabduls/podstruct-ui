@@ -61,7 +61,7 @@ const Routes = ({ location }) => {
                     <div>
                         <Suspense fallback={<PageLoader/>}>
                             <Switch location={location}>
-                                <Redirect to="/notfound"/>
+                                <Redirect to="/register"/>
                             </Switch>
                         </Suspense>
                     </div>
