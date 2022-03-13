@@ -138,29 +138,8 @@ class Register extends Component {
                 //     + "-" + this.state.formRegister.dob.day,
                 "phone": "+6474169050",
                 "chargeInterval": "M",
-                // "toolTip": true,
-                // "active": true
             },
             "password": this.state.formRegister.password
-            // "phone": "+6474169050",
-            // "podName": "Test",
-            // "podDescription": "null",
-            // "defaultTimezone": "America/New_York",
-            // "admin": {
-            //     "email": "umar.abdulselam@outlook.com",
-            //     "address": "null",
-            //     "firstName": "Umar",
-            //     "lastName": "Abdulselam",
-            //     "role": "null",
-            //     "birthDate": "2022"
-            //         + "-" + "01"
-            //         + "-" + "01",
-            //     "phone": "+6474169050",
-            //     "chargeInterval": "M",
-            //     // "toolTip": true,
-            //     // "active": true
-            // },
-            // "password": "Testtest1!"
         })
     }
 
