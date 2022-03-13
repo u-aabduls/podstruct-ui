@@ -4,7 +4,7 @@ import { Input } from 'reactstrap';
 import MonthSelector from "../Common/MonthSelector";
 import DaySelector from "../Common/DaySelector";
 import YearSelector from "../Common/YearSelector";
-import send from "../../connectors//AccountCreation"
+import send from "../../connectors/AccountCreation"
 
 // import { CustomInput } from 'reactstrap';
 
@@ -119,27 +119,49 @@ class Register extends Component {
 
     /* Build payload */
     constructRequestPayload = () => {
-        return {
-            "phone": "null",
+        return JSON.stringify({
+            "phone": "+6474169050",
             "podName": this.state.formRegister.podName,
             "podDescription": "null",
-            "defaultTimezone": "string",
+            "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
             "admin": {
                 "email": this.state.formRegister.email,
                 "address": "null",
                 "firstName": this.state.formRegister.firstName,
                 "lastName": this.state.formRegister.lastName,
                 "role": "null",
-                "birthDate": this.state.formRegister.dob.month
-                    + "-" + this.state.formRegister.dob.day
-                    + "-" + this.state.formRegister.dob.year,
-                "phone": "null",
-                "chargeInterval": "string",
-                "toolTip": true,
-                "active": true
+                "birthDate": "2022"
+                    + "-" + "01"
+                    + "-" + "01",
+                // "birthDate": this.state.formRegister.dob.year
+                //     + "-" + this.state.formRegister.dob.month
+                //     + "-" + this.state.formRegister.dob.day,
+                "phone": "+6474169050",
+                "chargeInterval": "M",
+                // "toolTip": true,
+                // "active": true
             },
             "password": this.state.formRegister.password
-        }
+            // "phone": "+6474169050",
+            // "podName": "Test",
+            // "podDescription": "null",
+            // "defaultTimezone": "America/New_York",
+            // "admin": {
+            //     "email": "umar.abdulselam@outlook.com",
+            //     "address": "null",
+            //     "firstName": "Umar",
+            //     "lastName": "Abdulselam",
+            //     "role": "null",
+            //     "birthDate": "2022"
+            //         + "-" + "01"
+            //         + "-" + "01",
+            //     "phone": "+6474169050",
+            //     "chargeInterval": "M",
+            //     // "toolTip": true,
+            //     // "active": true
+            // },
+            // "password": "Testtest1!"
+        })
     }
 
     render() {
@@ -335,8 +357,9 @@ class Register extends Component {
                                 onClick={(e) => {
                                         e.preventDefault();
                                         // this.onSubmit();
-                                        send(this.constructRequestPayload)
-                                    }}>
+                                        send(this.constructRequestPayload())
+                                    }}
+                                >
                                     Create account
                             </button>
                         </form>
@@ -347,7 +370,7 @@ class Register extends Component {
                 {/* END card */}
                 <div className="p-3 text-center">
                     <span className="mr-2">&copy;</span>
-                    <span>2021</span>
+                    <span>2022</span>
                     <span className="mx-2">-</span>
                     <span>Podstruct</span>
                 </div>
