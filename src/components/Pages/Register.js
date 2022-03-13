@@ -120,7 +120,7 @@ class Register extends Component {
     /* Build payload */
     constructRequestPayload = () => {
         return JSON.stringify({
-            "phone": "+6474169050",
+            "phone": "+1001001000",
             "podName": this.state.formRegister.podName,
             "podDescription": "null",
             "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -136,7 +136,7 @@ class Register extends Component {
                 // "birthDate": this.state.formRegister.dob.year
                 //     + "-" + this.state.formRegister.dob.month
                 //     + "-" + this.state.formRegister.dob.day,
-                "phone": "+6474169050",
+                "phone": "+1001001000",
                 "chargeInterval": "M",
             },
             "password": this.state.formRegister.password
