@@ -25,7 +25,6 @@ class Register extends Component {
                 day: '',
                 year: ''
             },
-            // TODO: valid_dob: false,
             podName: '',
             valid_podName: false,
             password: '',
@@ -69,10 +68,6 @@ class Register extends Component {
             case "lastName":
                 stateCopy.valid_lastName = validity;
                 break;
-            // TODO:
-                // case "dob":
-                //     this.state.formRegister.valid_firstName = validity;
-                //     break;
             case "podName":
                 stateCopy.valid_podName = validity;
                 break;
@@ -148,9 +143,6 @@ class Register extends Component {
                 "firstName": this.state.formRegister.firstName,
                 "lastName": this.state.formRegister.lastName,
                 "role": "null",
-                // "birthDate": "2022"
-                //     + "-" + "01"
-                //     + "-" + "01",
                 "birthDate": this.state.formRegister.dob.year
                     + "-" + this.state.formRegister.dob.month
                     + "-" + this.state.formRegister.dob.day,
@@ -253,9 +245,21 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPassword1">Date of birth</label>
                                 <div className="input-group with-focus">
-                                    <MonthSelector setMonth={(month) => this.setMonth(month)}/>
-                                    <DaySelector setDay={(day) => this.setDay(day)}/>
-                                    <YearSelector setYear={(year) => this.setYear(year)}/>
+                                    <MonthSelector
+                                        name="monthSelector"
+                                        setMonth={(month) => this.setMonth(month)}
+                                        onChange={this.validateOnChange}
+                                    />
+                                    <DaySelector
+                                        name="daySelector"
+                                        setDay={(day) => this.setDay(day)}
+                                        onChange={this.validateOnChange}
+                                    />
+                                    <YearSelector
+                                        name="yearSelector"
+                                        setYear={(year) => this.setYear(year)}
+                                        onChange={this.validateOnChange}
+                                    />
                                     {true && <span className="invalid-feedback">Last name is required</span>}
                                 </div>
                             </div>
@@ -354,7 +358,6 @@ class Register extends Component {
                                 onClick={(e) => {
                                         e.preventDefault();
                                         // this.onSubmit();
-                                        var payload = this.constructRequestPayload();
                                         send(this.constructRequestPayload())
                                     }}
                                 >
