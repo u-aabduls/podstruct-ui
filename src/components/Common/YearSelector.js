@@ -20,13 +20,14 @@ function setOptions() {
   }
 }
 
-export default function YearSelector() {
+export default function YearSelector(props) {
     setOptions();
     return (
       <Select
         placeholder={`Year`}
         styles={customStyles}
-        options={options} 
+        options={options}
+        onChange={(e) => {props.setYear(e.value)}}
       />
     )
 }

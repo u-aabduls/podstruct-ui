@@ -3,15 +3,15 @@ import Select from 'react-select'
 import "../../styles/app/widgets/select.css";
 
 const options = [
-  { value: '1', label: '1' },
-  { value: '2', label: '2' },
-  { value: '3', label: '3' },
-  { value: '4', label: '4' },
-  { value: '5', label: '5' },
-  { value: '6', label: '6' },
-  { value: '7', label: '7' },
-  { value: '8', label: '8' },
-  { value: '9', label: '9' },
+  { value: '01', label: '1' },
+  { value: '02', label: '2' },
+  { value: '03', label: '3' },
+  { value: '04', label: '4' },
+  { value: '05', label: '5' },
+  { value: '06', label: '6' },
+  { value: '07', label: '7' },
+  { value: '08', label: '8' },
+  { value: '09', label: '9' },
   { value: '10', label: '10' },
   { value: '11', label: '11' },
   { value: '12', label: '12' },
@@ -44,12 +44,13 @@ const customStyles = {
   })
 };
 
-export default function DaySelector() {
+export default function DaySelector(props) {
     return (
       <Select
         placeholder={`Day`}
         styles={customStyles}
-        options={options} 
+        options={options}
+        onChange={(e) => {props.setDay(e.value)}}
       />
     )
 }

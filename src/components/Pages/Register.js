@@ -35,6 +35,27 @@ class Register extends Component {
         }
     }
 
+    setMonth = (month) => {
+        var stateCopy = this.state.formRegister;
+        stateCopy.dob.month = month;
+        this.setState(stateCopy); 
+        console.log(month); 
+    };
+
+    setDay = (day) => {
+        var stateCopy = this.state.formRegister;
+        stateCopy.dob.day = day;
+        this.setState(stateCopy); 
+        console.log(day); 
+    };
+
+    setYear = (year) => {
+        var stateCopy = this.state.formRegister;
+        stateCopy.dob.year = year;
+        this.setState(stateCopy); 
+        console.log(year); 
+    };
+
     /**
      * Update valid input state, used for input validation
      * on form submission
@@ -235,10 +256,10 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPassword1">Date of birth</label>
                                 <div className="input-group with-focus">
-                                    <MonthSelector />
-                                    <DaySelector />
-                                    <YearSelector />
-                                    {/* {true && <span className="invalid-feedback">Last name is required</span>} */}
+                                    <MonthSelector setMonth={(month) => this.setMonth(month)}/>
+                                    <DaySelector setDay={(day) => this.setMonth(day)}/>
+                                    <YearSelector setYear={(year) => this.setYear(year)}/>
+                                    {true && <span className="invalid-feedback">Last name is required</span>}
                                 </div>
                             </div>
                             <div className="form-group">

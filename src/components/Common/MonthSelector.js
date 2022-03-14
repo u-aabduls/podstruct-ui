@@ -3,18 +3,18 @@ import Select from 'react-select'
 import "../../styles/app/widgets/select.css";
 
 const options = [
-  { value: '0', label: 'Jan' },
-  { value: '1', label: 'Feb' },
-  { value: '2', label: 'Mar' },
-  { value: '3', label: 'Apr' },
-  { value: '4', label: 'May' },
-  { value: '5', label: 'Jun' },
-  { value: '6', label: 'Jul' },
-  { value: '7', label: 'Aug' },
-  { value: '8', label: 'Sept' },
-  { value: '9', label: 'Oct' },
-  { value: '10', label: 'Nov' },
-  { value: '11', label: 'Dec' }
+  { value: '01', label: 'Jan' },
+  { value: '02', label: 'Feb' },
+  { value: '03', label: 'Mar' },
+  { value: '04', label: 'Apr' },
+  { value: '05', label: 'May' },
+  { value: '06', label: 'Jun' },
+  { value: '07', label: 'Jul' },
+  { value: '08', label: 'Aug' },
+  { value: '09', label: 'Sept' },
+  { value: '10', label: 'Oct' },
+  { value: '11', label: 'Nov' },
+  { value: '12', label: 'Dec' }
 ];
 
 const customStyles = {
@@ -25,12 +25,13 @@ const customStyles = {
   })
 };
 
-export default function MonthSelector() {
+export default function MonthSelector(props) {
     return (
       <Select
         placeholder={`Month`}
         styles={customStyles}
-        options={options} 
+        options={options}
+        onChange={(e) => {props.setMonth(e.value)}}
       />
     )
 }
