@@ -151,12 +151,12 @@ class Register extends Component {
                 "firstName": this.state.formRegister.firstName,
                 "lastName": this.state.formRegister.lastName,
                 "role": "null",
-                "birthDate": "2022"
-                    + "-" + "01"
-                    + "-" + "01",
-                // "birthDate": this.state.formRegister.dob.year
-                //     + "-" + this.state.formRegister.dob.month
-                //     + "-" + this.state.formRegister.dob.day,
+                // "birthDate": "2022"
+                //     + "-" + "01"
+                //     + "-" + "01",
+                "birthDate": this.state.formRegister.dob.year
+                    + "-" + this.state.formRegister.dob.month
+                    + "-" + this.state.formRegister.dob.day,
                 "phone": "+1001001000",
                 "chargeInterval": "M",
             },
@@ -257,7 +257,7 @@ class Register extends Component {
                                 <label className="text-muted" htmlFor="signupInputPassword1">Date of birth</label>
                                 <div className="input-group with-focus">
                                     <MonthSelector setMonth={(month) => this.setMonth(month)}/>
-                                    <DaySelector setDay={(day) => this.setMonth(day)}/>
+                                    <DaySelector setDay={(day) => this.setDay(day)}/>
                                     <YearSelector setYear={(year) => this.setYear(year)}/>
                                     {true && <span className="invalid-feedback">Last name is required</span>}
                                 </div>
@@ -357,6 +357,7 @@ class Register extends Component {
                                 onClick={(e) => {
                                         e.preventDefault();
                                         // this.onSubmit();
+                                        var payload = this.constructRequestPayload();
                                         send(this.constructRequestPayload())
                                     }}
                                 >
