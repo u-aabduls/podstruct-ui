@@ -38,22 +38,19 @@ class Register extends Component {
     setMonth = (month) => {
         var stateCopy = this.state.formRegister;
         stateCopy.dob.month = month;
-        this.setState(stateCopy); 
-        console.log(month); 
+        this.setState(stateCopy);
     };
 
     setDay = (day) => {
         var stateCopy = this.state.formRegister;
         stateCopy.dob.day = day;
-        this.setState(stateCopy); 
-        console.log(day); 
+        this.setState(stateCopy);
     };
 
     setYear = (year) => {
         var stateCopy = this.state.formRegister;
         stateCopy.dob.year = year;
-        this.setState(stateCopy); 
-        console.log(year); 
+        this.setState(stateCopy);
     };
 
     /**
