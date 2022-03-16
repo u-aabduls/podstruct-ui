@@ -105,6 +105,7 @@ class Register extends Component {
     }
 
     onSubmit = e => {
+        console.log(e);
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
 
@@ -118,6 +119,10 @@ class Register extends Component {
         });
 
         console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
+
+        if (!hasError) {
+            send(this.constructRequestPayload())
+        }
 
         e.preventDefault()
     }
@@ -187,7 +192,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputPassword1">First name</label>
+                                <label className="text-muted" htmlFor="signupInputFirstName">First name</label>
                                 <div className="input-group with-focus">
                                     <Input type="text"
                                         id="id-firstName"
@@ -215,7 +220,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputPassword1">Last name</label>
+                                <label className="text-muted" htmlFor="signupInputLastName">Last name</label>
                                 <div className="input-group with-focus">
                                     <Input type="text"
                                         id="id-lastName"
@@ -243,28 +248,24 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputPassword1">Date of birth</label>
+                                <label className="text-muted" htmlFor="signupInputDOB">Date of birth</label>
                                 <div className="input-group with-focus">
                                     <MonthSelector
                                         name="monthSelector"
                                         setMonth={(month) => this.setMonth(month)}
-                                        onChange={this.validateOnChange}
                                     />
                                     <DaySelector
                                         name="daySelector"
                                         setDay={(day) => this.setDay(day)}
-                                        onChange={this.validateOnChange}
                                     />
                                     <YearSelector
                                         name="yearSelector"
                                         setYear={(year) => this.setYear(year)}
-                                        onChange={this.validateOnChange}
                                     />
-                                    {true && <span className="invalid-feedback">Last name is required</span>}
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputPassword1">POD name</label>
+                                <label className="text-muted" htmlFor="signupInputPodname">POD name</label>
                                 <div className="input-group with-focus">
                                     <Input type="text"
                                         id="id-podName"
@@ -352,17 +353,7 @@ class Register extends Component {
                                 checked={this.state.formRegister.terms}>
                                     <span className="invalid-feedback">Field is required</span>
                             </CustomInput> */}
-                            <button 
-                                className="btn btn-block btn-primary mt-3" 
-                                type="submit" 
-                                onClick={(e) => {
-                                        e.preventDefault();
-                                        // this.onSubmit();
-                                        send(this.constructRequestPayload())
-                                    }}
-                                >
-                                    Create account
-                            </button>
+                            <button className="btn btn-block btn-primary mt-3" type="submit">Create account</button>
                         </form>
                         <p className="pt-3 text-center">Have an account?</p>
                         <Link to="login" className="btn btn-block btn-secondary">Log in</Link>
