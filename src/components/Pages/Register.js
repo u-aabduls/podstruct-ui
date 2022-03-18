@@ -15,20 +15,15 @@ class Register extends Component {
     state = {
         formRegister: {
             email: '',
-            valid_email: false,
             firstName: '',
-            valid_firstName: false,
             lastName: '',
-            valid_lastName: false,
             dob: {
                 month: '',
                 day: '',
                 year: ''
             },
             podName: '',
-            valid_podName: false,
             password: '',
-            valid_password: false,
             confirmedPassword: '',
             terms: false
         }
@@ -51,32 +46,6 @@ class Register extends Component {
         stateCopy.dob.year = year;
         this.setState(stateCopy);
     };
-
-    /**
-     * Update valid input state, used for input validation
-     * on form submission
-     */
-    setValid = (formField, validity) => {
-        var stateCopy = this.state.formRegister;
-        switch(formField) {
-            case "email":
-                stateCopy.valid_email = validity;
-                break;
-            case "firstName":
-                stateCopy.valid_firstName = validity;
-                break;
-            case "lastName":
-                stateCopy.valid_lastName = validity;
-                break;
-            case "podName":
-                stateCopy.valid_podName = validity;
-                break;
-            case "password":
-                stateCopy.valid_password = validity;
-                break;
-        }
-        this.setState(stateCopy);
-    }
 
     /**
      * Validate input using onChange event
@@ -105,9 +74,17 @@ class Register extends Component {
     }
 
     onSubmit = e => {
-        console.log(e);
         const form = e.target;
-        const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
+
+        const inputsToValidate = [
+            'email',
+            'firstName',
+            'lastName',
+            'podName',
+            'password'
+        ];
+
+        const inputs = [...form.elements].filter(i => inputsToValidate.includes(i.name))
 
         const { errors, hasError } = FormValidator.bulkValidate(inputs)
 
