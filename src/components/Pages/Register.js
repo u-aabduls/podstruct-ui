@@ -69,8 +69,6 @@ class Register extends Component {
                 }
             }
         });
-        
-        this.setValid(input.name, !Object.values(result).some((v) => v));
     }
 
     onSubmit = e => {
