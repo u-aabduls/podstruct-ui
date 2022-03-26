@@ -1,5 +1,6 @@
 // private members
 var request = new XMLHttpRequest();
+var result = {};
 
 /********************
  * Public Methods
@@ -8,6 +9,7 @@ var request = new XMLHttpRequest();
 function send(requestBody) {
     _initialize();
     request.send(requestBody);
+    return result;
 }
 
 /********************
@@ -15,8 +17,8 @@ function send(requestBody) {
  ********************/
 
 function _initialize() {
-    request.open("POST", "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/podstruct/api/rest/pod", true);
-    // request.open("POST", "https://d1vp98nn3zy5j1.cloudfront.net/podstruct/api/rest/pod", true);
+    request.open("POST", "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/podstruct/api/rest/pod", false);
+    // request.open("POST", "https://d1vp98nn3zy5j1.cloudfront.net/podstruct/api/rest/pod", false);
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
     request.onload = __execute;
@@ -37,9 +39,12 @@ function __execute() {
     if (request.status >= 200 && request.status < 400) {
         // TODO:
         console.log('successfully created an account');
+        result.isSuccess = true;
     } else {
         console.log('error code: ' + request.status);
+        result.isSuccess = false;
     }
+    result.message = (data.message) ? data.message : (data.errors[0].message) ? data.errors[0].message : undefined;
 }
 
 export default send;

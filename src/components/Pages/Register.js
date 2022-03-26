@@ -4,7 +4,9 @@ import { Input } from 'reactstrap';
 import MonthSelector from "../Common/MonthSelector";
 import DaySelector from "../Common/DaySelector";
 import YearSelector from "../Common/YearSelector";
-import send from "../../connectors/AccountCreation"
+import send from "../../connectors/AccountCreation";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // import { CustomInput } from 'reactstrap';
 
@@ -96,7 +98,12 @@ class Register extends Component {
         console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            send(this.constructRequestPayload())
+            var result = send(this.constructRequestPayload());
+            this.displayToast(
+                result.message, 
+                result.isSuccess ? "success" : "error", 
+                "bottom-center"
+            );
         }
 
         e.preventDefault()
@@ -131,7 +138,31 @@ class Register extends Component {
             },
             "password": this.state.formRegister.password
         })
+        // return JSON.stringify({
+        //     // "phone": "+1001001000",
+        //     "podName": "test",
+        //     // "podDescription": "null",
+        //     "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+        //     "admin": {
+        //         "email": "umar.abdulselam@outlook.com",
+        //         // "address": "null",
+        //         "firstName": "Umar",
+        //         "lastName": "Abdulselam",
+        //         // "role": "null",
+        //         "birthDate": "2022"
+        //             + "-" + "01"
+        //             + "-" + "01",
+        //         // "phone": "+1001001000",
+        //         "chargeInterval": "M",
+        //     },
+        //     "password": "Testtest1!"
+        // })
     }
+
+    displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
+        type: toastType,
+        position: toastPosition
+    })
 
     render() {
         return (
@@ -329,6 +360,7 @@ class Register extends Component {
                                     <span className="invalid-feedback">Field is required</span>
                             </CustomInput> */}
                             <button className="btn btn-block btn-primary mt-3" type="submit">Create account</button>
+                            <ToastContainer />
                         </form>
                         <p className="pt-3 text-center">Have an account?</p>
                         <Link to="login" className="btn btn-block btn-secondary">Log in</Link>
