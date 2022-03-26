@@ -303,7 +303,7 @@ class Register extends Component {
                                     <Input type="password"
                                         name="confirmedPassword"
                                         className="border-right-0"
-                                        placeholder="Retype assword"
+                                        placeholder="Retype password"
                                         invalid={this.hasError('formRegister', 'confirmedPassword', 'equalto')}
                                         onChange={this.validateOnChange}
                                         data-validate='["equalto"]'
