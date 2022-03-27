@@ -1,6 +1,9 @@
 // private members
 var request = new XMLHttpRequest();
 var result = {};
+var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
+    prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/" ;
+var endpointPath = "podstruct/api/rest/pod";
 
 /********************
  * Public Methods
@@ -17,8 +20,8 @@ function send(requestBody) {
  ********************/
 
 function _initialize() {
-    request.open("POST", "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/podstruct/api/rest/pod", false);
-    // request.open("POST", "https://d1vp98nn3zy5j1.cloudfront.net/podstruct/api/rest/pod", false);
+    request.open("POST", devServer + endpointPath, false);
+    // request.open("POST", prodServer + endpointPath, false);
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
     request.onload = __execute;
@@ -44,7 +47,7 @@ function __execute() {
         console.log('error code: ' + request.status);
         result.isSuccess = false;
     }
-    result.message = (data.message) ? data.message : (data.errors[0].message) ? data.errors[0].message : undefined;
+    result.message = (data.message) ? data.message : (data.errors[0].message) ? data.errors[0].message : "An unexpected error occurred.";
 }
 
 export default send;
