@@ -74,6 +74,7 @@ class Register extends Component {
     }
 
     onSubmit = e => {
+
         const form = e.target;
 
         const inputsToValidate = [
@@ -106,7 +107,7 @@ class Register extends Component {
             );
         }
 
-        e.preventDefault()
+        e.preventDefault();
     }
 
     /* Simplify error check */
