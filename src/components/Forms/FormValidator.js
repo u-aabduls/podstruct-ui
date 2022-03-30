@@ -30,7 +30,7 @@ const FormValidator = {
      * Returns true iff:
      *     1) month & day together form a valid date of birth
      */
-     isValidDateOfBirth(month, day) {
+    isValidDateOfBirth(month, day) {
         const monthsWith30Days = ["1", "3", "5", "8", "10"];
         const monthsWith31Days = ["0", "2", "4", "6", "7", "9"];
 

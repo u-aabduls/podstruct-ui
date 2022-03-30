@@ -270,6 +270,7 @@ class Register extends Component {
                                         name="yearSelector"
                                         setYear={(year) => this.setYear(year)}
                                     />
+                                    {this.state.formRegister.dob_invalid && <p><span className="">Date of birth must be set</span></p>}
                                 </div>
                             </div>
                             <div className="form-group">
