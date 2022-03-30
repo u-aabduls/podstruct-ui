@@ -209,12 +209,12 @@ class Register extends Component {
                                         placeholder="First name"
                                         invalid={
                                             this.hasError('formRegister', 'firstName', 'required')
-                                            || this.hasError('formRegister', 'firstName', 'minlen')
+                                            || this.hasError('formRegister', 'firstName', 'maxlen')
                                             || this.hasError('formRegister', 'firstName', 'name')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "minlen", "name"]'
-                                        data-param='2'
+                                        data-validate='["required", "maxlen", "name"]'
+                                        data-param='50'
                                         value={this.state.formRegister.firstName}
                                     />
                                     <div className="input-group-append">
@@ -223,7 +223,7 @@ class Register extends Component {
                                         </span>
                                     </div>
                                     {this.hasError('formRegister', 'firstName', 'required') && <span className="invalid-feedback">First name is required</span>}
-                                    {this.hasError('formRegister', 'firstName', 'minlen') && <span className="invalid-feedback">First name must have at least 2 characters</span>}
+                                    {this.hasError('formRegister', 'firstName', 'maxlen') && <span className="invalid-feedback">First name must not have more than 50 characters</span>}
                                     {this.hasError('formRegister', 'firstName', 'name') && <span className="invalid-feedback">First name must contain alpha characters only</span>}
                                 </div>
                             </div>
@@ -237,12 +237,12 @@ class Register extends Component {
                                         placeholder="Last name"
                                         invalid={
                                             this.hasError('formRegister', 'lastName', 'required')
-                                            || this.hasError('formRegister', 'lastName', 'minlen')
+                                            || this.hasError('formRegister', 'lastName', 'maxlen')
                                             || this.hasError('formRegister', 'lastName', 'name')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "minlen", "name"]'
-                                        data-param='2'
+                                        data-validate='["required", "maxlen", "name"]'
+                                        data-param='50'
                                         value={this.state.formRegister.lastName}
                                     />
                                     <div className="input-group-append">
@@ -251,7 +251,7 @@ class Register extends Component {
                                         </span>
                                     </div>
                                     {this.hasError('formRegister', 'lastName', 'required') && <span className="invalid-feedback">Last name is required</span>}
-                                    {this.hasError('formRegister', 'lastName', 'minlen') && <span className="invalid-feedback">Last name must have at least 2 characters</span>}
+                                    {this.hasError('formRegister', 'lastName', 'maxlen') && <span className="invalid-feedback">Last name must have not have more than 50 characters</span>}
                                     {this.hasError('formRegister', 'lastName', 'name') && <span className="invalid-feedback">Last name must contain alpha characters only</span>}
                                 </div>
                             </div>

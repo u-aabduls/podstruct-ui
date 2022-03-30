@@ -11,19 +11,23 @@ const FormValidator = {
      * Returns true iff:
      *     1) input is alpha only
      *     2) input's only special character (if exists) is apostrophe (') or hyphen (-)
+     *     3) input has at least one alpha character (not ' or -)
      */
     isValidName(input) {
         const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-        var i = input.length;
+        var i = input.length, alphaCharFound = false;
         input = input.toUpperCase();
         while (i--) {
             var char = input.charAt(i);
             if (!alpha.includes(char) && (char !== '\'' && char !== '-')) {
                 return false;
             }
+            if ((char !== '\'' && char !== '-') && !alphaCharFound) {
+                alphaCharFound = true;
+            }
         }
-        return true;
+        return alphaCharFound;
     },
 
     /**
