@@ -39,11 +39,11 @@ const FormValidator = {
 
     /**
      * Returns true iff:
-     *     1) input is alphanumeric
+     *     1) input is alphanumeric (including space ' ')
      *     2) input's only special character (if exists) is hyphen (-) 
      */
     isValidPODName(input) {
-        const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ".split("");
         const num = "0123456789".split("");
 
         // name not valid if less than 2 characters long
