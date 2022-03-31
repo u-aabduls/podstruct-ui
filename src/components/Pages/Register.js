@@ -211,9 +211,11 @@ class Register extends Component {
                                             this.hasError('formRegister', 'firstName', 'required')
                                             || this.hasError('formRegister', 'firstName', 'maxlen')
                                             || this.hasError('formRegister', 'firstName', 'name')
+                                            || this.hasError('formRegister', 'firstName', 'begin-end-spacing')
+                                            || this.hasError('formRegister', 'firstName', 'consecutive-spacing')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "maxlen", "name"]'
+                                        data-validate='["required", "maxlen", "name", "begin-end-spacing", "consecutive-spacing"]'
                                         data-param='50'
                                         value={this.state.formRegister.firstName}
                                     />
@@ -225,6 +227,8 @@ class Register extends Component {
                                     {this.hasError('formRegister', 'firstName', 'required') && <span className="invalid-feedback">First name is required</span>}
                                     {this.hasError('formRegister', 'firstName', 'maxlen') && <span className="invalid-feedback">First name must not have more than 50 characters</span>}
                                     {this.hasError('formRegister', 'firstName', 'name') && <span className="invalid-feedback">First name must contain alpha characters only</span>}
+                                    {this.hasError('formRegister', 'firstName', 'begin-end-spacing') && <span className="invalid-feedback">First name must not begin or end with a space character</span>}
+                                    {this.hasError('formRegister', 'firstName', 'consecutive-spacing') && <span className="invalid-feedback">First name must not contain consecutive space characters</span>}
                                 </div>
                             </div>
                             <div className="form-group">
@@ -239,9 +243,11 @@ class Register extends Component {
                                             this.hasError('formRegister', 'lastName', 'required')
                                             || this.hasError('formRegister', 'lastName', 'maxlen')
                                             || this.hasError('formRegister', 'lastName', 'name')
+                                            || this.hasError('formRegister', 'lastName', 'begin-end-spacing')
+                                            || this.hasError('formRegister', 'lastName', 'consecutive-spacing')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "maxlen", "name"]'
+                                        data-validate='["required", "maxlen", "name", "begin-end-spacing", "consecutive-spacing"]'
                                         data-param='50'
                                         value={this.state.formRegister.lastName}
                                     />
@@ -253,6 +259,8 @@ class Register extends Component {
                                     {this.hasError('formRegister', 'lastName', 'required') && <span className="invalid-feedback">Last name is required</span>}
                                     {this.hasError('formRegister', 'lastName', 'maxlen') && <span className="invalid-feedback">Last name must have not have more than 50 characters</span>}
                                     {this.hasError('formRegister', 'lastName', 'name') && <span className="invalid-feedback">Last name must contain alpha characters only</span>}
+                                    {this.hasError('formRegister', 'lastName', 'begin-end-spacing') && <span className="invalid-feedback">Last name must not begin or end with a space character</span>}
+                                    {this.hasError('formRegister', 'lastName', 'consecutive-spacing') && <span className="invalid-feedback">Last name must not contain consecutive space characters</span>}
                                 </div>
                             </div>
                             <div className="form-group">

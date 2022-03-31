@@ -9,12 +9,33 @@ const FormValidator = {
 
     /**
      * Returns true iff:
+     *     1) input begins or ends with a space character
+     */
+    beginsOrEndsWithSpace(input) {
+        return input.substring(0,1) == " " || input.substring(input.length-1,input.length) == " ";
+    },
+
+    /**
+     * Returns true iff:
+     *     1) input contains consecutive spaces
+     */
+    containsConsecutiveSpaces(input) {
+        var index = input.indexOf(" ");
+        if (index < 0 || index == input.length - 1) {
+            return false;
+        } else {
+            return input.charAt(index + 1) == " ";
+        }
+    },
+
+    /**
+     * Returns true iff:
      *     1) input is alpha only
      *     2) input's only special character (if exists) is apostrophe (') or hyphen (-)
      *     3) input has at least one alpha character (not ' or -)
      */
     isValidName(input) {
-        const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ".split("");
 
         var i = input.length, alphaCharFound = false;
         input = input.toUpperCase();
@@ -186,6 +207,12 @@ const FormValidator = {
                         break;
                     case 'password':
                         result[m] = !this.isValidPassword(value)
+                        break;
+                    case 'begin-end-spacing':
+                        result[m] = this.beginsOrEndsWithSpace(value)
+                        break;
+                    case 'consecutive-spacing':
+                        result[m] = this.containsConsecutiveSpaces(value)
                         break;
                     default:
                         throw new Error('Unrecognized validator.');
