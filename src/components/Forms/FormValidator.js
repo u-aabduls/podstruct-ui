@@ -30,25 +30,38 @@ const FormValidator = {
 
     /**
      * Returns true iff:
-     *     1) input is alpha only
-     *     2) input's only special character (if exists) is apostrophe (') or hyphen (-)
-     *     3) input has at least one alpha character (not ' or -)
+     *     1) input contains at least 1 alpha character
+     */
+    containsAlphaChar(input) {
+        const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+        var i = input.length;
+        input = input.toUpperCase();
+        while (i--) {
+            var char = input.charAt(i);
+            if (alpha.includes(char)) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    /**
+     * Returns true iff:
+     *     1) input is alpha only and special character (if exists) is apostrophe (') or hyphen (-)
      */
     isValidName(input) {
         const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ".split("");
 
-        var i = input.length, alphaCharFound = false;
+        var i = input.length;
         input = input.toUpperCase();
         while (i--) {
             var char = input.charAt(i);
             if (!alpha.includes(char) && (char !== '\'' && char !== '-')) {
                 return false;
             }
-            if ((char !== '\'' && char !== '-') && !alphaCharFound) {
-                alphaCharFound = true;
-            }
         }
-        return alphaCharFound;
+        return true;
     },
 
     /**
@@ -198,6 +211,9 @@ const FormValidator = {
                     case 'list':
                         const list = JSON.parse(param)
                         result[m] = !validator.isIn(value, list)
+                        break;
+                    case 'contains-alpha':
+                        result[m] = !this.containsAlphaChar(value)
                         break;
                     case 'name':
                         result[m] = !this.isValidName(value)
