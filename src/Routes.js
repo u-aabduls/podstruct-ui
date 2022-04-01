@@ -12,7 +12,8 @@ import BasePage from './components/Layout/BasePage';
 /* Used to render a lazy component with react-router */
 const waitFor = Tag => props => <Tag {...props}/>;
 
-const Register = lazy(() => import('./components/Pages/Registration/PodOwnerRegister'));
+const Register = lazy(() => import('./components/Pages/Register'));
+// const Register = lazy(() => import('./components/Pages/Registration/PodOwnerRegister'));
 const Login = lazy(() => import('./components/Pages/Login'));
 const NotFound = lazy(() => import('./components/Pages/NotFound'));
 
