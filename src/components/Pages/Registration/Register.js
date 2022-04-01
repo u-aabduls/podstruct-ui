@@ -208,8 +208,8 @@ class Register extends Component {
                                     </div>
                                     {this.hasError('formRegister', 'firstName', 'required') && <span className="invalid-feedback">First name is required</span>}
                                     {this.hasError('formRegister', 'firstName', 'maxlen') && <span className="invalid-feedback">First name must not have more than 50 characters</span>}
-                                    {this.hasError('formRegister', 'firstName', 'contains-alpha') && <span className="invalid-feedback">First name must contain at least 1 alpha character</span>}
-                                    {this.hasError('formRegister', 'firstName', 'name') && <span className="invalid-feedback">First name must contain alpha characters only</span>}
+                                    {this.hasError('formRegister', 'firstName', 'contains-alpha') && <span className="invalid-feedback">First name must contain at least one alpha character</span>}
+                                    {this.hasError('formRegister', 'firstName', 'name') && <span className="invalid-feedback">First name must contain alpha, apostrophe, or hyphen characters only</span>}
                                     {this.hasError('formRegister', 'firstName', 'begin-end-spacing') && <span className="invalid-feedback">First name must not begin or end with a space character</span>}
                                     {this.hasError('formRegister', 'firstName', 'consecutive-spacing') && <span className="invalid-feedback">First name must not contain consecutive space characters</span>}
                                 </div>
@@ -242,8 +242,8 @@ class Register extends Component {
                                     </div>
                                     {this.hasError('formRegister', 'lastName', 'required') && <span className="invalid-feedback">Last name is required</span>}
                                     {this.hasError('formRegister', 'lastName', 'maxlen') && <span className="invalid-feedback">Last name must have not have more than 50 characters</span>}
-                                    {this.hasError('formRegister', 'lastName', 'contains-alpha') && <span className="invalid-feedback">Last name must contain at least 1 alpha character</span>}
-                                    {this.hasError('formRegister', 'lastName', 'name') && <span className="invalid-feedback">Last name must contain alpha characters only</span>}
+                                    {this.hasError('formRegister', 'lastName', 'contains-alpha') && <span className="invalid-feedback">Last name must contain at least one alpha character</span>}
+                                    {this.hasError('formRegister', 'lastName', 'name') && <span className="invalid-feedback">Last name must contain alpha, apostrophe, or hyphen characters only</span>}
                                     {this.hasError('formRegister', 'lastName', 'begin-end-spacing') && <span className="invalid-feedback">Last name must not begin or end with a space character</span>}
                                     {this.hasError('formRegister', 'lastName', 'consecutive-spacing') && <span className="invalid-feedback">Last name must not contain consecutive space characters</span>}
                                 </div>
