@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap';
-import MonthSelector from "../Common/MonthSelector";
-import DaySelector from "../Common/DaySelector";
-import YearSelector from "../Common/YearSelector";
-import send from "../../connectors/AccountCreation";
+import MonthSelector from "../../Common/MonthSelector";
+import DaySelector from "../../Common/DaySelector";
+import YearSelector from "../../Common/YearSelector";
+import send from "../../../connectors/AccountCreation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // import { CustomInput } from 'reactstrap';
 
-import FormValidator from '../Forms/FormValidator.js';
+import FormValidator from '../../Forms/FormValidator.js';
 
-class Register extends Component {
+class PodOwnerRegister extends Component {
 
     state = {
         formRegister: {
@@ -24,7 +24,7 @@ class Register extends Component {
                 day: '',
                 year: ''
             },
-            podName: '',
+            phone: '',
             password: '',
             confirmedPassword: '',
             terms: false
@@ -81,7 +81,6 @@ class Register extends Component {
             'email',
             'firstName',
             'lastName',
-            'podName',
             'password'
         ];
 
@@ -121,43 +120,20 @@ class Register extends Component {
     /* Build payload */
     constructRequestPayload = () => {
         return JSON.stringify({
-            "phone": "+1001001000",
-            "podName": this.state.formRegister.podName,
-            "podDescription": "null",
+            "phone": this.state.formRegister.phone,
             "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
             "admin": {
                 "email": this.state.formRegister.email,
-                "address": "null",
                 "firstName": this.state.formRegister.firstName,
                 "lastName": this.state.formRegister.lastName,
-                "role": "null",
                 "birthDate": this.state.formRegister.dob.year
                     + "-" + this.state.formRegister.dob.month
                     + "-" + this.state.formRegister.dob.day,
-                "phone": "+1001001000",
+                "phone": this.state.formRegister.phone,
                 "chargeInterval": "M",
             },
             "password": this.state.formRegister.password
         })
-        // return JSON.stringify({
-        //     // "phone": "+1001001000",
-        //     "podName": "test",
-        //     // "podDescription": "null",
-        //     "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
-        //     "admin": {
-        //         "email": "umar.abdulselam@outlook.com",
-        //         // "address": "null",
-        //         "firstName": "Umar",
-        //         "lastName": "Abdulselam",
-        //         // "role": "null",
-        //         "birthDate": "2022"
-        //             + "-" + "01"
-        //             + "-" + "01",
-        //         // "phone": "+1001001000",
-        //         "chargeInterval": "M",
-        //     },
-        //     "password": "Testtest1!"
-        // })
     }
 
     displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
@@ -227,8 +203,8 @@ class Register extends Component {
                                     </div>
                                     {this.hasError('formRegister', 'firstName', 'required') && <span className="invalid-feedback">First name is required</span>}
                                     {this.hasError('formRegister', 'firstName', 'maxlen') && <span className="invalid-feedback">First name must not have more than 50 characters</span>}
-                                    {this.hasError('formRegister', 'firstName', 'contains-alpha') && <span className="invalid-feedback">First name must contain at least 1 alpha character</span>}
-                                    {this.hasError('formRegister', 'firstName', 'name') && <span className="invalid-feedback">First name must contain alpha characters only</span>}
+                                    {this.hasError('formRegister', 'firstName', 'contains-alpha') && <span className="invalid-feedback">First name must contain at least one alpha character</span>}
+                                    {this.hasError('formRegister', 'firstName', 'name') && <span className="invalid-feedback">First name must contain alpha, apostrophe, or hyphen characters only</span>}
                                     {this.hasError('formRegister', 'firstName', 'begin-end-spacing') && <span className="invalid-feedback">First name must not begin or end with a space character</span>}
                                     {this.hasError('formRegister', 'firstName', 'consecutive-spacing') && <span className="invalid-feedback">First name must not contain consecutive space characters</span>}
                                 </div>
@@ -261,8 +237,8 @@ class Register extends Component {
                                     </div>
                                     {this.hasError('formRegister', 'lastName', 'required') && <span className="invalid-feedback">Last name is required</span>}
                                     {this.hasError('formRegister', 'lastName', 'maxlen') && <span className="invalid-feedback">Last name must have not have more than 50 characters</span>}
-                                    {this.hasError('formRegister', 'lastName', 'contains-alpha') && <span className="invalid-feedback">Last name must contain at least 1 alpha character</span>}
-                                    {this.hasError('formRegister', 'lastName', 'name') && <span className="invalid-feedback">Last name must contain alpha characters only</span>}
+                                    {this.hasError('formRegister', 'lastName', 'contains-alpha') && <span className="invalid-feedback">Last name must contain at least one alpha character</span>}
+                                    {this.hasError('formRegister', 'lastName', 'name') && <span className="invalid-feedback">Last name must contain alpha, apostrophe, or hyphen characters only</span>}
                                     {this.hasError('formRegister', 'lastName', 'begin-end-spacing') && <span className="invalid-feedback">Last name must not begin or end with a space character</span>}
                                     {this.hasError('formRegister', 'lastName', 'consecutive-spacing') && <span className="invalid-feedback">Last name must not contain consecutive space characters</span>}
                                 </div>
@@ -286,31 +262,29 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputPodname">POD name</label>
+                                <label className="text-muted" htmlFor="signupInputPhone">Phone number</label>
                                 <div className="input-group with-focus">
                                     <Input type="text"
-                                        id="id-podName"
-                                        name="podName"
+                                        id="id-phone"
+                                        name="phone"
                                         className="border-right-0"
-                                        placeholder="POD name"
+                                        placeholder="Phone"
                                         invalid={
-                                            this.hasError('formRegister', 'podName', 'required')
-                                            || this.hasError('formRegister', 'podName', 'minlen')
-                                            || this.hasError('formRegister', 'podName', 'podname')
+                                            this.hasError('formRegister', 'phone', 'required')
+                                            || this.hasError('formRegister', 'phone', 'minlen')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "minlen", "podname"]'
-                                        data-param='2'
-                                        value={this.state.formRegister.podName}
+                                        data-validate='["required", "minlen"]'
+                                        data-param='10'
+                                        value={this.state.formRegister.phone}
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-users"></em>
                                         </span>
                                     </div>
-                                    {this.hasError('formRegister', 'podName', 'required') && <span className="invalid-feedback">POD name is required</span>}
-                                    {this.hasError('formRegister', 'podName', 'minlen') && <span className="invalid-feedback">POD name must have at least 2 characters</span>}
-                                    {this.hasError('formRegister', 'podName', 'podname') && <span className="invalid-feedback">POD name must be alphanumeric</span>}
+                                    {this.hasError('formRegister', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
+                                    {this.hasError('formRegister', 'phone', 'minlen') && <span className="invalid-feedback">Phone number must have at least 10 digits</span>}
                                 </div>
                             </div>
                             <div className="form-group">
@@ -393,4 +367,4 @@ class Register extends Component {
     }
 }
 
-export default Register;
+export default PodOwnerRegister;
