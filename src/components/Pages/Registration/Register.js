@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap';
-import MonthSelector from "../Common/MonthSelector";
-import DaySelector from "../Common/DaySelector";
-import YearSelector from "../Common/YearSelector";
-import send from "../../connectors/AccountCreation";
+import MonthSelector from "../../Common/MonthSelector";
+import DaySelector from "../../Common/DaySelector";
+import YearSelector from "../../Common/YearSelector";
+import send from "../../../connectors/AccountCreation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // import { CustomInput } from 'reactstrap';
 
-import FormValidator from '../Forms/FormValidator.js';
+import FormValidator from '../../Forms/FormValidator.js';
 
 class Register extends Component {
 
@@ -139,25 +139,6 @@ class Register extends Component {
             },
             "password": this.state.formRegister.password
         })
-        // return JSON.stringify({
-        //     // "phone": "+1001001000",
-        //     "podName": "test",
-        //     // "podDescription": "null",
-        //     "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
-        //     "admin": {
-        //         "email": "umar.abdulselam@outlook.com",
-        //         // "address": "null",
-        //         "firstName": "Umar",
-        //         "lastName": "Abdulselam",
-        //         // "role": "null",
-        //         "birthDate": "2022"
-        //             + "-" + "01"
-        //             + "-" + "01",
-        //         // "phone": "+1001001000",
-        //         "chargeInterval": "M",
-        //     },
-        //     "password": "Testtest1!"
-        // })
     }
 
     displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
