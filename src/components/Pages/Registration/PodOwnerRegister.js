@@ -7,6 +7,8 @@ import YearSelector from "../../Common/YearSelector";
 import send from "../../../connectors/AccountCreation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 // import { CustomInput } from 'reactstrap';
 
@@ -264,7 +266,7 @@ class PodOwnerRegister extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPhone">Phone number</label>
                                 <div className="input-group with-focus">
-                                    <Input type="text"
+                                    {/* <Input type="text"
                                         id="id-phone"
                                         name="phone"
                                         className="border-right-0"
@@ -277,6 +279,11 @@ class PodOwnerRegister extends Component {
                                         data-validate='["required", "minlen"]'
                                         data-param='10'
                                         value={this.state.formRegister.phone}
+                                    /> */}
+                                    <PhoneInput
+                                        placeholder="Enter phone number"
+                                        value={this.state.formRegister.phone}
+                                        // onChange={setValue}
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
