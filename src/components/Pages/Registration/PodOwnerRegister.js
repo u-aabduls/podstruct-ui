@@ -7,8 +7,6 @@ import YearSelector from "../../Common/YearSelector";
 import send from "../../../connectors/AccountCreation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import 'react-phone-number-input/style.css'
-import PhoneInput from 'react-phone-number-input'
 
 // import { CustomInput } from 'reactstrap';
 
@@ -119,19 +117,24 @@ class PodOwnerRegister extends Component {
             this.state[formName].errors[inputName][method]
     }
 
+    /* Clean phone input */
+    cleanPhoneNumber = (phoneNumber) => {
+        return "+" + phoneNumber.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "");
+    }
+
     /* Build payload */
     constructRequestPayload = () => {
         return JSON.stringify({
-            "phone": this.state.formRegister.phone,
             "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "admin": {
+            "user": {
                 "email": this.state.formRegister.email,
                 "firstName": this.state.formRegister.firstName,
                 "lastName": this.state.formRegister.lastName,
+                "role": "Test",
                 "birthDate": this.state.formRegister.dob.year
                     + "-" + this.state.formRegister.dob.month
                     + "-" + this.state.formRegister.dob.day,
-                "phone": this.state.formRegister.phone,
+                "phone": this.cleanPhoneNumber(this.state.formRegister.phone),
                 "chargeInterval": "M",
             },
             "password": this.state.formRegister.password
@@ -266,32 +269,27 @@ class PodOwnerRegister extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPhone">Phone number</label>
                                 <div className="input-group with-focus">
-                                    {/* <Input type="text"
+                                    <Input type="text"
                                         id="id-phone"
                                         name="phone"
                                         className="border-right-0"
                                         placeholder="Phone"
                                         invalid={
                                             this.hasError('formRegister', 'phone', 'required')
-                                            || this.hasError('formRegister', 'phone', 'minlen')
+                                            || this.hasError('formRegister', 'phone', 'phone')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "minlen"]'
+                                        data-validate='["required", "phone"]'
                                         data-param='10'
                                         value={this.state.formRegister.phone}
-                                    /> */}
-                                    <PhoneInput
-                                        placeholder="Enter phone number"
-                                        value={this.state.formRegister.phone}
-                                        // onChange={setValue}
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
-                                            <em className="fa fa-users"></em>
+                                            <em className="fa fa-phone"></em>
                                         </span>
                                     </div>
                                     {this.hasError('formRegister', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
-                                    {this.hasError('formRegister', 'phone', 'minlen') && <span className="invalid-feedback">Phone number must have at least 10 digits</span>}
+                                    {this.hasError('formRegister', 'phone', 'phone') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
                                 </div>
                             </div>
                             <div className="form-group">
