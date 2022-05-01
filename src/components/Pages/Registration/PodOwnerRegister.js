@@ -95,15 +95,27 @@ class PodOwnerRegister extends Component {
             }
         });
 
-        console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
+        const invalidDOB = this.state.formRegister.dob.day === '' 
+                        || this.state.formRegister.dob.month === '' 
+                        || this.state.formRegister.dob.year === '';
+
+        console.log((hasError || invalidDOB) ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            var result = send(this.constructRequestPayload());
-            this.displayToast(
-                result.message, 
-                result.isSuccess ? "success" : "error", 
-                "bottom-center"
-            );
+            if (invalidDOB) {
+                this.displayToast(
+                    "Invalid date of birth selected.", 
+                    "error", 
+                    "bottom-center"
+                );
+            } else {
+                var result = send(this.constructRequestPayload());
+                this.displayToast(
+                    result.message, 
+                    result.isSuccess ? "success" : "error", 
+                    "bottom-center"
+                );   
+            }
         }
 
         e.preventDefault();
