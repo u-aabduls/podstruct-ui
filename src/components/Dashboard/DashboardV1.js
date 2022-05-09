@@ -9,6 +9,9 @@ import Sparkline from '../Common/Sparklines';
 import Scrollable from '../Common/Scrollable'
 import FlotChart from '../Charts/Flot';
 import Now from '../Common/Now';
+import { Redirect } from 'react-router';
+import { local } from 'd3';
+import { localstorage } from 'modernizr';
 
 class DashboardV1 extends Component {
 
@@ -85,7 +88,7 @@ class DashboardV1 extends Component {
             lineCap: 'round',
             size: 145
         };
-        new EasyPieChart(this.refs.easypie, pieOptions1);
+       // new EasyPieChart(this.refs.easypie, pieOptions1);
     }
 
     changeLanguage = lng => {
@@ -102,10 +105,14 @@ class DashboardV1 extends Component {
         // Usse t function instead of Trans component
         // const { t } = this.props;
 
+        if (localStorage.getItem('status') == 401 || !localstorage.getItem('status'))  {
+            return <Redirect to='/login'/>;
+        }
+
         return (
             <ContentWrapper>
                 <div className="content-heading">
-                    <div>Dashboard
+                    <div> {localStorage.getItem('podName')}'s Dashboard
                         <small><Trans i18nKey='dashboard.WELCOME'></Trans></small>
                     </div>
                     { /* START Language list */ }
