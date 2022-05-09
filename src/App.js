@@ -21,8 +21,8 @@ import "./Vendor";
 import './styles/bootstrap.scss';
 import './styles/app.scss'
 
-class App extends Component {
 
+class App extends Component {
   render() {
 
     // specify base href from env varible 'PUBLIC_URL'
