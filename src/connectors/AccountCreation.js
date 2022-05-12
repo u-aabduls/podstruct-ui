@@ -32,24 +32,18 @@ function _initialize() {
  ********************/
 
 function __execute() {
-    // Begin accessing JSON data here
-    // this.response.setHeader("Access-Control-Allow-Origin", "*");
-    // this.response.setHeader("Access-Control-Allow-Credentials", "true");
-    // this.response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    // this.response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-    var data = JSON.parse(this.response);
-
-    if (request.status >= 200 && request.status < 400) {
-        // TODO:
-        console.log('successfully created an account');
-        result.isSuccess = true;
-    } else {
+    if (request.status >= 400) {
+        var data = JSON.parse(this.response);
         console.log('error code: ' + request.status);
         result.isSuccess = false;
+        result.message = (data.message) ? 
+                            data.message : (data.errors[0].message) ? 
+                                data.errors[0].message : "An unexpected error occurred.";
+    } else {
+        console.log('Successfully created an account');
+        result.isSuccess = true;
+        result.message = "Successfully created account! Please check your email to verify your account."
     }
-    result.message = (data.message) ? 
-                        data.message : (data.errors[0].message) ? 
-                            data.errors[0].message : "An unexpected error occurred.";
 }
 
 export default send;

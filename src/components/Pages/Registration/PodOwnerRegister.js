@@ -81,6 +81,7 @@ class PodOwnerRegister extends Component {
             'email',
             'firstName',
             'lastName',
+            'phone',
             'password'
         ];
 
