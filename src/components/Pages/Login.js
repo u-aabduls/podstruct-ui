@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input, CustomInput } from 'reactstrap';
+import { Redirect, Route } from "react-router-dom";
+import send from "../../connectors/Login";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import FormValidator from '../Forms/FormValidator.js';
 
@@ -11,14 +15,15 @@ class Login extends Component {
         formLogin: {
             email: '',
             password: ''
-        }
+        },
+        redirect: null
     }
 
-     /**
-      * Validate input using onChange event
-      * @param  {String} formName The name of the form in the state object
-      * @return {Function} a function used for the event
-      */
+    /**
+     * Validate input using onChange event
+     * @param  {String} formName The name of the form in the state object
+     * @return {Function} a function used for the event
+     */
     validateOnChange = event => {
         const input = event.target;
         const form = input.form
@@ -40,6 +45,8 @@ class Login extends Component {
     }
 
     onSubmit = e => {
+        // TODO redirect only on valid login
+        //this.setState({redirect: "/dashboardv1"})
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
 
@@ -54,16 +61,36 @@ class Login extends Component {
 
         console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
 
+        if (!hasError) {
+            var result = send(this.constructRequestPayload());
+            if (result.isSuccess){
+                this.props.history.push('/dashboardv1')
+            } 
+        }
+
         e.preventDefault()
     }
 
     /* Simplify error check */
     hasError = (formName, inputName, method) => {
-        return  this.state[formName] &&
-                this.state[formName].errors &&
-                this.state[formName].errors[inputName] &&
-                this.state[formName].errors[inputName][method]
+        return this.state[formName] &&
+            this.state[formName].errors &&
+            this.state[formName].errors[inputName] &&
+            this.state[formName].errors[inputName][method]
     }
+
+    /* Build payload */
+    constructRequestPayload = () => {
+        return JSON.stringify({
+            "username": this.state.formLogin.email,
+            "password": this.state.formLogin.password
+        })
+    }
+
+    displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
+        type: toastType,
+        position: toastPosition
+    })
 
     render() {
         return (
@@ -71,8 +98,8 @@ class Login extends Component {
                 <div className="card card-flat">
                     <div className="card-header text-center bg-primary">
                         <a href="">
-                        <img className="block-center" src="img/logos/favicon.png" alt="Logo" />
-                            <img className="block-center" style={{marginLeft: 4 + 'px'}} src="img/logos/podstruct_text.svg" alt="Logo" />
+                            <img className="block-center" src="img/logos/favicon.png" alt="Logo" />
+                            <img className="block-center" style={{ marginLeft: 4 + 'px' }} src="img/logos/podstruct_text.svg" alt="Logo" />
                         </a>
                     </div>
                     <div className="card-body">
@@ -84,17 +111,17 @@ class Login extends Component {
                                         name="email"
                                         className="border-right-0"
                                         placeholder="Enter email"
-                                        invalid={this.hasError('formLogin','email','required')||this.hasError('formLogin','email','email')}
+                                        invalid={this.hasError('formLogin', 'email', 'required') || this.hasError('formLogin', 'email', 'email')}
                                         onChange={this.validateOnChange}
                                         data-validate='["required", "email"]'
-                                        value={this.state.formLogin.email}/>
+                                        value={this.state.formLogin.email} />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-envelope"></em>
                                         </span>
                                     </div>
-                                    { this.hasError('formLogin','email','required') && <span className="invalid-feedback">Field is required</span> }
-                                    { this.hasError('formLogin','email','email') && <span className="invalid-feedback">Field must be valid email</span> }
+                                    {this.hasError('formLogin', 'email', 'required') && <span className="invalid-feedback">Field is required</span>}
+                                    {this.hasError('formLogin', 'email', 'email') && <span className="invalid-feedback">Field must be valid email</span>}
                                 </div>
                             </div>
                             <div className="form-group">
@@ -104,7 +131,7 @@ class Login extends Component {
                                         name="password"
                                         className="border-right-0"
                                         placeholder="Password"
-                                        invalid={this.hasError('formLogin','password','required')}
+                                        invalid={this.hasError('formLogin', 'password', 'required')}
                                         onChange={this.validateOnChange}
                                         data-validate='["required"]'
                                         value={this.state.formLogin.password}
@@ -138,7 +165,7 @@ class Login extends Component {
                     <span>2020</span>
                     <span className="mx-2">-</span>
                     <span>Angle</span>
-                    <br/>
+                    <br />
                     <span>Bootstrap Admin Template</span>
                 </div>
             </div>

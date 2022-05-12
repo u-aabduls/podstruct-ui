@@ -10,12 +10,14 @@ import BasePage from './components/Layout/BasePage';
 // import BaseHorizontal from './components/Layout/BaseHorizontal';
 
 /* Used to render a lazy component with react-router */
-const waitFor = Tag => props => <Tag {...props}/>;
+const waitFor = Tag => props => <Tag {...props} />;
 
 const Register = lazy(() => import('./components/Pages/Registration/Register'));
 // const Register = lazy(() => import('./components/Pages/Registration/PodOwnerRegister'));
 const Login = lazy(() => import('./components/Pages/Login'));
 const NotFound = lazy(() => import('./components/Pages/NotFound'));
+
+const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -37,16 +39,16 @@ const Routes = ({ location }) => {
 
     const animationName = 'rag-fadeIn'
 
-    if(listofPages.indexOf(location.pathname) > -1) {
+    if (listofPages.indexOf(location.pathname) > -1) {
         return (
             // Page Layout component wrapper
             <BasePage>
-                <Suspense fallback={<PageLoader/>}>
+                <Suspense fallback={<PageLoader />}>
                     <Switch location={location}>
                         {/* See full project for reference */}
-                        <Route path="/register" component={waitFor(Register)}/>
-                        <Route path="/login" component={waitFor(Login)}/>
-                        <Route path="/notfound" component={waitFor(NotFound)}/>
+                        <Route path="/register" component={waitFor(Register)} />
+                        <Route path="/login" component={waitFor(Login)} />
+                        <Route path="/notfound" component={waitFor(NotFound)} />
                     </Switch>
                 </Suspense>
             </BasePage>
@@ -57,17 +59,18 @@ const Routes = ({ location }) => {
             // Layout component wrapper
             // Use <BaseHorizontal> to change layout
             <Base>
-              <TransitionGroup>
-                <CSSTransition key={currentKey} timeout={timeout} classNames={animationName} exit={false}>
-                    <div>
-                        <Suspense fallback={<PageLoader/>}>
-                            <Switch location={location}>
-                                <Redirect to="/register"/>
-                            </Switch>
-                        </Suspense>
-                    </div>
-                </CSSTransition>
-              </TransitionGroup>
+                <TransitionGroup>
+                    <CSSTransition key={currentKey} timeout={timeout} classNames={animationName} exit={false}>
+                        <div>
+                            <Suspense fallback={<PageLoader />}>
+                                <Switch location={location}>
+                                    <Route path="/dashboardv1" component={waitFor(DashboardV1)} />
+                                    <Redirect to="/register" />
+                                </Switch>
+                            </Suspense>
+                        </div>
+                    </CSSTransition>
+                </TransitionGroup>
             </Base>
         )
     }
