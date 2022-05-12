@@ -81,6 +81,7 @@ class PodOwnerRegister extends Component {
             'email',
             'firstName',
             'lastName',
+            'phone',
             'password'
         ];
 
@@ -95,15 +96,27 @@ class PodOwnerRegister extends Component {
             }
         });
 
-        console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
+        const invalidDOB = this.state.formRegister.dob.day === '' 
+                        || this.state.formRegister.dob.month === '' 
+                        || this.state.formRegister.dob.year === '';
+
+        console.log((hasError || invalidDOB) ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            var result = send(this.constructRequestPayload());
-            this.displayToast(
-                result.message, 
-                result.isSuccess ? "success" : "error", 
-                "bottom-center"
-            );
+            if (invalidDOB) {
+                this.displayToast(
+                    "Invalid date of birth selected.", 
+                    "error", 
+                    "bottom-center"
+                );
+            } else {
+                var result = send(this.constructRequestPayload());
+                this.displayToast(
+                    result.message, 
+                    result.isSuccess ? "success" : "error", 
+                    "bottom-center"
+                );   
+            }
         }
 
         e.preventDefault();
@@ -117,19 +130,24 @@ class PodOwnerRegister extends Component {
             this.state[formName].errors[inputName][method]
     }
 
+    /* Clean phone input */
+    cleanPhoneNumber = (phoneNumber) => {
+        return "+" + phoneNumber.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "");
+    }
+
     /* Build payload */
     constructRequestPayload = () => {
         return JSON.stringify({
-            "phone": this.state.formRegister.phone,
             "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "admin": {
+            "user": {
                 "email": this.state.formRegister.email,
                 "firstName": this.state.formRegister.firstName,
                 "lastName": this.state.formRegister.lastName,
+                "role": "Test",
                 "birthDate": this.state.formRegister.dob.year
                     + "-" + this.state.formRegister.dob.month
                     + "-" + this.state.formRegister.dob.day,
-                "phone": this.state.formRegister.phone,
+                "phone": this.cleanPhoneNumber(this.state.formRegister.phone),
                 "chargeInterval": "M",
             },
             "password": this.state.formRegister.password
@@ -271,20 +289,20 @@ class PodOwnerRegister extends Component {
                                         placeholder="Phone"
                                         invalid={
                                             this.hasError('formRegister', 'phone', 'required')
-                                            || this.hasError('formRegister', 'phone', 'minlen')
+                                            || this.hasError('formRegister', 'phone', 'phone')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "minlen"]'
+                                        data-validate='["required", "phone"]'
                                         data-param='10'
                                         value={this.state.formRegister.phone}
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
-                                            <em className="fa fa-users"></em>
+                                            <em className="fa fa-phone"></em>
                                         </span>
                                     </div>
                                     {this.hasError('formRegister', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
-                                    {this.hasError('formRegister', 'phone', 'minlen') && <span className="invalid-feedback">Phone number must have at least 10 digits</span>}
+                                    {this.hasError('formRegister', 'phone', 'phone') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
                                 </div>
                             </div>
                             <div className="form-group">

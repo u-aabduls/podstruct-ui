@@ -12,7 +12,7 @@ const FormValidator = {
      *     1) input begins or ends with a space character
      */
     beginsOrEndsWithSpace(input) {
-        return input.substring(0,1) == " " || input.substring(input.length-1,input.length) == " ";
+        return input.substring(0, 1) === " " || input.substring(input.length - 1, input.length) === " ";
     },
 
     /**
@@ -21,10 +21,10 @@ const FormValidator = {
      */
     containsConsecutiveSpaces(input) {
         var index = input.indexOf(" ");
-        if (index < 0 || index == input.length - 1) {
+        if (index < 0 || index === input.length - 1) {
             return false;
         } else {
-            return input.charAt(index + 1) == " ";
+            return input.charAt(index + 1) === " ";
         }
     },
 
@@ -72,7 +72,7 @@ const FormValidator = {
         const monthsWith30Days = ["1", "3", "5", "8", "10"];
         const monthsWith31Days = ["0", "2", "4", "6", "7", "9"];
 
-        return (monthsWith30Days.includes(month) && day <= 30) || monthsWith31Days.includes(month) && day <= 31;
+        return (monthsWith30Days.includes(month) && day <= 30) || (monthsWith31Days.includes(month) && day <= 31);
     },
 
     /**
@@ -100,6 +100,34 @@ const FormValidator = {
             }
         }
         return true;
+    },
+
+    /**
+     * Returns true iff:
+     *     1) input has exactly 10 numbers
+     *     2) contains only numbers or '(',')', or '-' characters
+     */
+    isValidPhoneNumber(input) {
+        const num = "0123456789".split("");
+        const special = "()-".split("");
+
+        if (input.length < 10) {
+            return false;
+        }
+
+        var i = input.length,
+            numbers = 0,
+            containsInvalidChar = false;
+
+        while (i-- && !containsInvalidChar) {
+            var char = input.charAt(i);
+            if (num.includes(char)) {
+                numbers++;
+            } else if (!special.includes(char)) {
+                containsInvalidChar = true;
+            }
+        }
+        return numbers === 10 && !containsInvalidChar;
     },
 
     /**
@@ -164,7 +192,7 @@ const FormValidator = {
         const validations = JSON.parse(element.getAttribute('data-validate'));
 
         let result = []
-        if(validations && validations.length) {
+        if (validations && validations.length) {
             /*  Result of each validation must be true if the input is invalid
                 and false if valid. */
             validations.forEach(m => {
@@ -220,6 +248,9 @@ const FormValidator = {
                         break;
                     case 'podname':
                         result[m] = !this.isValidPODName(value)
+                        break;
+                    case 'phone':
+                        result[m] = !this.isValidPhoneNumber(value)
                         break;
                     case 'password':
                         result[m] = !this.isValidPassword(value)
