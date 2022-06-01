@@ -9,3 +9,6 @@ build/
 
 # vscode
 .vscode/launch.json
+
+# package
+package-lock.json
