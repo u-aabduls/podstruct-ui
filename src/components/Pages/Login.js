@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input, CustomInput } from 'reactstrap';
-import { Redirect, Route } from "react-router-dom";
 import send from "../../connectors/Login";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,7 +15,7 @@ class Login extends Component {
             email: '',
             password: ''
         },
-        redirect: null
+        errorMessage: ''
     }
 
     /**
@@ -45,8 +44,6 @@ class Login extends Component {
     }
 
     onSubmit = e => {
-        // TODO redirect only on valid login
-        //this.setState({redirect: "/dashboardv1"})
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
 
@@ -63,9 +60,12 @@ class Login extends Component {
 
         if (!hasError) {
             var result = send(this.constructRequestPayload());
-            if (result.isSuccess){
+            if (localStorage.getItem('token')){
                 this.props.history.push('/dashboardv1')
             } 
+            else {
+                this.setState({errorMessage: result.message})
+            }
         }
 
         e.preventDefault()
@@ -144,6 +144,7 @@ class Login extends Component {
                                     <span className="invalid-feedback">Field is required</span>
                                 </div>
                             </div>
+                            { this.state.errorMessage != '' && <p style={{ color: 'red' }}>{this.state.errorMessage}</p>}
                             <div className="clearfix">
                                 <CustomInput type="checkbox" id="rememberme"
                                     className="float-left mt-0"
@@ -162,11 +163,9 @@ class Login extends Component {
                 </div>
                 <div className="p-3 text-center">
                     <span className="mr-2">&copy;</span>
-                    <span>2020</span>
+                    <span>2022</span>
                     <span className="mx-2">-</span>
-                    <span>Angle</span>
-                    <br />
-                    <span>Bootstrap Admin Template</span>
+                    <span>Podstruct</span>
                 </div>
             </div>
         );
