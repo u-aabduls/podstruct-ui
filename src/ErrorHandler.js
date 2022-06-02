@@ -1,6 +1,3 @@
-import { local } from 'd3';
-import React, { Component } from 'react';
-import Login from './components/Pages/Login';
 
 function handleError(errorValue, data){
     const location = window.location.pathname
