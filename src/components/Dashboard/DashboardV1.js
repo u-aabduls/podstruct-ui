@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withTranslation, Trans } from 'react-i18next';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import EasyPieChart from 'easy-pie-chart';
 
 import CardTool from '../Common/CardTool'
 import Sparkline from '../Common/Sparklines';
@@ -10,8 +9,6 @@ import Scrollable from '../Common/Scrollable'
 import FlotChart from '../Charts/Flot';
 import Now from '../Common/Now';
 import { Redirect } from 'react-router';
-import { local } from 'd3';
-import { localstorage } from 'modernizr';
 
 class DashboardV1 extends Component {
 
@@ -105,7 +102,7 @@ class DashboardV1 extends Component {
         // Usse t function instead of Trans component
         // const { t } = this.props;
 
-        if (localStorage.getItem('status') == 401 || !localstorage.getItem('status'))  {
+        if (localStorage.getItem('status') == 401 || !localStorage.getItem('status'))  {
             return <Redirect to='/login'/>;
         }
 
