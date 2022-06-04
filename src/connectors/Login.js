@@ -1,4 +1,3 @@
-
 // private members
 var request = new XMLHttpRequest();
 var result = {};

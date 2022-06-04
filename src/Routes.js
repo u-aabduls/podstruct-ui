@@ -25,7 +25,7 @@ const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
 // listed here to Switch between layouts
 // depending on the current pathname
 const listofPages = [
-    '/register/registration',
+    '/register/account',
     '/register/complete',
     '/login',
     '/notfound',
@@ -53,7 +53,7 @@ const Routes = ({ location }) => {
                 <Suspense fallback={<PageLoader />}>
                     <Switch location={location}>
                         {/* See full project for reference */}
-                        <Route path="/register/registration" component={waitFor(Register)} />
+                        <Route path="/register/account" component={waitFor(Register)} />
                         <Route path="/register/complete" component={waitFor(RegisterComplete)} />
                         <Route path="/login" component={waitFor(Login)} />
                         <Route path="/notfound" component={waitFor(NotFound)} />

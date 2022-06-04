@@ -23,7 +23,10 @@ class Register extends Component {
                 month: '',
                 day: '',
                 year: '',
-                error: false
+                error: {
+                    isNull: false,
+                    isInFuture: false
+                }
             },
             phone: '',
             password: '',
@@ -82,14 +85,23 @@ class Register extends Component {
     }
 
     validateDateOfBirth = event => {
-        const invalidDOB = this.state.formRegister.dob.day === '' 
-                        || this.state.formRegister.dob.month === '' 
-                        || this.state.formRegister.dob.year === '';
+        var isNullDateOfBirth = this.state.formRegister.dob.day === '' 
+                            || this.state.formRegister.dob.month === '' 
+                            || this.state.formRegister.dob.year === '';
+
+        if (!isNullDateOfBirth) {
+            var DOB = new Date(this.state.formRegister.dob.year,
+                                this.state.formRegister.dob.month - 1,
+                                this.state.formRegister.dob.day),
+                today = new Date(),
+                isFutureDateOfBirth = DOB.getTime() > today.getTime();   
+        }
 
         var stateCopy = this.state.formRegister;
-        stateCopy.dob.error = invalidDOB;
+        stateCopy.dob.error.isNull = isNullDateOfBirth ? true : false;
+        stateCopy.dob.error.isInFuture = isFutureDateOfBirth ? true : false; 
         this.setState(stateCopy);
-        return invalidDOB;
+        return isNullDateOfBirth || isFutureDateOfBirth;
     }
 
     /* Simplify error check */
@@ -290,7 +302,8 @@ class Register extends Component {
                                         name="yearSelector"
                                         setYear={(year) => this.setYear(year)}
                                     />
-                                    {this.state.formRegister.dob.error && <p style={this.errorMessageStyling}>Date of birth is required</p>}
+                                    {this.state.formRegister.dob.error.isNull && <p style={this.errorMessageStyling}>Date of birth is required</p>}
+                                    {this.state.formRegister.dob.error.isInFuture && <p style={this.errorMessageStyling}>Date of birth must not be in the future</p>}
                                 </div>
                             </div>
                             <div className="form-group">

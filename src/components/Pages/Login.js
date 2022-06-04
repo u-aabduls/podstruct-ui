@@ -148,7 +148,7 @@ class Login extends Component {
                             <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
                         </form>
                         <p className="pt-3 text-center">Need to Signup?</p>
-                        <Link to="/register/registration" className="btn btn-block btn-secondary">Register now</Link>
+                        <Link to="/register/account" className="btn btn-block btn-secondary">Register now</Link>
                     </div>
                 </div>
                 <div className="p-3 text-center">
