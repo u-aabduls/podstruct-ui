@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Input } from 'reactstrap';
 import send from "../../connectors/PasswordRecover";
 import FormValidator from '../Forms/FormValidator.js';
+import { Link } from 'react-router-dom';
 
 class Recover extends Component {
 
@@ -122,6 +123,7 @@ class Recover extends Component {
                                 </div>
                             </div>                          
                             <button className="btn btn-primary btn-block" type="submit">Request verification code</button>
+                            <Link to="/login" className="btn btn-block btn-secondary">Return to login</Link>
                         </form>
                     </div>
                 </div>
