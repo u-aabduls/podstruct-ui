@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap';
-import MonthSelector from "../../Common/MonthSelector";
-import DaySelector from "../../Common/DaySelector";
-import YearSelector from "../../Common/YearSelector";
-import send from "../../../connectors/AccountCreation";
+import MonthSelector from "../Common/MonthSelector";
+import DaySelector from "../Common/DaySelector";
+import YearSelector from "../Common/YearSelector";
+import send from "../../connectors/AccountCreation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // import { CustomInput } from 'reactstrap';
 
-import FormValidator from '../../Forms/FormValidator.js';
+import FormValidator from '../Forms/FormValidator.js';
 
 class Register extends Component {
 
@@ -22,13 +22,21 @@ class Register extends Component {
             dob: {
                 month: '',
                 day: '',
-                year: ''
+                year: '',
+                error: false
             },
-            podName: '',
+            phone: '',
             password: '',
             confirmedPassword: '',
             terms: false
         }
+    }
+
+    errorMessageStyling = {
+        color: '#f05050', 
+        width: '100%', 
+        marginTop: '0.25rem', 
+        fontSize: '80%'
     }
 
     setMonth = (month) => {
@@ -73,6 +81,53 @@ class Register extends Component {
         });
     }
 
+    validateDateOfBirth = event => {
+        const invalidDOB = this.state.formRegister.dob.day === '' 
+                        || this.state.formRegister.dob.month === '' 
+                        || this.state.formRegister.dob.year === '';
+
+        var stateCopy = this.state.formRegister;
+        stateCopy.dob.error = invalidDOB;
+        this.setState(stateCopy);
+        return invalidDOB;
+    }
+
+    /* Simplify error check */
+    hasError = (formName, inputName, method) => {
+        return this.state[formName] &&
+            this.state[formName].errors &&
+            this.state[formName].errors[inputName] &&
+            this.state[formName].errors[inputName][method]
+    }
+
+    /* Clean phone input */
+    cleanPhoneNumber = (phoneNumber) => {
+        return "+" + phoneNumber.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "");
+    }
+
+    /* Build payload */
+    constructRequestPayload = () => {
+        return JSON.stringify({
+            "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+            "user": {
+                "email": this.state.formRegister.email,
+                "firstName": this.state.formRegister.firstName,
+                "lastName": this.state.formRegister.lastName,
+                "birthDate": this.state.formRegister.dob.year
+                    + "-" + this.state.formRegister.dob.month
+                    + "-" + this.state.formRegister.dob.day,
+                "phone": this.cleanPhoneNumber(this.state.formRegister.phone),
+                "chargeInterval": "M",
+            },
+            "password": this.state.formRegister.password
+        })
+    }
+
+    displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
+        type: toastType,
+        position: toastPosition
+    })
+
     onSubmit = e => {
 
         const form = e.target;
@@ -81,7 +136,7 @@ class Register extends Component {
             'email',
             'firstName',
             'lastName',
-            'podName',
+            'phone',
             'password'
         ];
 
@@ -96,55 +151,24 @@ class Register extends Component {
             }
         });
 
-        console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
+        const invalidDOB = this.validateDateOfBirth();
 
-        if (!hasError) {
+        console.log((hasError || invalidDOB) ? 'Form has errors. Check!' : 'Form Submitted!')
+
+        if (!hasError && !invalidDOB) {
             var result = send(this.constructRequestPayload());
             this.displayToast(
                 result.message, 
                 result.isSuccess ? "success" : "error", 
                 "bottom-center"
             );
+            if (result.isSuccess) {
+                setTimeout(() => this.props.history.push('/register/complete'), 5000);
+            }
         }
 
         e.preventDefault();
     }
-
-    /* Simplify error check */
-    hasError = (formName, inputName, method) => {
-        return this.state[formName] &&
-            this.state[formName].errors &&
-            this.state[formName].errors[inputName] &&
-            this.state[formName].errors[inputName][method]
-    }
-
-    /* Build payload */
-    constructRequestPayload = () => {
-        return JSON.stringify({
-            "phone": "+1001001000",
-            "podName": this.state.formRegister.podName,
-            "podDescription": "null",
-            "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "admin": {
-                "email": this.state.formRegister.email,
-                "address": "null",
-                "firstName": this.state.formRegister.firstName,
-                "lastName": this.state.formRegister.lastName,
-                "role": "null",
-                "birthDate": this.state.formRegister.dob.year
-                    + "-" + this.state.formRegister.dob.month
-                    + "-" + this.state.formRegister.dob.day,
-                "phone": "+1001001000",
-                "chargeInterval": "M",
-            },
-            "password": this.state.formRegister.password
-        })
-    }
-
-    displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
-        type: toastType,
-        position: toastPosition
-    })
 
     render() {
         return (
@@ -163,7 +187,8 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputEmail1">Email address</label>
                                 <div className="input-group with-focus">
-                                    <Input type="email"
+                                    <Input 
+                                        type="email"
                                         name="email"
                                         className="border-right-0"
                                         placeholder="Enter email"
@@ -183,7 +208,8 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputFirstName">First name</label>
                                 <div className="input-group with-focus">
-                                    <Input type="text"
+                                    <Input 
+                                        type="text"
                                         id="id-firstName"
                                         name="firstName"
                                         className="border-right-0"
@@ -217,7 +243,8 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputLastName">Last name</label>
                                 <div className="input-group with-focus">
-                                    <Input type="text"
+                                    <Input 
+                                        type="text"
                                         id="id-lastName"
                                         name="lastName"
                                         className="border-right-0"
@@ -263,41 +290,41 @@ class Register extends Component {
                                         name="yearSelector"
                                         setYear={(year) => this.setYear(year)}
                                     />
-                                    {this.state.formRegister.dob_invalid && <p><span className="">Date of birth must be set</span></p>}
+                                    {this.state.formRegister.dob.error && <p style={this.errorMessageStyling}>Date of birth is required</p>}
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputPodname">POD name</label>
+                                <label className="text-muted" htmlFor="signupInputPhone">Phone number</label>
                                 <div className="input-group with-focus">
-                                    <Input type="text"
-                                        id="id-podName"
-                                        name="podName"
+                                    <Input 
+                                        type="text"
+                                        id="id-phone"
+                                        name="phone"
                                         className="border-right-0"
-                                        placeholder="POD name"
+                                        placeholder="Phone"
                                         invalid={
-                                            this.hasError('formRegister', 'podName', 'required')
-                                            || this.hasError('formRegister', 'podName', 'minlen')
-                                            || this.hasError('formRegister', 'podName', 'podname')
+                                            this.hasError('formRegister', 'phone', 'required')
+                                            || this.hasError('formRegister', 'phone', 'phone')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "minlen", "podname"]'
-                                        data-param='2'
-                                        value={this.state.formRegister.podName}
+                                        data-validate='["required", "phone"]'
+                                        data-param='10'
+                                        value={this.state.formRegister.phone}
                                     />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
-                                            <em className="fa fa-users"></em>
+                                            <em className="fa fa-phone"></em>
                                         </span>
                                     </div>
-                                    {this.hasError('formRegister', 'podName', 'required') && <span className="invalid-feedback">POD name is required</span>}
-                                    {this.hasError('formRegister', 'podName', 'minlen') && <span className="invalid-feedback">POD name must have at least 2 characters</span>}
-                                    {this.hasError('formRegister', 'podName', 'podname') && <span className="invalid-feedback">POD name must be alphanumeric</span>}
+                                    {this.hasError('formRegister', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
+                                    {this.hasError('formRegister', 'phone', 'phone') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPassword1">Password</label>
                                 <div className="input-group with-focus">
-                                    <Input type="password"
+                                    <Input 
+                                        type="password"
                                         id="id-password"
                                         name="password"
                                         className="border-right-0"
@@ -320,14 +347,15 @@ class Register extends Component {
                                     {this.hasError('formRegister', 'password', 'password') &&
                                         <span className="invalid-feedback">
                                             Password must have at least 8 characters including each of one of the following:
-                                            upper case, lower case, numeric and special character.
+                                            upper case, lower case, numeric and special character
                                         </span>}
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputRePassword1">Confirm Password</label>
                                 <div className="input-group with-focus">
-                                    <Input type="password"
+                                    <Input 
+                                        type="password"
                                         name="confirmedPassword"
                                         className="border-right-0"
                                         placeholder="Retype password"
