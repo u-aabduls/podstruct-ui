@@ -109,8 +109,8 @@ class DashboardV1 extends Component {
         return (
             <ContentWrapper>
                 <div className="content-heading">
-                    <div> {localStorage.getItem('podName')}'s Dashboard
-                        <small><Trans i18nKey='dashboard.WELCOME'></Trans></small>
+                    <div> Dashboard
+                        <small>{localStorage.getItem('podName')}, welcome to your dashboard!</small>
                     </div>
                     { /* START Language list */ }
                     <div className="ml-auto">

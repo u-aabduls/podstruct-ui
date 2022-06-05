@@ -1,5 +1,3 @@
-import handleError from '../ErrorHandler.js'
-
 // private members
 var request = new XMLHttpRequest();
 var result = {};
@@ -11,9 +9,9 @@ var endpointPath = "podstruct/api/user/auth";
  * Public Methods
  ********************/
 
-function send(requestBody) {
-    _initialize();
-    request.send(requestBody);
+function send(authorizationToken) {
+    _initialize(authorizationToken);
+    request.send();
     return result;
 }
 
@@ -21,11 +19,12 @@ function send(requestBody) {
  * Private Methods
  ********************/
 
-function _initialize() {
-    request.open("POST", devServer + endpointPath, false);
+function _initialize(authorizationToken) {
+    request.open("DELETE", devServer + endpointPath, false);
     // request.open("POST", prodServer + endpointPath, false);
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
     request.onload = __execute;
 }
 
@@ -39,17 +38,15 @@ function __execute() {
     // this.response.setHeader("Access-Control-Allow-Credentials", "true");
     // this.response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
     // this.response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-    var data = JSON.parse(this.response)
+    //var data = JSON.parse(this.response)
     if (request.status >= 200 && request.status < 400) {
-        console.log('successfully logged in');
+        console.log('successfully logged out');
         result.isSuccess = true;
-        localStorage.setItem('token', data.authorizationToken)
-        localStorage.setItem('status', request.status)
-        localStorage.setItem('podName', data.firstName)
+        localStorage.clear();
     } else {
         console.log('error code: ' + request.status);
         result.isSuccess = false;
-        result.message = handleError(request.status, data)
+        //result.message = (data.message) ? data.message : (data.errors[0].message) ? data.errors[0].message : "An unexpected error occurred.";
     }
    
 }

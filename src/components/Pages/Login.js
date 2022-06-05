@@ -13,7 +13,7 @@ class Login extends Component {
             email: '',
             password: ''
         },
-        redirect: null
+        errorMessage: ''
     }
 
     /**
@@ -42,6 +42,7 @@ class Login extends Component {
     }
 
     onSubmit = e => {
+      
         // TODO redirect only on valid login
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
@@ -59,9 +60,12 @@ class Login extends Component {
 
         if (!hasError) {
             var result = send(this.constructRequestPayload());
-            if (result.isSuccess){
+            if (localStorage.getItem('token')){
                 this.props.history.push('/dashboardv1')
             } 
+            else {
+                this.setState({errorMessage: result.message})
+            }
         }
 
         e.preventDefault()
@@ -135,6 +139,7 @@ class Login extends Component {
                                     <span className="invalid-feedback">Field is required</span>
                                 </div>
                             </div>
+                            { this.state.errorMessage != '' && <p style={{ color: 'red' }}>{this.state.errorMessage}</p>}
                             <div className="clearfix">
                                 <CustomInput type="checkbox" id="rememberme"
                                     className="float-left mt-0"

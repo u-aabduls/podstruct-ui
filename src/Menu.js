@@ -40,6 +40,12 @@ const Menu = [
         
     },
     {
+        name: 'Messages',
+        icon: 'icon-speech',
+        translate: 'sidebar.nav.DASHBOARD',
+        
+    },
+    {
         name: 'Payments',
         icon: 'icon-wallet',
         translate: 'sidebar.nav.DASHBOARD',
@@ -48,6 +54,12 @@ const Menu = [
     {
         name: 'Settings',
         icon: 'icon-settings',
+        translate: 'sidebar.nav.DASHBOARD',
+        
+    },
+    {
+        name: 'Help',
+        icon: 'icon-question',
         translate: 'sidebar.nav.DASHBOARD',
         
     }

@@ -14,6 +14,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 // App Routes
 import Routes from './Routes';
+import ErrorHandler from './ErrorHandler';
 
 // Vendor dependencies
 import "./Vendor";
@@ -30,11 +31,11 @@ class App extends Component {
     // for development it is forced to root only
     /* global PUBLIC_URL */
     const basename = process.env.NODE_ENV === 'development' ? '/' : (PUBLIC_URL || '/');
-    
+
     return (
-        <BrowserRouter basename={basename}>
-            <Routes />
-        </BrowserRouter>
+      <BrowserRouter basename={basename}>
+          <Routes />
+      </BrowserRouter>
     );
 
   }
