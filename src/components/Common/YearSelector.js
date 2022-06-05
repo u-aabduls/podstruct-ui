@@ -4,10 +4,22 @@ import "../../styles/app/widgets/select.css";
 
 const options = [];
 
-const customStyles = {
+const customStylesDefault = {
   container: provided => ({
     ...provided,
     width: `30%`
+  })
+};
+
+const customStylesError = {
+  container: provided => ({
+    ...provided,
+    width: `28.5%`,
+    margin: `0% 1.5% 0% 0%`,
+  }),
+  control: (provided) => ({
+      ...provided,
+      border: '1px solid #f05050 !important'
   })
 };
 
@@ -25,7 +37,7 @@ export default function YearSelector(props) {
     return (
       <Select
         placeholder={`Year`}
-        styles={customStyles}
+        styles={ !props.hasError ? customStylesDefault : customStylesError }
         options={options}
         onChange={(e) => {props.setYear(e.value)}}
       />

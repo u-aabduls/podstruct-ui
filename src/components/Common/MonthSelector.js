@@ -17,7 +17,7 @@ const options = [
   { value: '12', label: 'Dec' }
 ];
 
-const customStyles = {
+const customStylesDefault = {
   container: provided => ({
     ...provided,
     width: `38.5%`,
@@ -25,11 +25,23 @@ const customStyles = {
   })
 };
 
+const customStylesError = {
+  container: provided => ({
+    ...provided,
+    width: `38.5%`,
+    margin: `0% 1.5% 0% 0%`,
+  }),
+  control: (provided) => ({
+      ...provided,
+      border: '1px solid #f05050 !important'
+  })
+};
+
 export default function MonthSelector(props) {
     return (
       <Select
         placeholder={`Month`}
-        styles={customStyles}
+        styles={ !props.hasError ? customStylesDefault : customStylesError }
         options={options}
         onChange={(e) => {props.setMonth(e.value)}}
       />

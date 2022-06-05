@@ -292,14 +292,17 @@ class Register extends Component {
                                 <div className="input-group with-focus">
                                     <MonthSelector
                                         name="monthSelector"
+                                        hasError={this.state.formRegister.dob.error.isNull || this.state.formRegister.dob.error.isInFuture}
                                         setMonth={(month) => this.setMonth(month)}
                                     />
                                     <DaySelector
                                         name="daySelector"
+                                        hasError={this.state.formRegister.dob.error.isNull || this.state.formRegister.dob.error.isInFuture}
                                         setDay={(day) => this.setDay(day)}
                                     />
                                     <YearSelector
                                         name="yearSelector"
+                                        hasError={this.state.formRegister.dob.error.isNull || this.state.formRegister.dob.error.isInFuture}
                                         setYear={(year) => this.setYear(year)}
                                     />
                                     {this.state.formRegister.dob.error.isNull && <p style={this.errorMessageStyling}>Date of birth is required</p>}
