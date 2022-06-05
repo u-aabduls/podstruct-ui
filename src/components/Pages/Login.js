@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input, CustomInput } from 'reactstrap';
 import send from "../../connectors/Login";
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import FormValidator from '../Forms/FormValidator.js';
-
 
 class Login extends Component {
 
@@ -44,6 +42,8 @@ class Login extends Component {
     }
 
     onSubmit = e => {
+      
+        // TODO redirect only on valid login
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
 
@@ -87,11 +87,6 @@ class Login extends Component {
         })
     }
 
-    displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
-        type: toastType,
-        position: toastPosition
-    })
-
     render() {
         return (
             <div className="block-center mt-4 wd-xl">
@@ -103,7 +98,7 @@ class Login extends Component {
                         </a>
                     </div>
                     <div className="card-body">
-                        <p className="text-center py-2">SIGN IN TO CONTINUE.</p>
+                        <p className="text-center py-2">SIGN IN TO CONTINUE</p>
                         <form className="mb-3" name="formLogin" onSubmit={this.onSubmit}>
                             <div className="form-group">
                                 <div className="input-group with-focus">
@@ -152,13 +147,13 @@ class Login extends Component {
                                     label="Remember Me">
                                 </CustomInput>
                                 <div className="float-right">
-                                    <Link to="recover" className="text-muted">Forgot your password?</Link>
+                                    <Link to="password/recover" className="text-muted">Forgot your password?</Link>
                                 </div>
                             </div>
                             <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
                         </form>
                         <p className="pt-3 text-center">Need to Signup?</p>
-                        <Link to="register" className="btn btn-block btn-secondary">Register Now</Link>
+                        <Link to="/register/account" className="btn btn-block btn-secondary">Register now</Link>
                     </div>
                 </div>
                 <div className="p-3 text-center">

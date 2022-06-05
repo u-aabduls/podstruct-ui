@@ -12,10 +12,12 @@ import BasePage from './components/Layout/BasePage';
 /* Used to render a lazy component with react-router */
 const waitFor = Tag => props => <Tag {...props} />;
 
-// const Register = lazy(() => import('./components/Pages/Registration/Register'));
-const Register = lazy(() => import('./components/Pages/Registration/PodOwnerRegister'));
+const Register = lazy(() => import('./components/Pages/Register'));
+const RegisterComplete = lazy(() => import('./components/Pages/RegisterComplete'));
 const Login = lazy(() => import('./components/Pages/Login'));
 const NotFound = lazy(() => import('./components/Pages/NotFound'));
+const PasswordRecover = lazy(() => import('./components/Pages/PasswordRecover'));
+const PasswordReset = lazy(() => import('./components/Pages/PasswordReset'));
 
 const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
 
@@ -23,9 +25,14 @@ const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
 // listed here to Switch between layouts
 // depending on the current pathname
 const listofPages = [
-    '/register',
+    '/register/account',
+    '/register/complete',
     '/login',
     '/notfound',
+    '/password/recover',
+    '/password/reset',
+
+    '/dashboardv1',
 ];
 
 const Routes = ({ location }) => {
@@ -46,9 +53,14 @@ const Routes = ({ location }) => {
                 <Suspense fallback={<PageLoader />}>
                     <Switch location={location}>
                         {/* See full project for reference */}
-                        <Route path="/register" component={waitFor(Register)} />
+                        <Route path="/register/account" component={waitFor(Register)} />
+                        <Route path="/register/complete" component={waitFor(RegisterComplete)} />
                         <Route path="/login" component={waitFor(Login)} />
                         <Route path="/notfound" component={waitFor(NotFound)} />
+                        <Route path="/password/recover" component={waitFor(PasswordRecover)} />
+                        <Route path="/password/reset" component={waitFor(PasswordReset)} />
+
+                        <Route path="/dashboardv1" component={waitFor(DashboardV1)} />
                     </Switch>
                 </Suspense>
             </BasePage>
@@ -64,8 +76,7 @@ const Routes = ({ location }) => {
                         <div>
                             <Suspense fallback={<PageLoader />}>
                                 <Switch location={location}>
-                                    <Route path="/dashboardv1" component={waitFor(DashboardV1)} />
-                                    <Redirect to="/register" />
+                                    <Redirect to="/login" />
                                 </Switch>
                             </Suspense>
                         </div>
