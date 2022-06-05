@@ -36,7 +36,7 @@ const options = [
   { value: '31', label: '31' }
 ];
 
-const customStyles = {
+const customStylesDefault = {
   container: provided => ({
     ...provided,
     width: `28.5%`,
@@ -44,11 +44,23 @@ const customStyles = {
   })
 };
 
+const customStylesError = {
+  container: provided => ({
+    ...provided,
+    width: `28.5%`,
+    margin: `0% 1.5% 0% 0%`,
+  }),
+  control: (provided) => ({
+      ...provided,
+      border: '1px solid #f05050 !important'
+  })
+};
+
 export default function DaySelector(props) {
     return (
       <Select
         placeholder={`Day`}
-        styles={customStyles}
+        styles={ !props.hasError ? customStylesDefault : customStylesError }
         options={options}
         onChange={(e) => {props.setDay(e.value)}}
       />
