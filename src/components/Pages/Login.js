@@ -19,7 +19,7 @@ class Login extends Component {
     errorMessageStyling = {
         color: '#f05050', 
         width: '100%', 
-        marginTop: '1.5rem', 
+        marginTop: '0.5rem', 
         fontSize: '80%'
     }
 
@@ -69,7 +69,7 @@ class Login extends Component {
             var result = send(this.constructRequestPayload());
             if (localStorage.getItem('token') && result.isSuccess){
                 this.setState({errorMessage: null});
-                this.props.history.push('/dashboardv1');
+                this.props.history.push('/dashboard');
             } 
             else {
                 this.setState({errorMessage: result.message});
@@ -123,8 +123,8 @@ class Login extends Component {
                                             <em className="fa fa-envelope"></em>
                                         </span>
                                     </div>
-                                    {this.hasError('formLogin', 'email', 'required') && <span className="invalid-feedback">Field is required</span>}
-                                    {this.hasError('formLogin', 'email', 'email') && <span className="invalid-feedback">Field must be valid email</span>}
+                                    {this.hasError('formLogin', 'email', 'required') && <span className="invalid-feedback">Email is required</span>}
+                                    {this.hasError('formLogin', 'email', 'email') && <span className="invalid-feedback">Email must be valid email</span>}
                                 </div>
                             </div>
                             <div className="form-group">
@@ -144,7 +144,7 @@ class Login extends Component {
                                             <em className="fa fa-lock"></em>
                                         </span>
                                     </div>
-                                    <span className="invalid-feedback">Field is required</span>
+                                    <span className="invalid-feedback">Password is required</span>
                                 </div>
                             </div>
                             { this.state.errorMessage && <p style={this.errorMessageStyling}>{this.state.errorMessage}</p>}

@@ -1,4 +1,4 @@
-import handleError from '../ErrorHandler.js'
+import handleError from '../utils/ErrorHandler.js'
 
 // private members
 var request = new XMLHttpRequest();
@@ -36,13 +36,11 @@ function _initialize() {
 function __execute() {
     if (request.status >= 400) {
         var data = JSON.parse(this.response);
-        console.log('error code: ' + request.status);
         result.isSuccess = false;
         result.message = handleError(request.status, data)
     } else {
-        console.log('Successfully created an account');
         result.isSuccess = true;
-        result.message = "Successfully created account! Please check your email to verify your account."
+        result.message = "Successfully created account. Please check your email to verify your account."
     }
 }
 

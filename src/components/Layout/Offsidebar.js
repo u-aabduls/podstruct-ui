@@ -41,10 +41,9 @@ class Offsidebar extends Component {
         if (localStorage.getItem('token')) {
             var result = send(localStorage.getItem('token'));
             if (result.isSuccess) {
-               return  this.props.history.push('/login')
+               this.props.history.push('/login');
             }
         }
-
         e.preventDefault()
     }
 
@@ -62,10 +61,10 @@ class Offsidebar extends Component {
                                 <h3 className="text-center text-thin mt-4">Settings</h3>
                                     <div className="clearfix">
                                         {/* <p className="float-left">Log out</p> */}
-                                            <button type="button" className="btn btn-block btn-secondary" onClick={this.logout}>
-                                                Sign out
-                                            </button>
-                                        </div>
+                                        <button type="button" className="btn btn-block btn-secondary float-right" onClick={this.logout}>
+                                            Sign out
+                                        </button>
+                                    </div>
                             </TabPane>
                         </TabContent>
                     </div>

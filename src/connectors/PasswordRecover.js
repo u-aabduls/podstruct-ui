@@ -1,4 +1,4 @@
-import handleError from '../ErrorHandler.js'
+import handleError from '../utils/ErrorHandler.js'
 
 // private members
 var request = new XMLHttpRequest();

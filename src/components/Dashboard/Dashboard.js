@@ -8,9 +8,9 @@ import Sparkline from '../Common/Sparklines';
 import Scrollable from '../Common/Scrollable'
 import FlotChart from '../Charts/Flot';
 import Now from '../Common/Now';
-import { Redirect } from 'react-router';
+import { Redirect } from 'react-router-dom';
 
-class DashboardV1 extends Component {
+class Dashboard extends Component {
 
     state = {
         flotData: [{
@@ -99,8 +99,10 @@ class DashboardV1 extends Component {
     }
 
     render() {
-        // Usse t function instead of Trans component
-        // const { t } = this.props;
+  
+        if (localStorage.getItem('status') == 401 || !localStorage.getItem('token'))  {
+            return <Redirect to='/login'/>;
+        }
 
         return (
             <ContentWrapper>
@@ -591,4 +593,4 @@ class DashboardV1 extends Component {
 
 }
 
-export default withTranslation('translations')(DashboardV1);
+export default withTranslation('translations')(Dashboard);

@@ -19,7 +19,7 @@ const NotFound = lazy(() => import('./components/Pages/NotFound'));
 const PasswordRecover = lazy(() => import('./components/Pages/PasswordRecover'));
 const PasswordReset = lazy(() => import('./components/Pages/PasswordReset'));
 
-const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
+const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -72,7 +72,7 @@ const Routes = ({ location }) => {
                         <div>
                             <Suspense fallback={<PageLoader />}>
                                 <Switch location={location}>
-                                    <Route path="/dashboardv1" component={waitFor(DashboardV1)} />
+                                    <Route path="/dashboard" component={waitFor(Dashboard)} />
                                     <Redirect to="/login" />
                                 </Switch>
                             </Suspense>
