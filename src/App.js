@@ -14,7 +14,6 @@ import { BrowserRouter } from 'react-router-dom';
 
 // App Routes
 import Routes from './Routes';
-import ErrorHandler from './ErrorHandler';
 
 // Vendor dependencies
 import "./Vendor";

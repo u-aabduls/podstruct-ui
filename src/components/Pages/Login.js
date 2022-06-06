@@ -13,7 +13,14 @@ class Login extends Component {
             email: '',
             password: ''
         },
-        errorMessage: ''
+        errorMessage: null
+    }
+
+    errorMessageStyling = {
+        color: '#f05050', 
+        width: '100%', 
+        marginTop: '1.5rem', 
+        fontSize: '80%'
     }
 
     /**
@@ -60,11 +67,12 @@ class Login extends Component {
 
         if (!hasError) {
             var result = send(this.constructRequestPayload());
-            if (localStorage.getItem('token')){
-                this.props.history.push('/dashboardv1')
+            if (localStorage.getItem('token') && result.isSuccess){
+                this.setState({errorMessage: null});
+                this.props.history.push('/dashboardv1');
             } 
             else {
-                this.setState({errorMessage: result.message})
+                this.setState({errorMessage: result.message});
             }
         }
 
@@ -139,7 +147,7 @@ class Login extends Component {
                                     <span className="invalid-feedback">Field is required</span>
                                 </div>
                             </div>
-                            { this.state.errorMessage != '' && <p style={{ color: 'red' }}>{this.state.errorMessage}</p>}
+                            { this.state.errorMessage && <p style={this.errorMessageStyling}>{this.state.errorMessage}</p>}
                             <div className="clearfix">
                                 <CustomInput type="checkbox" id="rememberme"
                                     className="float-left mt-0"

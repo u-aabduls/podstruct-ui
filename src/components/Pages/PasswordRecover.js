@@ -10,7 +10,7 @@ class Recover extends Component {
         formPasswordRecover: {
             email: '',
         },
-        errorMessage: ''
+        errorMessage: null
     }
 
     errorMessageStyling = {
@@ -70,10 +70,11 @@ class Recover extends Component {
         if (!hasError) {
             var result = send(this.constructRequestHeader());
             if (result.isSuccess) {
+                this.setState({errorMessage: null});
                     // redirect to password/reset page
                 this.props.history.push('/password/reset');
             } else {
-                this.setState({errorMessage: result.message})
+                this.setState({errorMessage: result.message});
             }
         }
 
