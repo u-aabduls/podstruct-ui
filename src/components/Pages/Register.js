@@ -32,8 +32,7 @@ class Register extends Component {
             password: '',
             confirmedPassword: '',
             terms: false
-        },
-        errorMessage: null
+        }
     }
 
     errorMessageStyling = {
@@ -176,11 +175,7 @@ class Register extends Component {
                 "bottom-center"
             );
             if (result.isSuccess) {
-                this.setState({errorMessage: null});
                 setTimeout(() => this.props.history.push('/register/complete'), 5000);
-            }
-            else{
-                this.setState({errorMessage: result.message});
             }
         }
 
@@ -393,7 +388,6 @@ class Register extends Component {
                                         </span>
                                     </div>
                                     <span className="invalid-feedback">Password confirmation doesn't match password</span>
-                                    {this.state.errorMessage && <p style={this.errorMessageStyling}>{this.state.errorMessage}</p>}
                                 </div>
                             </div>
                             {/* <CustomInput type="checkbox" id="terms"
