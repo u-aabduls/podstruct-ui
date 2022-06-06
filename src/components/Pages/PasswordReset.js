@@ -13,7 +13,7 @@ class PasswordReset extends Component {
             password: '',
             confirmedPassword: ''
         },
-        errorMessage: ''
+        errorMessage: null
     }
 
     errorMessageStyling = {
@@ -85,11 +85,12 @@ class PasswordReset extends Component {
         if (!hasError) {
             var result = send(this.constructRequestPayload());
             if (result.isSuccess) {
+                this.setState({errorMessage: null});
                 this.displayToast(result.message, "success", "bottom-center");
                     // redirect to login page
                 setTimeout(() => this.props.history.push('/login'), 5000);
                 } else {
-                this.setState({errorMessage: result.message})
+                this.setState({errorMessage: result.message});
             }
         }
 

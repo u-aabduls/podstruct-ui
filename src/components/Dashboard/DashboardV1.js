@@ -102,10 +102,6 @@ class DashboardV1 extends Component {
         // Usse t function instead of Trans component
         // const { t } = this.props;
 
-        if (localStorage.getItem('status') == 401 || !localStorage.getItem('status'))  {
-            return <Redirect to='/login'/>;
-        }
-
         return (
             <ContentWrapper>
                 <div className="content-heading">

@@ -1,3 +1,5 @@
+import handleError from '../ErrorHandler.js'
+
 // private members
 var request = new XMLHttpRequest();
 var result = {};
@@ -46,7 +48,7 @@ function __execute() {
     } else {
         console.log('error code: ' + request.status);
         result.isSuccess = false;
-        //result.message = (data.message) ? data.message : (data.errors[0].message) ? data.errors[0].message : "An unexpected error occurred.";
+        //result.message = handleError(request.status, data)
     }
    
 }

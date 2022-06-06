@@ -31,8 +31,6 @@ const listofPages = [
     '/notfound',
     '/password/recover',
     '/password/reset',
-
-    '/dashboardv1',
 ];
 
 const Routes = ({ location }) => {
@@ -59,8 +57,6 @@ const Routes = ({ location }) => {
                         <Route path="/notfound" component={waitFor(NotFound)} />
                         <Route path="/password/recover" component={waitFor(PasswordRecover)} />
                         <Route path="/password/reset" component={waitFor(PasswordReset)} />
-
-                        <Route path="/dashboardv1" component={waitFor(DashboardV1)} />
                     </Switch>
                 </Suspense>
             </BasePage>
@@ -76,6 +72,7 @@ const Routes = ({ location }) => {
                         <div>
                             <Suspense fallback={<PageLoader />}>
                                 <Switch location={location}>
+                                    <Route path="/dashboardv1" component={waitFor(DashboardV1)} />
                                     <Redirect to="/login" />
                                 </Switch>
                             </Suspense>

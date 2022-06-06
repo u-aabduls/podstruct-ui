@@ -44,7 +44,6 @@ function __execute() {
         console.log('successfully logged in');
         result.isSuccess = true;
         localStorage.setItem('token', data.authorizationToken)
-        localStorage.setItem('status', request.status)
         localStorage.setItem('podName', data.firstName)
     } else {
         console.log('error code: ' + request.status);
