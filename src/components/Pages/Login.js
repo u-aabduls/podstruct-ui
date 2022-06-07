@@ -160,7 +160,7 @@ class Login extends Component {
                             </div>
                             <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
                         </form>
-                        <p className="pt-3 text-center">Need to Signup?</p>
+                        <p className="pt-3 text-center">Don't have an account?</p>
                         <Link to="/register/account" className="btn btn-block btn-secondary">Register now</Link>
                     </div>
                 </div>

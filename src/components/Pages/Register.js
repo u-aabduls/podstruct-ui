@@ -402,7 +402,7 @@ class Register extends Component {
                             <button className="btn btn-block btn-primary mt-3" type="submit">Create account</button>
                             <ToastContainer />
                         </form>
-                        <p className="pt-3 text-center">Have an account?</p>
+                        <p className="pt-3 text-center">Already have an account?</p>
                         <Link to="login" className="btn btn-block btn-secondary">Log in</Link>
                     </div>
                 </div>
