@@ -121,15 +121,14 @@ class Register extends Component {
     constructRequestPayload = () => {
         return JSON.stringify({
             "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+            "email": this.state.formRegister.email,
             "user": {
-                "email": this.state.formRegister.email,
                 "firstName": this.state.formRegister.firstName,
                 "lastName": this.state.formRegister.lastName,
                 "birthDate": this.state.formRegister.dob.year
                     + "-" + this.state.formRegister.dob.month
                     + "-" + this.state.formRegister.dob.day,
                 "phone": this.cleanPhoneNumber(this.state.formRegister.phone),
-                "chargeInterval": "M",
             },
             "password": this.state.formRegister.password
         })
