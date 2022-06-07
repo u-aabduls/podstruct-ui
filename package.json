@@ -15,7 +15,8 @@
     "build-themes": "node-sass-chokidar src/styles/themes -o public/themes -w",
     "lint": "react-app-rewired lint",
     "postinstall-heroku": "npm run build",
-    "deploy": "aws s3 sync build/ s3://podstruct-ui-test"
+    "deploy": "aws s3 sync build/ s3://podstruct-ui-test",
+    "release": "npm run build && npm run deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
