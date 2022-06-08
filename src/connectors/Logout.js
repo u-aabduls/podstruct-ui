@@ -40,7 +40,7 @@ function __execute() {
         localStorage.clear();
     } else {
         result.isSuccess = false;
-        //result.message = handleError(request.status, data)
+        result.message = handleError(request.status, data)
     }
 }
 
