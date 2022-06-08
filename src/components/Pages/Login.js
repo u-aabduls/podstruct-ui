@@ -43,7 +43,8 @@ class Login extends Component {
                     ...this.state[form.name].errors,
                     [input.name]: result
                 }
-            }
+            },
+            errorMessage: null
         });
 
     }
