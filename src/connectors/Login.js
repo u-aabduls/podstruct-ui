@@ -37,11 +37,11 @@ function __execute() {
     var data = JSON.parse(this.response)
     if (request.status >= 200 && request.status < 400) {
         result.isSuccess = true;
-        localStorage.setItem('token', data.authorizationToken)
-        localStorage.setItem('podName', data.firstName)
+        localStorage.setItem('token', data.authorizationToken);
+        localStorage.setItem('podName', data.firstName);
     } else {
         result.isSuccess = false;
-        result.message = handleError(request.status, data)
+        result.message = handleError(request.status, data);
     }
 }
 

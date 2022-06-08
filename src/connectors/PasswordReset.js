@@ -42,7 +42,7 @@ function __execute() {
     } else {
         localStorage.removeItem('username');
         result.isSuccess = true;
-        result.message = "Password successfully updated."
+        result.message = "Password successfully updated.";
     }
 }
 

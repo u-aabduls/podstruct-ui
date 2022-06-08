@@ -37,10 +37,10 @@ function __execute() {
     if (request.status >= 400) {
         var data = JSON.parse(this.response);
         result.isSuccess = false;
-        result.message = handleError(request.status, data)
+        result.message = handleError(request.status, data);
     } else {
         result.isSuccess = true;
-        result.message = "Successfully created account. Please check your email to verify your account."
+        result.message = "Successfully created account. Please check your email to verify your account.";
     }
 }
 

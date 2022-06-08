@@ -39,9 +39,9 @@ function __execute() {
         result.isSuccess = true;
         localStorage.clear();
     } else {
-        var data = JSON.parse(this.response)
+        var data = JSON.parse(this.response);
         result.isSuccess = false;
-        result.message = handleError(request.status, data)
+        result.message = handleError(request.status, data);
     }
 }
 

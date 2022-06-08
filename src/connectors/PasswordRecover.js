@@ -40,7 +40,7 @@ function __execute() {
     if (request.status >= 400) {
         var data = JSON.parse(this.response);
         result.isSuccess = false;
-        result.message = handleError(request.status, data)
+        result.message = handleError(request.status, data);
     } else {
         localStorage.setItem('username', username);
         result.isSuccess = true;
