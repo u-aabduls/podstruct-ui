@@ -402,7 +402,7 @@ class Register extends Component {
                             <ToastContainer />
                         </form>
                         <p className="pt-3 text-center">Already have an account?</p>
-                        <Link to="login" className="btn btn-block btn-secondary">Log in</Link>
+                        <Link to="/login" className="btn btn-block btn-secondary">Log in</Link>
                     </div>
                 </div>
                 {/* END card */}

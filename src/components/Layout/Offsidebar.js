@@ -21,14 +21,6 @@ class Offsidebar extends Component {
         this.setState({ offsidebarReady: true });
     }
 
-    toggle = tab => {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-                activeTab: tab
-            });
-        }
-    }
-
     handleSettingCheckbox = event => {
         this.props.actions.changeSetting(event.target.name, event.target.checked);
     }
