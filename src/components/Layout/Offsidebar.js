@@ -57,6 +57,115 @@ class Offsidebar extends Component {
                                             Sign out
                                         </button>
                                     </div>
+                                    <div className="p-2">
+                                    <h4 className="text-muted text-thin">Themes</h4>
+                                    <div className="row row-flush mb-2">
+                                        <div className="col-3 mb-3">
+                                            <div className="setting-color">
+                                                <label>
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-a.css'}  value='themes/theme-a.css' onChange={this.handleThemeRadio} />
+                                                    <span className="icon-check"></span>
+                                                    <span className="split">
+                                                        <span className="color bg-info"></span>
+                                                        <span className="color bg-info-light"></span>
+                                                    </span>
+                                                    <span className="color bg-white"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-3 mb-3">
+                                            <div className="setting-color">
+                                                <label>
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-b.css'}  value='themes/theme-b.css' onChange={this.handleThemeRadio} />
+                                                    <span className="icon-check"></span>
+                                                    <span className="split">
+                                                        <span className="color bg-green"></span>
+                                                        <span className="color bg-green-light"></span>
+                                                    </span>
+                                                    <span className="color bg-white"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-3 mb-3">
+                                            <div className="setting-color">
+                                                <label>
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-c.css'}  value='themes/theme-c.css' onChange={this.handleThemeRadio} />
+                                                    <span className="icon-check"></span>
+                                                    <span className="split">
+                                                        <span className="color bg-purple"></span>
+                                                        <span className="color bg-purple-light"></span>
+                                                    </span>
+                                                    <span className="color bg-white"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-3 mb-3">
+                                            <div className="setting-color">
+                                                <label>
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-d.css'}  value='themes/theme-d.css' onChange={this.handleThemeRadio} />
+                                                    <span className="icon-check"></span>
+                                                    <span className="split">
+                                                        <span className="color bg-danger"></span>
+                                                        <span className="color bg-danger-light"></span>
+                                                    </span>
+                                                    <span className="color bg-white"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-3 mb-3">
+                                            <div className="setting-color">
+                                                <label>
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-e.css'}  value='themes/theme-e.css' onChange={this.handleThemeRadio} />
+                                                    <span className="icon-check"></span>
+                                                    <span className="split">
+                                                        <span className="color bg-info-dark"></span>
+                                                        <span className="color bg-info"></span>
+                                                    </span>
+                                                    <span className="color bg-gray-dark"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-3 mb-3">
+                                            <div className="setting-color">
+                                                <label>
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-f.css'}  value='themes/theme-f.css' onChange={this.handleThemeRadio} />
+                                                    <span className="icon-check"></span>
+                                                    <span className="split">
+                                                        <span className="color bg-green-dark"></span>
+                                                        <span className="color bg-green"></span>
+                                                    </span>
+                                                    <span className="color bg-gray-dark"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-3 mb-3">
+                                            <div className="setting-color">
+                                                <label>
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-g.css'}  value='themes/theme-g.css' onChange={this.handleThemeRadio} />
+                                                    <span className="icon-check"></span>
+                                                    <span className="split">
+                                                        <span className="color bg-purple-dark"></span>
+                                                        <span className="color bg-purple"></span>
+                                                    </span>
+                                                    <span className="color bg-gray-dark"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="col-3 mb-3">
+                                            <div className="setting-color">
+                                                <label>
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-h.css'}  value='themes/theme-h.css' onChange={this.handleThemeRadio} />
+                                                    <span className="icon-check"></span>
+                                                    <span className="split">
+                                                        <span className="color bg-danger-dark"></span>
+                                                        <span className="color bg-danger"></span>
+                                                    </span>
+                                                    <span className="color bg-gray-dark"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </TabPane>
                         </TabContent>
                     </div>
