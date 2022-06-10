@@ -25,7 +25,7 @@ class RegisterComplete extends Component {
                 {/* END card */}
                 <div className="p-3 text-center">
                     <span className="mr-2">&copy;</span>
-                    <span>2022</span>
+                    <span>{new Date().getFullYear()}</span>
                     <span className="mx-2">-</span>
                     <span>Podstruct</span>
                 </div>
