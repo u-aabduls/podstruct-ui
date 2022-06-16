@@ -36,9 +36,9 @@ class Register extends Component {
     }
 
     errorMessageStyling = {
-        color: '#f05050', 
-        width: '100%', 
-        marginTop: '0.25rem', 
+        color: '#f05050',
+        width: '100%',
+        marginTop: '0.25rem',
         fontSize: '80%'
     }
 
@@ -85,21 +85,21 @@ class Register extends Component {
     }
 
     validateDateOfBirth = event => {
-        var isNullDateOfBirth = this.state.formRegister.dob.day === '' 
-                            || this.state.formRegister.dob.month === '' 
-                            || this.state.formRegister.dob.year === '';
+        var isNullDateOfBirth = this.state.formRegister.dob.day === ''
+            || this.state.formRegister.dob.month === ''
+            || this.state.formRegister.dob.year === '';
 
         if (!isNullDateOfBirth) {
             var DOB = new Date(this.state.formRegister.dob.year,
-                                this.state.formRegister.dob.month - 1,
-                                this.state.formRegister.dob.day),
+                this.state.formRegister.dob.month - 1,
+                this.state.formRegister.dob.day),
                 today = new Date(),
-                isFutureDateOfBirth = DOB.getTime() > today.getTime();   
+                isFutureDateOfBirth = DOB.getTime() > today.getTime();
         }
 
         var stateCopy = this.state.formRegister;
         stateCopy.dob.error.isNull = isNullDateOfBirth ? true : false;
-        stateCopy.dob.error.isInFuture = isFutureDateOfBirth ? true : false; 
+        stateCopy.dob.error.isInFuture = isFutureDateOfBirth ? true : false;
         this.setState(stateCopy);
         return isNullDateOfBirth || isFutureDateOfBirth;
     }
@@ -169,8 +169,8 @@ class Register extends Component {
         if (!hasError && !invalidDOB) {
             var result = send(this.constructRequestPayload());
             this.displayToast(
-                result.message, 
-                result.isSuccess ? "success" : "error", 
+                result.message,
+                result.isSuccess ? "success" : "error",
                 "bottom-center"
             );
             if (result.isSuccess) {
@@ -189,7 +189,7 @@ class Register extends Component {
                     <div className="card-header text-center bg-primary">
                         <a href="">
                             <img className="block-center" src="img/logos/favicon.png" alt="Logo" />
-                            <img className="block-center" style={{marginLeft: 4 + 'px'}} src="img/logos/podstruct_text.svg" alt="Logo" />
+                            <img className="block-center" style={{ marginLeft: 4 + 'px' }} src="img/logos/podstruct_text.svg" alt="Logo" />
                         </a>
                     </div>
                     <div className="card-body">
@@ -198,7 +198,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputEmail1">Email address</label>
                                 <div className="input-group with-focus">
-                                    <Input 
+                                    <Input
                                         type="email"
                                         name="email"
                                         className="border-right-0"
@@ -219,7 +219,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputFirstName">First name</label>
                                 <div className="input-group with-focus">
-                                    <Input 
+                                    <Input
                                         type="text"
                                         id="id-firstName"
                                         name="firstName"
@@ -252,9 +252,9 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputLastName">Last name</label>
+                                <label className="text-muted" htmlFor="id-lastName">Last name</label>
                                 <div className="input-group with-focus">
-                                    <Input 
+                                    <Input
                                         type="text"
                                         id="id-lastName"
                                         name="lastName"
@@ -311,7 +311,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPhone">Phone number</label>
                                 <div className="input-group with-focus">
-                                    <Input 
+                                    <Input
                                         type="text"
                                         id="id-phone"
                                         name="phone"
@@ -338,7 +338,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPassword1">Password</label>
                                 <div className="input-group with-focus">
-                                    <Input 
+                                    <Input
                                         type="password"
                                         id="id-password"
                                         name="password"
@@ -369,7 +369,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputRePassword1">Confirm Password</label>
                                 <div className="input-group with-focus">
-                                    <Input 
+                                    <Input
                                         type="password"
                                         name="confirmedPassword"
                                         className="border-right-0"

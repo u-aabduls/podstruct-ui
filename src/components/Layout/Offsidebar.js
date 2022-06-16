@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -41,7 +42,7 @@ class Offsidebar extends Component {
         if (localStorage.getItem('token')) {
             var result = send(localStorage.getItem('token'));
             if (result.isSuccess) {
-               this.props.history.push('/login');
+                this.props.history.push('/login');
             }
         }
         e.preventDefault()
@@ -55,16 +56,32 @@ class Offsidebar extends Component {
                 { /* START Off Sidebar (right) */}
                 <nav>
                     <div>
-                        { /* Tab panes */} 
+                        { /* Tab panes */}
                         <TabContent activeTab={this.state.activeTab}>
                             <TabPane tabId="settings">
                                 <h3 className="text-center text-thin mt-4">Settings</h3>
-                                    <div className="clearfix">
-                                        {/* <p className="float-left">Log out</p> */}
-                                        <button type="button" className="btn btn-block btn-secondary float-right" onClick={this.logout}>
-                                            Sign out
-                                        </button>
-                                    </div>
+                                <div className="clearfix">
+                                    {/* <p className="float-left">Log out</p> */}
+                                    <Link to="settings" className="btn btn-block btn-secondary">
+                                        <em className="icon-settings fa-pull-left btn-icon"></em>
+                                          Settings
+                                    </Link>
+
+                                </div>
+                                <div className="clearfix">
+                                    {/* <p className="float-left">Log out</p> */}
+                                    <button type="button" className="btn btn-block btn-secondary">
+                                    <i className="icon-question float-left btn-icon"></i>
+                                        Help
+                                    </button>
+                                </div>
+                                <div className="clearfix">
+                                    {/* <p className="float-left">Log out</p> */}
+                                    <button type="button" className="btn btn-block btn-secondary" onClick={this.logout}>
+                                    <em className="icon-logout fa-pull-left btn-icon"></em>
+                                        Sign out
+                                    </button>
+                                </div>
                             </TabPane>
                         </TabContent>
                     </div>
