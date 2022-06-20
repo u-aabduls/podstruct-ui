@@ -402,13 +402,13 @@ class Register extends Component {
                             <ToastContainer />
                         </form>
                         <p className="pt-3 text-center">Already have an account?</p>
-                        <Link to="login" className="btn btn-block btn-secondary">Log in</Link>
+                        <Link to="/login" className="btn btn-block btn-secondary">Log in</Link>
                     </div>
                 </div>
                 {/* END card */}
                 <div className="p-3 text-center">
                     <span className="mr-2">&copy;</span>
-                    <span>2022</span>
+                    <span>{new Date().getFullYear()}</span>
                     <span className="mx-2">-</span>
                     <span>Podstruct</span>
                 </div>
