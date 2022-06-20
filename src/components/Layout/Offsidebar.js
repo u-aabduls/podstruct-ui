@@ -57,37 +57,32 @@ class Offsidebar extends Component {
                                     {/* <p className="float-left">Log out</p> */}
                                     <Link to="settings" className="btn btn-block btn-secondary">
                                         <em className="icon-settings fa-pull-left btn-icon"></em>
-                                          Settings
+                                        <span className="text-right">Settings</span>
+                                        
                                     </Link>
 
                                 </div>
                                 <div className="clearfix">
                                     {/* <p className="float-left">Log out</p> */}
                                     <button type="button" className="btn btn-block btn-secondary">
-                                    <i className="icon-question float-left btn-icon"></i>
+                                        <i className="icon-question float-left btn-icon"></i>
                                         Help
                                     </button>
                                 </div>
                                 <div className="clearfix">
                                     {/* <p className="float-left">Log out</p> */}
                                     <button type="button" className="btn btn-block btn-secondary" onClick={this.logout}>
-                                    <em className="icon-logout fa-pull-left btn-icon"></em>
+                                        <em className="icon-logout fa-pull-left btn-icon"></em>
                                         Sign out
                                     </button>
-
-                                    <div className="clearfix">
-                                        {/* <p className="float-left">Log out</p> */}
-                                        <button type="button" className="btn btn-block btn-secondary float-right" onClick={this.logout}>
-                                            Sign out
-                                        </button>
-                                    </div>
-                                    <div className="p-2">
+                                </div>
+                                <div className="p-2">
                                     <h4 className="text-muted text-thin">Themes</h4>
                                     <div className="row row-flush mb-2">
                                         <div className="col-3 mb-3">
                                             <div className="setting-color">
                                                 <label>
-                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-a.css'}  value='themes/theme-a.css' onChange={this.handleThemeRadio} />
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-a.css'} value='themes/theme-a.css' onChange={this.handleThemeRadio} />
                                                     <span className="icon-check"></span>
                                                     <span className="split">
                                                         <span className="color bg-info"></span>
@@ -100,7 +95,7 @@ class Offsidebar extends Component {
                                         <div className="col-3 mb-3">
                                             <div className="setting-color">
                                                 <label>
-                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-b.css'}  value='themes/theme-b.css' onChange={this.handleThemeRadio} />
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-b.css'} value='themes/theme-b.css' onChange={this.handleThemeRadio} />
                                                     <span className="icon-check"></span>
                                                     <span className="split">
                                                         <span className="color bg-green"></span>
@@ -113,7 +108,7 @@ class Offsidebar extends Component {
                                         <div className="col-3 mb-3">
                                             <div className="setting-color">
                                                 <label>
-                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-c.css'}  value='themes/theme-c.css' onChange={this.handleThemeRadio} />
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-c.css'} value='themes/theme-c.css' onChange={this.handleThemeRadio} />
                                                     <span className="icon-check"></span>
                                                     <span className="split">
                                                         <span className="color bg-purple"></span>
@@ -126,7 +121,7 @@ class Offsidebar extends Component {
                                         <div className="col-3 mb-3">
                                             <div className="setting-color">
                                                 <label>
-                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-d.css'}  value='themes/theme-d.css' onChange={this.handleThemeRadio} />
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-d.css'} value='themes/theme-d.css' onChange={this.handleThemeRadio} />
                                                     <span className="icon-check"></span>
                                                     <span className="split">
                                                         <span className="color bg-danger"></span>
@@ -139,7 +134,7 @@ class Offsidebar extends Component {
                                         <div className="col-3 mb-3">
                                             <div className="setting-color">
                                                 <label>
-                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-e.css'}  value='themes/theme-e.css' onChange={this.handleThemeRadio} />
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-e.css'} value='themes/theme-e.css' onChange={this.handleThemeRadio} />
                                                     <span className="icon-check"></span>
                                                     <span className="split">
                                                         <span className="color bg-info-dark"></span>
@@ -152,7 +147,7 @@ class Offsidebar extends Component {
                                         <div className="col-3 mb-3">
                                             <div className="setting-color">
                                                 <label>
-                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-f.css'}  value='themes/theme-f.css' onChange={this.handleThemeRadio} />
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-f.css'} value='themes/theme-f.css' onChange={this.handleThemeRadio} />
                                                     <span className="icon-check"></span>
                                                     <span className="split">
                                                         <span className="color bg-green-dark"></span>
@@ -165,7 +160,7 @@ class Offsidebar extends Component {
                                         <div className="col-3 mb-3">
                                             <div className="setting-color">
                                                 <label>
-                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-g.css'}  value='themes/theme-g.css' onChange={this.handleThemeRadio} />
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-g.css'} value='themes/theme-g.css' onChange={this.handleThemeRadio} />
                                                     <span className="icon-check"></span>
                                                     <span className="split">
                                                         <span className="color bg-purple-dark"></span>
@@ -178,7 +173,7 @@ class Offsidebar extends Component {
                                         <div className="col-3 mb-3">
                                             <div className="setting-color">
                                                 <label>
-                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-h.css'}  value='themes/theme-h.css' onChange={this.handleThemeRadio} />
+                                                    <input type="radio" name="setting-theme" checked={this.props.theme.path === 'themes/theme-h.css'} value='themes/theme-h.css' onChange={this.handleThemeRadio} />
                                                     <span className="icon-check"></span>
                                                     <span className="split">
                                                         <span className="color bg-danger-dark"></span>
@@ -188,6 +183,7 @@ class Offsidebar extends Component {
                                                 </label>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </TabPane>
