@@ -11,7 +11,7 @@ const options = [
   { value: '06', label: 'Jun' },
   { value: '07', label: 'Jul' },
   { value: '08', label: 'Aug' },
-  { value: '09', label: 'Sept' },
+  { value: '09', label: 'Sept'},
   { value: '10', label: 'Oct' },
   { value: '11', label: 'Nov' },
   { value: '12', label: 'Dec' }
@@ -43,6 +43,7 @@ export default function MonthSelector(props) {
         placeholder={`Month`}
         styles={ !props.hasError ? customStylesDefault : customStylesError }
         options={options}
+        value={options.find(o => o.value === props.defaultv)}
         onChange={(e) => {props.setMonth(e.value)}}
       />
     )

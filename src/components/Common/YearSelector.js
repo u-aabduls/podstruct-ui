@@ -39,6 +39,7 @@ export default function YearSelector(props) {
         placeholder={`Year`}
         styles={ !props.hasError ? customStylesDefault : customStylesError }
         options={options}
+        value={options.find(o => o.value === props.defaultv)}
         onChange={(e) => {props.setYear(e.value)}}
       />
     )

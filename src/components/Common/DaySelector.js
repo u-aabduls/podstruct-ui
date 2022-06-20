@@ -62,6 +62,7 @@ export default function DaySelector(props) {
         placeholder={`Day`}
         styles={ !props.hasError ? customStylesDefault : customStylesError }
         options={options}
+        value={options.find(o => o.value === props.defaultv)}
         onChange={(e) => {props.setDay(e.value)}}
       />
     )
