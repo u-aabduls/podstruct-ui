@@ -5,8 +5,7 @@ import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, CustomInput } 
 import MonthSelector from "../Common/MonthSelector";
 import DaySelector from "../Common/DaySelector";
 import YearSelector from "../Common/YearSelector";
-import send from "../../connectors/User";
-import get from "../../connectors/User";
+import { updateUser, getUser } from "../../connectors/User";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -34,6 +33,24 @@ class Settings extends Component {
             userImageUrl: '',
             email: ''
         }
+    }
+
+    backendInfo = {
+        firstName: '',
+        lastName: '',
+        phone: '',
+        dob: {
+            month: '',
+            day: '',
+            year: '',
+        },
+    };
+
+    changedInputStyling = {
+        color: '#f0ad4e',
+        width: '100%',
+        marginTop: '0.5rem',
+        fontSize: '80%'
     }
 
     setMonth = (month) => {
@@ -114,18 +131,14 @@ class Settings extends Component {
     /* Build payload */
     constructRequestPayload = () => {
         return JSON.stringify({
-            "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "email": this.state.personalInformation.email,
-            "user": {
-                "firstName": this.state.personalInformation.firstName,
-                "lastName": this.state.personalInformation.lastName,
-                "birthDate": this.state.personalInformation.dob.year
-                    + "-" + this.state.personalInformation.dob.month
-                    + "-" + this.state.personalInformation.dob.day,
-                "phone": this.cleanPhoneNumber(this.state.personalInformation.phone),
-            },
-            "password": this.state.personalInformation.password
+            "firstName": this.state.personalInformation.firstName,
+            "lastName": this.state.personalInformation.lastName,
+            "birthDate": this.state.personalInformation.dob.year
+                + "-" + this.state.personalInformation.dob.month
+                + "-" + this.state.personalInformation.dob.day,
+            "phone": this.cleanPhoneNumber(this.state.personalInformation.phone),
         })
+
     }
 
     displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
@@ -138,14 +151,14 @@ class Settings extends Component {
         const form = e.target;
 
         const inputsToValidate = [
-            'email',
             'firstName',
             'lastName',
             'phone',
-            'password'
         ];
 
         const inputs = [...form.elements].filter(i => inputsToValidate.includes(i.name))
+        console.log(inputs)
+        console.log(inputs['firstName'])
 
         const { errors, hasError } = FormValidator.bulkValidate(inputs)
 
@@ -161,14 +174,14 @@ class Settings extends Component {
         console.log((hasError || invalidDOB) ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError && !invalidDOB) {
-            var result = send(this.constructRequestPayload());
+            var result = updateUser(this.constructRequestPayload());
             this.displayToast(
                 result.message,
                 result.isSuccess ? "success" : "error",
                 "bottom-center"
             );
             if (result.isSuccess) {
-                setTimeout(() => this.props.history.push('/register/complete'), 5000);
+                //setTimeout(() => this.props.history.push('/dashboard'), 5000);
             }
         }
 
@@ -184,19 +197,20 @@ class Settings extends Component {
     }
 
     componentDidMount() {
-        var result = get();
+        var result = getUser();
         if (result.isSuccess) {
             var stateCopy = this.state;
             var dob = result.data.birthDate.split("-");
             stateCopy.personalInformation.email = result.data.username;
             stateCopy.personalInformation.firstName = result.data.firstName;
             stateCopy.personalInformation.lastName = result.data.lastName;
-            stateCopy.personalInformation.phone = result.data.phone;
+            stateCopy.personalInformation.phone = result.data.phone.substring(1);
             stateCopy.personalInformation.dob.month = dob[1];
             stateCopy.personalInformation.dob.day = dob[2];
             stateCopy.personalInformation.dob.year = dob[0];
             stateCopy.personalInformation.address = result.data.address;
             stateCopy.personalInformation.status = result.data.status;
+            this.backendInfo = JSON.parse(JSON.stringify(stateCopy.personalInformation));
             this.setState(stateCopy);
         }
     }
@@ -262,7 +276,7 @@ class Settings extends Component {
                                                             name="email"
                                                             className="border-right-0"
                                                             placeholder={this.state.personalInformation.email}
-                                                            readonly />
+                                                            readOnly />
                                                         <div className="input-group-append">
                                                             <span className="input-group-text text-muted bg-transparent border-left-0">
                                                                 <em className="fa fa-envelope"></em>
@@ -297,6 +311,7 @@ class Settings extends Component {
                                                                 <em className="fa fa-book"></em>
                                                             </span>
                                                         </div>
+                                                        {(this.backendInfo.firstName !== this.state.personalInformation.firstName) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
                                                         {this.hasError('personalInformation', 'firstName', 'required') && <span className="invalid-feedback">First name is required</span>}
                                                         {this.hasError('personalInformation', 'firstName', 'maxlen') && <span className="invalid-feedback">First name must not have more than 50 characters</span>}
                                                         {this.hasError('personalInformation', 'firstName', 'contains-alpha') && <span className="invalid-feedback">First name must contain at least one alpha character</span>}
@@ -332,6 +347,7 @@ class Settings extends Component {
                                                                 <em className="fa fa-book"></em>
                                                             </span>
                                                         </div>
+                                                        {(this.backendInfo.lastName !== this.state.personalInformation.lastName) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
                                                         {this.hasError('personalInformation', 'lastName', 'required') && <span className="invalid-feedback">Last name is required</span>}
                                                         {this.hasError('personalInformation', 'lastName', 'maxlen') && <span className="invalid-feedback">Last name must have not have more than 50 characters</span>}
                                                         {this.hasError('personalInformation', 'lastName', 'contains-alpha') && <span className="invalid-feedback">Last name must contain at least one alpha character</span>}
@@ -363,6 +379,7 @@ class Settings extends Component {
                                                                 <em className="fa fa-phone"></em>
                                                             </span>
                                                         </div>
+                                                        {(this.backendInfo.phone !== this.state.personalInformation.phone) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
                                                         {this.hasError('personalInformation', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
                                                         {this.hasError('personalInformation', 'phone', 'phone') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
                                                     </div>
@@ -371,21 +388,26 @@ class Settings extends Component {
                                                     <label className="text-muted" htmlFor="signupInputDOB">Date of birth</label>
                                                     <div className="input-group with-focus">
                                                         <MonthSelector
+                                                            defaultv={this.state.personalInformation.dob.month}
                                                             name="monthSelector"
-                                                            placeholder={this.state.personalInformation.dob.month}
                                                             hasError={this.state.personalInformation.dob.error.isNull || this.state.personalInformation.dob.error.isInFuture}
                                                             setMonth={(month) => this.setMonth(month)}
                                                         />
                                                         <DaySelector
+                                                            defaultv={this.state.personalInformation.dob.day}
                                                             name="daySelector"
                                                             hasError={this.state.personalInformation.dob.error.isNull || this.state.personalInformation.dob.error.isInFuture}
                                                             setDay={(day) => this.setDay(day)}
                                                         />
                                                         <YearSelector
+                                                            defaultv={this.state.personalInformation.dob.year}
                                                             name="yearSelector"
                                                             hasError={this.state.personalInformation.dob.error.isNull || this.state.personalInformation.dob.error.isInFuture}
                                                             setYear={(year) => this.setYear(year)}
                                                         />
+                                                        {(this.backendInfo.dob.month !== this.state.personalInformation.dob.month) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
+                                                        {(this.backendInfo.dob.day !== this.state.personalInformation.dob.day) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
+                                                        {(this.backendInfo.dob.year !== this.state.personalInformation.dob.year) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
                                                         {this.state.personalInformation.dob.error.isNull && <p style={this.errorMessageStyling}>Date of birth is required</p>}
                                                         {this.state.personalInformation.dob.error.isInFuture && <p style={this.errorMessageStyling}>Date of birth must not be in the future</p>}
                                                     </div>
@@ -407,10 +429,7 @@ class Settings extends Component {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button className="btn btn-info" type="button">Update Information</button>
-                                                <p>
-                                                    <small className="text-muted">* Integer fermentum accumsan metus, id sagittis ipsum molestie vitae</small>
-                                                </p>
+                                                <button className="btn btn-info" type="submit">Update Information</button>
                                             </form>
                                         </div>
                                     </div>

@@ -36,150 +36,150 @@ class Register extends Component {
     }
 
     errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
+        color: '#f05050', 
+        width: '100%', 
+        marginTop: '0.25rem', 
         fontSize: '80%'
     }
 
-    setMonth = (month) => {
-        var stateCopy = this.state.formRegister;
-        stateCopy.dob.month = month;
-        this.setState(stateCopy);
-    };
+        setMonth = (month) => {
+            var stateCopy = this.state.formRegister;
+            stateCopy.dob.month = month;
+            this.setState(stateCopy);
+        };
 
-    setDay = (day) => {
-        var stateCopy = this.state.formRegister;
-        stateCopy.dob.day = day;
-        this.setState(stateCopy);
-    };
+        setDay = (day) => {
+            var stateCopy = this.state.formRegister;
+            stateCopy.dob.day = day;
+            this.setState(stateCopy);
+        };
 
-    setYear = (year) => {
-        var stateCopy = this.state.formRegister;
-        stateCopy.dob.year = year;
-        this.setState(stateCopy);
-    };
+        setYear = (year) => {
+            var stateCopy = this.state.formRegister;
+            stateCopy.dob.year = year;
+            this.setState(stateCopy);
+        };
 
-    /**
-     * Validate input using onChange event
-     * @param  {String} formName The name of the form in the state object
-     * @return {Function} a function used for the event
-     */
-    validateOnChange = event => {
-        const input = event.target;
-        const form = input.form
-        const value = input.type === 'checkbox' ? input.checked : input.value;
+        /**
+         * Validate input using onChange event
+         * @param  {String} formName The name of the form in the state object
+         * @return {Function} a function used for the event
+         */
+        validateOnChange = event => {
+            const input = event.target;
+            const form = input.form
+            const value = input.type === 'checkbox' ? input.checked : input.value;
 
-        const result = FormValidator.validate(input);
+            const result = FormValidator.validate(input);
 
-        this.setState({
-            [form.name]: {
-                ...this.state[form.name],
-                [input.name]: value,
-                errors: {
-                    ...this.state[form.name].errors,
-                    [input.name]: result
+            this.setState({
+                [form.name]: {
+                    ...this.state[form.name],
+                    [input.name]: value,
+                    errors: {
+                        ...this.state[form.name].errors,
+                        [input.name]: result
+                    }
+                }
+            });
+        }
+
+        validateDateOfBirth = event => {
+            var isNullDateOfBirth = this.state.formRegister.dob.day === '' 
+                                || this.state.formRegister.dob.month === '' 
+                                || this.state.formRegister.dob.year === '';
+
+            if (!isNullDateOfBirth) {
+                var DOB = new Date(this.state.formRegister.dob.year,
+                                    this.state.formRegister.dob.month - 1,
+                                    this.state.formRegister.dob.day),
+                    today = new Date(),
+                    isFutureDateOfBirth = DOB.getTime() > today.getTime();   
+            }
+
+            var stateCopy = this.state.formRegister;
+            stateCopy.dob.error.isNull = isNullDateOfBirth ? true : false;
+            stateCopy.dob.error.isInFuture = isFutureDateOfBirth ? true : false; 
+            this.setState(stateCopy);
+            return isNullDateOfBirth || isFutureDateOfBirth;
+        }
+
+        /* Simplify error check */
+        hasError = (formName, inputName, method) => {
+            return this.state[formName] &&
+                this.state[formName].errors &&
+                this.state[formName].errors[inputName] &&
+                this.state[formName].errors[inputName][method]
+        }
+
+        /* Clean phone input */
+        cleanPhoneNumber = (phoneNumber) => {
+            return "+" + phoneNumber.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "");
+        }
+
+        /* Build payload */
+        constructRequestPayload = () => {
+            return JSON.stringify({
+                "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+                "email": this.state.formRegister.email,
+                "user": {
+                    "firstName": this.state.formRegister.firstName,
+                    "lastName": this.state.formRegister.lastName,
+                    "birthDate": this.state.formRegister.dob.year
+                        + "-" + this.state.formRegister.dob.month
+                        + "-" + this.state.formRegister.dob.day,
+                    "phone": this.cleanPhoneNumber(this.state.formRegister.phone),
+                },
+                "password": this.state.formRegister.password
+            })
+        }
+
+        displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
+            type: toastType,
+            position: toastPosition
+        })
+
+        onSubmit = e => {
+
+            const form = e.target;
+
+            const inputsToValidate = [
+                'email',
+                'firstName',
+                'lastName',
+                'phone',
+                'password'
+            ];
+
+            const inputs = [...form.elements].filter(i => inputsToValidate.includes(i.name))
+
+            const { errors, hasError } = FormValidator.bulkValidate(inputs)
+
+            this.setState({
+                [form.name]: {
+                    ...this.state[form.name],
+                    errors
+                }
+            });
+
+            const invalidDOB = this.validateDateOfBirth();
+
+            console.log((hasError || invalidDOB) ? 'Form has errors. Check!' : 'Form Submitted!')
+
+            if (!hasError && !invalidDOB) {
+                var result = send(this.constructRequestPayload());
+                this.displayToast(
+                    result.message, 
+                    result.isSuccess ? "success" : "error", 
+                    "bottom-center"
+                );
+                if (result.isSuccess) {
+                    setTimeout(() => this.props.history.push('/register/complete'), 5000);
                 }
             }
-        });
-    }
 
-    validateDateOfBirth = event => {
-        var isNullDateOfBirth = this.state.formRegister.dob.day === ''
-            || this.state.formRegister.dob.month === ''
-            || this.state.formRegister.dob.year === '';
-
-        if (!isNullDateOfBirth) {
-            var DOB = new Date(this.state.formRegister.dob.year,
-                this.state.formRegister.dob.month - 1,
-                this.state.formRegister.dob.day),
-                today = new Date(),
-                isFutureDateOfBirth = DOB.getTime() > today.getTime();
+            e.preventDefault();
         }
-
-        var stateCopy = this.state.formRegister;
-        stateCopy.dob.error.isNull = isNullDateOfBirth ? true : false;
-        stateCopy.dob.error.isInFuture = isFutureDateOfBirth ? true : false;
-        this.setState(stateCopy);
-        return isNullDateOfBirth || isFutureDateOfBirth;
-    }
-
-    /* Simplify error check */
-    hasError = (formName, inputName, method) => {
-        return this.state[formName] &&
-            this.state[formName].errors &&
-            this.state[formName].errors[inputName] &&
-            this.state[formName].errors[inputName][method]
-    }
-
-    /* Clean phone input */
-    cleanPhoneNumber = (phoneNumber) => {
-        return "+" + phoneNumber.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "");
-    }
-
-    /* Build payload */
-    constructRequestPayload = () => {
-        return JSON.stringify({
-            "defaultTimezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "email": this.state.formRegister.email,
-            "user": {
-                "firstName": this.state.formRegister.firstName,
-                "lastName": this.state.formRegister.lastName,
-                "birthDate": this.state.formRegister.dob.year
-                    + "-" + this.state.formRegister.dob.month
-                    + "-" + this.state.formRegister.dob.day,
-                "phone": this.cleanPhoneNumber(this.state.formRegister.phone),
-            },
-            "password": this.state.formRegister.password
-        })
-    }
-
-    displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
-        type: toastType,
-        position: toastPosition
-    })
-
-    onSubmit = e => {
-
-        const form = e.target;
-
-        const inputsToValidate = [
-            'email',
-            'firstName',
-            'lastName',
-            'phone',
-            'password'
-        ];
-
-        const inputs = [...form.elements].filter(i => inputsToValidate.includes(i.name))
-
-        const { errors, hasError } = FormValidator.bulkValidate(inputs)
-
-        this.setState({
-            [form.name]: {
-                ...this.state[form.name],
-                errors
-            }
-        });
-
-        const invalidDOB = this.validateDateOfBirth();
-
-        console.log((hasError || invalidDOB) ? 'Form has errors. Check!' : 'Form Submitted!')
-
-        if (!hasError && !invalidDOB) {
-            var result = send(this.constructRequestPayload());
-            this.displayToast(
-                result.message,
-                result.isSuccess ? "success" : "error",
-                "bottom-center"
-            );
-            if (result.isSuccess) {
-                setTimeout(() => this.props.history.push('/register/complete'), 5000);
-            }
-        }
-
-        e.preventDefault();
-    }
 
     render() {
         return (
@@ -189,7 +189,7 @@ class Register extends Component {
                     <div className="card-header text-center bg-primary">
                         <a href="">
                             <img className="block-center" src="img/logos/favicon.png" alt="Logo" />
-                            <img className="block-center" style={{ marginLeft: 4 + 'px' }} src="img/logos/podstruct_text.svg" alt="Logo" />
+                            <img className="block-center" style={{marginLeft: 4 + 'px'}} src="img/logos/podstruct_text.svg" alt="Logo" />
                         </a>
                     </div>
                     <div className="card-body">
@@ -198,7 +198,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputEmail1">Email address</label>
                                 <div className="input-group with-focus">
-                                    <Input
+                                    <Input 
                                         type="email"
                                         name="email"
                                         className="border-right-0"
@@ -219,7 +219,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputFirstName">First name</label>
                                 <div className="input-group with-focus">
-                                    <Input
+                                    <Input 
                                         type="text"
                                         id="id-firstName"
                                         name="firstName"
@@ -252,9 +252,9 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-lastName">Last name</label>
+                                <label className="text-muted" htmlFor="signupInputLastName">Last name</label>
                                 <div className="input-group with-focus">
-                                    <Input
+                                    <Input 
                                         type="text"
                                         id="id-lastName"
                                         name="lastName"
@@ -311,7 +311,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPhone">Phone number</label>
                                 <div className="input-group with-focus">
-                                    <Input
+                                    <Input 
                                         type="text"
                                         id="id-phone"
                                         name="phone"
@@ -338,7 +338,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputPassword1">Password</label>
                                 <div className="input-group with-focus">
-                                    <Input
+                                    <Input 
                                         type="password"
                                         id="id-password"
                                         name="password"
@@ -369,7 +369,7 @@ class Register extends Component {
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="signupInputRePassword1">Confirm Password</label>
                                 <div className="input-group with-focus">
-                                    <Input
+                                    <Input 
                                         type="password"
                                         name="confirmedPassword"
                                         className="border-right-0"

@@ -12,12 +12,12 @@ var authorizationToken = localStorage.getItem('token');
  * Public Methods
  ********************/
 
-function send(requestBody) {
+function updateUser(requestBody) {
     _initializePUT();
     request.send(requestBody);
     return result;
 }
-function get() {
+function getUser() {
     _initializeGET();
     request.send();
     return result;
@@ -33,7 +33,7 @@ function _initializePUT() {
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
     request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
-    request.onload = __execute;
+    request.onload = __executePUT;
 }
 
 function _initializeGET() {
@@ -42,14 +42,14 @@ function _initializeGET() {
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
     request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
-    request.onload = __execute;
+    request.onload = __executeGET;
 }
 
 /********************
  * Event handlers
  ********************/
 
-function __execute() {
+function __executeGET() {
     var data = JSON.parse(this.response);
     if (request.status >= 400) {
         result.isSuccess = false;
@@ -61,4 +61,16 @@ function __execute() {
     }
 }
 
-export default get;
+function __executePUT() {
+    if (request.status >= 400) {
+        var data = JSON.parse(this.response);
+        result.isSuccess = false;
+        result.message = handleError(request.status, data);
+    } else {
+        result.isSuccess = true;
+        result.data = data;
+        result.message = "";
+    }
+}
+
+export {updateUser, getUser};
