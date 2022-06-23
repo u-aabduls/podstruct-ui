@@ -52,12 +52,17 @@ class PodCreate extends Component {
             this.state[formName].errors[inputName][method]
     }
 
+    /* Clean phone input */
+    cleanPhoneNumber = (phoneNumber) => {
+        return "+" + phoneNumber.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "");
+    }
+
     /* Build payload */
     constructRequestPayload = () => {
         return JSON.stringify({
             "podName": this.state.podCreate.podName,
             "podDescription": this.state.podCreate.description,
-            "phone": this.state.podCreate.phone,
+            "phone": this.cleanPhoneNumber(this.state.podCreate.phone),
             "address": this.state.podCreate.address
         })
 

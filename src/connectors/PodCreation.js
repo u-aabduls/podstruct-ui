@@ -6,6 +6,7 @@ var result = {};
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/" ;
 var endpointPath = "podstruct/api/pods";
+var authorizationToken = localStorage.getItem('token');
 
 /********************
  * Public Methods
@@ -26,6 +27,7 @@ function _initialize() {
     // request.open("POST", prodServer + endpointPath, false);
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
     request.onload = __execute;
 }
 
