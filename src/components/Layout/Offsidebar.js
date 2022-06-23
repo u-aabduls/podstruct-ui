@@ -58,9 +58,7 @@ class Offsidebar extends Component {
                                     <Link to="settings" className="btn btn-block btn-secondary">
                                         <em className="icon-settings fa-pull-left btn-icon"></em>
                                         <span className="text-right">Settings</span>
-                                        
                                     </Link>
-
                                 </div>
                                 <div className="clearfix">
                                     {/* <p className="float-left">Log out</p> */}

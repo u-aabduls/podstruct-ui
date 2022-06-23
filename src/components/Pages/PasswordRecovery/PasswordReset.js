@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Input } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import send from "../../connectors/PasswordReset";
-import FormValidator from '../Forms/FormValidator.js';
+import send from "../../../connectors/PasswordReset";
+import FormValidator from '../../Forms/FormValidator.js';
 import { ToastContainer, toast } from 'react-toastify';
 
 class PasswordReset extends Component {

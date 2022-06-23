@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap';
-import MonthSelector from "../Common/MonthSelector";
-import DaySelector from "../Common/DaySelector";
-import YearSelector from "../Common/YearSelector";
-import send from "../../connectors/AccountCreation";
+import MonthSelector from "../../Common/MonthSelector";
+import DaySelector from "../../Common/DaySelector";
+import YearSelector from "../../Common/YearSelector";
+import send from "../../../connectors/AccountCreation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // import { CustomInput } from 'reactstrap';
 
-import FormValidator from '../Forms/FormValidator.js';
+import FormValidator from '../../Forms/FormValidator.js';
 
 class Register extends Component {
 
@@ -316,7 +316,7 @@ class Register extends Component {
                                         id="id-phone"
                                         name="phone"
                                         className="border-right-0"
-                                        placeholder="Phone"
+                                        placeholder="(XXX) XXX-XXXX"
                                         invalid={
                                             this.hasError('formRegister', 'phone', 'required')
                                             || this.hasError('formRegister', 'phone', 'phone')

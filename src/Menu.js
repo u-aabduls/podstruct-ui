@@ -8,7 +8,16 @@ const Menu = [
         icon: 'icon-folder',
         path: '/dashboardv2',
         translate: 'sidebar.nav.DASHBOARD',
-        
+        submenu: [{
+            name: 'View Pods',
+            icon: 'icon-grid',
+            path: 'test'
+        },
+        {
+            name: 'Create Pod',
+            icon: 'icon-plus',
+            path: '/pod/create'
+        }]
     },
     {
         name: 'Courses',

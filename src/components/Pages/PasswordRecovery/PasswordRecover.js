@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input } from 'reactstrap';
-import send from "../../connectors/PasswordRecover";
-import FormValidator from '../Forms/FormValidator.js';
+import send from "../../../connectors/PasswordRecover";
+import FormValidator from '../../Forms/FormValidator.js';
 import { Link } from 'react-router-dom';
 
 class Recover extends Component {

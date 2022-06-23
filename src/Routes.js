@@ -12,15 +12,17 @@ import BasePage from './components/Layout/BasePage';
 /* Used to render a lazy component with react-router */
 const waitFor = Tag => props => <Tag {...props} />;
 
-const Register = lazy(() => import('./components/Pages/Register'));
-const RegisterComplete = lazy(() => import('./components/Pages/RegisterComplete'));
+const Register = lazy(() => import('./components/Pages/Registration/Register'));
+const RegisterComplete = lazy(() => import('./components/Pages/Registration/RegisterComplete'));
 const Login = lazy(() => import('./components/Pages/Login'));
 const NotFound = lazy(() => import('./components/Pages/NotFound'));
-const PasswordRecover = lazy(() => import('./components/Pages/PasswordRecover'));
-const PasswordReset = lazy(() => import('./components/Pages/PasswordReset'));
+const PasswordRecover = lazy(() => import('./components/Pages/PasswordRecovery/PasswordRecover'));
+const PasswordReset = lazy(() => import('./components/Pages/PasswordRecovery/PasswordReset'));
 
 const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 const Settings = lazy(() => import('./components/Extras/Settings'));
+const PodCreate = lazy(() => import('./components/Pages/PodManagement/PodCreate'));
+
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -78,6 +80,9 @@ const Routes = ({ location }) => {
 
                                     {/*Extras*/}
                                     <Route path="/settings" component={waitFor(Settings)}/>
+                                    <Route path="/pod/create" component={waitFor(PodCreate)}/>
+                                    
+                                    {/*Default*/}
                                     <Redirect to="/login" />
                                 </Switch>
                             </Suspense>
