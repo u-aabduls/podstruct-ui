@@ -167,13 +167,12 @@ class PodCreate extends Component {
                                                             className="border-right-0 no-resize"
                                                             placeholder="Description"
                                                             invalid={
-                                                                this.hasError('podCreate', 'description', 'required')
-                                                                || this.hasError('podCreate', 'description', 'maxlen')
+                                                                this.hasError('podCreate', 'description', 'maxlen')
                                                                 || this.hasError('podCreate', 'description', 'begin-end-spacing')
                                                                 || this.hasError('podCreate', 'description', 'consecutive-spacing')
                                                             }
                                                             onChange={this.validateOnChange}
-                                                            data-validate='["required", "maxlen", "begin-end-spacing", "consecutive-spacing"]'
+                                                            data-validate='["maxlen", "begin-end-spacing", "consecutive-spacing"]'
                                                             data-param='100'
                                                             value={this.state.podCreate.description}
                                                             rows={5}
@@ -183,7 +182,6 @@ class PodCreate extends Component {
                                                                 <em className="fa fa-book"></em>
                                                             </span>
                                                         </div>
-                                                        {this.hasError('podCreate', 'description', 'required') && <span className="invalid-feedback">Description is required</span>}
                                                         {this.hasError('podCreate', 'description', 'maxlen') && <span className="invalid-feedback">Description must have not have more than 100 characters</span>}
                                                         {this.hasError('podCreate', 'description', 'begin-end-spacing') && <span className="invalid-feedback">Description must not begin or end with a space character</span>}
                                                         {this.hasError('podCreate', 'description', 'consecutive-spacing') && <span className="invalid-feedback">Description must not contain consecutive space characters</span>}
@@ -225,9 +223,7 @@ class PodCreate extends Component {
                                                             name="address"
                                                             className="border-right-0"
                                                             placeholder="Address"
-                                                            invalid={this.hasError('podCreate', 'address', 'required')}
                                                             onChange={this.validateOnChange}
-                                                            data-validate='["required"]'
                                                             value={this.state.podCreate.address}
                                                         />
                                                         <div className="input-group-append">
@@ -235,7 +231,6 @@ class PodCreate extends Component {
                                                                 <em className="fa fa-book"></em>
                                                             </span>
                                                         </div>
-                                                        {this.hasError('podCreate', 'address', 'required') && <span className="invalid-feedback">Address is required</span>}
                                                     </div>
                                                 </div>
                                                 <button className="btn btn-primary" type="submit">Create pod</button>
