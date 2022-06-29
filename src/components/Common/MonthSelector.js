@@ -11,7 +11,7 @@ const options = [
   { value: '06', label: 'Jun' },
   { value: '07', label: 'Jul' },
   { value: '08', label: 'Aug' },
-  { value: '09', label: 'Sept'},
+  { value: '09', label: 'Sept' },
   { value: '10', label: 'Oct' },
   { value: '11', label: 'Nov' },
   { value: '12', label: 'Dec' }
@@ -22,6 +22,10 @@ const customStylesDefault = {
     ...provided,
     width: `38.5%`,
     margin: `0% 1.5% 0% 0%`,
+  }),
+  valueContainer: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isDisabled ? "#D3D3D3" : ""
   })
 };
 
@@ -32,19 +36,20 @@ const customStylesError = {
     margin: `0% 1.5% 0% 0%`,
   }),
   control: (provided) => ({
-      ...provided,
-      border: '1px solid #f05050 !important'
+    ...provided,
+    border: '1px solid #f05050 !important'
   })
 };
 
 export default function MonthSelector(props) {
-    return (
-      <Select
-        placeholder={`Month`}
-        styles={ !props.hasError ? customStylesDefault : customStylesError }
-        options={options}
-        value={options.find(o => o.value === props.defaultv)}
-        onChange={(e) => {props.setMonth(e.value)}}
-      />
-    )
+  return (
+    <Select
+      placeholder={`Month`}
+      styles={!props.hasError ? customStylesDefault : customStylesError}
+      options={options}
+      value={options.find(o => o.value === props.defaultv)}
+      onChange={(e) => { props.setMonth(e.value) }}
+      isDisabled={props.disabled}
+    />
+  )
 }

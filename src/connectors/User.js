@@ -69,7 +69,7 @@ function __executePUT() {
     } else {
         result.isSuccess = true;
         result.data = data;
-        result.message = "";
+        result.message = "Updated Successfully";
     }
 }
 
