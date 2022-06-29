@@ -55,10 +55,10 @@ class Offsidebar extends Component {
 
                                 <div className="clearfix">
                                     <Link to="settings" className="btn btn-block btn-secondary">
+
                                         <i className="icon-settings fa-pull-left btn-icon"></i>
                                         Manage Profile
                                     </Link>
-
                                 </div>
                                 <div className="clearfix">
                                     <button type="button" className="btn btn-block btn-secondary">
@@ -179,6 +179,7 @@ class Offsidebar extends Component {
                                                 </label>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </TabPane>
