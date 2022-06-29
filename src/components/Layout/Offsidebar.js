@@ -54,23 +54,21 @@ class Offsidebar extends Component {
                                 <h3 className="text-center text-thin mt-4">Settings</h3>
 
                                 <div className="clearfix">
-                                    {/* <p className="float-left">Log out</p> */}
                                     <Link to="settings" className="btn btn-block btn-secondary">
-                                        <em className="icon-settings fa-pull-left btn-icon"></em>
-                                        <span className="text-right">Settings</span>
+
+                                        <i className="icon-settings fa-pull-left btn-icon"></i>
+                                        Manage Profile
                                     </Link>
                                 </div>
                                 <div className="clearfix">
-                                    {/* <p className="float-left">Log out</p> */}
                                     <button type="button" className="btn btn-block btn-secondary">
                                         <i className="icon-question float-left btn-icon"></i>
                                         Help
                                     </button>
                                 </div>
                                 <div className="clearfix">
-                                    {/* <p className="float-left">Log out</p> */}
                                     <button type="button" className="btn btn-block btn-secondary" onClick={this.logout}>
-                                        <em className="icon-logout fa-pull-left btn-icon"></em>
+                                        <i className="icon-logout fa-pull-left btn-icon"></i>
                                         Sign out
                                     </button>
                                 </div>

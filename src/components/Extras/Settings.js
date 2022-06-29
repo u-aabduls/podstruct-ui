@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Input } from 'reactstrap';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, CustomInput } from 'reactstrap';
+import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, CustomInput, Button } from 'reactstrap';
 import MonthSelector from "../Common/MonthSelector";
 import DaySelector from "../Common/DaySelector";
 import YearSelector from "../Common/YearSelector";
+import EditableProfile from "./EditableProfile"
+import UnEditableProfile from './UnEditableProfile';
 import { updateUser, getUser } from "../../connectors/User";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -32,7 +34,10 @@ class Settings extends Component {
             status: '',
             userImageUrl: '',
             email: ''
-        }
+        },
+        editMode: false,
+        editButtonText: "Edit",
+        errorMessage: null
     }
 
     backendInfo = {
@@ -146,6 +151,17 @@ class Settings extends Component {
         position: toastPosition
     })
 
+    onEditChange = () => {
+        if (this.state.editMode) {
+            this.setState({ editButtonText: "Edit" })
+            this.setState({ editMode: false })
+        }
+        else {
+            this.setState({ editButtonText: "Cancel" })
+            this.setState({ editMode: true })
+        }
+    }
+
     onSubmit = e => {
 
         const form = e.target;
@@ -157,8 +173,6 @@ class Settings extends Component {
         ];
 
         const inputs = [...form.elements].filter(i => inputsToValidate.includes(i.name))
-        console.log(inputs)
-        console.log(inputs['firstName'])
 
         const { errors, hasError } = FormValidator.bulkValidate(inputs)
 
@@ -175,14 +189,17 @@ class Settings extends Component {
 
         if (!hasError && !invalidDOB) {
             var result = updateUser(this.constructRequestPayload());
-            this.displayToast(
-                result.message,
-                result.isSuccess ? "success" : "error",
-                "bottom-center"
-            );
             if (result.isSuccess) {
-                //setTimeout(() => this.props.history.push('/dashboard'), 5000);
+                this.setState({ errorMessage: null });
+                console.log("test")
+                this.displayToast(result.message, "success", "bottom-center");
+                this.setUserState();
+                this.setState({ editButtonText: "Edit" })
+                this.setState({ editMode: false })
+            } else {
+                this.setState({ errorMessage: result.message });
             }
+
         }
 
         e.preventDefault();
@@ -196,7 +213,7 @@ class Settings extends Component {
         }
     }
 
-    componentDidMount() {
+    setUserState() {
         var result = getUser();
         if (result.isSuccess) {
             var stateCopy = this.state;
@@ -215,6 +232,10 @@ class Settings extends Component {
         }
     }
 
+    componentDidMount() {
+        this.setUserState();
+    }
+
     render() {
         return (
             <ContentWrapper>
@@ -227,7 +248,7 @@ class Settings extends Component {
                                     <ListGroupItem action
                                         className={this.state.activeTab === 'profile' ? 'active' : ''}
                                         onClick={() => { this.toggleTab('profile'); }}>
-                                        Personal Information
+                                        My Profile
                                     </ListGroupItem>
                                     <ListGroupItem action
                                         className={this.state.activeTab === 'account' ? 'active' : ''}
@@ -238,11 +259,6 @@ class Settings extends Component {
                                         className={this.state.activeTab === 'payments' ? 'active' : ''}
                                         onClick={() => { this.toggleTab('account'); }}>
                                         Payments and Subscriptions
-                                    </ListGroupItem>
-                                    <ListGroupItem action
-                                        className={this.state.activeTab === 'emails' ? 'active' : ''}
-                                        onClick={() => { this.toggleTab('emails'); }}>
-                                        Email
                                     </ListGroupItem>
                                     <ListGroupItem action
                                         className={this.state.activeTab === 'notifications' ? 'active' : ''}
@@ -261,175 +277,45 @@ class Settings extends Component {
                             <TabContent activeTab={this.state.activeTab} className="p-0 b0">
                                 <TabPane tabId="profile">
                                     <div className="card b">
-                                        <div className="card-header bg-gray-lighter text-bold">Profile</div>
+                                        <div className="card-header bg-gray-lighter text-bold">Profile
+                                            <Col md={13}>
+                                                <Button color="info" className="btn float-right" onClick={this.onEditChange}>{this.state.editButtonText}</Button>
+                                            </Col>
+                                        </div>
                                         <div className="card-body">
                                             <form className="mb-3" name="personalInformation" onSubmit={this.onSubmit}>
-                                                <div className="form-group">
-                                                    <label>Picture</label>
-                                                    <CustomInput type="file" id="exampleCustomFileBrowser" name="customFile" />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="text-muted" htmlFor="signupInputEmail1">Email address</label>
-                                                    <div className="input-group with-focus">
-                                                        <Input
-                                                            type="email"
-                                                            name="email"
-                                                            className="border-right-0"
-                                                            placeholder={this.state.personalInformation.email}
-                                                            readOnly />
-                                                        <div className="input-group-append">
-                                                            <span className="input-group-text text-muted bg-transparent border-left-0">
-                                                                <em className="fa fa-envelope"></em>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="text-muted" htmlFor="signupInputFirstName">First name</label>
-                                                    <div className="input-group with-focus">
-                                                        <Input
-                                                            type="text"
-                                                            id="id-firstName"
-                                                            name="firstName"
-                                                            className="border-right-0"
-                                                            placeholder="First name"
-                                                            invalid={
-                                                                this.hasError('personalInformation', 'firstName', 'required')
-                                                                || this.hasError('personalInformation', 'firstName', 'maxlen')
-                                                                || this.hasError('personalInformation', 'firstName', 'contains-alpha')
-                                                                || this.hasError('personalInformation', 'firstName', 'name')
-                                                                || this.hasError('personalInformation', 'firstName', 'begin-end-spacing')
-                                                                || this.hasError('personalInformation', 'firstName', 'consecutive-spacing')
-                                                            }
-                                                            onChange={this.validateOnChange}
-                                                            data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
-                                                            data-param='50'
-                                                            value={this.state.personalInformation.firstName}
+                                                {this.state.editMode ?
+                                                    <>
+                                                        <EditableProfile
+                                                            state={this.state}
+                                                            backendInfo={this.backendInfo}
+                                                            errorMessageStyling={this.errorMessageStyling}
+                                                            changedInputStyling={this.changedInputStyling}
+                                                            setDay={this.setDay}
+                                                            setMonth={this.setMonth}
+                                                            setYear={this.setYear}
+                                                            hasError={this.hasError}
+                                                            validateOnChange={this.validateOnChange}
                                                         />
-                                                        <div className="input-group-append">
-                                                            <span className="input-group-text text-muted bg-transparent border-left-0">
-                                                                <em className="fa fa-book"></em>
-                                                            </span>
-                                                        </div>
-                                                        {(this.backendInfo.firstName !== this.state.personalInformation.firstName) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
-                                                        {this.hasError('personalInformation', 'firstName', 'required') && <span className="invalid-feedback">First name is required</span>}
-                                                        {this.hasError('personalInformation', 'firstName', 'maxlen') && <span className="invalid-feedback">First name must not have more than 50 characters</span>}
-                                                        {this.hasError('personalInformation', 'firstName', 'contains-alpha') && <span className="invalid-feedback">First name must contain at least one alpha character</span>}
-                                                        {this.hasError('personalInformation', 'firstName', 'name') && <span className="invalid-feedback">First name must contain alpha, apostrophe, or hyphen characters only</span>}
-                                                        {this.hasError('personalInformation', 'firstName', 'begin-end-spacing') && <span className="invalid-feedback">First name must not begin or end with a space character</span>}
-                                                        {this.hasError('personalInformation', 'firstName', 'consecutive-spacing') && <span className="invalid-feedback">First name must not contain consecutive space characters</span>}
-                                                    </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="text-muted" htmlFor="signupInputLastName">Last name</label>
-                                                    <div className="input-group with-focus">
-                                                        <Input
-                                                            type="text"
-                                                            id="id-lastName"
-                                                            name="lastName"
-                                                            className="border-right-0"
-                                                            placeholder="Last name"
-                                                            invalid={
-                                                                this.hasError('personalInformation', 'lastName', 'required')
-                                                                || this.hasError('personalInformation', 'lastName', 'maxlen')
-                                                                || this.hasError('personalInformation', 'lastName', 'contains-alpha')
-                                                                || this.hasError('personalInformation', 'lastName', 'name')
-                                                                || this.hasError('personalInformation', 'lastName', 'begin-end-spacing')
-                                                                || this.hasError('personalInformation', 'lastName', 'consecutive-spacing')
-                                                            }
-                                                            onChange={this.validateOnChange}
-                                                            data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
-                                                            data-param='50'
-                                                            value={this.state.personalInformation.lastName}
+                                                        <button className="btn btn-info" type="submit">Save Changes</button>
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <UnEditableProfile
+                                                            state={this.state}
+                                                            backendInfo={this.backendInfo}
+                                                            errorMessageStyling={this.errorMessageStyling}
+                                                            changedInputStyling={this.changedInputStyling}
+                                                            setDay={this.setDay}
+                                                            setMonth={this.setMonth}
+                                                            setYear={this.setYear}
+                                                            hasError={this.hasError}
+                                                            validateOnChange={this.validateOnChange}
                                                         />
-                                                        <div className="input-group-append">
-                                                            <span className="input-group-text text-muted bg-transparent border-left-0">
-                                                                <em className="fa fa-book"></em>
-                                                            </span>
-                                                        </div>
-                                                        {(this.backendInfo.lastName !== this.state.personalInformation.lastName) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
-                                                        {this.hasError('personalInformation', 'lastName', 'required') && <span className="invalid-feedback">Last name is required</span>}
-                                                        {this.hasError('personalInformation', 'lastName', 'maxlen') && <span className="invalid-feedback">Last name must have not have more than 50 characters</span>}
-                                                        {this.hasError('personalInformation', 'lastName', 'contains-alpha') && <span className="invalid-feedback">Last name must contain at least one alpha character</span>}
-                                                        {this.hasError('personalInformation', 'lastName', 'name') && <span className="invalid-feedback">Last name must contain alpha, apostrophe, or hyphen characters only</span>}
-                                                        {this.hasError('personalInformation', 'lastName', 'begin-end-spacing') && <span className="invalid-feedback">Last name must not begin or end with a space character</span>}
-                                                        {this.hasError('personalInformation', 'lastName', 'consecutive-spacing') && <span className="invalid-feedback">Last name must not contain consecutive space characters</span>}
-                                                    </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="text-muted" htmlFor="signupInputPhone">Phone number</label>
-                                                    <div className="input-group with-focus">
-                                                        <Input
-                                                            type="text"
-                                                            id="id-phone"
-                                                            name="phone"
-                                                            className="border-right-0"
-                                                            placeholder="Phone"
-                                                            invalid={
-                                                                this.hasError('personalInformation', 'phone', 'required')
-                                                                || this.hasError('personalInformation', 'phone', 'phone')
-                                                            }
-                                                            onChange={this.validateOnChange}
-                                                            data-validate='["required", "phone"]'
-                                                            data-param='10'
-                                                            value={this.state.personalInformation.phone}
-                                                        />
-                                                        <div className="input-group-append">
-                                                            <span className="input-group-text text-muted bg-transparent border-left-0">
-                                                                <em className="fa fa-phone"></em>
-                                                            </span>
-                                                        </div>
-                                                        {(this.backendInfo.phone !== this.state.personalInformation.phone) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
-                                                        {this.hasError('personalInformation', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
-                                                        {this.hasError('personalInformation', 'phone', 'phone') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
-                                                    </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="text-muted" htmlFor="signupInputDOB">Date of birth</label>
-                                                    <div className="input-group with-focus">
-                                                        <MonthSelector
-                                                            defaultv={this.state.personalInformation.dob.month}
-                                                            name="monthSelector"
-                                                            hasError={this.state.personalInformation.dob.error.isNull || this.state.personalInformation.dob.error.isInFuture}
-                                                            setMonth={(month) => this.setMonth(month)}
-                                                        />
-                                                        <DaySelector
-                                                            defaultv={this.state.personalInformation.dob.day}
-                                                            name="daySelector"
-                                                            hasError={this.state.personalInformation.dob.error.isNull || this.state.personalInformation.dob.error.isInFuture}
-                                                            setDay={(day) => this.setDay(day)}
-                                                        />
-                                                        <YearSelector
-                                                            defaultv={this.state.personalInformation.dob.year}
-                                                            name="yearSelector"
-                                                            hasError={this.state.personalInformation.dob.error.isNull || this.state.personalInformation.dob.error.isInFuture}
-                                                            setYear={(year) => this.setYear(year)}
-                                                        />
-                                                        {(this.backendInfo.dob.month !== this.state.personalInformation.dob.month) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
-                                                        {(this.backendInfo.dob.day !== this.state.personalInformation.dob.day) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
-                                                        {(this.backendInfo.dob.year !== this.state.personalInformation.dob.year) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
-                                                        {this.state.personalInformation.dob.error.isNull && <p style={this.errorMessageStyling}>Date of birth is required</p>}
-                                                        {this.state.personalInformation.dob.error.isInFuture && <p style={this.errorMessageStyling}>Date of birth must not be in the future</p>}
-                                                    </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="text-muted">Address</label>
-                                                    <div className="input-group with-focus">
-                                                        <Input
-                                                            type="text"
-                                                            id="address"
-                                                            name="address"
-                                                            className="border-right-0"
-                                                            placeholder="Address"
-                                                        />
-                                                        <div className="input-group-append">
-                                                            <span className="input-group-text text-muted bg-transparent border-left-0">
-                                                                <em className="fa fa-book"></em>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button className="btn btn-info" type="submit">Update Information</button>
+                                                        <button className="btn btn-info" disabled>Save Changes</button>
+                                                        <ToastContainer/>
+                                                    </>
+                                                }
                                             </form>
                                         </div>
                                     </div>
@@ -465,52 +351,6 @@ class Settings extends Component {
                                             <button className="btn btn-secondary" type="button">
                                                 <span className="text-danger">Delete account</span>
                                             </button>
-                                        </div>
-                                    </div>
-                                </TabPane>
-                                <TabPane tabId="emails">
-                                    <div className="card b">
-                                        <div className="card-header bg-gray-lighter text-bold">Emails</div>
-                                        <div className="card-body">
-                                            <p>Etiam eros nibh, condimentum in auctor et, aliquam quis elit. Donec id libero eros. Ut fringilla, justo id fringilla pretium, nibh nunc suscipit mauris, et suscipit nulla nisl ac dolor. Nam egestas, leo eu gravida tincidunt, sem ipsum pellentesque quam, vel iaculis est quam et eros.</p>
-                                            <p>
-                                                <strong>Your email addresses</strong>
-                                            </p>
-                                            <p>
-                                                <span className="mr-2">email@someaddress.com</span>
-                                                <span className="badge badge-success">primary</span>
-                                            </p>
-                                            <p>
-                                                <span className="mr-2">another.email@someaddress.com</span>
-                                                <span className="badge bg-gray">private</span>
-                                            </p>
-                                        </div>
-                                        <div className="card-body bt">
-                                            <p>
-                                                <strong>Add email address</strong>
-                                            </p>
-                                            <form action="">
-                                                <Row className="mb-2">
-                                                    <Col xl="6">
-                                                        <div className="form-group">
-                                                            <div className="input-group">
-                                                                <input className="form-control" type="email" placeholder="email@server.com" />
-                                                                <span className="input-group-btn">
-                                                                    <button className="btn btn-secondary" type="button">Add</button>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-check">
-                                                            <input className="form-check-input" id="defaultCheck1" type="checkbox" value="" />
-                                                            <label className="form-check-label">Keep my email address private</label>
-                                                        </div>
-                                                    </Col>
-                                                </Row>
-                                                <button className="btn btn-info" type="button">Update email</button>
-                                                <p>
-                                                    <small className="text-muted">* Integer fermentum accumsan metus, id sagittis ipsum molestie vitae</small>
-                                                </p>
-                                            </form>
                                         </div>
                                     </div>
                                 </TabPane>

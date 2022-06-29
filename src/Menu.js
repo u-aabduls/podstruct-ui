@@ -4,9 +4,9 @@ const Menu = [
         translate: 'sidebar.heading.HEADER'
     },
     {
-        name: 'Pods',
-        icon: 'icon-folder',
-        path: '/dashboardv2',
+        name: 'Dashboard',
+        icon: 'icon-speedometer',
+        path: '/dashboard',
         translate: 'sidebar.nav.DASHBOARD',
         submenu: [{
             name: 'View Pods',
@@ -49,6 +49,13 @@ const Menu = [
         
     },
     {
+        name: 'Pods',
+        icon: 'icon-folder',
+        path: '/dashboardv2',
+        translate: 'sidebar.nav.DASHBOARD',
+        
+    },
+    {
         name: 'Messages',
         icon: 'icon-speech',
         translate: 'sidebar.nav.DASHBOARD',
@@ -57,18 +64,6 @@ const Menu = [
     {
         name: 'Payments',
         icon: 'icon-wallet',
-        translate: 'sidebar.nav.DASHBOARD',
-        
-    },
-    {
-        name: 'Settings',
-        icon: 'icon-settings',
-        translate: 'sidebar.nav.DASHBOARD',
-        
-    },
-    {
-        name: 'Help',
-        icon: 'icon-question',
         translate: 'sidebar.nav.DASHBOARD',
         
     }

@@ -41,6 +41,10 @@ const customStylesDefault = {
     ...provided,
     width: `28.5%`,
     margin: `0% 1.5% 0% 0%`,
+  }),
+  valueContainer: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isDisabled ? "#D3D3D3" : ""
   })
 };
 
@@ -64,6 +68,7 @@ export default function DaySelector(props) {
         options={options}
         value={options.find(o => o.value === props.defaultv)}
         onChange={(e) => {props.setDay(e.value)}}
+        isDisabled={props.disabled}
       />
     )
 }
