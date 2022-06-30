@@ -54,8 +54,7 @@ class Offsidebar extends Component {
                                 <h3 className="text-center text-thin mt-4">Settings</h3>
 
                                 <div className="clearfix">
-                                    <Link to="settings" className="btn btn-block btn-secondary">
-
+                                    <Link to="/settings" className="btn btn-block btn-secondary">
                                         <i className="icon-settings fa-pull-left btn-icon"></i>
                                         Manage Profile
                                     </Link>
