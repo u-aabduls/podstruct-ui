@@ -7,6 +7,12 @@ const Menu = [
         name: 'Dashboard',
         icon: 'icon-speedometer',
         path: '/dashboard',
+        translate: 'sidebar.nav.DASHBOARD'
+    },
+    {
+        name: 'Pods',
+        icon: 'icon-folder',
+        path: '/dashboard',
         translate: 'sidebar.nav.DASHBOARD',
         submenu: [{
             name: 'View Pods',
@@ -45,13 +51,6 @@ const Menu = [
     {
         name: 'Grades',
         icon: 'icon-calculator',
-        translate: 'sidebar.nav.DASHBOARD',
-        
-    },
-    {
-        name: 'Pods',
-        icon: 'icon-folder',
-        path: '/dashboardv2',
         translate: 'sidebar.nav.DASHBOARD',
         
     },
