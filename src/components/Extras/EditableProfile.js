@@ -122,7 +122,7 @@ class EditableProfile extends Component {
                         />
                         <div className="input-group-append">
                             <span className="input-group-text text-muted bg-transparent border-left-0">
-                                <em className="fa fa-phone"></em>
+                                <i className="fa fa-phone"></i>
                             </span>
                         </div>
                         {(this.props.backendInfo.phone !== this.props.state.personalInformation.phone) && <span style={this.props.changedInputStyling}>this.props field's current value differs from our records.</span>}
