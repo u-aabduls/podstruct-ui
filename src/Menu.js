@@ -12,12 +12,12 @@ const Menu = [
     {
         name: 'Pods',
         icon: 'icon-folder',
-        path: '/dashboard',
         translate: 'sidebar.nav.DASHBOARD',
         submenu: [{
             name: 'View Pods',
             icon: 'icon-grid',
-            path: 'test'
+            path: '/pods/view',
+            translate: 'sidebar.nav.table.EXTENDED'
         },
         {
             name: 'Create Pod',
@@ -28,7 +28,6 @@ const Menu = [
     {
         name: 'Courses',
         icon: 'icon-notebook',
-        
         translate: 'sidebar.nav.DASHBOARD',
         submenu: [{
             name: 'Assignments',
@@ -46,25 +45,21 @@ const Menu = [
         name: 'Users',
         icon: 'icon-user',
         translate: 'sidebar.nav.DASHBOARD',
-        
     },
     {
         name: 'Grades',
         icon: 'icon-calculator',
         translate: 'sidebar.nav.DASHBOARD',
-        
     },
     {
         name: 'Messages',
         icon: 'icon-speech',
         translate: 'sidebar.nav.DASHBOARD',
-        
     },
     {
         name: 'Payments',
         icon: 'icon-wallet',
         translate: 'sidebar.nav.DASHBOARD',
-        
     }
 ];
 

@@ -59,12 +59,17 @@ class PodCreate extends Component {
 
     /* Build payload */
     constructRequestPayload = () => {
-        return JSON.stringify({
+        var payload = {
             "podName": this.state.podCreate.podName,
-            "podDescription": this.state.podCreate.description,
             "phone": this.cleanPhoneNumber(this.state.podCreate.phone),
             "address": this.state.podCreate.address
-        })
+        };
+
+        if (this.state.podCreate.description) {
+            payload.podDescription = this.state.podCreate.description
+        }
+
+        return JSON.stringify(payload);
 
     }
 

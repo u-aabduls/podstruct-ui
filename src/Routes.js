@@ -23,6 +23,8 @@ const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 const Settings = lazy(() => import('./components/Extras/Settings'));
 const PodCreate = lazy(() => import('./components/Pages/PodManagement/PodCreate'));
 
+const PodsView = lazy(() => import('./components/Tables/PodsView/PodsView'));
+
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -81,6 +83,9 @@ const Routes = ({ location }) => {
                                     {/*Extras*/}
                                     <Route path="/settings" component={waitFor(Settings)}/>
                                     <Route path="/pod/create" component={waitFor(PodCreate)}/>
+
+                                    {/*Tables*/}
+                                    <Route path="/pods/view" component={waitFor(PodsView)}/>
                                     
                                     {/*Default*/}
                                     <Redirect to="/login" />
