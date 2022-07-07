@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import { Input } from 'reactstrap';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, CustomInput, Button } from 'reactstrap';
-import MonthSelector from "../Common/MonthSelector";
-import DaySelector from "../Common/DaySelector";
-import YearSelector from "../Common/YearSelector";
 import EditableProfile from "./EditableProfile"
 import UnEditableProfile from './UnEditableProfile';
 import { updateUser, getUser } from "../../connectors/User";
@@ -191,7 +187,6 @@ class Settings extends Component {
             var result = updateUser(this.constructRequestPayload());
             if (result.isSuccess) {
                 this.setState({ errorMessage: null });
-                console.log("test")
                 this.displayToast(result.message, "success", "bottom-center");
                 this.setUserState();
                 this.setState({ editButtonText: "Edit" })
