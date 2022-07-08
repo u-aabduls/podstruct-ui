@@ -14,6 +14,11 @@ class PodView extends Component {
 
     componentDidMount() {
         var result = send().payload;
+        result.push({
+            podName: "H Dummy Pod",
+            podDescription: "Dummy description",
+            roleInPod: "Student"
+        })
         result.sort(function(a,b){
             return (a.podName).localeCompare(b.podName);
         })
@@ -33,7 +38,7 @@ class PodView extends Component {
                     {/* <CardHeader>Demo Table #1</CardHeader> */}
                     {/* START table-responsive */}
                     <Table bordered hover responsive>
-                        <thead class="thead-dark">
+                        <thead className="thead-dark">
                             <tr>
                                 <th>Pod Name</th>
                                 <th>Pod Description</th>
@@ -51,6 +56,7 @@ class PodView extends Component {
                                             role={object.roleInPod}
                                             courseCount={0}
                                             studentCount={0}
+                                            action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] : ["View"]}
                                             key={i}
                                             isOddRow={i % 2 != 0}
                                         />;

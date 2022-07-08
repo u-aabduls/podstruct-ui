@@ -38,8 +38,7 @@ const Menu = [
             name: 'Attendance',
             icon: 'icon-check',
             path: '/table-datatable'
-        }
-    ]
+        }]
     },
     {
         name: 'Users',
