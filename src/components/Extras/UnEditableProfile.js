@@ -7,6 +7,14 @@ import YearSelector from "../Common/YearSelector";
 
 class UnEditableProfile extends Component {
 
+    disabledStyling = {
+        color: `#b7bac9`,
+        backgroundColor: `#EDF1F2`,
+        hover: {
+            backgroundColor: 'red'
+        }
+    }
+
     render() {
         return (
             <>
@@ -42,6 +50,7 @@ class UnEditableProfile extends Component {
                             id="disabled-field"
                             name="firstName"
                             className="border-right-0"
+                            style={this.disabledStyling}
                             placeholder="First name"
                             invalid={
                                 this.props.hasError('personalInformation', 'firstName', 'required')
@@ -79,6 +88,7 @@ class UnEditableProfile extends Component {
                             id="disabled-field"
                             name="lastName"
                             className="border-right-0"
+                            style={this.disabledStyling}
                             placeholder="Last name"
                             invalid={
                                 this.props.hasError('personalInformation', 'lastName', 'required')
@@ -116,6 +126,7 @@ class UnEditableProfile extends Component {
                             id="disabled-field"
                             name="phone"
                             className="border-right-0"
+                            style={this.disabledStyling}
                             placeholder="Phone"
                             invalid={
                                 this.props.hasError('personalInformation', 'phone', 'required')
@@ -180,6 +191,7 @@ class UnEditableProfile extends Component {
                             id="disabled-field"
                             name="address"
                             className="border-right-0"
+                            style={this.disabledStyling}
                             placeholder="Address"
                             disabled="disabled"
                         />

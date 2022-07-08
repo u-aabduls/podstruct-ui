@@ -14,6 +14,9 @@ class PodView extends Component {
 
     componentDidMount() {
         var result = send().payload;
+        result.sort(function(a,b){
+            return (a.podName).localeCompare(b.podName);
+        })
         this.setState({pods: result});
     }
 
@@ -30,7 +33,7 @@ class PodView extends Component {
                     {/* <CardHeader>Demo Table #1</CardHeader> */}
                     {/* START table-responsive */}
                     <Table bordered hover responsive>
-                        <thead class="thead-light">
+                        <thead class="thead-dark">
                             <tr>
                                 <th>Pod Name</th>
                                 <th>Pod Description</th>

@@ -25,42 +25,35 @@ const customStylesDefault = {
     height: "2.1875rem",
     fontWeight: "400",
     lineHeight: "1.52857",
-    color: "#495057",
-    backgroundColor: "#fff",
     backgroundClip: "padding-box",
     borderRadius: "0.25rem"
   }),
-  control: provided => ({
+  control: (provided, state) => ({
     ...provided,
     height: "2.1875rem",
     fontWeight: "400",
     lineHeight: "1.52857",
-    color: "#495057",
-    backgroundColor: "#fff",
     backgroundClip: "padding-box",
-    borderRadius: "0.25rem"
-  }),
-  valueContainer: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isDisabled ? "#c2c2c244" : "",
-    color: "#b7bac9"
+    borderRadius: "0.25rem",
+    border: `1px solid #dde6e9`,
+    background: state.isDisabled ? "#EDF1F2" : ""
   }),
   placeholder: (provided) => ({
     ...provided,
     color: "#b7bac9",
   }),
-  indicatorsContainer: (provided, state) => ({
+  singleValue: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isDisabled ? "#c2c2c244" : ""
+    color: state.isDisabled ? "#b7bac9" : "#495057"
   }),
-  indicatorSeparator: (provided, state) => ({
+  indicatorSeparator: (provided) => ({
     ...provided,
-    backgroundColor: "#918F90" 
+    backgroundColor: "#b7bac9"
   }),
-  dropdownIndicator: (provided, state) => ({
+  dropdownIndicator: (provided) => ({
      ...provided,
-    color: state.isDisabled ? "#918F90" : ""
-   })
+    color: "#b7bac9"
+  })
 };
 
 const customStylesError = {
