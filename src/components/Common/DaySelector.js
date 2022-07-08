@@ -1,6 +1,5 @@
 import React from 'react'
-import Select from 'react-select'
-import "../../styles/app/widgets/select.css";
+import Select from 'react-select';
 
 const options = [
   { value: '01', label: '1' },

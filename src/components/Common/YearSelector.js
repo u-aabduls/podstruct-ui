@@ -1,7 +1,5 @@
 import React, { useContext, useState } from "react";
-import Select from 'react-select'
-import "../../styles/app/widgets/select.css";
-
+import Select from 'react-select';
 const options = [];
 
 const customStylesDefault = {
