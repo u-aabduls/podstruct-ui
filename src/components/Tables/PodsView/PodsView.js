@@ -3,8 +3,7 @@ import ContentWrapper from '../../Layout/ContentWrapper';
 import { Row, Col, Card, CardHeader, CardFooter, Table, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import send from "../../../connectors/PodsRetrieval";
 import PodsViewRow from './PodsViewRow';
-
-import Sparkline from '../../Common/Sparklines.js';
+import { Link } from 'react-router-dom';
 
 class PodView extends Component {
 
@@ -17,7 +16,12 @@ class PodView extends Component {
         result.push({
             podName: "H Dummy Pod",
             podDescription: "Dummy description",
-            roleInPod: "Student"
+            roleInPod: "ROLE_STUDENT"
+        })
+        result.push({
+            podName: "O Dummy Pod",
+            podDescription: "Dummy description",
+            roleInPod: "ROLE_TEACHER"
         })
         result.sort(function(a,b){
             return (a.podName).localeCompare(b.podName);
@@ -32,6 +36,11 @@ class PodView extends Component {
                     <div>Pods
                         <small>Manage and create pods</small>
                     </div>
+                </div>
+                <div className="mb-3 text-right">
+                    <Link to="/pod/create" className="btn btn-success mr-5" title="Create Pod">
+                        <em className="fa fa-plus-circle fa-sm"></em> Create Pod
+                    </Link>
                 </div>
                 {/* START card */}
                 <Card className="card-default">
@@ -56,7 +65,8 @@ class PodView extends Component {
                                             role={object.roleInPod}
                                             courseCount={0}
                                             studentCount={0}
-                                            action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] : ["View"]}
+                                            action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] : 
+                                                        object.roleInPod === "ROLE_TEACHER" ? ["Manage"] : ["View"]}
                                             key={i}
                                             isOddRow={i % 2 != 0}
                                         />;
