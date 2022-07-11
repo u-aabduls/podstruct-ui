@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../../Layout/ContentWrapper';
 import { Row, Col, Card, CardHeader, CardFooter, Table, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
-import send from "../../../connectors/PodsRetrieval";
+import getPods from "../../../connectors/PodsRetrieval";
 import PodsViewRow from './PodsViewRow';
 import { Link } from 'react-router-dom';
 
@@ -11,8 +11,12 @@ class PodView extends Component {
         pods: []
     }
 
+    buttonLabelStyle = {
+        marginRight: `5px`
+    }
+
     componentDidMount() {
-        var result = send().payload;
+        var result = getPods().payload;
         result.push({
             podName: "H Dummy Pod",
             podDescription: "Dummy description",
@@ -39,7 +43,7 @@ class PodView extends Component {
                 </div>
                 <div className="mb-3 text-right">
                     <Link to="/pod/create" className="btn btn-success mr-5" title="Create Pod">
-                        <em className="fa fa-plus-circle fa-sm"></em> Create Pod
+                        <em className="fa fa-plus-circle fa-sm" style={this.buttonLabelStyle}></em> Create Pod
                     </Link>
                 </div>
                 {/* START card */}
@@ -67,6 +71,7 @@ class PodView extends Component {
                                             studentCount={0}
                                             action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] : 
                                                         object.roleInPod === "ROLE_TEACHER" ? ["Manage"] : ["View"]}
+                                            id={object.id}
                                             key={i}
                                             isOddRow={i % 2 != 0}
                                         />;
