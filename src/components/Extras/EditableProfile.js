@@ -57,7 +57,7 @@ class EditableProfile extends Component {
                                 <em className="fa fa-book"></em>
                             </span>
                         </div>
-                        {(this.props.backendInfo.firstName !== this.props.state.personalInformation.firstName) && <span style={this.props.changedInputStyling}>this.props field's current value differs from our records.</span>}
+                        {(this.props.backendInfo.firstName !== this.props.state.personalInformation.firstName) && <span style={this.props.changedInputStyling}>This field's current value differs from our records.</span>}
                         {this.props.hasError('personalInformation', 'firstName', 'required') && <span className="invalid-feedback">First name is required</span>}
                         {this.props.hasError('personalInformation', 'firstName', 'maxlen') && <span className="invalid-feedback">First name must not have more than 50 characters</span>}
                         {this.props.hasError('personalInformation', 'firstName', 'contains-alpha') && <span className="invalid-feedback">First name must contain at least one alpha character</span>}
@@ -93,7 +93,7 @@ class EditableProfile extends Component {
                                 <em className="fa fa-book"></em>
                             </span>
                         </div>
-                        {(this.props.backendInfo.lastName !== this.props.state.personalInformation.lastName) && <span style={this.props.changedInputStyling}>this.props field's current value differs from our records.</span>}
+                        {(this.props.backendInfo.lastName !== this.props.state.personalInformation.lastName) && <span style={this.props.changedInputStyling}>This field's current value differs from our records.</span>}
                         {this.props.hasError('personalInformation', 'lastName', 'required') && <span className="invalid-feedback">Last name is required</span>}
                         {this.props.hasError('personalInformation', 'lastName', 'maxlen') && <span className="invalid-feedback">Last name must have not have more than 50 characters</span>}
                         {this.props.hasError('personalInformation', 'lastName', 'contains-alpha') && <span className="invalid-feedback">Last name must contain at least one alpha character</span>}
@@ -125,7 +125,7 @@ class EditableProfile extends Component {
                                 <i className="fa fa-phone"></i>
                             </span>
                         </div>
-                        {(this.props.backendInfo.phone !== this.props.state.personalInformation.phone) && <span style={this.props.changedInputStyling}>this.props field's current value differs from our records.</span>}
+                        {(this.props.backendInfo.phone !== this.props.state.personalInformation.phone) && <span style={this.props.changedInputStyling}>This field's current value differs from our records.</span>}
                         {this.props.hasError('personalInformation', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
                         {this.props.hasError('personalInformation', 'phone', 'phone') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
                     </div>
@@ -154,7 +154,7 @@ class EditableProfile extends Component {
                         {(this.props.backendInfo.dob.month !== this.props.state.personalInformation.dob.month ||
                             this.props.backendInfo.dob.day !== this.props.state.personalInformation.dob.day ||
                             this.props.backendInfo.dob.year !== this.props.state.personalInformation.dob.year) &&
-                            <span style={this.props.changedInputStyling}>this.props field's current value differs from our records.</span>}
+                            <span style={this.props.changedInputStyling}>This field's current value differs from our records.</span>}
                         {this.props.state.personalInformation.dob.error.isNull && <p style={this.props.errorMessageStyling}>Date of birth is required</p>}
                         {this.props.state.personalInformation.dob.error.isInFuture && <p style={this.props.errorMessageStyling}>Date of birth must not be in the future</p>}
                     </div>

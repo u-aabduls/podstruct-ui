@@ -149,6 +149,7 @@ class Settings extends Component {
 
     onEditChange = () => {
         if (this.state.editMode) {
+            this.resetUserState();
             this.setState({ editButtonText: "Edit" })
             this.setState({ editMode: false })
         }
@@ -225,6 +226,15 @@ class Settings extends Component {
             this.backendInfo = JSON.parse(JSON.stringify(stateCopy.personalInformation));
             this.setState(stateCopy);
         }
+    }
+
+    resetUserState() {
+        this.state.personalInformation.firstName = this.backendInfo.firstName;
+        this.state.personalInformation.lastName = this.backendInfo.lastName;
+        this.state.personalInformation.phone = this.backendInfo.phone;
+        this.state.personalInformation.dob.month = this.backendInfo.dob.month;
+        this.state.personalInformation.dob.day = this.backendInfo.dob.day;
+        this.state.personalInformation.dob.year = this.backendInfo.dob.year;
     }
 
     componentDidMount() {
@@ -308,7 +318,7 @@ class Settings extends Component {
                                                             validateOnChange={this.validateOnChange}
                                                         />
                                                         <button className="btn btn-info" disabled>Save Changes</button>
-                                                        <ToastContainer/>
+                                                        <ToastContainer />
                                                     </>
                                                 }
                                             </form>
