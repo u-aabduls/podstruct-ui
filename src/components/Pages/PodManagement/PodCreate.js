@@ -110,7 +110,7 @@ class PodCreate extends Component {
                 "bottom-center"
             );
             if (result.isSuccess) {
-                // setTimeout(() => this.props.history.push('/dashboard'), 5000);
+                setTimeout(() => this.props.history.push('/pods/view'), 5000);
             }
         }
 
