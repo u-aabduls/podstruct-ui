@@ -23,7 +23,7 @@ const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 const Settings = lazy(() => import('./components/Extras/Settings'));
 const PodCreate = lazy(() => import('./components/Pages/PodManagement/PodCreate'));
 
-const PodsView = lazy(() => import('./components/Tables/PodsView/PodsView'));
+const PodsView = lazy(() => import('./components/Pages/PodsView/PodsView'));
 
 
 // List of routes that uses the page layout
