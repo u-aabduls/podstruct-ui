@@ -196,11 +196,12 @@ class Register extends Component {
                         <p className="text-center py-2">CREATE YOUR PODSTRUCT ACCOUNT</p>
                         <form className="mb-3" name="formRegister" onSubmit={this.onSubmit}>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputEmail1">Email address</label>
+                                <label className="text-muted" htmlFor="id-email">Email address</label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="email"
                                         name="email"
+                                        id='id-email'
                                         className="border-right-0"
                                         placeholder="Enter email"
                                         invalid={this.hasError('formRegister', 'email', 'required') || this.hasError('formRegister', 'email', 'email')}
@@ -217,7 +218,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputFirstName">First name</label>
+                                <label className="text-muted" htmlFor="id-firstName">First name</label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="text"
@@ -252,7 +253,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputLastName">Last name</label>
+                                <label className="text-muted" htmlFor="id-lastName">Last name</label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="text"
@@ -287,7 +288,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputDOB">Date of birth</label>
+                                <label className="text-muted">Date of birth</label>
                                 <div className="input-group with-focus">
                                     <MonthSelector
                                         name="monthSelector"
@@ -309,7 +310,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputPhone">Phone number</label>
+                                <label className="text-muted" htmlFor="id-phone">Phone number</label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="text"
@@ -336,7 +337,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputPassword1">Password</label>
+                                <label className="text-muted" htmlFor="id-password">Password</label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="password"
@@ -367,11 +368,12 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="signupInputRePassword1">Confirm Password</label>
+                                <label className="text-muted" htmlFor="id-confirmedPassword">Confirm Password</label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="password"
                                         name="confirmedPassword"
+                                        id="id-confirmedPassword"
                                         className="border-right-0"
                                         placeholder="Retype password"
                                         invalid={this.hasError('formRegister', 'confirmedPassword', 'equalto')}
