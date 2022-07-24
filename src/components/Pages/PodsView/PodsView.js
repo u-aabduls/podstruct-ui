@@ -48,7 +48,7 @@ class PodView extends Component {
                         <small>Manage and create pods</small>
                     </div>
                     <div>
-                        <Link to="/pod/create" className="btn btn-success mr-5" title="Create Pod">
+                        <Link to="/pod/create" className="btn btn-success" title="Create Pod">
                             <em className="fa fa-plus-circle fa-sm" style={this.buttonLabelStyle}></em> Create Pod
                         </Link>
                     </div>
