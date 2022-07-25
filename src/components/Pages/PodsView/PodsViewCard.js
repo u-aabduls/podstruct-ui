@@ -1,7 +1,7 @@
 import React from 'react';
 import deactivatePod from "../../../connectors/PodDeactivate";
 import { Progress, Card, CardHeader, CardBody, CardFooter, Table } from 'reactstrap';
-import Sparkline from '../../Common/Sparklines';
+import Swal from '../../Common/Swal';
 
 function deactivate(podId) {
     var result = deactivatePod({ podId: podId });
@@ -14,6 +14,36 @@ const contentHeadingStyle = {
     paddingTop: `0.5rem`
 }
 
+const swalDeactivateOptions = {
+    title: 'Are you sure?',
+    text: 'You are about to deactivate this pod',
+    icon: 'warning',
+    buttons: {
+        cancel: {
+            text: 'No, cancel',
+            value: null,
+            visible: true,
+            className: "",
+            closeModal: false
+        },
+        confirm: {
+            text: 'Yes, deactivate',
+            value: true,
+            visible: true,
+            className: "bg-danger",
+            closeModal: false
+        }
+    }
+}
+
+function swalCallback5(isConfirm, swal) {
+    if (isConfirm) {
+        swal("Deactivated", "Your pod has been deacivated.", "success");
+    } else {
+        swal("Cancelled", "Cancelled attempt to deactivate this pod.", "error");
+    }
+}
+
 export default function PodsViewCard(props) {
     return (
         <Card className="b">
@@ -22,7 +52,6 @@ export default function PodsViewCard(props) {
                     <div className="badge badge-info">started</div>
                 </div>
                 <h4 className="m-0">{props.name}</h4>
-                {/* <small className="text-muted">Sed amet lectus id.</small> */}
             </CardHeader>
             <CardBody style={contentHeadingStyle}>
                 <div className="d-flex align-items-center">
@@ -41,7 +70,7 @@ export default function PodsViewCard(props) {
                             <strong>Pod Description</strong>
                         </td>
                         <td>
-                            {props.description}
+                            {props.description.length > 50 ? props.description.substring(0,50) + "..." : props.description}
                         </td>
                     </tr>
                     <tr>
@@ -84,16 +113,15 @@ export default function PodsViewCard(props) {
                         <button 
                             className="btn btn-warning mr-2 mt-2 mb-2" 
                             title="Manage">
-                                {/* <em className="fa icon-pencil"></em> */}
                                 Manage
                         </button>
-                        <button 
+                        {/* <button 
                             className="btn btn-danger mt-2 mb-2" 
                             title="Deactivate"
                             onClick={e => {deactivate(props.id)}}>
-                                {/* <em className="fa fa-trash"></em> */}
                                 Deactivate
-                        </button>
+                        </button> */}
+                        <Swal options={swalDeactivateOptions} callback={swalCallback5} className="btn btn-danger">Deactivate</Swal>
                     </div> 
                 }
                 {props.action.length === 1 && props.action[0] === "Manage" &&
@@ -101,7 +129,6 @@ export default function PodsViewCard(props) {
                         <button 
                             className="btn btn-warning m-2" 
                             title="Manage">
-                                {/* <em className="fa icon-pencil"></em> */}
                                 Manage
                         </button>
                     </div> 
@@ -111,7 +138,6 @@ export default function PodsViewCard(props) {
                         <button 
                             className="btn btn-primary m-2" 
                             title="View">
-                                {/* <em className="fa fa-folder-open"></em> */}
                                 View
                         </button>
                     </div> 
