@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../../Layout/ContentWrapper';
-import { Row, Col, Card, CardHeader, CardBody, CardFooter, Table, Progress } from 'reactstrap';
-import Sparkline from '../../Common/Sparklines';
+import { Row, Col, Input } from 'reactstrap';
 import getPods from "../../../connectors/PodsRetrieval";
 import PodsViewCard from './PodsViewCard';
-import { Link } from 'react-router-dom';
+import Swal from '../../Common/Swal';
+import renderSwal from '../../Common/Modal/PodCreation';
 
 class PodView extends Component {
 
     state = {
-        pods: []
+        pods: [],
+        podCreate: {
+            name: '',
+            description: '',
+            phone: '',
+            address: ''
+        }
     }
 
     buttonLabelStyle = {
@@ -26,12 +32,14 @@ class PodView extends Component {
         result.push({
             podName: "H Dummy Pod",
             podDescription: "Dummy description",
-            roleInPod: "ROLE_STUDENT"
+            roleInPod: "ROLE_STUDENT",
+            active: true
         })
         result.push({
             podName: "O Dummy Pod",
             podDescription: "Dummy description",
-            roleInPod: "ROLE_TEACHER"
+            roleInPod: "ROLE_TEACHER",
+            active: true
         })
         result.sort(function (a, b) {
             return (a.podName).localeCompare(b.podName);
@@ -45,38 +53,39 @@ class PodView extends Component {
                 <div className="content-heading" style={this.contentHeadingStyle}>
                     <div>
                         Pods
-                        <small>Manage and create pods</small>
+                        <small>View and create pods</small>
                     </div>
                     <div>
-                        <Link to="/pod/create" className="btn btn-success" title="Create Pod">
+                        <button className="btn btn-success"
+                            onClick={() => { renderSwal() }}>
                             <em className="fa fa-plus-circle fa-sm" style={this.buttonLabelStyle}></em> Create Pod
-                        </Link>
+                        </button>
                     </div>
                 </div>
                 <Row>
                     {this.state.pods.map(function (object, i) {
                         return (
-                            <Col xl="4" lg="6">
-                                <PodsViewCard
-                                    name={object.podName}
-                                    description={object.podDescription}
-                                    role={object.roleInPod}
-                                    courseCount={0}
-                                    studentCount={0}
-                                    action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] :
-                                        object.roleInPod === "ROLE_TEACHER" ? ["Manage"] : ["View"]}
-                                    id={object.id}
-                                    key={i}
-                                    isOddRow={i % 2 != 0}
-                                />
-                            </Col>
+                            object.active ?
+                                <Col key={i} xl="4" lg="6">
+                                    <PodsViewCard
+                                        name={object.podName}
+                                        description={object.podDescription}
+                                        role={object.roleInPod}
+                                        courseCount={0}
+                                        studentCount={0}
+                                        action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] :
+                                            object.roleInPod === "ROLE_TEACHER" ? ["Manage"] : ["View"]}
+                                        id={object.id}
+                                        key={i}
+                                        isOddRow={i % 2 != 0}
+                                    />
+                                </Col> : null
                         );
                     })}
                 </Row>
             </ContentWrapper>
         );
     }
-
 }
 
 export default PodView;
