@@ -4,6 +4,22 @@ import swal from '@sweetalert/with-react';
 import send from "../../../connectors/PodCreation";
 import "../../../styles/app/modals/pod-creation.css";
 
+var podName = "",
+    description = "",
+    phone = "",
+    address = "",
+    error = {
+        found: false,
+        message: ""
+    };
+
+function resetValues() {
+    podName = "";
+    description = "";
+    phone = "";
+    address = "";
+}
+
 function constructRequestPayload(podName, description, phone, address) {
     var payload = {
         podName: podName,
@@ -132,15 +148,6 @@ function parsePhoneNumber(phoneNumber) {
 
 function renderSwal() {
 
-    var podName = "",
-        description = "",
-        phone = "",
-        address = "",
-        error = {
-            found: false,
-            message: ""
-        };
-
     swal({
         text: "Create a Pod",
         buttons: {
@@ -161,6 +168,7 @@ function renderSwal() {
                             name="podName"
                             className="border-right-0"
                             placeholder="Name"
+                            defaultValue= {podName ? podName : ""}
                         />
                         <div className="input-group-append">
                             <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -178,6 +186,7 @@ function renderSwal() {
                             name="description"
                             className="border-right-0 no-resize"
                             placeholder="Description"
+                            defaultValue= {description ? description : ""}
                             rows={5}
                         />
                         <div className="input-group-append">
@@ -196,6 +205,7 @@ function renderSwal() {
                             name="phone"
                             className="border-right-0"
                             placeholder="(XXX) XXX-XXXX"
+                            defaultValue= {phone ? phone : ""}
                         />
                         <div className="input-group-append">
                             <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -213,6 +223,7 @@ function renderSwal() {
                             name="address"
                             className="border-right-0"
                             placeholder="Address"
+                            defaultValue= {address ? address : ""}
                         />
                         <div className="input-group-append">
                             <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -266,7 +277,8 @@ function renderSwal() {
                                 },
                             }).then(
                                 (acknowledged) => {
-                                    window.location.href = (acknowledged) ? window.location.href : window.location.href
+                                    window.location.href = (acknowledged) ? window.location.href : window.location.href;
+                                    resetValues();
                                 }
                             )
                         } else {
@@ -281,6 +293,7 @@ function renderSwal() {
                                     }
                                 },
                             });
+
                         }
                     } else {
                         swal({
