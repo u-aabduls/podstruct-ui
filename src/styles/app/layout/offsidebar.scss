@@ -7,7 +7,7 @@
 // Open status toggled via JS
 // -----------------------------------------
 
-$offsidebar-bg:           #fff;
+$offsidebar-bg:           rgb(212, 89, 89);
 $offsidebar-border-color: grayscale(darken($offsidebar-bg, 20%));
 $offsidebar-color:        $body-color;
 $offsidebar-wd:           $aside-wd + 15px;      // match the width with the main aside component

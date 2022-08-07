@@ -538,3 +538,13 @@ _:-ms-lang(x),
         left: $aside-wd-collapsed-text
     }
 }
+
+.not-found{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 100px;
+    margin-left: -130px;
+    margin-top: 350px;
+}

@@ -41,7 +41,6 @@ class Offsidebar extends Component {
     }
 
     render() {
-
         return (
             this.state.offsidebarReady &&
             <aside className="offsidebar">
