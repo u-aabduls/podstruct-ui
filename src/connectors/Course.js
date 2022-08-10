@@ -30,7 +30,7 @@ async function getCourses(podID, subject) {
 function addCourse(podID, requestBody){
     endpointPath = "podstruct/api/pods/" + podID + "/courses";
     _initializePOSTCourse();
-    request.send();
+    request.send(requestBody);
     return result;
 }
 
@@ -57,6 +57,7 @@ function _initializeGETCourses() {
 }
 
 function _initializePOSTCourse() {
+    console.log(endpointPath)
     request.open("POST", devServer + endpointPath, false);
     // request.open("POST", prodServer + endpointPath, false);
     request.setRequestHeader("accept", "*/*");
@@ -70,8 +71,7 @@ function _initializePOSTCourse() {
  ********************/
 
 function __execute() {
-    var data = JSON.parse(this.response);
-   // console.log(data)
+    if (this.response) var data = JSON.parse(this.response);
     if (request.status >= 400) {
         result.isSuccess = false;
         result.message = handleError(request.status, data);

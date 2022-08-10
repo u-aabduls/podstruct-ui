@@ -56,7 +56,7 @@ class CourseCard extends Component {
                                 })}
                                 {output}
                                 <br></br>
-                                {moment(this.props.startTime, "HH:mm:ss").format("h:mm ") + " - " + moment(this.props.endTime, "HH:mm:ss").format("h:mm A")}
+                                {moment(this.props.startTime, "HH:mm:ss").format("h:mm A") + " - " + moment(this.props.endTime, "HH:mm:ss").format("h:mm A")}
                             </td>
                         </tr>
                     </tbody>

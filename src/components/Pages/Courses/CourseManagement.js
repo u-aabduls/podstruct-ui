@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ContentWrapper from '../../Layout/ContentWrapper';
-import { Button, Row, Col,} from 'reactstrap';
-import Select from 'react-select';
+import { Button, Input, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
+import PodSelector from '../../Common/PodSelector';
+import DaysOfWeekSelector from '../../Common/DaysOfWeekSelector';
+import Datetime from 'react-datetime';
 import CourseCard from './CourseCard';
-import renderSwal from '../../Modal/CourseCreation';
+import Swal from 'sweetalert2';
+import 'react-datetime/css/react-datetime.css';
+
 import { getPods, getCourses, addCourse } from '../../../connectors/Course';
 import * as actions from '../../../store/actions/actions';
 import { bindActionCreators } from 'redux';
@@ -27,17 +32,23 @@ class CourseManagement extends Component {
         subjectFilter: '',
         pods: [],
         courses: [],
+        modal: false
     }
 
-    options = []
-
-    daysOfWeek = ["Mon", "Tues", "Wed", "Thrus", "Fri", "Sat", "Sun"]
-
-    colourStyles = {
-        placeholder: (provided) => ({
-            ...provided,
-            color: "#b7bac9",
-        })
+    toggleModal = () => {
+        this.setState({
+            formAddCourse: {
+                subject: '',
+                daysOfWeekInterval: '',
+                startTime: '',
+                endTime: '',
+                number: '',
+                teacher: '',
+                description: '',
+                selectedPod: ''
+            },
+            modal: !this.state.modal
+        });
     }
 
     /**
@@ -79,8 +90,7 @@ class CourseManagement extends Component {
             "startTime": this.state.formAddCourse.startTime,
             "endTime": this.state.formAddCourse.endTime,
             "description": this.state.formAddCourse.description,
-            "number": this.state.formAddCourse.number,
-            "teacher": this.state.formAddCourse.teacher,
+            // "teacher": this.state.formAddCourse.teacher,
         })
     }
 
@@ -92,10 +102,37 @@ class CourseManagement extends Component {
         };
     };
 
-    setOptions() {
-        this.options = this.state.pods.map(function (pod) {
-            return { value: pod.id, label: pod.podName }
-        })
+    setFormPod = (pod) => {
+        var stateCopy = this.state.formAddCourse;
+        stateCopy.selectedPod = pod;
+        this.setState(stateCopy);
+    }
+
+    setDays = (day) => {
+        var stateCopy = this.state.formAddCourse;
+        var output = ''
+        day.forEach((element, idx, array) => {
+            if (idx === array.length - 1) {
+                output += element.value
+            }
+            else {
+                output += element.value + ','
+            }
+
+        });
+        stateCopy.daysOfWeekInterval = output
+        this.setState(stateCopy);
+    }
+
+    setTime = (date, id) => {
+        var stateCopy = this.state.formAddCourse;
+        if (id === "AM") {
+            stateCopy.startTime = date.format("HH:mm:ss")
+        }
+        else {
+            stateCopy.endTime = date.format("HH:mm:ss")
+        }
+        this.setState(stateCopy);
     }
 
     setPod = (pod) => {
@@ -154,6 +191,7 @@ class CourseManagement extends Component {
     }
 
     onSubmit = e => {
+        e.preventDefault();
 
         const form = e.target;
 
@@ -175,24 +213,32 @@ class CourseManagement extends Component {
             }
         });
 
-        const invalidDOB = this.validateDateOfBirth();
+        console.log((hasError) ? 'Form has errors. Check!' : 'Form Submitted!')
 
-        console.log((hasError || invalidDOB) ? 'Form has errors. Check!' : 'Form Submitted!')
-
-        if (!hasError && !invalidDOB) {
-            var result = addCourse(this.state.selectedPod, this.constructRequestPayload());
-            this.displayToast(
-                result.message,
-                result.isSuccess ? "success" : "error",
-                "bottom-center"
-            );
+        if (!hasError) {
+            var result = addCourse(this.state.formAddCourse.selectedPod, this.constructRequestPayload());
+            if (result.isSuccess) {
+                var self = this;
+                Swal.fire({
+                    title: "Successfully created course",
+                    icon: "success",
+                }).then(function () {
+                    self.toggleModal()
+                })
+            }
+            else {
+                Swal.fire({
+                    title: "Error",
+                    icon: "error",
+                    text: result.message
+                })
+            }
         }
 
-        e.preventDefault();
+
     }
 
     render() {
-        this.setOptions()
         return (
             <ContentWrapper>
                 <div className="content-heading">
@@ -201,22 +247,162 @@ class CourseManagement extends Component {
                     </div>
 
                     <div className="ml-auto">
-                        <Button className="btn btn-secondary btn-sm" onClick={event => renderSwal(event, this.state.pods)}>Add Course</Button>
+                        <Button className="btn btn-secondary btn-sm" onClick={this.toggleModal}>Add Course</Button>
+                        <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                            <form className="mb-3" name="formAddCourse" onSubmit={this.onSubmit}>
+                                <ModalHeader toggle={this.toggleModal}>Add Course</ModalHeader>
+                                <ModalBody>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addCourseSubject">Select Pod</label>
+                                        <PodSelector
+                                            name="podSelector"
+                                            pods={this.state.pods}
+                                            setPod={(pod) => this.setFormPod(pod)}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addCourseSubject">Course Subject</label>
+                                        <div className="input-group with-focus">
+                                            <Input
+                                                type="text"
+                                                name="subject"
+                                                className="border-right-0"
+                                                placeholder="Enter course subject"
+                                                invalid={
+                                                    this.hasError('formAddCourse', 'subject', 'required')
+                                                    || this.hasError('formAddCourse', 'subject', 'maxlen')
+                                                    || this.hasError('formAddCourse', 'subject', 'contains-alpha')
+                                                    || this.hasError('formAddCourse', 'subject', 'begin-end-spacing')
+                                                    || this.hasError('formAddCourse', 'subject', 'consecutive-spacing')
+                                                }
+                                                onChange={this.validateOnChange}
+                                                data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-param='50'
+                                                value={this.state.formAddCourse.subject} />
+                                            <div className="input-group-append">
+                                                <span className="input-group-text text-muted bg-transparent border-left-0">
+                                                    <em className="fa fa-book"></em>
+                                                </span>
+                                            </div>
+                                            {this.hasError('formAddCourse', 'subject', 'required') && <span className="invalid-feedback">Subject is required</span>}
+                                            {this.hasError('formAddCourse', 'subject', 'maxlen') && <span className="invalid-feedback">Subject must not have more than 50 characters</span>}
+                                            {this.hasError('formAddCourse', 'subject', 'contains-alpha') && <span className="invalid-feedback">Subject must contain at least one alpha character</span>}
+                                            {this.hasError('formAddCourse', 'subject', 'begin-end-spacing') && <span className="invalid-feedback">Subject must not begin or end with a space character</span>}
+                                            {this.hasError('formAddCourse', 'subject', 'consecutive-spacing') && <span className="invalid-feedback">Subject must not contain consecutive space characters</span>}
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addDaySchedule">Day Schedule</label>
+                                        <DaysOfWeekSelector
+                                            name="daysOfWeekSelector"
+                                            setDays={(day) => this.setDays(day)}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule</label>
+                                        <Row>
+                                            <Col lg="6">
+                                                <label className="text-muted">Start time: </label>
+                                                <Datetime
+                                                    id="AM"
+                                                    inputProps={{ className: 'form-control' }}
+                                                    dateFormat={false}
+                                                    onChange={(date) => this.setTime(date, "AM")}
+                                                />
+                                            </Col>
+                                            <Col lg="6">
+                                                <label className="text-muted">End time: </label>
+                                                <Datetime
+                                                    id="AM"
+                                                    inputProps={{ className: 'form-control' }}
+                                                    dateFormat={false}
+                                                    onChange={(date) => this.setTime(date, "PM")}
+                                                />
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addCourseTeacher">Teacher</label>
+                                        <div className="input-group with-focus">
+                                            <Input
+                                                type="text"
+                                                name="teacher"
+                                                className="border-right-0"
+                                                placeholder="Enter teacher's name"
+                                                invalid={
+                                                    this.hasError('formAddCourse', 'teacher', 'required')
+                                                    || this.hasError('formAddCourse', 'teacher', 'maxlen')
+                                                    || this.hasError('formAddCourse', 'teacher', 'contains-alpha')
+                                                    || this.hasError('formAddCourse', 'teacher', 'name')
+                                                    || this.hasError('formAddCourse', 'teacher', 'begin-end-spacing')
+                                                    || this.hasError('formAddCourse', 'teacher', 'consecutive-spacing')
+                                                }
+                                                onChange={this.validateOnChange}
+                                                data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-param='50'
+                                                value={this.state.formAddCourse.teacher} />
+                                            <div className="input-group-append">
+                                                <span className="input-group-text text-muted bg-transparent border-left-0">
+                                                    <em className="fa fa-book"></em>
+                                                </span>
+                                            </div>
+                                            {this.hasError('formAddCourse', 'teacher', 'required') && <span className="invalid-feedback">Teacher is required</span>}
+                                            {this.hasError('formAddCourse', 'teacher', 'maxlen') && <span className="invalid-feedback">Teacher must not have more than 50 characters</span>}
+                                            {this.hasError('formAddCourse', 'teacher', 'contains-alpha') && <span className="invalid-feedback">Teacher must contain at least one alpha character</span>}
+                                            {this.hasError('formAddCourse', 'teacher', 'name') && <span className="invalid-feedback">Teacher must contain alpha, apostrophe, or hyphen characters only</span>}
+                                            {this.hasError('formAddCourse', 'teacher', 'begin-end-spacing') && <span className="invalid-feedback">Teacher must not begin or end with a space character</span>}
+                                            {this.hasError('formAddCourse', 'teacher', 'consecutive-spacing') && <span className="invalid-feedback">Teacher must not contain consecutive space characters</span>}
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addDescription">Course Description</label>
+                                        <div className="input-group with-focus">
+                                            <Input
+                                                type="textarea"
+                                                name="description"
+                                                className="border-right-0"
+                                                placeholder="Enter course description"
+                                                invalid={
+                                                    this.hasError('formAddCourse', 'description', 'required')
+                                                    || this.hasError('formAddCourse', 'description', 'maxlen')
+                                                    || this.hasError('formAddCourse', 'description', 'contains-alpha')
+                                                    || this.hasError('formAddCourse', 'description', 'begin-end-spacing')
+                                                    || this.hasError('formAddCourse', 'description', 'consecutive-spacing')
+                                                }
+                                                onChange={this.validateOnChange}
+                                                data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-param='150'
+                                                value={this.state.formAddCourse.description} />
+                                            <div className="input-group-append">
+                                                <span className="input-group-text text-muted bg-transparent border-left-0">
+                                                    <em className="fa fa-book"></em>
+                                                </span>
+                                            </div>
+                                            {this.hasError('formAddCourse', 'description', 'required') && <span className="invalid-feedback">Course description is required</span>}
+                                            {this.hasError('formAddCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 150 characters</span>}
+                                            {this.hasError('formAddCourse', 'description', 'contains-alpha') && <span className="invalid-feedback">Course description must contain at least one alpha character</span>}
+                                            {this.hasError('formAddCourse', 'description', 'begin-end-spacing') && <span className="invalid-feedback">Course description must not begin or end with a space character</span>}
+                                            {this.hasError('formAddCourse', 'description', 'consecutive-spacing') && <span className="invalid-feedback">Course description must not contain consecutive space characters</span>}
+                                        </div>
+                                    </div>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                                    <Button color="primary" type="submit">Add</Button>{' '}
+                                </ModalFooter>
+                            </form>
+                        </Modal>
+
                     </div>
                 </div>
 
                 <Row>
                     <Col lg="2">
                         <div className="form-group mb-5">
-                            <Select
+                            <PodSelector
                                 name="podSelector"
-                                multi
-                                simpleValue
-                                placeholder="Select a Pod..."
-                                styles={this.colourStyles}
-                                value={this.options.find(o => o.value === this.state.selectedPod)}
-                                onChange={(e) => { this.setPod(e.value) }}
-                                options={this.options}
+                                pods={this.state.pods}
+                                setPod={(pod) => this.setPod(pod)}
                             />
                         </div>
                     </Col>
