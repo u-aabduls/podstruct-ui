@@ -30,6 +30,11 @@ const Menu = [
         icon: 'icon-notebook',
         translate: 'sidebar.nav.DASHBOARD',
         submenu: [{
+            name: 'Manage',
+            icon: 'fas fa-user-cog',
+            path: '/courses'
+        },
+        {
             name: 'Assignments',
             icon: 'icon-pencil',
             path: '/table-standard'

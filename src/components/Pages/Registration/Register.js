@@ -183,6 +183,7 @@ class Register extends Component {
 
     render() {
         return (
+            
             <div className="block-center mt-4 wd-xl">
                 {/* START card */}
                 <div className="card card-flat">

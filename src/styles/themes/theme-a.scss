@@ -170,6 +170,11 @@ body, .wrapper .section-container {
 
 }
 
+.course-card-header{
+     background-color: $nav-top-bg;
+    @include gradient-x($nav-top-bg-start, $nav-top-bg-end);
+}
+
 /* ========================================================================
    Component: offsidebar
  ========================================================================== */

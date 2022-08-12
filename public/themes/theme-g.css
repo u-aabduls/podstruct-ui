@@ -92,3 +92,13 @@ body, .wrapper .section-container {
   border-left: 1px solid greyscale(#cccccc);
   background-color: #fff;
   color: #656565; }
+
+/* ========================================================================
+   Component: course card
+ ========================================================================== */
+ .course-card-header {
+  background-color: transparent;
+  background-image: linear-gradient(to right, #564aa3 0%, #7266ba 100%);
+  background-repeat: repeat-x;
+  color: white
+}
