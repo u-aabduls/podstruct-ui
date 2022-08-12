@@ -76,7 +76,7 @@ export default function PodsViewCard(props) {
                         </tr>
                     </tbody>
                 </Table>
-                <CardFooter className="text-center">
+                {/* <CardFooter className="text-center">
                     {props.action.length > 1 &&
                         <div>
                             <button
@@ -110,7 +110,7 @@ export default function PodsViewCard(props) {
                             </button>
                         </div>
                     }
-                </CardFooter>
+                </CardFooter> */}
             </Card>
         </Link>
     )
