@@ -12,7 +12,7 @@ export default function configureStore() {
         reducers,
         persistedState, // second argument overrides the initial state
         applyMiddleware(
-            ...middlewares
+            ...middlewares,
         )
     );
 
