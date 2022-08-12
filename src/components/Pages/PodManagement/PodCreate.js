@@ -128,7 +128,7 @@ class PodCreate extends Component {
                                     <div className="card b">
                                         <div className="card-header bg-gray-lighter text-bold">Create a Pod</div>
                                         <div className="card-body">
-                                            <form className="mb-3" name="podCreate" onSubmit={this.onSubmit}>
+                                            <form name="podCreate" onSubmit={this.onSubmit}>
                                                 <div className="form-group">
                                                     <label className="text-muted" htmlFor="id-podName">Name</label>
                                                     <div className="input-group with-focus">
@@ -147,7 +147,7 @@ class PodCreate extends Component {
                                                             }
                                                             onChange={this.validateOnChange}
                                                             data-validate='["required", "maxlen", "podname", "begin-end-spacing", "consecutive-spacing"]'
-                                                            data-param='50'
+                                                            data-param='45'
                                                             value={this.state.podCreate.podName}
                                                         />
                                                         <div className="input-group-append">
@@ -156,7 +156,7 @@ class PodCreate extends Component {
                                                             </span>
                                                         </div>
                                                         {this.hasError('podCreate', 'podName', 'required') && <span className="invalid-feedback">Name is required</span>}
-                                                        {this.hasError('podCreate', 'podName', 'maxlen') && <span className="invalid-feedback">Name must not have more than 50 characters</span>}
+                                                        {this.hasError('podCreate', 'podName', 'maxlen') && <span className="invalid-feedback">Name must not have more than 45 characters</span>}
                                                         {this.hasError('podCreate', 'podName', 'podname') && <span className="invalid-feedback">Name must contain alpha, numeric, or hyphen characters only</span>}
                                                         {this.hasError('podCreate', 'podName', 'begin-end-spacing') && <span className="invalid-feedback">Name must not begin or end with a space character</span>}
                                                         {this.hasError('podCreate', 'podName', 'consecutive-spacing') && <span className="invalid-feedback">Name must not contain consecutive space characters</span>}
@@ -238,7 +238,7 @@ class PodCreate extends Component {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button className="btn btn-primary" type="submit">Create pod</button>
+                                                <button className="btn btn-primary mt-2 mb-2" type="submit">Create pod</button>
                                             </form>
                                         </div>
                                     </div>
