@@ -18,11 +18,6 @@ const customStylesDefault = {
 }
 
 const customStylesError = {
-    container: provided => ({
-        ...provided,
-        width: `28.5%`,
-        margin: `0% 1.5% 0% 0%`,
-    }),
     control: (provided) => ({
         ...provided,
         border: '1px solid #f05050'
@@ -36,7 +31,7 @@ export default function DaysOfWeekSelector(props) {
             isMulti={true}
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
-            value={options.find(o => o.value === props.defaultv)}
+            value={props.defaultv.map(e => options.find(o => o.value === e))}
             onChange={(e) => { props.setDays(e)}}
         />
     )

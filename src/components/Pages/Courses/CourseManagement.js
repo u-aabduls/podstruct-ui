@@ -14,6 +14,7 @@ import { getPods, getCourses, addCourse } from '../../../connectors/Course';
 import * as actions from '../../../store/actions/actions';
 import { bindActionCreators } from 'redux';
 import FormValidator from '../../Forms/FormValidator';
+import { Date } from 'core-js/es7';
 
 class CourseManagement extends Component {
 
@@ -26,13 +27,27 @@ class CourseManagement extends Component {
             number: '',
             teacher: '',
             description: '',
-            selectedPod: ''
+            selectedPod: '',
+            selector: {
+                error: {
+                    isNullPod: false,
+                    isNullDay: false,
+                    isNullTime: false
+                }
+            }
         },
         selectedPod: '',
         subjectFilter: '',
         pods: [],
         courses: [],
         modal: false
+    }
+
+    errorMessageStyling = {
+        color: '#f05050',
+        width: '100%',
+        marginTop: '0.25rem',
+        fontSize: '80%'
     }
 
     toggleModal = () => {
@@ -45,7 +60,14 @@ class CourseManagement extends Component {
                 number: '',
                 teacher: '',
                 description: '',
-                selectedPod: ''
+                selectedPod: '',
+                selector: {
+                    error: {
+                        isNullPod: false,
+                        isNullDay: false,
+                        isNullTime: false
+                    }
+                }
             },
             modal: !this.state.modal
         });
@@ -73,6 +95,19 @@ class CourseManagement extends Component {
                 }
             }
         });
+    }
+
+    validateSelectors = event => {
+        var isNullPod = this.state.formAddCourse.selectedPod === '';
+        var isNullDay = this.state.formAddCourse.daysOfWeekInterval === '';
+        var isNullTime = this.state.formAddCourse.startTime === '' || this.state.formAddCourse.endTime === '';
+
+        var stateCopy = this.state.formAddCourse;
+        stateCopy.selector.error.isNullPod = isNullPod ? true : false;
+        stateCopy.selector.error.isNullDay = isNullDay ? true : false;
+        stateCopy.selector.error.isNullTime = isNullTime ? true : false;
+        this.setState(stateCopy);
+        return isNullPod || isNullDay || isNullTime;
     }
 
     /* Simplify error check */
@@ -109,6 +144,7 @@ class CourseManagement extends Component {
     }
 
     setDays = (day) => {
+        if (day == null) { return }
         var stateCopy = this.state.formAddCourse;
         var output = ''
         day.forEach((element, idx, array) => {
@@ -213,17 +249,26 @@ class CourseManagement extends Component {
             }
         });
 
-        console.log((hasError) ? 'Form has errors. Check!' : 'Form Submitted!')
+        const invalidSelector = this.validateSelectors();
 
-        if (!hasError) {
+        console.log((hasError || invalidSelector) ? 'Form has errors. Check!' : 'Form Submitted!')
+
+        if (!hasError && !invalidSelector) {
             var result = addCourse(this.state.formAddCourse.selectedPod, this.constructRequestPayload());
             if (result.isSuccess) {
-                var self = this;
+                this.toggleModal()
                 Swal.fire({
                     title: "Successfully created course",
                     icon: "success",
-                }).then(function () {
-                    self.toggleModal()
+                })
+                getCourses(this.state.selectedPod, "").then(res => {
+                    if (res.isSuccess) {
+                        this.setState({
+                            courses: [...res.data]
+                        })
+                    }
+                }).finally(() => {
+                    this.props.actions.changeLoaderState('loading', false);
                 })
             }
             else {
@@ -234,8 +279,6 @@ class CourseManagement extends Component {
                 })
             }
         }
-
-
     }
 
     render() {
@@ -257,8 +300,10 @@ class CourseManagement extends Component {
                                         <PodSelector
                                             name="podSelector"
                                             pods={this.state.pods}
+                                            hasError={this.state.formAddCourse.selector.error.isNullPod}
                                             setPod={(pod) => this.setFormPod(pod)}
                                         />
+                                        {this.state.formAddCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
                                     </div>
                                     <div className="form-group">
                                         <label className="text-muted" htmlFor="addCourseSubject">Course Subject</label>
@@ -295,8 +340,10 @@ class CourseManagement extends Component {
                                         <label className="text-muted" htmlFor="addDaySchedule">Day Schedule</label>
                                         <DaysOfWeekSelector
                                             name="daysOfWeekSelector"
+                                            hasError={this.state.formAddCourse.selector.error.isNullDay}
                                             setDays={(day) => this.setDays(day)}
                                         />
+                                        {this.state.formAddCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
                                     </div>
                                     <div className="form-group">
                                         <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule</label>
@@ -304,8 +351,7 @@ class CourseManagement extends Component {
                                             <Col lg="6">
                                                 <label className="text-muted">Start time: </label>
                                                 <Datetime
-                                                    id="AM"
-                                                    inputProps={{ className: 'form-control' }}
+                                                    inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
                                                     dateFormat={false}
                                                     onChange={(date) => this.setTime(date, "AM")}
                                                 />
@@ -313,13 +359,13 @@ class CourseManagement extends Component {
                                             <Col lg="6">
                                                 <label className="text-muted">End time: </label>
                                                 <Datetime
-                                                    id="AM"
-                                                    inputProps={{ className: 'form-control' }}
+                                                    inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
                                                     dateFormat={false}
                                                     onChange={(date) => this.setTime(date, "PM")}
                                                 />
                                             </Col>
                                         </Row>
+                                        {this.state.formAddCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Time schedule is required</p>}
                                     </div>
                                     <div className="form-group">
                                         <label className="text-muted" htmlFor="addCourseTeacher">Teacher</label>
@@ -419,12 +465,7 @@ class CourseManagement extends Component {
                             return (
                                 <Col xl="4" lg="6">
                                     <CourseCard
-                                        subject={course.subject}
-                                        id={course.id}
-                                        description={course.description}
-                                        daysOfWeekInterval={course.daysOfWeekInterval}
-                                        startTime={course.startTime}
-                                        endTime={course.endTime}
+                                        course={ course }
                                     />
                                 </Col>
                             )

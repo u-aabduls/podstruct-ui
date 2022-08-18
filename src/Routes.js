@@ -26,6 +26,7 @@ const PodCreate = lazy(() => import('./components/Pages/PodManagement/PodCreate'
 
 const PodsView = lazy(() => import('./components/Tables/PodsView/PodsView'));
 const CourseManagement = lazy(() => import('./components/Pages/Courses/CourseManagement'));
+const CourseDetail = lazy(() => import('./components/Pages/Courses/CourseDetail'));
 
 
 // List of routes that uses the page layout
@@ -86,6 +87,7 @@ const Routes = ({ location }) => {
                                     <Route path="/settings" component={waitFor(Settings)} />
                                     <Route path="/pod/create" component={waitFor(PodCreate)} />
                                     <Route path="/courses" component={waitFor(CourseManagement)} />
+                                    <Route path="/course/details" component={waitFor(CourseDetail)} />
 
                                     {/*Tables*/}
                                     <Route path="/pods/view" component={waitFor(PodsView)} />

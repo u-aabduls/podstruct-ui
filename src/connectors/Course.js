@@ -27,9 +27,23 @@ async function getCourses(podID, subject) {
     return result;
 }
 
+async function getCourse(podID, courseID){
+    endpointPath = "podstruct/api/pods/" + podID + "/courses/" + courseID;
+    _initializeGETCourses();
+    request.send();
+    return result;
+}
+
 function addCourse(podID, requestBody){
     endpointPath = "podstruct/api/pods/" + podID + "/courses";
     _initializePOSTCourse();
+    request.send(requestBody);
+    return result;
+}
+
+function editCourse(podID, courseID, requestBody){
+    endpointPath = "podstruct/api/pods/" + podID + "/courses/" + courseID;
+    _initializePUTCourse();
     request.send(requestBody);
     return result;
 }
@@ -57,8 +71,16 @@ function _initializeGETCourses() {
 }
 
 function _initializePOSTCourse() {
-    console.log(endpointPath)
     request.open("POST", devServer + endpointPath, false);
+    // request.open("POST", prodServer + endpointPath, false);
+    request.setRequestHeader("accept", "*/*");
+    request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
+    request.onload = __execute;
+}
+
+function _initializePUTCourse() {
+    request.open("PUT", devServer + endpointPath, false);
     // request.open("POST", prodServer + endpointPath, false);
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
@@ -82,4 +104,4 @@ function __execute() {
     }
 }
 
-export {getPods, getCourses, addCourse};
+export {getPods, getCourses, getCourse, addCourse, editCourse};
