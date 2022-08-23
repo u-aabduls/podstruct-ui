@@ -1,6 +1,26 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../../Layout/ContentWrapper';
-import { Button, Dropdown, DropdownMenu, DropdownToggle, DropdownItem, Input, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import classnames from 'classnames';
+import { Button, 
+    Dropdown, 
+    DropdownMenu, 
+    DropdownToggle, 
+    DropdownItem, 
+    Input, 
+    Row,
+    Card,
+    CardBody,
+    CardHeader,
+    Col, 
+    Modal, 
+    ModalHeader, 
+    ModalBody, 
+    ModalFooter, 
+    TabContent,
+    TabPane,
+    Nav,
+    NavItem,
+    NavLink, } from 'reactstrap';
 
 import PodSelector from '../../Common/PodSelector';
 import DaysOfWeekSelector from '../../Common/DaysOfWeekSelector';
@@ -35,7 +55,8 @@ class CourseDetail extends Component {
         },
         course: this.props.location.state.course,
         modal: false,
-        ddOpen: false
+        ddOpen: false,
+        activeTab: '1',
     }
 
     errorMessageStyling = {
@@ -54,6 +75,14 @@ class CourseDetail extends Component {
         this.setState({
             modal: !this.state.modal
         });
+    }
+
+    toggleTab = tab => {
+        if (this.state.activeTab !== tab) {
+            this.setState({
+                activeTab: tab
+            });
+        }
     }
 
     /**
@@ -113,23 +142,19 @@ class CourseDetail extends Component {
     }
 
     setDays = (day) => {
-        console.log(day)
         var stateCopy = this.state.formEditCourse;
         var output = ''
-        if (day == null) { 
-            stateCopy.daysOfWeekInterval = output
-            this.setState(stateCopy)
-            return 
-        }
-        day.forEach((element, idx, array) => {
-            if (idx === array.length - 1) {
-                output += element.value
-            }
-            else {
-                output += element.value + ','
-            }
+        if (day != null) {
+            day.forEach((element, idx, array) => {
+                if (idx === array.length - 1) {
+                    output += element.value
+                }
+                else {
+                    output += element.value + ','
+                }
 
-        });
+            });
+        }
         stateCopy.daysOfWeekInterval = output
         this.setState(stateCopy);
     }
@@ -404,58 +429,107 @@ class CourseDetail extends Component {
                             </Modal>
                         </div>
                     </div>
-                        <Row>
-                            <div className="col-xl-3">
-                                {/* START card */}
-                                <div className="card-fixed-height">
-                                    <div className="card-body">
-                                        <h3 className="mt-0">Course Subject</h3>
-                                        <p className="text-muted">{this.state.course.subject}</p>
-                                    </div>
+                    <Row noGutters={true}>
+                        <Col md={3}>
+                            {/* START card */}
+                            <div className="card-fixed-height">
+                                <div className="card-body">
+                                    <h4 className="mt-1 text-muted">Course Subject</h4>
+                                    <p className="text-primary font-weight-bold">{this.state.course.subject}</p>
                                 </div>
-                                {/* END card */}
                             </div>
-                            <div className="col-xl-3">
-                                {/* START card */}
-                                <div className="card-fixed-height">
-                                    <div className="card-body">
-                                        <h3 className="mt-0">Course Description</h3>
-                                        <p className="text-muted">{this.state.course.description}</p>
-                                    </div>
+                            {/* END card */}
+                        </Col>
+                        <Col md={3}>
+                            {/* START card */}
+                            <div className="card-fixed-height">
+                                <div className="card-body">
+                                    <h4 className="mt-1 text-muted">Course Description</h4>
+                                    <p className="text-primary font-weight-bold">{this.state.course.description}</p>
                                 </div>
-                                {/* END card */}
                             </div>
-                            <div className="col-xl-3">
-                                {/* START card */}
-                                <div className="card-fixed-height">
-                                    <div className="card-body">
-                                        <h3 className="mt-0">Teacher</h3>
-                                        <p className="text-muted"></p>
-                                    </div>
+                            {/* END card */}
+                        </Col>
+                        <Col md={3}>
+                            {/* START card */}
+                            <div className="card-fixed-height">
+                                <div className="card-body">
+                                    <h4 className="mt-1 text-muted">Teacher</h4>
+                                    <p className="text-primary font-weight-bold"></p>
                                 </div>
-                                {/* END card */}
                             </div>
-                            <div className="col-xl-3">
-                                {/* START card */}
-                                <div className="card-fixed-height">
-                                    <div className="card-body">
-                                        <h3 className="mt-0">Course Schedule</h3>
-                                        <p className="text-muted">{this.state.course.daysOfWeekInterval.split(',').forEach(function (i, idx, array) {
-                                            if (idx === array.length - 1) {
-                                                output += daysOfWeek[i - 1]
-                                            }
-                                            else {
-                                                output += daysOfWeek[i - 1] + '/'
-                                            }
-                                        })}
-                                            {output}
-                                            <br></br>
-                                            {moment(this.state.course.startTime, "HH:mm:ss").format("h:mm A") + " - " + moment(this.state.course.endTime, "HH:mm:ss").format("h:mm A")}</p>
-                                    </div>
+                            {/* END card */}
+                        </Col>
+                        <Col md={3}>
+                            {/* START card */}
+                            <div className="card-fixed-height">
+                                <div className="card-body">
+                                    <h4 className="mt-1 text-muted">Course Schedule</h4>
+                                    <p className="text-primary font-weight-bold">{this.state.course.daysOfWeekInterval.split(',').forEach(function (i, idx, array) {
+                                        if (idx === array.length - 1) {
+                                            output += daysOfWeek[i - 1]
+                                        }
+                                        else {
+                                            output += daysOfWeek[i - 1] + '/'
+                                        }
+                                    })}
+                                        {output}
+                                        <br></br>
+                                        {moment(this.state.course.startTime, "HH:mm:ss").format("h:mm A") + " - " + moment(this.state.course.endTime, "HH:mm:ss").format("h:mm A")}</p>
                                 </div>
-                                {/* END card */}
                             </div>
-                        </Row>
+                            {/* END card */}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <Card className="card">
+                                <CardHeader>Basic Tabs</CardHeader>
+                                <CardBody>
+                                    <div role="tabpanel">
+                                        {/* Nav tabs */}
+                                        <Nav tabs>
+                                            <NavItem>
+                                                <NavLink
+                                                    className={classnames({ active: this.state.activeTab === '1' })}
+                                                    onClick={() => { this.toggleTab('1'); }}>
+                                                    Home
+                                                </NavLink>
+                                            </NavItem>
+                                            <NavItem>
+                                                <NavLink
+                                                    className={classnames({ active: this.state.activeTab === '2' })}
+                                                    onClick={() => { this.toggleTab('2'); }}>
+                                                    Profile
+                                                </NavLink>
+                                            </NavItem>
+                                            <NavItem>
+                                                <NavLink
+                                                    className={classnames({ active: this.state.activeTab === '3' })}
+                                                    onClick={() => { this.toggleTab('3'); }}>
+                                                    Messages
+                                                </NavLink>
+                                            </NavItem>
+                                            <NavItem>
+                                                <NavLink
+                                                    className={classnames({ active: this.state.activeTab === '4' })}
+                                                    onClick={() => { this.toggleTab('4'); }}>
+                                                    Settings
+                                                </NavLink>
+                                            </NavItem>
+                                        </Nav>
+                                        {/* Tab panes */}
+                                        <TabContent activeTab={this.state.activeTab}>
+                                            <TabPane tabId="1">Suspendisse velit erat, vulputate sit amet feugiat a, lobortis nec felis.</TabPane>
+                                            <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>
+                                            <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
+                                            <TabPane tabId="4">Sed commodo tellus ut mi tristique pharetra.</TabPane>
+                                        </TabContent>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
                 </ContentWrapper>
             )
         }
