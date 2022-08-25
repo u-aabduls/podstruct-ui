@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import send from "../../../connectors/PasswordReset";
+import { resetPassword } from "../../../connectors/Password";
 import FormValidator from '../../Forms/FormValidator.js';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -83,7 +83,7 @@ class PasswordReset extends Component {
         console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            var result = send(this.constructRequestPayload());
+            var result = resetPassword(this.constructRequestPayload());
             if (result.isSuccess) {
                 this.setState({errorMessage: null});
                 this.displayToast(result.message, "success", "bottom-center");

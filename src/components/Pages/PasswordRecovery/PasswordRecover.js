@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Input } from 'reactstrap';
-import send from "../../../connectors/PasswordRecover";
+import { recoverPassword } from "../../../connectors/Password";
 import FormValidator from '../../Forms/FormValidator.js';
 import { Link } from 'react-router-dom';
 
@@ -68,7 +68,7 @@ class Recover extends Component {
         console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            var result = send(this.constructRequestHeader());
+            var result = recoverPassword(this.constructRequestHeader());
             if (result.isSuccess) {
                 this.setState({errorMessage: null});
                     // redirect to password/reset page

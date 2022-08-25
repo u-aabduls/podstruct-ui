@@ -4,7 +4,7 @@ import { Input } from 'reactstrap';
 import MonthSelector from "../../Common/MonthSelector";
 import DaySelector from "../../Common/DaySelector";
 import YearSelector from "../../Common/YearSelector";
-import send from "../../../connectors/AccountCreation";
+import { createUser } from "../../../connectors/User";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -167,7 +167,7 @@ class Register extends Component {
         console.log((hasError || invalidDOB) ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError && !invalidDOB) {
-            var result = send(this.constructRequestPayload());
+            var result = createUser(this.constructRequestPayload());
             this.displayToast(
                 result.message, 
                 result.isSuccess ? "success" : "error", 

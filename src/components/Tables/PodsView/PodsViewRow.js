@@ -1,5 +1,5 @@
 import React from 'react';
-import deactivatePod from "../../../connectors/PodDeactivate";
+import { deactivatePod } from "../../../connectors/Pod";
 
 const customStylesDefault = {
     backgroundColor: ""

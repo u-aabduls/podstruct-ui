@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../../Layout/ContentWrapper';
 import { Row, Col, Card, CardHeader, CardFooter, Table, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
-import getPods from "../../../connectors/PodsRetrieval";
+import { getPods } from '../../../connectors/Pod';
 import PodsViewRow from './PodsViewRow';
 import { Link } from 'react-router-dom';
 

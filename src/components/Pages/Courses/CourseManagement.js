@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import ContentWrapper from '../../Layout/ContentWrapper';
 import { Button, Input, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
@@ -8,13 +7,11 @@ import DaysOfWeekSelector from '../../Common/DaysOfWeekSelector';
 import Datetime from 'react-datetime';
 import CourseCard from './CourseCard';
 import Swal from 'sweetalert2';
-import 'react-datetime/css/react-datetime.css';
-
-import { getPods, getCourses, addCourse } from '../../../connectors/Course';
-import * as actions from '../../../store/actions/actions';
-import { bindActionCreators } from 'redux';
+import { getPods } from '../../../connectors/Pod';
+import { getCourses, addCourse } from '../../../connectors/Course';
 import FormValidator from '../../Forms/FormValidator';
-import { Date } from 'core-js/es7';
+
+const podsResponse = getPods()
 
 class CourseManagement extends Component {
 
@@ -38,7 +35,7 @@ class CourseManagement extends Component {
         },
         selectedPod: '',
         subjectFilter: '',
-        pods: [],
+        pods: podsResponse.data,
         courses: [],
         modal: false
     }
@@ -97,7 +94,7 @@ class CourseManagement extends Component {
         });
     }
 
-    validateSelectors = event => {
+    validateSelectors = () => {
         var isNullPod = this.state.formAddCourse.selectedPod === '';
         var isNullDay = this.state.formAddCourse.daysOfWeekInterval === '';
         var isNullTime = this.state.formAddCourse.startTime === '' || this.state.formAddCourse.endTime === '';
@@ -128,14 +125,6 @@ class CourseManagement extends Component {
             // "teacher": this.state.formAddCourse.teacher,
         })
     }
-
-    debounce = (fn, delay) => {
-        let timerId;
-        return (...args) => {
-            clearTimeout(timerId);
-            timerId = setTimeout(fn, delay, [...args]);
-        };
-    };
 
     setFormPod = (pod) => {
         var stateCopy = this.state.formAddCourse;
@@ -173,49 +162,34 @@ class CourseManagement extends Component {
 
     setPod = (pod) => {
         this.setState({ selectedPod: pod });
-        this.props.actions.changeLoaderState('loading', true);
-        getCourses(pod, "").then(res => {
-            if (res.isSuccess) {
-                this.setState({
-                    courses: [...res.data]
-                })
-            }
-        }).finally(() => {
-            this.props.actions.changeLoaderState('loading', false);
-        })
+        var res = getCourses(pod, "")
+        if (res.isSuccess) {
+            this.setState({
+                courses: [...res.data]
+            })
+        }
     };
 
     handleSearchChange = event => {
         this.setState({ subjectFilter: event.target.value })
     }
 
+    debounce = (fn, delay) => {
+        let timerId;
+        return (...args) => {
+            clearTimeout(timerId);
+            timerId = setTimeout(fn, delay, [...args]);
+        };
+    };
+
     filterRequest = this.debounce(() => {
-        this.props.actions.changeLoaderState('loading', true);
-        getCourses(this.state.selectedPod, this.state.subjectFilter).then(res => {
-            if (res.isSuccess) {
-                this.setState({
-                    courses: [...res.data]
-                })
-            }
-
-        }).finally(() => {
-            this.props.actions.changeLoaderState('loading', false);
-        })
-
+        var res = getCourses(this.state.selectedPod, this.state.subjectFilter)
+        if (res.isSuccess) {
+            this.setState({
+                courses: [...res.data]
+            })
+        }
     }, 500);
-
-    componentDidMount() {
-        this.props.actions.changeLoaderState('loading', true);
-        getPods().then(res => {
-            if (res.isSuccess) {
-                this.setState({
-                    pods: [...res.data]
-                })
-            }
-        }).finally(() => {
-            this.props.actions.changeLoaderState('loading', false);
-        })
-    }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.subjectFilter !== this.state.subjectFilter) {
@@ -261,15 +235,12 @@ class CourseManagement extends Component {
                     title: "Successfully created course",
                     icon: "success",
                 })
-                getCourses(this.state.selectedPod, "").then(res => {
-                    if (res.isSuccess) {
-                        this.setState({
-                            courses: [...res.data]
-                        })
-                    }
-                }).finally(() => {
-                    this.props.actions.changeLoaderState('loading', false);
-                })
+                var res = getCourses(this.state.selectedPod, "")
+                if (res.isSuccess) {
+                    this.setState({
+                        courses: [...res.data]
+                    })
+                }
             }
             else {
                 Swal.fire({
@@ -465,7 +436,7 @@ class CourseManagement extends Component {
                             return (
                                 <Col xl="4" lg="6">
                                     <CourseCard
-                                        course={ course }
+                                        course={course}
                                     />
                                 </Col>
                             )
@@ -481,7 +452,6 @@ class CourseManagement extends Component {
 
 }
 
-const mapStateToProps = state => ({ loader: state.loader })
-const mapDispatchToProps = dispatch => ({ actions: bindActionCreators(actions, dispatch) });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CourseManagement);
+
+export default CourseManagement;
