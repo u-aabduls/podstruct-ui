@@ -22,7 +22,7 @@ function getCourses(podID, subject) {
 
 function getCourse(podID, courseID){
     endpointPath = "podstruct/api/pods";
-    endpointPath += podID + "/courses/" + courseID;
+    endpointPath += "/" + podID + "/courses/" + courseID;
     _initialize("GET");
     request.send();
     return result;
@@ -30,7 +30,7 @@ function getCourse(podID, courseID){
 
 function addCourse(podID, requestBody){
     endpointPath = "podstruct/api/pods";
-    endpointPath += podID + "/courses";
+    endpointPath += "/" + podID + "/courses";
     _initialize("POST");
     request.send(requestBody);
     return result;
@@ -38,7 +38,7 @@ function addCourse(podID, requestBody){
 
 function editCourse(podID, courseID, requestBody){
     endpointPath = "podstruct/api/pods";
-    endpointPath += podID + "/courses/" + courseID;
+    endpointPath += "/" + podID + "/courses/" + courseID;
     _initialize("PUT");
     request.send(requestBody);
     return result;

@@ -191,6 +191,15 @@ class CourseManagement extends Component {
         }
     }, 500);
 
+    componentDidMount() {
+        var stateCopy = this.state
+        var res = getPods()
+        if (res.isSuccess) {
+            stateCopy.pods = res.data
+            this.setState(stateCopy)
+        }
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (prevState.subjectFilter !== this.state.subjectFilter) {
             if (this.state.courses) {

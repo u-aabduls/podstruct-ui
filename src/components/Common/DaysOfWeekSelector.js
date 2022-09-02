@@ -31,7 +31,7 @@ export default function DaysOfWeekSelector(props) {
             isMulti={true}
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
-            value={props.defaultv.map(e => options.find(o => o.value === e))}
+            value={props.defaultv ? props.defaultv.map(e => options.find(o => o.value === e)) : options.find(o => o.value === props.defaultv)}
             onChange={(e) => { props.setDays(e)}}
         />
     )

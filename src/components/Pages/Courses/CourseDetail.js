@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../../Layout/ContentWrapper';
 import classnames from 'classnames';
+import { withRouter } from 'react-router';
 import {
     Button,
     Dropdown,
@@ -11,7 +12,6 @@ import {
     Row,
     Card,
     CardBody,
-    CardHeader,
     Col,
     Modal,
     ModalHeader,
@@ -19,6 +19,7 @@ import {
     ModalFooter,
     TabContent,
     TabPane,
+    Table,
     Nav,
     NavItem,
     NavLink,
@@ -32,6 +33,7 @@ import 'react-datetime/css/react-datetime.css';
 import { getPod } from '../../../connectors/Pod';
 import { getCourse, editCourse } from '../../../connectors/Course';
 import FormValidator from '../../Forms/FormValidator';
+import Now from "../../Common/Now"
 
 class CourseDetail extends Component {
 
@@ -52,7 +54,8 @@ class CourseDetail extends Component {
                 }
             }
         },
-        course: this.props.location.state.course,
+        privileges: "owner",
+        course: this.props.location.state,
         modal: false,
         ddOpen: false,
         activeTab: '1',
@@ -240,7 +243,7 @@ class CourseDetail extends Component {
 
     componentDidMount() {
         var stateCopy = this.state.formEditCourse;
-        var res = getPod(this.props.location.state.course.podId)
+        var res = getPod(this.props.location.state.podId)
         if (res.isSuccess) {
             stateCopy.selectedPod = res.data
             this.setState(stateCopy)
@@ -249,6 +252,7 @@ class CourseDetail extends Component {
     }
 
     render() {
+        console.log(this.state.course)
         var daysOfWeek = ["Mon", "Tues", "Wed", "Thrus", "Fri", "Sat", "Sun"]
         var output = ""
         return (
@@ -264,7 +268,9 @@ class CourseDetail extends Component {
                                 <em className="fas fa-ellipsis-v fa-lg"></em>
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem onClick={this.toggleModal}>Edit Course</DropdownItem>
+                                {this.state.privileges === "owner" &&
+                                    <DropdownItem onClick={this.toggleModal}>Edit Course</DropdownItem>
+                                }
                             </DropdownMenu>
                         </Dropdown>
 
@@ -472,10 +478,10 @@ class CourseDetail extends Component {
                         {/* END card */}
                     </Col>
                 </Row>
+                <br />
                 <Row>
                     <Col md={12}>
                         <Card className="card">
-                            <CardHeader>Basic Tabs</CardHeader>
                             <CardBody>
                                 <div role="tabpanel">
                                     {/* Nav tabs */}
@@ -484,34 +490,117 @@ class CourseDetail extends Component {
                                             <NavLink
                                                 className={classnames({ active: this.state.activeTab === '1' })}
                                                 onClick={() => { this.toggleTab('1'); }}>
-                                                Home
+                                                Announcements
                                             </NavLink>
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
                                                 className={classnames({ active: this.state.activeTab === '2' })}
                                                 onClick={() => { this.toggleTab('2'); }}>
-                                                Profile
+                                                Assignments
                                             </NavLink>
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
                                                 className={classnames({ active: this.state.activeTab === '3' })}
                                                 onClick={() => { this.toggleTab('3'); }}>
-                                                Messages
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                className={classnames({ active: this.state.activeTab === '4' })}
-                                                onClick={() => { this.toggleTab('4'); }}>
-                                                Settings
+                                                Upcoming Events
                                             </NavLink>
                                         </NavItem>
                                     </Nav>
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
-                                        <TabPane tabId="1">Suspendisse velit erat, vulputate sit amet feugiat a, lobortis nec felis.</TabPane>
+                                        <TabPane tabId="1">
+                                            {this.state.privileges === "owner" &&
+                                                <div className="float-right">
+                                                    <Button className="btn btn-secondary btn-sm" onClick={this.toggleModal}>Add Announcement</Button>
+                                                </div>
+                                            }
+                                            <Table hover responsive>
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td className='date'>
+                                                            <Now format="dddd" className="text-uppercase text-bold" />
+                                                            <br />
+                                                            <Now format="h:mm" className="h2 mt0 text-sm" />
+                                                            <Now format="a" className="text-muted text-sm" />
+                                                        </td>
+                                                        <td className="announcement">
+                                                            <span className="h4 text-bold">Midterm grades released</span>
+                                                            <br />
+                                                            <span>Please email me for any inquiries about your grade</span>
+                                                        </td>
+                                                        <td className="buttons">
+                                                            {this.state.privileges === "owner" &&
+                                                                <div className='button-container'>
+                                                                    <Button className="btn btn-secondary btn-sm bg-success">
+                                                                        <i className="fas fa-edit fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                    <Button className="btn btn-secondary btn-sm bg-danger">
+                                                                        <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                </div>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td className='date'>
+                                                            <Now format="dddd" className="text-uppercase text-bold" />
+                                                            <br />
+                                                            <Now format="h:mm" className="h2 mt0 text-sm" />
+                                                            <Now format="a" className="text-muted text-sm" />
+                                                        </td>
+                                                        <td className="announcement">
+                                                            <span className="h4 text-bold">Final grades released</span>
+                                                        </td>
+                                                        <td className="buttons">
+                                                            {this.state.privileges === "owner" &&
+                                                                <div className='button-container'>
+                                                                    <Button className="btn btn-secondary btn-sm bg-success">
+                                                                        <i className="fas fa-edit fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                    <Button className="btn btn-secondary btn-sm bg-danger">
+                                                                        <i className="fas fa-trash fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                </div>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td className='date'>
+                                                            <Now format="dddd" className="text-uppercase text-bold" />
+                                                            <br />
+                                                            <Now format="h:mm" className="h2 mt0 text-sm" />
+                                                            <Now format="a" className="text-muted text-sm" />
+                                                        </td>
+                                                        <td className="announcement">
+                                                            <span className="h4 text-bold">Assignment 4 Due</span>
+                                                            <br />
+                                                            <span>Please submit before 12 AM</span>
+                                                        </td>
+                                                        <td className="buttons">
+                                                            {this.state.privileges === "owner" &&
+                                                                <div className='button-container'>
+                                                                    <Button className="btn btn-secondary btn-sm bg-success">
+                                                                        <i className="fas fa-edit fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                    <Button className="btn btn-secondary btn-sm bg-danger">
+                                                                        <i className="fas fa-trash fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                </div>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </Table>
+                                        </TabPane>
                                         <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
                                         <TabPane tabId="4">Sed commodo tellus ut mi tristique pharetra.</TabPane>
@@ -521,9 +610,9 @@ class CourseDetail extends Component {
                         </Card>
                     </Col>
                 </Row>
-            </ContentWrapper>
+            </ContentWrapper >
         )
     }
 }
 
-export default CourseDetail
+export default withRouter(CourseDetail)

@@ -16,13 +16,12 @@ function getPods() {
     endpointPath = "podstruct/api/pods";
     _initialize("GET");
     request.send();
-    console.log(result)
     return result;
 }
 
 function getPod(podID) {
     endpointPath = "podstruct/api/pods";
-    endpointPath += podID
+    endpointPath += "/" + podID
     _initialize("GET");
     request.send();
     return result;
@@ -37,7 +36,7 @@ function createPod(requestBody) {
 
 function deactivatePod(podID) {
     endpointPath = "podstruct/api/pods";
-    endpointPath += podID
+    endpointPath += "/" + podID
     _initialize("DELETE");
     request.send();
     return result;
