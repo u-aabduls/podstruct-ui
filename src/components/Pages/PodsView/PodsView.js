@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../../Layout/ContentWrapper';
 import { Row, Col, Input } from 'reactstrap';
-import getPods from "../../../connectors/PodsRetrieval";
+import { getPods } from "../../../connectors/Pod";
 import PodsViewCard from './PodsViewCard';
 import Swal from '../../Common/Swal';
 import renderSwal from '../../Common/Modal/PodCreation';

@@ -87,7 +87,7 @@ const Routes = ({ location }) => {
                                     <Route path="/settings" component={waitFor(Settings)} />
                                     <Route path="/pod/create" component={waitFor(PodCreate)} />
                                     <Route path="/courses" component={waitFor(CourseManagement)} />
-                                    <Route path="/course/details" component={waitFor(CourseDetail)} />
+                                    <Route path="/course/details/:id" component={waitFor(CourseDetail)} />
 
                                     {/*Tables*/}
                                     <Route path="/pods/view" component={waitFor(PodsView)} />

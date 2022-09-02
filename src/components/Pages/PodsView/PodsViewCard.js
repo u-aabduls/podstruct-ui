@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import deactivatePod from "../../../connectors/PodDeactivate";
+import { deactivatePod } from "../../../connectors/Pod";
 import { Card, CardHeader, CardBody, CardFooter, Table } from 'reactstrap';
 
 function deactivate(podId) {
