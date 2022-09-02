@@ -11,19 +11,9 @@ const Menu = [
     },
     {
         name: 'Pods',
-        icon: 'icon-folder',
+        icon: 'icon-grid',
+        path: '/pods',
         translate: 'sidebar.nav.DASHBOARD',
-        submenu: [{
-            name: 'View Pods',
-            icon: 'icon-grid',
-            path: '/pods/view',
-            translate: 'sidebar.nav.table.EXTENDED'
-        },
-        {
-            name: 'Create Pod',
-            icon: 'icon-plus',
-            path: '/pod/create'
-        }]
     },
     {
         name: 'Courses',
