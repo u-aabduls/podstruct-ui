@@ -303,7 +303,7 @@ class CourseManagement extends Component {
                                                 onChange={this.validateOnChange}
                                                 data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
                                                 data-param='50'
-                                                value={this.state.formAddCourse.subject} />
+                                                value={this.state.formAddCourse.subject || ''} />
                                             <div className="input-group-append">
                                                 <span className="input-group-text text-muted bg-transparent border-left-0">
                                                     <em className="fa fa-book"></em>
@@ -366,7 +366,7 @@ class CourseManagement extends Component {
                                                 onChange={this.validateOnChange}
                                                 data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
                                                 data-param='50'
-                                                value={this.state.formAddCourse.teacher} />
+                                                value={this.state.formAddCourse.teacher || ''} />
                                             <div className="input-group-append">
                                                 <span className="input-group-text text-muted bg-transparent border-left-0">
                                                     <em className="fa fa-book"></em>
@@ -398,7 +398,7 @@ class CourseManagement extends Component {
                                                 onChange={this.validateOnChange}
                                                 data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
                                                 data-param='150'
-                                                value={this.state.formAddCourse.description} />
+                                                value={this.state.formAddCourse.description || ''} />
                                             <div className="input-group-append">
                                                 <span className="input-group-text text-muted bg-transparent border-left-0">
                                                     <em className="fa fa-book"></em>
@@ -453,7 +453,6 @@ class CourseManagement extends Component {
                         <div className='not-found'>
                             <h1>No courses found</h1>
                         </div>}
-
                 </div>
             </ContentWrapper>
         );

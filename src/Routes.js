@@ -21,13 +21,11 @@ const PasswordReset = lazy(() => import('./components/Pages/PasswordRecovery/Pas
 
 const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 const Settings = lazy(() => import('./components/Extras/Settings'));
-const PodCreate = lazy(() => import('./components/Pages/PodManagement/PodCreate'));
 
-const PodsView = lazy(() => import('./components/Pages/PodsView/PodsView'));
+const PodManagement = lazy(() => import('./components/Pages/Pods/PodManagement'));
+const PodDetail = lazy(() => import('./components/Pages/Pods/PodDetail'));
 const CourseManagement = lazy(() => import('./components/Pages/Courses/CourseManagement'));
 const CourseDetail = lazy(() => import('./components/Pages/Courses/CourseDetail'));
-
-
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -85,12 +83,11 @@ const Routes = ({ location }) => {
 
                                     {/*Extras*/}
                                     <Route path="/settings" component={waitFor(Settings)} />
-                                    <Route path="/pod/create" component={waitFor(PodCreate)} />
+
+                                    <Route path="/pods" component={waitFor(PodManagement)} />
+                                    <Route path="/pod/details" component={waitFor(PodDetail)} />
                                     <Route path="/courses" component={waitFor(CourseManagement)} />
                                     <Route path="/course/details" component={waitFor(CourseDetail)} />
-
-                                    {/*Tables*/}
-                                    <Route path="/pods/view" component={waitFor(PodsView)} />
 
                                     {/*Default*/}
                                     <Redirect to="/login" />
