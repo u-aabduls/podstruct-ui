@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import deactivatePod from "../../../connectors/PodDeactivate";
-import { Card, CardHeader, CardBody, CardFooter, Table } from 'reactstrap';
+import { deactivatePod } from "../../../connectors/Pod";
+import { Card, CardHeader, CardBody, Table } from 'reactstrap';
 
 class PodCard extends Component {
 

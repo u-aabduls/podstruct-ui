@@ -79,7 +79,7 @@ function __execute() {
         result.message = handleError(request.status, data);
     } else {
         result.isSuccess = true;
-        result.data = data
+        result.data = data;
         result.message = "Successfully reached Pod endpoint.";
     }
 }

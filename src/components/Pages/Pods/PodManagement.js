@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../../Layout/ContentWrapper';
 import { Row, Col, Input, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import getPods from "../../../connectors/PodsRetrieval";
+import { getPods, createPod } from "../../../connectors/Pod";
 import PodCard from './PodCard';
 import FormValidator from '../../Forms/FormValidator';
 import Swal from 'sweetalert2';
-import send from "../../../connectors/PodCreation";
 
 class PodManagement extends Component {
 
@@ -121,7 +120,7 @@ class PodManagement extends Component {
         console.log((hasError) ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            var result = send(this.constructRequestPayload());
+            var result = createPod(this.constructRequestPayload());
             if (result.isSuccess) {
                 this.toggleModal()
                 Swal.fire({
@@ -146,7 +145,7 @@ class PodManagement extends Component {
     }
 
     componentDidMount() {
-        var result = getPods().payload;
+        var result = getPods().data;
         result.sort(function (a, b) {
             return (a.podName).localeCompare(b.podName);
         })
