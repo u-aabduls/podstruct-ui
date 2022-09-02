@@ -6,9 +6,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../../store/actions/actions';
 import { withRouter } from 'react-router';
-import send from "../../connectors/Logout";
+import { logoutUser } from '../../connectors/UserAuth';
 
-import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { TabContent, TabPane} from 'reactstrap';
+
 
 class Offsidebar extends Component {
 
@@ -32,8 +33,8 @@ class Offsidebar extends Component {
 
     logout = e => {
         if (localStorage.getItem('token')) {
-            var result = send(localStorage.getItem('token'));
-            if (result.isSuccess) {
+            var res = logoutUser();
+            if (res.isSuccess) {
                 this.props.history.push('/login');
             }
         }

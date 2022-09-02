@@ -5,31 +5,40 @@ var request = new XMLHttpRequest();
 var result = {};
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
-var endpointPath = "podstruct/api/user";
+var endpointPath = "podstruct/api/pods";
 var authorizationToken = localStorage.getItem('token');
 
 /********************
  * Public Methods
  ********************/
 
-function getUser() {
-    endpointPath = "podstruct/api/user";
+function getPods() {
+    endpointPath = "podstruct/api/pods";
     _initialize("GET");
     request.send();
     return result;
 }
 
-function createUser(requestBody) {
-    endpointPath = "podstruct/api/user";
+function getPod(podID) {
+    endpointPath = "podstruct/api/pods";
+    endpointPath += "/" + podID
+    _initialize("GET");
+    request.send();
+    return result;
+}
+
+function createPod(requestBody) {
+    endpointPath = "podstruct/api/pods";
     _initialize("POST");
     request.send(requestBody);
     return result;
 }
 
-function updateUser(requestBody) {
-    endpointPath = "podstruct/api/user";
-    _initialize("PUT");
-    request.send(requestBody);
+function deactivatePod(podID) {
+    endpointPath = "podstruct/api/pods";
+    endpointPath += "/" + podID
+    _initialize("DELETE");
+    request.send();
     return result;
 }
 
@@ -70,9 +79,9 @@ function __execute() {
         result.message = handleError(request.status, data);
     } else {
         result.isSuccess = true;
-        result.data = data;
-        result.message = "Successfully reached User endpoint";
+        result.data = data
+        result.message = "Successfully reached Pod endpoint.";
     }
 }
 
-export { getUser, createUser, updateUser };
+export { getPods, getPod, createPod, deactivatePod };

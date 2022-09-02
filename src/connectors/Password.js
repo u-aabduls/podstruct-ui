@@ -2,32 +2,26 @@ import handleError from '../utils/ErrorHandler.js'
 
 // private members
 var request = new XMLHttpRequest();
-var result = {};
+var username = null, result = {};
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
-var endpointPath = "podstruct/api/user";
-var authorizationToken = localStorage.getItem('token');
+var endpointPath = "podstruct/api/user/auth/resetpassword";
 
 /********************
  * Public Methods
  ********************/
 
-function getUser() {
-    endpointPath = "podstruct/api/user";
-    _initialize("GET");
-    request.send();
+function recoverPassword(requestHeader) {
+    if (requestHeader) {
+        username = requestHeader;
+        _initialize("POST");
+        request.send();
+    }
     return result;
 }
 
-function createUser(requestBody) {
-    endpointPath = "podstruct/api/user";
-    _initialize("POST");
-    request.send(requestBody);
-    return result;
-}
-
-function updateUser(requestBody) {
-    endpointPath = "podstruct/api/user";
+function resetPassword(requestBody) {
+    username = localStorage.getItem('username')
     _initialize("PUT");
     request.send(requestBody);
     return result;
@@ -55,7 +49,7 @@ function _initialize(method) {
     // request.open("POST", prodServer + endpointPath, false);
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
-    request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
+    request.setRequestHeader("username", username);
     request.onload = __execute;
 }
 
@@ -69,10 +63,11 @@ function __execute() {
         result.isSuccess = false;
         result.message = handleError(request.status, data);
     } else {
+        if (!localStorage.getItem('username')) localStorage.setItem('username', username);
+        else  localStorage.removeItem('username');
         result.isSuccess = true;
-        result.data = data;
-        result.message = "Successfully reached User endpoint";
+        result.message = "Successfully reached Password endpoint.";
     }
 }
 
-export { getUser, createUser, updateUser };
+export {recoverPassword, resetPassword};

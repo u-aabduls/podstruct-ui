@@ -10,11 +10,6 @@ const customStylesDefault = {
 }
 
 const customStylesError = {
-    container: provided => ({
-        ...provided,
-        width: `28.5%`,
-        margin: `0% 1.5% 0% 0%`,
-    }),
     control: (provided) => ({
         ...provided,
         border: '1px solid #f05050'
@@ -22,20 +17,23 @@ const customStylesError = {
 };
 
 function setOptions(pods) {
+    if(!Array.isArray(pods)) return;
     options = pods.map(function (pod) {
         return { value: pod.id, label: pod.podName }
     })
 }
 
 export default function PodSelector(props) {
-    setOptions(props.pods);
+    if(props.pods) setOptions(props.pods);
     return (
         <Select
             placeholder="Select a Pod..."
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
+            defaultValue={props.defaultV? { label: props.defaultV.podName, value: props.defaultV.id } : null}
             value={options.find(o => o.value === props.defaultv)}
             onChange={(e) => { props.setPod(e.value) }}
+            isDisabled={props.disabled}
         />
     )
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Input } from 'reactstrap';
 import ContentWrapper from '../../Layout/ContentWrapper';
 import { Row, Col, TabContent, TabPane } from 'reactstrap';
-import send from "../../../connectors/PodCreation";
+import { createPod } from "../../../connectors/Pod";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -103,7 +103,7 @@ class PodCreate extends Component {
         console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            var result = send(this.constructRequestPayload());
+            var result = createPod(this.constructRequestPayload());
             this.displayToast(
                 result.message,
                 result.isSuccess ? "success" : "error",

@@ -4,7 +4,6 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 /* loader component for Suspense*/
 import PageLoader from './components/Common/PageLoader';
-import LoadingSpinner from './components/Elements/LoadingSpinner';
 
 import Base from './components/Layout/Base';
 import BasePage from './components/Layout/BasePage';
@@ -26,6 +25,7 @@ const PodCreate = lazy(() => import('./components/Pages/PodManagement/PodCreate'
 
 const PodsView = lazy(() => import('./components/Pages/PodsView/PodsView'));
 const CourseManagement = lazy(() => import('./components/Pages/Courses/CourseManagement'));
+const CourseDetail = lazy(() => import('./components/Pages/Courses/CourseDetail'));
 
 
 
@@ -87,6 +87,7 @@ const Routes = ({ location }) => {
                                     <Route path="/settings" component={waitFor(Settings)} />
                                     <Route path="/pod/create" component={waitFor(PodCreate)} />
                                     <Route path="/courses" component={waitFor(CourseManagement)} />
+                                    <Route path="/course/details" component={waitFor(CourseDetail)} />
 
                                     {/*Tables*/}
                                     <Route path="/pods/view" component={waitFor(PodsView)} />
@@ -98,7 +99,6 @@ const Routes = ({ location }) => {
                         </div>
                     </CSSTransition>
                 </TransitionGroup>
-                <LoadingSpinner />
             </Base>
         )
     }
