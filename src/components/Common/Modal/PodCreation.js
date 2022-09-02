@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from 'reactstrap';
 import swal from '@sweetalert/with-react';
-import send from "../../../connectors/PodCreation";
+import { createPod } from "../../../connectors/Pod";
 import "../../../styles/app/modals/pod-creation.css";
 
 var podName = "",
@@ -264,7 +264,7 @@ function renderSwal() {
                 // TODO: validation when requirements are defined
 
                 if (!error.found) {
-                    var result = send(constructRequestPayload(podName, description, parsePhoneNumber(phone), address));
+                    var result = createPod(constructRequestPayload(podName, description, parsePhoneNumber(phone), address));
                     if (result.isSuccess) {
                         swal({
                             title: "Successfully created pod",
