@@ -147,3 +147,8 @@ input[type="button"] {
     width: 100%;
   }
 }
+
+
+.button-container>.btn:not(:last-child){
+  margin-right: 10px;
+}

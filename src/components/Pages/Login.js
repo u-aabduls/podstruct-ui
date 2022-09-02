@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input, CustomInput } from 'reactstrap';
-import send from "../../connectors/Login";
+import { loginUser } from "../../connectors/UserAuth";
 import 'react-toastify/dist/ReactToastify.css';
 
 import FormValidator from '../Forms/FormValidator.js';
@@ -67,7 +67,7 @@ class Login extends Component {
         console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            var result = send(this.constructRequestPayload());
+            var result = loginUser(this.constructRequestPayload());
             if (localStorage.getItem('token') && result.isSuccess){
                 this.setState({errorMessage: null});
                 this.props.history.push('/dashboard');
@@ -103,7 +103,7 @@ class Login extends Component {
                     <div className="card-header text-center bg-primary">
                         <a href="">
                             <img className="block-center" src="img/logos/favicon.png" alt="Logo" />
-                            <img className="block-center" style={{ marginLeft: 4 + 'px' }} src="img/logos/podstruct_text.svg" alt="Logo" />
+                            <img className="block-center" style={{ marginLeft: '0.25rem' }} src="img/logos/podstruct_text.svg" alt="Logo" />
                         </a>
                     </div>
                     <div className="card-body">

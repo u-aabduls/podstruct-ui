@@ -17,6 +17,7 @@ const customStylesError = {
 };
 
 function setOptions(pods) {
+    if(!Array.isArray(pods)) return;
     options = pods.map(function (pod) {
         return { value: pod.id, label: pod.podName }
     })

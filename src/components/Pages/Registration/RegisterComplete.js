@@ -11,7 +11,7 @@ class RegisterComplete extends Component {
                     <div className="card-header text-center bg-primary">
                         <a href="">
                             <img className="block-center" src="img/logos/favicon.png" alt="Logo" />
-                            <img className="block-center" style={{ marginLeft: 4 + 'px' }} src="img/logos/podstruct_text.svg" alt="Logo" />
+                            <img className="block-center" style={{ marginLeft: '0.25rem' }} src="img/logos/podstruct_text.svg" alt="Logo" />
                         </a>
                     </div>
                     <div className="card-body">

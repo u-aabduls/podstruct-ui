@@ -1,38 +1,39 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../../Layout/ContentWrapper';
 import classnames from 'classnames';
-import { Button, 
-    Dropdown, 
-    DropdownMenu, 
-    DropdownToggle, 
-    DropdownItem, 
-    Input, 
+import { withRouter } from 'react-router';
+import {
+    Button,
+    Dropdown,
+    DropdownMenu,
+    DropdownToggle,
+    DropdownItem,
+    Input,
     Row,
     Card,
     CardBody,
-    CardHeader,
-    Col, 
-    Modal, 
-    ModalHeader, 
-    ModalBody, 
-    ModalFooter, 
+    Col,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
     TabContent,
     TabPane,
+    Table,
     Nav,
     NavItem,
-    NavLink, } from 'reactstrap';
-
+    NavLink,
+} from 'reactstrap';
 import PodSelector from '../../Common/PodSelector';
 import DaysOfWeekSelector from '../../Common/DaysOfWeekSelector';
 import Datetime from 'react-datetime';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
-
-import { getPods, getCourse, editCourse } from '../../../connectors/Course';
-import send from '../../../connectors/PodRetrieval';
+import { getPod } from '../../../connectors/Pod';
+import { getCourse, editCourse } from '../../../connectors/Course';
 import FormValidator from '../../Forms/FormValidator';
-
+import Now from "../../Common/Now"
 
 class CourseDetail extends Component {
 
@@ -53,7 +54,8 @@ class CourseDetail extends Component {
                 }
             }
         },
-        course: this.props.location.state.course,
+        privileges: "owner",
+        course: this.props.location.state,
         modal: false,
         ddOpen: false,
         activeTab: '1',
@@ -198,26 +200,25 @@ class CourseDetail extends Component {
         console.log((hasError || invalidSelector) ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError && !invalidSelector) {
-            var result = editCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id, this.constructRequestPayload());
-            if (result.isSuccess) {
+            var res = editCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id, this.constructRequestPayload());
+            if (res.isSuccess) {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully edited course",
                     icon: "success",
                 })
-                getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id).then(res => {
-                    if (res.isSuccess) {
-                        this.setState({
-                            course: res.data
-                        })
-                    }
-                })
+                var res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)
+                if (res.isSuccess) {
+                    this.setState({
+                        course: res.data
+                    })
+                }
             }
             else {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    text: result.message
+                    text: res.message
                 })
             }
         }
@@ -225,315 +226,393 @@ class CourseDetail extends Component {
 
     populateForm() {
         var stateCopy = this.state.formEditCourse;
-        getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id).then(res => {
-            if (res.isSuccess) {
-                this.setState({
-                    course: res.data
-                })
-                stateCopy.subject = res.data.subject
-                stateCopy.daysOfWeekInterval = res.data.daysOfWeekInterval
-                stateCopy.startTime = res.data.startTime
-                stateCopy.endTime = res.data.endTime
-                stateCopy.teacher = res.data.teacher
-                stateCopy.description = res.data.description
-                this.setState(stateCopy)
-            }
-        })
+        var res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)
+        if (res.isSuccess) {
+            this.setState({
+                course: res.data
+            })
+            stateCopy.subject = res.data.subject
+            stateCopy.daysOfWeekInterval = res.data.daysOfWeekInterval
+            stateCopy.startTime = res.data.startTime
+            stateCopy.endTime = res.data.endTime
+            stateCopy.teacher = res.data.teacher
+            stateCopy.description = res.data.description
+            this.setState(stateCopy)
+        }
     }
 
     componentDidMount() {
         var stateCopy = this.state.formEditCourse;
-        send(this.props.location.state.course.podId).then(res => {
-            if (res.isSuccess) {
-                stateCopy.selectedPod = res.data
-                this.setState(stateCopy)
-            }
-        })
+        var res = getPod(this.props.location.state.podId)
+        if (res.isSuccess) {
+            stateCopy.selectedPod = res.data
+            this.setState(stateCopy)
+        }
         this.populateForm()
     }
 
     render() {
-        console.log(this.state.formEditCourse.daysOfWeekInterval)
-        if (this.state.course == null) {
-            this.props.history.push('/courses')
-        }
-        else {
-            var daysOfWeek = ["Mon", "Tues", "Wed", "Thrus", "Fri", "Sat", "Sun"]
-            var output = ""
-            return (
-                <ContentWrapper>
-                    <div className="content-heading">
-                        <div>Course Details
-                            <small>Check out the details and edit a specific course</small>
-                        </div>
-
-                        <div className="ml-auto">
-                            <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
-                                <DropdownToggle>
-                                    <em className="fas fa-ellipsis-v fa-lg"></em>
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={this.toggleModal}>Edit Course</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-
-                            <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                                <form className="mb-3" name="formEditCourse" onSubmit={this.onSubmit}>
-                                    <ModalHeader toggle={this.toggleModal}>Edit Course</ModalHeader>
-                                    <ModalBody>
-                                        <div className="form-group">
-                                            <label className="text-muted" htmlFor="addCourseSubject">Select Pod</label>
-                                            <PodSelector
-                                                name="podSelector"
-                                                hasError={this.state.formEditCourse.selector.error.isNullPod}
-                                                defaultV={this.state.formEditCourse.selectedPod}
-                                                disabled={true}
-                                            />
-                                            {this.state.formEditCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="text-muted" htmlFor="addCourseSubject">Course Subject</label>
-                                            <div className="input-group with-focus">
-                                                <Input
-                                                    type="text"
-                                                    name="subject"
-                                                    className="border-right-0"
-                                                    placeholder="Enter course subject"
-                                                    invalid={
-                                                        this.hasError('formEditCourse', 'subject', 'required')
-                                                        || this.hasError('formEditCourse', 'subject', 'maxlen')
-                                                        || this.hasError('formEditCourse', 'subject', 'contains-alpha')
-                                                        || this.hasError('formEditCourse', 'subject', 'begin-end-spacing')
-                                                        || this.hasError('formEditCourse', 'subject', 'consecutive-spacing')
-                                                    }
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
-                                                    data-param='50'
-                                                    value={this.state.formEditCourse.subject} />
-                                                <div className="input-group-append">
-                                                    <span className="input-group-text text-muted bg-transparent border-left-0">
-                                                        <em className="fa fa-book"></em>
-                                                    </span>
-                                                </div>
-                                                {this.hasError('formEditCourse', 'subject', 'required') && <span className="invalid-feedback">Subject is required</span>}
-                                                {this.hasError('formEditCourse', 'subject', 'maxlen') && <span className="invalid-feedback">Subject must not have more than 50 characters</span>}
-                                                {this.hasError('formEditCourse', 'subject', 'contains-alpha') && <span className="invalid-feedback">Subject must contain at least one alpha character</span>}
-                                                {this.hasError('formEditCourse', 'subject', 'begin-end-spacing') && <span className="invalid-feedback">Subject must not begin or end with a space character</span>}
-                                                {this.hasError('formEditCourse', 'subject', 'consecutive-spacing') && <span className="invalid-feedback">Subject must not contain consecutive space characters</span>}
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="text-muted" htmlFor="addDaySchedule">Day Schedule</label>
-                                            <DaysOfWeekSelector
-                                                name="daysOfWeekSelector"
-                                                defaultv={this.state.formEditCourse.daysOfWeekInterval.split(",")}
-                                                hasError={this.state.formEditCourse.selector.error.isNullDay}
-                                                setDays={(day) => this.setDays(day)}
-                                            />
-                                            {this.state.formEditCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule</label>
-                                            <Row>
-                                                <Col lg="6">
-                                                    <label className="text-muted">Start time: </label>
-                                                    <Datetime
-                                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
-                                                        dateFormat={false}
-                                                        onChange={(date) => this.setTime(date, "AM")}
-                                                        value={moment(this.state.formEditCourse.startTime, "HH:mm:ss").format("h:mm A")}
-                                                    />
-                                                </Col>
-                                                <Col lg="6">
-                                                    <label className="text-muted">End time: </label>
-                                                    <Datetime
-                                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
-                                                        dateFormat={false}
-                                                        onChange={(date) => this.setTime(date, "PM")}
-                                                        value={moment(this.state.formEditCourse.endTime, "HH:mm:ss").format("h:mm A")}
-                                                    />
-                                                </Col>
-                                            </Row>
-                                            {this.state.formEditCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Time schedule is required</p>}
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="text-muted" htmlFor="addCourseTeacher">Teacher</label>
-                                            <div className="input-group with-focus">
-                                                <Input
-                                                    type="text"
-                                                    name="teacher"
-                                                    className="border-right-0"
-                                                    placeholder="Enter teacher's name"
-                                                    invalid={
-                                                        this.hasError('formEditCourse', 'teacher', 'required')
-                                                        || this.hasError('formEditCourse', 'teacher', 'maxlen')
-                                                        || this.hasError('formEditCourse', 'teacher', 'contains-alpha')
-                                                        || this.hasError('formEditCourse', 'teacher', 'name')
-                                                        || this.hasError('formEditCourse', 'teacher', 'begin-end-spacing')
-                                                        || this.hasError('formEditCourse', 'teacher', 'consecutive-spacing')
-                                                    }
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
-                                                    data-param='50'
-                                                    value={this.state.formEditCourse.teacher} />
-                                                <div className="input-group-append">
-                                                    <span className="input-group-text text-muted bg-transparent border-left-0">
-                                                        <em className="fa fa-book"></em>
-                                                    </span>
-                                                </div>
-                                                {this.hasError('formEditCourse', 'teacher', 'required') && <span className="invalid-feedback">Teacher is required</span>}
-                                                {this.hasError('formEditCourse', 'teacher', 'maxlen') && <span className="invalid-feedback">Teacher must not have more than 50 characters</span>}
-                                                {this.hasError('formEditCourse', 'teacher', 'contains-alpha') && <span className="invalid-feedback">Teacher must contain at least one alpha character</span>}
-                                                {this.hasError('formEditCourse', 'teacher', 'name') && <span className="invalid-feedback">Teacher must contain alpha, apostrophe, or hyphen characters only</span>}
-                                                {this.hasError('formEditCourse', 'teacher', 'begin-end-spacing') && <span className="invalid-feedback">Teacher must not begin or end with a space character</span>}
-                                                {this.hasError('formEditCourse', 'teacher', 'consecutive-spacing') && <span className="invalid-feedback">Teacher must not contain consecutive space characters</span>}
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="text-muted" htmlFor="addDescription">Course Description</label>
-                                            <div className="input-group with-focus">
-                                                <Input
-                                                    type="textarea"
-                                                    name="description"
-                                                    className="border-right-0"
-                                                    placeholder="Enter course description"
-                                                    invalid={
-                                                        this.hasError('formEditCourse', 'description', 'required')
-                                                        || this.hasError('formEditCourse', 'description', 'maxlen')
-                                                        || this.hasError('formEditCourse', 'description', 'contains-alpha')
-                                                        || this.hasError('formEditCourse', 'description', 'begin-end-spacing')
-                                                        || this.hasError('formEditCourse', 'description', 'consecutive-spacing')
-                                                    }
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
-                                                    data-param='150'
-                                                    value={this.state.formEditCourse.description} />
-                                                <div className="input-group-append">
-                                                    <span className="input-group-text text-muted bg-transparent border-left-0">
-                                                        <em className="fa fa-book"></em>
-                                                    </span>
-                                                </div>
-                                                {this.hasError('formEditCourse', 'description', 'required') && <span className="invalid-feedback">Course description is required</span>}
-                                                {this.hasError('formEditCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 150 characters</span>}
-                                                {this.hasError('formEditCourse', 'description', 'contains-alpha') && <span className="invalid-feedback">Course description must contain at least one alpha character</span>}
-                                                {this.hasError('formEditCourse', 'description', 'begin-end-spacing') && <span className="invalid-feedback">Course description must not begin or end with a space character</span>}
-                                                {this.hasError('formEditCourse', 'description', 'consecutive-spacing') && <span className="invalid-feedback">Course description must not contain consecutive space characters</span>}
-                                            </div>
-                                        </div>
-                                    </ModalBody>
-                                    <ModalFooter>
-                                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                                        <Button color="primary" type="submit">Edit</Button>{' '}
-                                    </ModalFooter>
-                                </form>
-                            </Modal>
-                        </div>
+        console.log(this.state.course)
+        var daysOfWeek = ["Mon", "Tues", "Wed", "Thrus", "Fri", "Sat", "Sun"]
+        var output = ""
+        return (
+            <ContentWrapper>
+                <div className="content-heading">
+                    <div>Course Details
+                        <small>Check out the details and edit a specific course</small>
                     </div>
-                    <Row noGutters={true}>
-                        <Col md={3}>
-                            {/* START card */}
-                            <div className="card-fixed-height">
-                                <div className="card-body">
-                                    <h4 className="mt-1 text-muted">Course Subject</h4>
-                                    <p className="text-primary font-weight-bold">{this.state.course.subject}</p>
-                                </div>
-                            </div>
-                            {/* END card */}
-                        </Col>
-                        <Col md={3}>
-                            {/* START card */}
-                            <div className="card-fixed-height">
-                                <div className="card-body">
-                                    <h4 className="mt-1 text-muted">Course Description</h4>
-                                    <p className="text-primary font-weight-bold">{this.state.course.description}</p>
-                                </div>
-                            </div>
-                            {/* END card */}
-                        </Col>
-                        <Col md={3}>
-                            {/* START card */}
-                            <div className="card-fixed-height">
-                                <div className="card-body">
-                                    <h4 className="mt-1 text-muted">Teacher</h4>
-                                    <p className="text-primary font-weight-bold"></p>
-                                </div>
-                            </div>
-                            {/* END card */}
-                        </Col>
-                        <Col md={3}>
-                            {/* START card */}
-                            <div className="card-fixed-height">
-                                <div className="card-body">
-                                    <h4 className="mt-1 text-muted">Course Schedule</h4>
-                                    <p className="text-primary font-weight-bold">{this.state.course.daysOfWeekInterval.split(',').forEach(function (i, idx, array) {
-                                        if (idx === array.length - 1) {
-                                            output += daysOfWeek[i - 1]
-                                        }
-                                        else {
-                                            output += daysOfWeek[i - 1] + '/'
-                                        }
-                                    })}
-                                        {output}
-                                        <br></br>
-                                        {moment(this.state.course.startTime, "HH:mm:ss").format("h:mm A") + " - " + moment(this.state.course.endTime, "HH:mm:ss").format("h:mm A")}</p>
-                                </div>
-                            </div>
-                            {/* END card */}
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}>
-                            <Card className="card">
-                                <CardHeader>Basic Tabs</CardHeader>
-                                <CardBody>
-                                    <div role="tabpanel">
-                                        {/* Nav tabs */}
-                                        <Nav tabs>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeTab === '1' })}
-                                                    onClick={() => { this.toggleTab('1'); }}>
-                                                    Home
-                                                </NavLink>
-                                            </NavItem>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeTab === '2' })}
-                                                    onClick={() => { this.toggleTab('2'); }}>
-                                                    Profile
-                                                </NavLink>
-                                            </NavItem>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeTab === '3' })}
-                                                    onClick={() => { this.toggleTab('3'); }}>
-                                                    Messages
-                                                </NavLink>
-                                            </NavItem>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeTab === '4' })}
-                                                    onClick={() => { this.toggleTab('4'); }}>
-                                                    Settings
-                                                </NavLink>
-                                            </NavItem>
-                                        </Nav>
-                                        {/* Tab panes */}
-                                        <TabContent activeTab={this.state.activeTab}>
-                                            <TabPane tabId="1">Suspendisse velit erat, vulputate sit amet feugiat a, lobortis nec felis.</TabPane>
-                                            <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>
-                                            <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
-                                            <TabPane tabId="4">Sed commodo tellus ut mi tristique pharetra.</TabPane>
-                                        </TabContent>
+
+                    <div className="ml-auto">
+                        <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
+                            <DropdownToggle>
+                                <em className="fas fa-ellipsis-v fa-lg"></em>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                {this.state.privileges === "owner" &&
+                                    <DropdownItem onClick={this.toggleModal}>Edit Course</DropdownItem>
+                                }
+                            </DropdownMenu>
+                        </Dropdown>
+
+                        <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                            <form className="mb-3" name="formEditCourse" onSubmit={this.onSubmit}>
+                                <ModalHeader toggle={this.toggleModal}>Edit Course</ModalHeader>
+                                <ModalBody>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addCourseSubject">Select Pod</label>
+                                        <PodSelector
+                                            name="podSelector"
+                                            hasError={this.state.formEditCourse.selector.error.isNullPod}
+                                            defaultV={this.state.formEditCourse.selectedPod}
+                                            disabled={true}
+                                        />
+                                        {this.state.formEditCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
                                     </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-                </ContentWrapper>
-            )
-        }
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addCourseSubject">Course Subject</label>
+                                        <div className="input-group with-focus">
+                                            <Input
+                                                type="text"
+                                                name="subject"
+                                                className="border-right-0"
+                                                placeholder="Enter course subject"
+                                                invalid={
+                                                    this.hasError('formEditCourse', 'subject', 'required')
+                                                    || this.hasError('formEditCourse', 'subject', 'maxlen')
+                                                    || this.hasError('formEditCourse', 'subject', 'contains-alpha')
+                                                    || this.hasError('formEditCourse', 'subject', 'begin-end-spacing')
+                                                    || this.hasError('formEditCourse', 'subject', 'consecutive-spacing')
+                                                }
+                                                onChange={this.validateOnChange}
+                                                data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-param='50'
+                                                value={this.state.formEditCourse.subject} />
+                                            <div className="input-group-append">
+                                                <span className="input-group-text text-muted bg-transparent border-left-0">
+                                                    <em className="fa fa-book"></em>
+                                                </span>
+                                            </div>
+                                            {this.hasError('formEditCourse', 'subject', 'required') && <span className="invalid-feedback">Subject is required</span>}
+                                            {this.hasError('formEditCourse', 'subject', 'maxlen') && <span className="invalid-feedback">Subject must not have more than 50 characters</span>}
+                                            {this.hasError('formEditCourse', 'subject', 'contains-alpha') && <span className="invalid-feedback">Subject must contain at least one alpha character</span>}
+                                            {this.hasError('formEditCourse', 'subject', 'begin-end-spacing') && <span className="invalid-feedback">Subject must not begin or end with a space character</span>}
+                                            {this.hasError('formEditCourse', 'subject', 'consecutive-spacing') && <span className="invalid-feedback">Subject must not contain consecutive space characters</span>}
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addDaySchedule">Day Schedule</label>
+                                        <DaysOfWeekSelector
+                                            name="daysOfWeekSelector"
+                                            defaultv={this.state.formEditCourse.daysOfWeekInterval.split(",")}
+                                            hasError={this.state.formEditCourse.selector.error.isNullDay}
+                                            setDays={(day) => this.setDays(day)}
+                                        />
+                                        {this.state.formEditCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule</label>
+                                        <Row>
+                                            <Col lg="6">
+                                                <label className="text-muted">Start time: </label>
+                                                <Datetime
+                                                    inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
+                                                    dateFormat={false}
+                                                    onChange={(date) => this.setTime(date, "AM")}
+                                                    value={moment(this.state.formEditCourse.startTime, "HH:mm:ss").format("h:mm A")}
+                                                />
+                                            </Col>
+                                            <Col lg="6">
+                                                <label className="text-muted">End time: </label>
+                                                <Datetime
+                                                    inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
+                                                    dateFormat={false}
+                                                    onChange={(date) => this.setTime(date, "PM")}
+                                                    value={moment(this.state.formEditCourse.endTime, "HH:mm:ss").format("h:mm A")}
+                                                />
+                                            </Col>
+                                        </Row>
+                                        {this.state.formEditCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Time schedule is required</p>}
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addCourseTeacher">Teacher</label>
+                                        <div className="input-group with-focus">
+                                            <Input
+                                                type="text"
+                                                name="teacher"
+                                                className="border-right-0"
+                                                placeholder="Enter teacher's name"
+                                                invalid={
+                                                    this.hasError('formEditCourse', 'teacher', 'required')
+                                                    || this.hasError('formEditCourse', 'teacher', 'maxlen')
+                                                    || this.hasError('formEditCourse', 'teacher', 'contains-alpha')
+                                                    || this.hasError('formEditCourse', 'teacher', 'name')
+                                                    || this.hasError('formEditCourse', 'teacher', 'begin-end-spacing')
+                                                    || this.hasError('formEditCourse', 'teacher', 'consecutive-spacing')
+                                                }
+                                                onChange={this.validateOnChange}
+                                                data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-param='50'
+                                                value={this.state.formEditCourse.teacher} />
+                                            <div className="input-group-append">
+                                                <span className="input-group-text text-muted bg-transparent border-left-0">
+                                                    <em className="fa fa-book"></em>
+                                                </span>
+                                            </div>
+                                            {this.hasError('formEditCourse', 'teacher', 'required') && <span className="invalid-feedback">Teacher is required</span>}
+                                            {this.hasError('formEditCourse', 'teacher', 'maxlen') && <span className="invalid-feedback">Teacher must not have more than 50 characters</span>}
+                                            {this.hasError('formEditCourse', 'teacher', 'contains-alpha') && <span className="invalid-feedback">Teacher must contain at least one alpha character</span>}
+                                            {this.hasError('formEditCourse', 'teacher', 'name') && <span className="invalid-feedback">Teacher must contain alpha, apostrophe, or hyphen characters only</span>}
+                                            {this.hasError('formEditCourse', 'teacher', 'begin-end-spacing') && <span className="invalid-feedback">Teacher must not begin or end with a space character</span>}
+                                            {this.hasError('formEditCourse', 'teacher', 'consecutive-spacing') && <span className="invalid-feedback">Teacher must not contain consecutive space characters</span>}
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-muted" htmlFor="addDescription">Course Description</label>
+                                        <div className="input-group with-focus">
+                                            <Input
+                                                type="textarea"
+                                                name="description"
+                                                className="border-right-0"
+                                                placeholder="Enter course description"
+                                                invalid={
+                                                    this.hasError('formEditCourse', 'description', 'required')
+                                                    || this.hasError('formEditCourse', 'description', 'maxlen')
+                                                    || this.hasError('formEditCourse', 'description', 'contains-alpha')
+                                                    || this.hasError('formEditCourse', 'description', 'begin-end-spacing')
+                                                    || this.hasError('formEditCourse', 'description', 'consecutive-spacing')
+                                                }
+                                                onChange={this.validateOnChange}
+                                                data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-param='150'
+                                                value={this.state.formEditCourse.description} />
+                                            <div className="input-group-append">
+                                                <span className="input-group-text text-muted bg-transparent border-left-0">
+                                                    <em className="fa fa-book"></em>
+                                                </span>
+                                            </div>
+                                            {this.hasError('formEditCourse', 'description', 'required') && <span className="invalid-feedback">Course description is required</span>}
+                                            {this.hasError('formEditCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 150 characters</span>}
+                                            {this.hasError('formEditCourse', 'description', 'contains-alpha') && <span className="invalid-feedback">Course description must contain at least one alpha character</span>}
+                                            {this.hasError('formEditCourse', 'description', 'begin-end-spacing') && <span className="invalid-feedback">Course description must not begin or end with a space character</span>}
+                                            {this.hasError('formEditCourse', 'description', 'consecutive-spacing') && <span className="invalid-feedback">Course description must not contain consecutive space characters</span>}
+                                        </div>
+                                    </div>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                                    <Button color="primary" type="submit">Edit</Button>{' '}
+                                </ModalFooter>
+                            </form>
+                        </Modal>
+                    </div>
+                </div>
+                <Row noGutters={true}>
+                    <Col md={3}>
+                        {/* START card */}
+                        <div className="card-fixed-height">
+                            <div className="card-body">
+                                <h4 className="mt-1 text-muted">Course Subject</h4>
+                                <p className="text-primary font-weight-bold">{this.state.course.subject}</p>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </Col>
+                    <Col md={3}>
+                        {/* START card */}
+                        <div className="card-fixed-height">
+                            <div className="card-body">
+                                <h4 className="mt-1 text-muted">Course Description</h4>
+                                <p className="text-primary font-weight-bold">{this.state.course.description}</p>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </Col>
+                    <Col md={3}>
+                        {/* START card */}
+                        <div className="card-fixed-height">
+                            <div className="card-body">
+                                <h4 className="mt-1 text-muted">Teacher</h4>
+                                <p className="text-primary font-weight-bold"></p>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </Col>
+                    <Col md={3}>
+                        {/* START card */}
+                        <div className="card-fixed-height">
+                            <div className="card-body">
+                                <h4 className="mt-1 text-muted">Course Schedule</h4>
+                                <p className="text-primary font-weight-bold">{this.state.course.daysOfWeekInterval.split(',').forEach(function (i, idx, array) {
+                                    if (idx === array.length - 1) {
+                                        output += daysOfWeek[i - 1]
+                                    }
+                                    else {
+                                        output += daysOfWeek[i - 1] + '/'
+                                    }
+                                })}
+                                    {output}
+                                    <br></br>
+                                    {moment(this.state.course.startTime, "HH:mm:ss").format("h:mm A") + " - " + moment(this.state.course.endTime, "HH:mm:ss").format("h:mm A")}</p>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </Col>
+                </Row>
+                <br />
+                <Row>
+                    <Col md={12}>
+                        <Card className="card">
+                            <CardBody>
+                                <div role="tabpanel">
+                                    {/* Nav tabs */}
+                                    <Nav tabs>
+                                        <NavItem>
+                                            <NavLink
+                                                className={classnames({ active: this.state.activeTab === '1' })}
+                                                onClick={() => { this.toggleTab('1'); }}>
+                                                Announcements
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={classnames({ active: this.state.activeTab === '2' })}
+                                                onClick={() => { this.toggleTab('2'); }}>
+                                                Assignments
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={classnames({ active: this.state.activeTab === '3' })}
+                                                onClick={() => { this.toggleTab('3'); }}>
+                                                Upcoming Events
+                                            </NavLink>
+                                        </NavItem>
+                                    </Nav>
+                                    {/* Tab panes */}
+                                    <TabContent activeTab={this.state.activeTab}>
+                                        <TabPane tabId="1">
+                                            {this.state.privileges === "owner" &&
+                                                <div className="float-right">
+                                                    <Button className="btn btn-secondary btn-sm" onClick={this.toggleModal}>Add Announcement</Button>
+                                                </div>
+                                            }
+                                            <Table hover responsive>
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td className='date'>
+                                                            <Now format="dddd" className="text-uppercase text-bold" />
+                                                            <br />
+                                                            <Now format="h:mm" className="h2 mt0 text-sm" />
+                                                            <Now format="a" className="text-muted text-sm" />
+                                                        </td>
+                                                        <td className="announcement">
+                                                            <span className="h4 text-bold">Midterm grades released</span>
+                                                            <br />
+                                                            <span>Please email me for any inquiries about your grade</span>
+                                                        </td>
+                                                        <td className="buttons">
+                                                            {this.state.privileges === "owner" &&
+                                                                <div className='button-container'>
+                                                                    <Button className="btn btn-secondary btn-sm bg-success">
+                                                                        <i className="fas fa-edit fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                    <Button className="btn btn-secondary btn-sm bg-danger">
+                                                                        <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                </div>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td className='date'>
+                                                            <Now format="dddd" className="text-uppercase text-bold" />
+                                                            <br />
+                                                            <Now format="h:mm" className="h2 mt0 text-sm" />
+                                                            <Now format="a" className="text-muted text-sm" />
+                                                        </td>
+                                                        <td className="announcement">
+                                                            <span className="h4 text-bold">Final grades released</span>
+                                                        </td>
+                                                        <td className="buttons">
+                                                            {this.state.privileges === "owner" &&
+                                                                <div className='button-container'>
+                                                                    <Button className="btn btn-secondary btn-sm bg-success">
+                                                                        <i className="fas fa-edit fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                    <Button className="btn btn-secondary btn-sm bg-danger">
+                                                                        <i className="fas fa-trash fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                </div>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td className='date'>
+                                                            <Now format="dddd" className="text-uppercase text-bold" />
+                                                            <br />
+                                                            <Now format="h:mm" className="h2 mt0 text-sm" />
+                                                            <Now format="a" className="text-muted text-sm" />
+                                                        </td>
+                                                        <td className="announcement">
+                                                            <span className="h4 text-bold">Assignment 4 Due</span>
+                                                            <br />
+                                                            <span>Please submit before 12 AM</span>
+                                                        </td>
+                                                        <td className="buttons">
+                                                            {this.state.privileges === "owner" &&
+                                                                <div className='button-container'>
+                                                                    <Button className="btn btn-secondary btn-sm bg-success">
+                                                                        <i className="fas fa-edit fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                    <Button className="btn btn-secondary btn-sm bg-danger">
+                                                                        <i className="fas fa-trash fa-fw btn-icon"></i>
+                                                                    </Button>
+                                                                </div>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </Table>
+                                        </TabPane>
+                                        <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>
+                                        <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
+                                        <TabPane tabId="4">Sed commodo tellus ut mi tristique pharetra.</TabPane>
+                                    </TabContent>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </ContentWrapper >
+        )
     }
 }
 
-export default CourseDetail
+export default withRouter(CourseDetail)

@@ -4,7 +4,6 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 /* loader component for Suspense*/
 import PageLoader from './components/Common/PageLoader';
-import LoadingSpinner from './components/Elements/LoadingSpinner';
 
 import Base from './components/Layout/Base';
 import BasePage from './components/Layout/BasePage';
@@ -97,7 +96,6 @@ const Routes = ({ location }) => {
                         </div>
                     </CSSTransition>
                 </TransitionGroup>
-                <LoadingSpinner />
             </Base>
         )
     }
