@@ -12,24 +12,34 @@ var authorizationToken = localStorage.getItem('token');
  * Public Methods
  ********************/
 
-async function getPods() {
-     endpointPath = "podstruct/api/pods";
-    _initializeGETPods();
+function getCourses(podID, subject) {
+    endpointPath = "podstruct/api/pods";
+    endpointPath += subject? "/" + podID + "/courses?subject=" + subject  : "/" + podID + "/courses"
+    _initialize("GET");
     request.send();
     return result;
 }
 
-async function getCourses(podID, subject) {
+function getCourse(podID, courseID){
     endpointPath = "podstruct/api/pods";
-    endpointPath += subject? "/" + podID + "/courses?subject=" + subject  : "/" + podID + "/courses"
-    _initializeGETCourses();
+    endpointPath += "/" + podID + "/courses/" + courseID;
+    _initialize("GET");
     request.send();
     return result;
 }
 
 function addCourse(podID, requestBody){
-    endpointPath = "podstruct/api/pods/" + podID + "/courses";
-    _initializePOSTCourse();
+    endpointPath = "podstruct/api/pods";
+    endpointPath += "/" + podID + "/courses";
+    _initialize("POST");
+    request.send(requestBody);
+    return result;
+}
+
+function editCourse(podID, courseID, requestBody){
+    endpointPath = "podstruct/api/pods";
+    endpointPath += "/" + podID + "/courses/" + courseID;
+    _initialize("PUT");
     request.send(requestBody);
     return result;
 }
@@ -38,27 +48,21 @@ function addCourse(podID, requestBody){
  * Private Methods
  ********************/
 
- function _initializeGETPods() {
-    request.open("GET", devServer + endpointPath, false);
-    // request.open("POST", prodServer + endpointPath, false);
-    request.setRequestHeader("accept", "*/*");
-    request.setRequestHeader("Content-Type", "application/json");
-    request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
-    request.onload = __execute;
-}
-
-function _initializeGETCourses() {
-    request.open("GET", devServer + endpointPath, false);
-    // request.open("POST", prodServer + endpointPath, false);
-    request.setRequestHeader("accept", "*/*");
-    request.setRequestHeader("Content-Type", "application/json");
-    request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
-    request.onload = __execute;
-}
-
-function _initializePOSTCourse() {
-    console.log(endpointPath)
-    request.open("POST", devServer + endpointPath, false);
+ function _initialize(method) {
+    switch (method){
+        case "GET":
+            request.open("GET", devServer + endpointPath, false);
+            break;
+        case "POST":
+            request.open("POST", devServer + endpointPath, false);
+            break;
+        case "PUT":
+            request.open("PUT", devServer + endpointPath, false);
+            break;
+        case "DELETE":
+            request.open("DELETE", devServer + endpointPath, false);
+            break;
+    }
     // request.open("POST", prodServer + endpointPath, false);
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
@@ -78,8 +82,8 @@ function __execute() {
     } else {
         result.isSuccess = true;
         result.data = data;
-        result.message = "";
+        result.message = "Successfully reached Course endpoint.";
     }
 }
 
-export {getPods, getCourses, addCourse};
+export { getCourses, getCourse, addCourse, editCourse};
