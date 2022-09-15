@@ -5,7 +5,7 @@ var request = new XMLHttpRequest();
 var result = {};
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
-var endpointPath = "podstruct/api/user/auth";
+var endpointPath = "podstruct/api/user/auth/";
 var authorizationToken = ""
 
 

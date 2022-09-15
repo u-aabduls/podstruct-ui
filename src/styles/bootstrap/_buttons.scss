@@ -52,7 +52,7 @@
 }
 
 .btn-icon {
-  line-height: inherit!important; 
+  line-height: inherit !important;
   vertical-align: middle;
 }
 
@@ -149,6 +149,10 @@ input[type="button"] {
 }
 
 
-.button-container>.btn:not(:last-child){
+.button-container>.btn:not(:last-child) {
   margin-right: 10px;
+}
+
+.button-create-icon {
+  margin-right: 0.3rem
 }
