@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Card, CardHeader, CardBody, Table } from 'reactstrap';
+import { Card, CardHeader, Table } from 'reactstrap';
 import moment from 'moment';
 
 class CourseCard extends Component {
 
     render() {
-        var daysOfWeek = ["Mon", "Tues", "Wed", "Thrus", "Fri", "Sat", "Sun"]
+        var daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"]
         var output = ""
         return (
             <div className='course-preview'>
                 <Link to={{ pathname: `/course/details/${this.props.course.id}`, state: this.props.course }}>
                     <Card outline color="dark" className="b">
-                        <CardHeader className="course-card-header">
+                        <CardHeader className="theme-card-header">
                             <h4 className="m-0 text-center">{this.props.course.subject}</h4>
                         </CardHeader>
                         <Table>
@@ -33,10 +33,10 @@ class CourseCard extends Component {
                                     <td>
                                         {this.props.course.daysOfWeekInterval.split(',').forEach(function (i, idx, array) {
                                             if (idx === array.length - 1) {
-                                                output += daysOfWeek[i - 1]
+                                                output += daysOfWeek[i]
                                             }
                                             else {
-                                                output += daysOfWeek[i - 1] + '/'
+                                                output += daysOfWeek[i] + '/'
                                             }
                                         })}
                                         {output}

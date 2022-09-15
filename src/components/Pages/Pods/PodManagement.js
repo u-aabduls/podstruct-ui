@@ -19,10 +19,6 @@ class PodManagement extends Component {
         modal: false
     }
 
-    buttonLabelStyle = {
-        marginRight: `0.3rem`
-    }
-
     contentHeadingStyle = {
         marginBottom: `1rem`,
         justifyContent: `space-between`
@@ -146,10 +142,12 @@ class PodManagement extends Component {
 
     componentDidMount() {
         var result = getPods().data;
-        result.sort(function (a, b) {
-            return (a.podName).localeCompare(b.podName);
-        })
-        this.setState({ pods: result });
+        if (result) {
+            result.sort(function (a, b) {
+                return (a.podName).localeCompare(b.podName);
+            })
+            this.setState({ pods: result });
+        }
     }
 
     render() {
@@ -163,11 +161,11 @@ class PodManagement extends Component {
                     <div>
                         <button className="btn btn-success"
                             onClick={this.toggleModal}>
-                            <em className="fa fa-plus-circle fa-sm" style={this.buttonLabelStyle}></em> Create Pod
+                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Pod
                         </button>
-                        <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                        <Modal isOpen={this.state.modal}>
                             <form className="mb-3" name="podCreate" onSubmit={this.onSubmit}>
-                                <ModalHeader>Create Pod</ModalHeader>
+                                <ModalHeader toggle={this.toggleModal}>Create Pod</ModalHeader>
                                 <ModalBody>
                                     <div className="form-group">
                                         <label className="text-muted" htmlFor="id-podName">Name</label>
@@ -290,20 +288,23 @@ class PodManagement extends Component {
                 <Row>
                     {this.state.pods.map(function (object, i) {
                         return (
-                            object.active ?
-                                <Col key={i} xl="4" lg="6">
-                                    <PodCard
-                                        name={object.podName}
-                                        description={object.podDescription}
-                                        role={object.roleInPod}
-                                        courseCount={0}
-                                        studentCount={0}
-                                        action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] :
-                                            object.roleInPod === "ROLE_TEACHER" ? ["Manage"] : ["View"]}
-                                        id={object.id}
-                                        key={i}
-                                    />
-                                </Col> : null
+                            object.active &&
+                            <Col key={i} xl="4" lg="6">
+                                {/* <PodCard
+                                    name={object.podName}
+                                    description={object.podDescription}
+                                    role={object.roleInPod}
+                                    courseCount={0}
+                                    studentCount={0}
+                                    action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] :
+                                        object.roleInPod === "ROLE_TEACHER" ? ["Manage"] : ["View"]}
+                                    id={object.id}
+                                    key={i}
+                                /> */}
+                                <PodCard
+                                    pod={object}
+                                />
+                            </Col>
                         );
                     })}
                 </Row>

@@ -83,11 +83,17 @@ const Routes = ({ location }) => {
 
                                     {/*Extras*/}
                                     <Route path="/settings" component={waitFor(Settings)} />
+<<<<<<< HEAD
+=======
+                                    <Route path="/pod/create" component={waitFor(PodCreate)} />
+                                    <Route path="/courses" component={waitFor(CourseManagement)} />
+                                    <Route path="/course/details/:id" component={waitFor(CourseDetail)} />
+>>>>>>> da0dd5410b04f07d025cd9242db780ff3a719c00
 
                                     <Route path="/pods" component={waitFor(PodManagement)} />
-                                    <Route path="/pod/details" component={waitFor(PodDetail)} />
+                                    <Route path="/pod/details/:id" component={waitFor(PodDetail)} />
                                     <Route path="/courses" component={waitFor(CourseManagement)} />
-                                    <Route path="/course/details" component={waitFor(CourseDetail)} />
+                                    <Route path="/course/details/:id" component={waitFor(CourseDetail)} />
 
                                     {/*Default*/}
                                     <Redirect to="/login" />

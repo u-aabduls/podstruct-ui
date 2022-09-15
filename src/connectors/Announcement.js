@@ -4,7 +4,7 @@ import handleError from '../utils/ErrorHandler.js'
 var request = new XMLHttpRequest();
 var result = {};
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
-    prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
+    prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/" ;
 var endpointPath = "podstruct/api/pods/";
 var authorizationToken = localStorage.getItem('token');
 
@@ -12,38 +12,17 @@ var authorizationToken = localStorage.getItem('token');
  * Public Methods
  ********************/
 
-function getPods() {
-    var endpointPathEXT = endpointPath
+function getCourseAnnouncements(podID, courseID, epochSeconds) {
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements?endDateTimeEpochSeconds=" + epochSeconds
     _initialize("GET", endpointPathEXT);
     request.send();
     return result;
 }
 
-function getPod(podID) {
-    var endpointPathEXT = endpointPath + podID
-    _initialize("GET", endpointPathEXT);
-    request.send();
-    return result;
-}
-
-function createPod(requestBody) {
-    var endpointPathEXT = endpointPath
+function addCourseAnnouncement(podID, courseID, requestBody) {
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements"
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
-    return result;
-}
-
-function editPod(podID, requestBody) {
-    var endpointPathEXT = endpointPath + podID
-    _initialize("PUT", endpointPathEXT);
-    request.send(requestBody);
-    return result;
-}
-
-function deactivatePod(podID) {
-    var endpointPathEXT = endpointPath + podID
-    _initialize("DELETE", endpointPathEXT);
-    request.send();
     return result;
 }
 
@@ -51,8 +30,8 @@ function deactivatePod(podID) {
  * Private Methods
  ********************/
 
-function _initialize(method, endpointPathEXT) {
-    switch (method) {
+ function _initialize(method,  endpointPathEXT) {
+    switch (method){
         case "GET":
             request.open("GET", devServer + endpointPathEXT, false);
             break;
@@ -85,8 +64,8 @@ function __execute() {
     } else {
         result.isSuccess = true;
         result.data = data;
-        result.message = "Successfully reached Pod endpoint.";
+        result.message = "Successfully reached Course endpoint.";
     }
 }
 
-export { getPods, getPod, createPod, editPod, deactivatePod };
+export { getCourseAnnouncements, addCourseAnnouncement};

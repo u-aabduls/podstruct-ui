@@ -11,7 +11,7 @@ import { getPods } from '../../../connectors/Pod';
 import { getCourses, addCourse } from '../../../connectors/Course';
 import FormValidator from '../../Forms/FormValidator';
 
-const podsResponse = getPods()
+const response = getPods()
 
 class CourseManagement extends Component {
 
@@ -35,7 +35,7 @@ class CourseManagement extends Component {
         },
         selectedPod: '',
         subjectFilter: '',
-        pods: podsResponse.data,
+        pods: response.data,
         courses: [],
         modal: false
     }
@@ -94,7 +94,7 @@ class CourseManagement extends Component {
         });
     }
 
-    validateSelectors = () => {
+    validateSelectors = e => {
         var isNullPod = this.state.formAddCourse.selectedPod === '';
         var isNullDay = this.state.formAddCourse.daysOfWeekInterval === '';
         var isNullTime = this.state.formAddCourse.startTime === '' || this.state.formAddCourse.endTime === '';
@@ -107,6 +107,25 @@ class CourseManagement extends Component {
         return isNullPod || isNullDay || isNullTime;
     }
 
+    validateSelectorsOnChange = e => {
+        var isNullPod = this.state.formAddCourse.selectedPod === '';
+        var isNullDay = this.state.formAddCourse.daysOfWeekInterval === '';
+        var isNullTime = this.state.formAddCourse.startTime === '' && this.state.formAddCourse.endTime === '';
+        var stateCopy = this.state.formAddCourse;
+        switch (e) {
+            case "pod":
+                stateCopy.selector.error.isNullPod = isNullPod ? true : false;
+                break;
+            case "day":
+                stateCopy.selector.error.isNullDay = isNullDay ? true : false;
+                break;
+            case "time":
+                stateCopy.selector.error.isNullTime = isNullTime ? true : false;
+                break;
+        }
+        this.setState(stateCopy);
+    }
+
     /* Simplify error check */
     hasError = (formName, inputName, method) => {
         return this.state[formName] &&
@@ -116,15 +135,24 @@ class CourseManagement extends Component {
     }
 
     constructRequestPayload = () => {
-        return JSON.stringify({
+        var payload = {
             "subject": this.state.formAddCourse.subject,
             "daysOfWeekInterval": this.state.formAddCourse.daysOfWeekInterval,
             "startTime": this.state.formAddCourse.startTime,
-            "endTime": this.state.formAddCourse.endTime,
-            "description": this.state.formAddCourse.description,
-            // "teacher": this.state.formAddCourse.teacher,
-        })
+            "endTime": this.state.formAddCourse.endTime
+        };
+
+        if (this.state.formAddCourse.description) {
+            payload.description = this.state.formAddCourse.description
+        }
+
+        if (this.state.formAddCourse.teacher) {
+            payload.teacher = this.state.formAddCourse.teacher
+        }
+
+        return JSON.stringify(payload);
     }
+
 
     setFormPod = (pod) => {
         var stateCopy = this.state.formAddCourse;
@@ -270,8 +298,11 @@ class CourseManagement extends Component {
                     </div>
 
                     <div className="ml-auto">
-                        <Button className="btn btn-secondary btn-sm" onClick={this.toggleModal}>Add Course</Button>
-                        <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                        <button className="btn btn-success"
+                            onClick={this.toggleModal}>
+                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course
+                        </button>
+                        <Modal isOpen={this.state.modal}>
                             <form className="mb-3" name="formAddCourse" onSubmit={this.onSubmit}>
                                 <ModalHeader toggle={this.toggleModal}>Add Course</ModalHeader>
                                 <ModalBody>
@@ -281,7 +312,9 @@ class CourseManagement extends Component {
                                             name="podSelector"
                                             pods={this.state.pods}
                                             hasError={this.state.formAddCourse.selector.error.isNullPod}
+                                            validate={this.validateSelectorsOnChange}
                                             setPod={(pod) => this.setFormPod(pod)}
+                                            active="required"
                                         />
                                         {this.state.formAddCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
                                     </div>
@@ -322,6 +355,7 @@ class CourseManagement extends Component {
                                             name="daysOfWeekSelector"
                                             hasError={this.state.formAddCourse.selector.error.isNullDay}
                                             setDays={(day) => this.setDays(day)}
+                                            validate={this.validateSelectorsOnChange}
                                         />
                                         {this.state.formAddCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
                                     </div>
@@ -333,7 +367,10 @@ class CourseManagement extends Component {
                                                 <Datetime
                                                     inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
                                                     dateFormat={false}
-                                                    onChange={(date) => this.setTime(date, "AM")}
+                                                    onChange={(date) => {
+                                                        this.setTime(date, "AM")
+                                                        this.validateSelectorsOnChange("time")
+                                                    }}
                                                 />
                                             </Col>
                                             <Col lg="6">
@@ -341,7 +378,10 @@ class CourseManagement extends Component {
                                                 <Datetime
                                                     inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
                                                     dateFormat={false}
-                                                    onChange={(date) => this.setTime(date, "PM")}
+                                                    onChange={(date) => {
+                                                        this.setTime(date, "PM")
+                                                        this.validateSelectorsOnChange("time")
+                                                    }}
                                                 />
                                             </Col>
                                         </Row>
@@ -356,15 +396,14 @@ class CourseManagement extends Component {
                                                 className="border-right-0"
                                                 placeholder="Enter teacher's name"
                                                 invalid={
-                                                    this.hasError('formAddCourse', 'teacher', 'required')
-                                                    || this.hasError('formAddCourse', 'teacher', 'maxlen')
+                                                    this.hasError('formAddCourse', 'teacher', 'maxlen')
                                                     || this.hasError('formAddCourse', 'teacher', 'contains-alpha')
                                                     || this.hasError('formAddCourse', 'teacher', 'name')
                                                     || this.hasError('formAddCourse', 'teacher', 'begin-end-spacing')
                                                     || this.hasError('formAddCourse', 'teacher', 'consecutive-spacing')
                                                 }
                                                 onChange={this.validateOnChange}
-                                                data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-validate='["maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
                                                 data-param='50'
                                                 value={this.state.formAddCourse.teacher || ''} />
                                             <div className="input-group-append">
@@ -372,7 +411,6 @@ class CourseManagement extends Component {
                                                     <em className="fa fa-book"></em>
                                                 </span>
                                             </div>
-                                            {this.hasError('formAddCourse', 'teacher', 'required') && <span className="invalid-feedback">Teacher is required</span>}
                                             {this.hasError('formAddCourse', 'teacher', 'maxlen') && <span className="invalid-feedback">Teacher must not have more than 50 characters</span>}
                                             {this.hasError('formAddCourse', 'teacher', 'contains-alpha') && <span className="invalid-feedback">Teacher must contain at least one alpha character</span>}
                                             {this.hasError('formAddCourse', 'teacher', 'name') && <span className="invalid-feedback">Teacher must contain alpha, apostrophe, or hyphen characters only</span>}
@@ -389,14 +427,13 @@ class CourseManagement extends Component {
                                                 className="border-right-0"
                                                 placeholder="Enter course description"
                                                 invalid={
-                                                    this.hasError('formAddCourse', 'description', 'required')
-                                                    || this.hasError('formAddCourse', 'description', 'maxlen')
+                                                    this.hasError('formAddCourse', 'description', 'maxlen')
                                                     || this.hasError('formAddCourse', 'description', 'contains-alpha')
                                                     || this.hasError('formAddCourse', 'description', 'begin-end-spacing')
                                                     || this.hasError('formAddCourse', 'description', 'consecutive-spacing')
                                                 }
                                                 onChange={this.validateOnChange}
-                                                data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-validate='["maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
                                                 data-param='150'
                                                 value={this.state.formAddCourse.description || ''} />
                                             <div className="input-group-append">
@@ -404,7 +441,6 @@ class CourseManagement extends Component {
                                                     <em className="fa fa-book"></em>
                                                 </span>
                                             </div>
-                                            {this.hasError('formAddCourse', 'description', 'required') && <span className="invalid-feedback">Course description is required</span>}
                                             {this.hasError('formAddCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 150 characters</span>}
                                             {this.hasError('formAddCourse', 'description', 'contains-alpha') && <span className="invalid-feedback">Course description must contain at least one alpha character</span>}
                                             {this.hasError('formAddCourse', 'description', 'begin-end-spacing') && <span className="invalid-feedback">Course description must not begin or end with a space character</span>}
@@ -418,7 +454,6 @@ class CourseManagement extends Component {
                                 </ModalFooter>
                             </form>
                         </Modal>
-
                     </div>
                 </div>
 
@@ -429,6 +464,8 @@ class CourseManagement extends Component {
                                 name="podSelector"
                                 pods={this.state.pods}
                                 setPod={(pod) => this.setPod(pod)}
+                                validate={this.validateSelectorsOnChange}
+                                active="required"
                             />
                         </div>
                     </Col>
@@ -443,6 +480,7 @@ class CourseManagement extends Component {
                     {this.state.courses.length ?
                         this.state.courses.map(function (course) {
                             return (
+                                course.active &&
                                 <Col xl="4" lg="6">
                                     <CourseCard
                                         course={course}
@@ -452,7 +490,8 @@ class CourseManagement extends Component {
                         }) :
                         <div className='not-found'>
                             <h1>No courses found</h1>
-                        </div>}
+                        </div>
+                    }
                 </div>
             </ContentWrapper>
         );
