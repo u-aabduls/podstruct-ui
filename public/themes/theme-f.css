@@ -184,7 +184,7 @@ body,
 /* ========================================================================
    Component: course card
  ========================================================================== */
-.course-card-header {
+.theme-card-header {
   background-color: transparent;
   background-image: linear-gradient(to right, #2b957a 0%, #37bc9b 100%);
   background-repeat: repeat-x;

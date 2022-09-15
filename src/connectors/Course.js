@@ -5,7 +5,7 @@ var request = new XMLHttpRequest();
 var result = {};
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/" ;
-var endpointPath = "podstruct/api/pods";
+var endpointPath = "podstruct/api/pods/";
 var authorizationToken = localStorage.getItem('token');
 
 /********************
@@ -13,33 +13,29 @@ var authorizationToken = localStorage.getItem('token');
  ********************/
 
 function getCourses(podID, subject) {
-    endpointPath = "podstruct/api/pods";
-    endpointPath += subject? "/" + podID + "/courses?subject=" + subject  : "/" + podID + "/courses"
-    _initialize("GET");
+    var endpointPathEXT = subject? endpointPath + podID + "/courses?subject=" + subject : endpointPath + podID + "/courses"
+    _initialize("GET", endpointPathEXT);
     request.send();
     return result;
 }
 
 function getCourse(podID, courseID){
-    endpointPath = "podstruct/api/pods";
-    endpointPath += "/" + podID + "/courses/" + courseID;
-    _initialize("GET");
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
+    _initialize("GET", endpointPathEXT);
     request.send();
     return result;
 }
 
 function addCourse(podID, requestBody){
-    endpointPath = "podstruct/api/pods";
-    endpointPath += "/" + podID + "/courses";
-    _initialize("POST");
+    var endpointPathEXT = endpointPath + podID + "/courses";
+    _initialize("POST", endpointPathEXT);
     request.send(requestBody);
     return result;
 }
 
 function editCourse(podID, courseID, requestBody){
-    endpointPath = "podstruct/api/pods";
-    endpointPath += "/" + podID + "/courses/" + courseID;
-    _initialize("PUT");
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
+    _initialize("PUT", endpointPathEXT);
     request.send(requestBody);
     return result;
 }
@@ -48,19 +44,19 @@ function editCourse(podID, courseID, requestBody){
  * Private Methods
  ********************/
 
- function _initialize(method) {
+ function _initialize(method,  endpointPathEXT) {
     switch (method){
         case "GET":
-            request.open("GET", devServer + endpointPath, false);
+            request.open("GET", devServer + endpointPathEXT, false);
             break;
         case "POST":
-            request.open("POST", devServer + endpointPath, false);
+            request.open("POST", devServer + endpointPathEXT, false);
             break;
         case "PUT":
-            request.open("PUT", devServer + endpointPath, false);
+            request.open("PUT", devServer + endpointPathEXT, false);
             break;
         case "DELETE":
-            request.open("DELETE", devServer + endpointPath, false);
+            request.open("DELETE", devServer + endpointPathEXT, false);
             break;
     }
     // request.open("POST", prodServer + endpointPath, false);

@@ -96,7 +96,7 @@ body, .wrapper .section-container {
   /* ========================================================================
    Component: course card
  ========================================================================== */
- .course-card-header {
+ .theme-card-header {
   background-color: transparent;
   background-image: linear-gradient(to right, #f05050 0%, #f47f7f 100%);
   background-repeat: repeat-x;

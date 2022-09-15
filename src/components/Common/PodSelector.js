@@ -16,23 +16,28 @@ const customStylesError = {
     })
 };
 
-function setOptions(pods) {
-    if(!Array.isArray(pods)) return;
+function setOptions(pods, active) {
+    if (!Array.isArray(pods)) return;
     options = pods.map(function (pod) {
+        if (active === "required" && pod.active) {
+            return { value: pod.id, label: pod.podName }
+        }
         return { value: pod.id, label: pod.podName }
     })
 }
 
 export default function PodSelector(props) {
-    if(props.pods) setOptions(props.pods);
+    if (props.pods) setOptions(props.pods, props.active);
     return (
         <Select
             placeholder="Select a Pod..."
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
-            defaultValue={props.defaultV? { label: props.defaultV.podName, value: props.defaultV.id } : null}
+            defaultValue={props.defaultV ? { label: props.defaultV.podName, value: props.defaultV.id } : null}
             value={options.find(o => o.value === props.defaultv)}
-            onChange={(e) => { props.setPod(e.value) }}
+            onChange={(e) => { 
+                props.setPod(e.value) 
+                props.validate("pod") }}
             isDisabled={props.disabled}
         />
     )

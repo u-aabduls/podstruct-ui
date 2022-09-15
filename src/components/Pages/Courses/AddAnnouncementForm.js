@@ -1,0 +1,207 @@
+import React, { Component } from 'react';
+import {
+    Button,
+    Input,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+} from 'reactstrap';
+import { addCourseAnnouncement, getCourseAnnouncements } from '../../../connectors/Announcement';
+import Swal from 'sweetalert2';
+import FormValidator from '../../Forms/FormValidator';
+
+class AddAnnouncementForm extends Component {
+
+    state = {
+        formAddAnnouncement: {
+            title: '',
+            message: ''
+        },
+        course: this.props.course,
+        modal: false,
+    }
+
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+
+    errorMessageStyling = {
+        color: '#f05050',
+        width: '100%',
+        marginTop: '0.25rem',
+        fontSize: '80%'
+    }
+
+    /**
+     * Validate input using onChange event
+     * @param  {String} formName The name of the form in the state object
+     * @return {Function} a function used for the event
+     */
+     validateOnChange = event => {
+        const input = event.target;
+        const form = input.form
+        const value = input.type === 'checkbox' ? input.checked : input.value;
+
+        const result = FormValidator.validate(input);
+
+        this.setState({
+            [form.name]: {
+                ...this.state[form.name],
+                [input.name]: value,
+                errors: {
+                    ...this.state[form.name].errors,
+                    [input.name]: result
+                }
+            }
+        });
+    }
+
+     /* Simplify error check */
+     hasError = (formName, inputName, method) => {
+        return this.state[formName] &&
+            this.state[formName].errors &&
+            this.state[formName].errors[inputName] &&
+            this.state[formName].errors[inputName][method]
+    }
+
+    constructRequestPayload = () => {
+        var payload = {
+            "title": this.state.formAddAnnouncement.title
+        };
+
+        if (this.state.formAddAnnouncement.message) {
+            payload.message = this.state.formAddAnnouncement.message
+        }
+
+        return JSON.stringify(payload);
+    }
+
+    onSubmit = e => {
+        e.preventDefault();
+
+        const form = e.target;
+
+        const inputsToValidate = [
+            'title',
+            'message',
+        ];
+
+        const inputs = [...form.elements].filter(i => inputsToValidate.includes(i.name))
+
+        const { errors, hasError } = FormValidator.bulkValidate(inputs)
+
+        this.setState({
+            [form.name]: {
+                ...this.state[form.name],
+                errors
+            }
+        });
+
+        console.log((hasError) ? 'Form has errors. Check!' : 'Form Submitted!')
+
+        if (!hasError) {
+            var res = addCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload());
+            if (res.isSuccess) {
+                this.toggleModal()
+                Swal.fire({
+                    title: "Successfully added announcement",
+                    icon: "success",
+                })
+                var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, Math.floor(Date.now() / 1000 + 2000))
+                this.props.updateOnEdit(res)
+            }
+            else {
+                Swal.fire({
+                    title: "Error",
+                    icon: "error",
+                    text: res.message
+                })
+            }
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.modal !== prevProps.modal) {
+            this.setState({ modal: this.props.modal })
+        }
+    }
+
+    render() {
+        return (
+            <Modal isOpen={this.state.modal}>
+                <form className="mb-3" name="formAddAnnouncement" onSubmit={this.onSubmit}>
+                    <ModalHeader toggle={this.toggleModal}>Add Announcement</ModalHeader>
+                    <ModalBody>
+                    <div className="form-group">
+                            <label className="text-muted" htmlFor="addAnnouncementTitle">Title</label>
+                            <div className="input-group with-focus">
+                                <Input
+                                    type="text"
+                                    name="title"
+                                    className="border-right-0"
+                                    placeholder="Enter announcement title"
+                                    invalid={
+                                        this.hasError('formAddAnnouncement', 'title', 'required')
+                                        || this.hasError('formAddAnnouncement', 'title', 'maxlen')
+                                        || this.hasError('formAddAnnouncement', 'title', 'contains-alpha')
+                                        || this.hasError('formAddAnnouncement', 'title', 'begin-end-spacing')
+                                        || this.hasError('formAddAnnouncement', 'title', 'consecutive-spacing')
+                                    }
+                                    onChange={this.validateOnChange}
+                                    data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                    data-param='50'
+                                    value={this.state.formAddAnnouncement.title} />
+                                <div className="input-group-append">
+                                    <span className="input-group-text text-muted bg-transparent border-left-0">
+                                        <em className="fa fa-book"></em>
+                                    </span>
+                                </div>
+                                {this.hasError('formAddAnnouncement', 'title', 'required') && <span className="invalid-feedback">Title is required</span>}
+                                {this.hasError('formAddAnnouncement', 'title', 'maxlen') && <span className="invalid-feedback">Title must not have more than 50 characters</span>}
+                                {this.hasError('formAddAnnouncement', 'title', 'contains-alpha') && <span className="invalid-feedback">Title must contain at least one alpha character</span>}
+                                {this.hasError('formAddAnnouncement', 'title', 'begin-end-spacing') && <span className="invalid-feedback">Title must not begin or end with a space character</span>}
+                                {this.hasError('formAddAnnouncement', 'title', 'consecutive-spacing') && <span className="invalid-feedback">Title must not contain consecutive space characters</span>}
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label className="text-muted" htmlFor="addAnnouncementMessage">Message</label>
+                            <div className="input-group with-focus">
+                                <Input
+                                    type="text"
+                                    name="message"
+                                    className="border-right-0"
+                                    placeholder="Enter announcement message"
+                                    invalid={
+                                        this.hasError('formAddAnnouncement', 'message', 'maxlen')
+                                        || this.hasError('formAddAnnouncement', 'message', 'begin-end-spacing')
+                                        || this.hasError('formAddAnnouncement', 'message', 'consecutive-spacing')
+                                    }
+                                    onChange={this.validateOnChange}
+                                    data-validate='["maxlen", "begin-end-spacing", "consecutive-spacing"]'
+                                    data-param='50'
+                                    value={this.state.formAddAnnouncement.message} />
+                                <div className="input-group-append">
+                                    <span className="input-group-text text-muted bg-transparent border-left-0">
+                                        <em className="fa fa-book"></em>
+                                    </span>
+                                </div>
+                                {this.hasError('formAddAnnouncement', 'message', 'maxlen') && <span className="invalid-feedback">Message must not have more than 50 characters</span>}
+                                {this.hasError('formAddAnnouncement', 'message', 'begin-end-spacing') && <span className="invalid-feedback">Message must not begin or end with a space character</span>}
+                                {this.hasError('formAddAnnouncement', 'message', 'consecutive-spacing') && <span className="invalid-feedback">Message must not contain consecutive space characters</span>}
+                            </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                        <Button color="primary" type="submit">Add</Button>{' '}
+                    </ModalFooter>
+                </form>
+            </Modal>
+        )
+    }
+}
+
+export default AddAnnouncementForm
