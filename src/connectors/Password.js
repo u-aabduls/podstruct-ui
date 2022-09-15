@@ -66,7 +66,7 @@ function __execute() {
         if (!localStorage.getItem('username')) localStorage.setItem('username', username);
         else  localStorage.removeItem('username');
         result.isSuccess = true;
-        result.message = "Successfully reached Password endpoint.";
+        result.message = "Successfully reset password.";
     }
 }
 
