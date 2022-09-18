@@ -7,7 +7,7 @@ import {
     ModalBody,
     ModalFooter,
 } from 'reactstrap';
-import { addCourseAnnouncement, getCourseAnnouncements } from '../../../connectors/Announcement';
+import { getPodAnnouncements, addPodAnnouncement, getCourseAnnouncements, addCourseAnnouncement } from '../../../connectors/Announcement';
 import Swal from 'sweetalert2';
 import FormValidator from '../../Forms/FormValidator';
 
@@ -19,13 +19,12 @@ class AddAnnouncementForm extends Component {
             message: ''
         },
         course: this.props.course,
+        pod: this.props.pod,
         modal: false,
     }
 
     toggleModal = () => {
-        this.setState({
-            modal: !this.state.modal
-        });
+       this.props.toggle()
     }
 
     errorMessageStyling = {
@@ -40,7 +39,7 @@ class AddAnnouncementForm extends Component {
      * @param  {String} formName The name of the form in the state object
      * @return {Function} a function used for the event
      */
-     validateOnChange = event => {
+    validateOnChange = event => {
         const input = event.target;
         const form = input.form
         const value = input.type === 'checkbox' ? input.checked : input.value;
@@ -59,8 +58,8 @@ class AddAnnouncementForm extends Component {
         });
     }
 
-     /* Simplify error check */
-     hasError = (formName, inputName, method) => {
+    /* Simplify error check */
+    hasError = (formName, inputName, method) => {
         return this.state[formName] &&
             this.state[formName].errors &&
             this.state[formName].errors[inputName] &&
@@ -103,15 +102,20 @@ class AddAnnouncementForm extends Component {
         console.log((hasError) ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            var res = addCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload());
+            var res;
+            this.state.course ?
+                res = addCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload()) :
+                res = addPodAnnouncement(this.state.pod.id, this.constructRequestPayload());
             if (res.isSuccess) {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully added announcement",
                     icon: "success",
                 })
-                var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, Math.floor(Date.now() / 1000 + 2000))
-                this.props.updateOnEdit(res)
+                this.state.course ?
+                    res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0) :
+                    res = getPodAnnouncements(this.state.pod.id, '', 0);
+                this.props.updateOnAdd(res)
             }
             else {
                 Swal.fire({
@@ -135,7 +139,7 @@ class AddAnnouncementForm extends Component {
                 <form className="mb-3" name="formAddAnnouncement" onSubmit={this.onSubmit}>
                     <ModalHeader toggle={this.toggleModal}>Add Announcement</ModalHeader>
                     <ModalBody>
-                    <div className="form-group">
+                        <div className="form-group">
                             <label className="text-muted" htmlFor="addAnnouncementTitle">Title</label>
                             <div className="input-group with-focus">
                                 <Input

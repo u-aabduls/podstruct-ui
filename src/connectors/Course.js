@@ -2,9 +2,9 @@ import handleError from '../utils/ErrorHandler.js'
 
 // private members
 var request = new XMLHttpRequest();
-var result = {};
+var result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
-    prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/" ;
+    prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
 var authorizationToken = localStorage.getItem('token');
 
@@ -13,27 +13,27 @@ var authorizationToken = localStorage.getItem('token');
  ********************/
 
 function getCourses(podID, subject) {
-    var endpointPathEXT = subject? endpointPath + podID + "/courses?subject=" + subject : endpointPath + podID + "/courses"
+    var endpointPathEXT = subject ? endpointPath + podID + "/courses?subject=" + subject : endpointPath + podID + "/courses"
     _initialize("GET", endpointPathEXT);
     request.send();
     return result;
 }
 
-function getCourse(podID, courseID){
+function getCourse(podID, courseID) {
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
     _initialize("GET", endpointPathEXT);
     request.send();
     return result;
 }
 
-function addCourse(podID, requestBody){
+function addCourse(podID, requestBody) {
     var endpointPathEXT = endpointPath + podID + "/courses";
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
     return result;
 }
 
-function editCourse(podID, courseID, requestBody){
+function editCourse(podID, courseID, requestBody) {
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
     _initialize("PUT", endpointPathEXT);
     request.send(requestBody);
@@ -44,8 +44,9 @@ function editCourse(podID, courseID, requestBody){
  * Private Methods
  ********************/
 
- function _initialize(method,  endpointPathEXT) {
-    switch (method){
+function _initialize(method, endpointPathEXT) {
+    httpMethod = method;
+    switch (method) {
         case "GET":
             request.open("GET", devServer + endpointPathEXT, false);
             break;
@@ -78,8 +79,23 @@ function __execute() {
     } else {
         result.isSuccess = true;
         result.data = data;
-        result.message = "Successfully reached Course endpoint.";
+        switch (httpMethod) {
+            case "GET":
+                result.message = "Successfully fetched course(s)"
+                break;
+            case "POST":
+                result.message = "Successfully created course"
+                break;
+            case "PUT":
+                result.message = "Successfully edited course"
+                break;
+            case "DELETE":
+                result.message = "Successfully deleted course"
+                break;
+            default:
+                result.message = "Successfully reached course endpoint";
+        }
     }
 }
 
-export { getCourses, getCourse, addCourse, editCourse};
+export { getCourses, getCourse, addCourse, editCourse };

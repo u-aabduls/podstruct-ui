@@ -2,7 +2,7 @@ import handleError from '../utils/ErrorHandler.js'
 
 // private members
 var request = new XMLHttpRequest();
-var result = {};
+var result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/user/";
@@ -35,6 +35,7 @@ function updateUser(requestBody) {
  ********************/
 
 function _initialize(method) {
+    httpMethod = method;
     switch (method) {
         case "GET":
             request.open("GET", devServer + endpointPath, false);
@@ -68,7 +69,22 @@ function __execute() {
     } else {
         result.isSuccess = true;
         result.data = data;
-        result.message = "Successfully reached User endpoint";
+        switch (httpMethod) {
+            case "GET":
+                result.message = "Successfully fetched account"
+                break;
+            case "POST":
+                result.message = "Successfully created account"
+                break;
+            case "PUT":
+                result.message = "Successfully edited account"
+                break;
+            case "DELETE":
+                result.message = "Successfully deleted account"
+                break;
+            default:
+                result.message = "Successfully reached User endpoint";
+        }
     }
 }
 

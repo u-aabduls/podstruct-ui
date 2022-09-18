@@ -4,6 +4,7 @@ import { Button, Input, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } f
 
 import PodSelector from '../../Common/PodSelector';
 import DaysOfWeekSelector from '../../Common/DaysOfWeekSelector';
+import 'react-datetime/css/react-datetime.css';
 import Datetime from 'react-datetime';
 import CourseCard from './CourseCard';
 import Swal from 'sweetalert2';

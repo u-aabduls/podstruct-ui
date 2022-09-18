@@ -21,10 +21,9 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
-import { getCourseAnnouncements } from '../../../connectors/Announcement';
-import EditCourseForm from './EditCourseForm';
-import AddAnnouncementForm from './AddAnnouncementForm';
-import Now from "../../Common/Now"
+import { getCourseAnnouncements, deleteCourseAnnouncement } from '../../../connectors/Announcement';
+import EditCourseForm from '../../Forms/Course/EditCourseForm';
+import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
 
 class CourseDetail extends Component {
 
@@ -32,14 +31,12 @@ class CourseDetail extends Component {
         privileges: "owner",
         course: this.props.location.state,
         announcements: [],
+        lastEvaluatedKey: '',
         editModal: false,
         annModal: false,
         ddOpen: false,
-        seeMore: 1,
         activeTab: '1',
     }
-
-    thirtyDaysEpoch = 259200;
 
     toggleDD = () => this.setState({
         ddOpen: !this.state.ddOpen
@@ -73,30 +70,43 @@ class CourseDetail extends Component {
         }
     }
 
-    updateOnAnnouncementEdit = (res) => {
+    updateOnAnnouncementAdd = (res) => {
         if (res.isSuccess) {
             this.setState({
-                announcements: res.data
+                announcements: res.data.announcements
             })
         }
     }
 
     fetchMore = () => {
-        // var stateCopy = this.state
-        // var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, Math.floor(Date.now() / 1000) - this.thirtyDaysEpoch * this.state.seeMore)
-        // console.log(Math.floor(Date.now() / 1000) - this.thirtyDaysEpoch * this.state.seeMore)
-        // if(res.isSuccess && !res.data.length == 0){
-        //     stateCopy.announcements = [...this.state.announcements, res.data]
-        //     stateCopy.seeMore = this.state.seeMore + 1
-        //     this.setState(stateCopy)
-        // }
+        if (this.state.lastEvaluatedKey) {
+            var stateCopy = this.state
+            var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0)
+            if (res.isSuccess && !res.data.announcements.length == 0) {
+                stateCopy.announcements = this.state.announcements.concat(res.data.announcements)
+                stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
+                this.setState(stateCopy)
+            }
+        }
+    }
+    
+    deleteAnnouncement = (date) => {
+        var stateCopy = this.state
+        var res = deleteCourseAnnouncement(this.state.course.podId, this.state.course.id, date)
+        if (res.isSuccess) {
+            res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0)
+            stateCopy.announcements = res.data.announcements
+            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
+            this.setState(stateCopy)
+        }
     }
 
     componentDidMount() {
         var stateCopy = this.state
-        var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, Math.floor(Date.now() / 1000))
+        var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0)
         if (res.isSuccess) {
-            stateCopy.announcements = res.data
+            stateCopy.announcements = res.data.announcements
+            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
             this.setState(stateCopy)
         }
     }
@@ -127,7 +137,7 @@ class CourseDetail extends Component {
                             course={this.state.course}
                             modal={this.state.editModal}
                             toggle={this.toggleEditModal}
-                            updateOnEdit={this.updateOnAnnouncementEdit}
+                            updateOnEdit={this.updateOnCourseEdit}
                         />
                     </div>
                 </div>
@@ -224,10 +234,11 @@ class CourseDetail extends Component {
                                             <AddAnnouncementForm
                                                 course={this.state.course}
                                                 modal={this.state.annModal}
-                                                updateOnEdit={this.updateOnAnnouncementEdit}
+                                                updateOnAdd={this.updateOnAnnouncementAdd}
+                                                toggle={this.toggleAnnModal}
                                             />
                                             <Table hover responsive>
-                                                {this.state.announcements.length &&
+                                                {this.state.announcements.length > 0 &&
                                                     this.state.announcements.map((announcement) => {
                                                         var date = new Date(announcement.date * 1000);
                                                         return (
@@ -240,8 +251,6 @@ class CourseDetail extends Component {
                                                                             {months[date.getMonth()]}
                                                                             {' '}
                                                                             {date.getDate()}
-                                                                            {' '}
-                                                                            {date.getFullYear()}
                                                                         </span>
                                                                         <br />
                                                                         <span className="h2 mt0 text-sm">
@@ -256,10 +265,7 @@ class CourseDetail extends Component {
                                                                     <td className="buttons">
                                                                         {this.state.privileges === "owner" &&
                                                                             <div className='button-container'>
-                                                                                <Button className="btn btn-secondary btn-sm bg-success">
-                                                                                    <i className="fas fa-edit fa-fw btn-icon"></i>
-                                                                                </Button>
-                                                                                <Button className="btn btn-secondary btn-sm bg-danger">
+                                                                                <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAnnouncement(announcement.date)}>
                                                                                     <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                                                                 </Button>
                                                                             </div>
@@ -273,7 +279,7 @@ class CourseDetail extends Component {
                                                 }
                                             </Table>
                                             <div>
-                                                <Button className="btn btn-secondary btn-sm" style={{marginLeft: "50%"}} onClick={this.fetchMore}>See More</Button>
+                                                <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
                                             </div>
                                         </TabPane>
                                         <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>

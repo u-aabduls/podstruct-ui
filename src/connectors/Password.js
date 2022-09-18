@@ -2,7 +2,7 @@ import handleError from '../utils/ErrorHandler.js'
 
 // private members
 var request = new XMLHttpRequest();
-var username = null, result = {};
+var username = null, result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/user/auth/resetpassword";
@@ -32,6 +32,7 @@ function resetPassword(requestBody) {
  ********************/
 
 function _initialize(method) {
+    httpMethod = method;
     switch (method) {
         case "GET":
             request.open("GET", devServer + endpointPath, false);
@@ -66,7 +67,16 @@ function __execute() {
         if (!localStorage.getItem('username')) localStorage.setItem('username', username);
         else  localStorage.removeItem('username');
         result.isSuccess = true;
-        result.message = "Successfully reached Password endpoint.";
+        switch (httpMethod) {
+            case "POST":
+                result.message = "Successfully recovered password"
+                break;
+            case "PUT":
+                result.message = "Successfully reset password"
+                break;
+            default:
+                result.message = "Successfully reached password endpoint";
+        }
     }
 }
 
