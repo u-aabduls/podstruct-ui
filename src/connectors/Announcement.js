@@ -2,7 +2,7 @@ import handleError from '../utils/ErrorHandler.js'
 
 // private members
 var request = new XMLHttpRequest();
-var result = {};
+var result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/" ;
 var endpointPath = "podstruct/api/pods/";
@@ -12,8 +12,34 @@ var authorizationToken = localStorage.getItem('token');
  * Public Methods
  ********************/
 
-function getCourseAnnouncements(podID, courseID, epochSeconds) {
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements?endDateTimeEpochSeconds=" + epochSeconds
+ function getPodAnnouncements(podID, lastEvaluatedKey, pageSize) {
+    var endpointPathEXT = endpointPath + podID + "/announcements"
+    if (lastEvaluatedKey && pageSize) endpointPathEXT += "?lastEvaluatedKey=" + lastEvaluatedKey + "&pageSize=" + pageSize
+    else if (lastEvaluatedKey) endpointPathEXT += "?lastEvaluatedKey=" + lastEvaluatedKey
+    else if (pageSize) endpointPathEXT += "?pageSize=" + pageSize
+    _initialize("GET", endpointPathEXT);
+    request.send();
+    return result;
+}
+
+function addPodAnnouncement(podID, requestBody) {
+    var endpointPathEXT = endpointPath + podID + "/announcements"
+    _initialize("POST", endpointPathEXT);
+    request.send(requestBody);
+    return result;
+}
+
+function deletePodAnnouncement(podID, announcementDate) {
+    var endpointPathEXT = endpointPath + podID + "/announcements/" + announcementDate
+    _initialize("DELETE", endpointPathEXT);
+    request.send();
+    return result;
+}
+function getCourseAnnouncements(podID, courseID, lastEvaluatedKey, pageSize) {
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements"
+    if (lastEvaluatedKey && pageSize) endpointPathEXT += "?lastEvaluatedKey=" + lastEvaluatedKey + "&pageSize=" + pageSize
+    else if (lastEvaluatedKey) endpointPathEXT += "?lastEvaluatedKey=" + lastEvaluatedKey
+    else if (pageSize) endpointPathEXT += "?pageSize=" + pageSize
     _initialize("GET", endpointPathEXT);
     request.send();
     return result;
@@ -26,11 +52,19 @@ function addCourseAnnouncement(podID, courseID, requestBody) {
     return result;
 }
 
+function deleteCourseAnnouncement(podID, courseID, announcementDate) {
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements/" + announcementDate
+    _initialize("DELETE", endpointPathEXT);
+    request.send();
+    return result;
+}
+
 /********************
  * Private Methods
  ********************/
 
  function _initialize(method,  endpointPathEXT) {
+    httpMethod = method;
     switch (method){
         case "GET":
             request.open("GET", devServer + endpointPathEXT, false);
@@ -64,8 +98,23 @@ function __execute() {
     } else {
         result.isSuccess = true;
         result.data = data;
-        result.message = "Successfully reached Course endpoint.";
+        switch (httpMethod) {
+            case "GET":
+                result.message = "Successfully fetched announcement(s)"
+                break;
+            case "POST":
+                result.message = "Successfully created announcement"
+                break;
+            case "PUT":
+                result.message = "Successfully edited announcement"
+                break;
+            case "DELETE":
+                result.message = "Successfully deleted announcement"
+                break;
+            default:
+                result.message = "Successfully reached announcement endpoint";
+        }
     }
 }
 
-export { getCourseAnnouncements, addCourseAnnouncement};
+export { getPodAnnouncements, addPodAnnouncement, deletePodAnnouncement, getCourseAnnouncements, addCourseAnnouncement, deleteCourseAnnouncement};

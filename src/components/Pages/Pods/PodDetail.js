@@ -11,7 +11,7 @@ import {
     Row,
     Card,
     CardBody,
-    Col,
+    Col, 
     TabContent,
     TabPane,
     Table,
@@ -19,15 +19,18 @@ import {
     NavItem,
     NavLink,
 } from 'reactstrap';
-
-import EditPodForm from './EditPodForm';
-import Now from '../../Common/Now';
+import moment from 'moment';
+import { getPodAnnouncements, deletePodAnnouncement } from '../../../connectors/Announcement';
+import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
+import EditPodForm from '../../Forms/Pod/EditPodForm';
 
 class PodDetail extends Component {
 
     state = {
         privileges: "owner",
         pod: this.props.location.state,
+        announcements: [],
+        lastEvaluatedKey: '',
         editModal: false,
         annModal: false,
         ddOpen: false,
@@ -58,7 +61,7 @@ class PodDetail extends Component {
         }
     }
 
-    updateOnEdit = (res) => {
+    updateOnPodEdit = (res) => {
         if (res.isSuccess) {
             this.setState({
                 pod: res.data
@@ -66,7 +69,50 @@ class PodDetail extends Component {
         }
     }
 
+    updateOnAnnouncementAdd = (res) => {
+        if (res.isSuccess) {
+            this.setState({
+                announcements: res.data.announcements
+            })
+        }
+    }
+
+    fetchMore = () => {
+        if (this.state.lastEvaluatedKey) {
+            var stateCopy = this.state
+            var res = getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0)
+            if (res.isSuccess && !res.data.announcements.length == 0) {
+                stateCopy.announcements = this.state.announcements.concat(res.data.announcements)
+                stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
+                this.setState(stateCopy)
+            }
+        }
+    }
+
+    deleteAnnouncement = (date) => {
+        var stateCopy = this.state
+        var res = deletePodAnnouncement(this.state.pod.id, date)
+        if (res.isSuccess) {
+            res = getPodAnnouncements(this.state.pod.id, '', 0)
+            stateCopy.announcements = res.data.announcements
+            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
+            this.setState(stateCopy)
+        }
+    }
+
+    componentDidMount() {
+        var stateCopy = this.state
+        var res = getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0)
+        if (res.isSuccess) {
+            stateCopy.announcements = res.data.announcements
+            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
+            this.setState(stateCopy)
+        }
+    }
+
     render() {
+        var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <ContentWrapper>
                 <div className="content-heading">
@@ -180,97 +226,59 @@ class PodDetail extends Component {
                                         <TabPane tabId="1">
                                             {this.state.privileges === "owner" &&
                                                 <div className="float-right">
-                                                    <Button className="btn btn-secondary btn-sm" onClick={this.toggleAnnModal}>Add Announcement</Button>
+                                                    <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>Add Announcement</Button>
                                                 </div>
                                             }
-                                            {/* <AddAnnouncementForm
-                                                course={this.state.course}
+                                            <AddAnnouncementForm
+                                                pod={this.state.pod}
                                                 modal={this.state.annModal}
-                                            /> */}
+                                                updateOnAdd={this.updateOnAnnouncementAdd}
+                                                toggle={this.toggleAnnModal}
+                                            />
                                             <Table hover responsive>
-                                                <thead>
-                                                    <tr>
-                                                        <th>
-
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td className='date'>
-                                                            <Now format="dddd" className="text-uppercase text-bold" />
-                                                            <br />
-                                                            <Now format="h:mm" className="h2 mt0 text-sm" />
-                                                            <Now format="a" className="text-muted text-sm" />
-                                                        </td>
-                                                        <td className="announcement">
-                                                            <span className="h4 text-bold">Midterm grades released</span>
-                                                            <br />
-                                                            <span>Please email me for any inquiries about your grade</span>
-                                                        </td>
-                                                        <td className="buttons">
-                                                            {this.state.privileges === "owner" &&
-                                                                <div className='button-container'>
-                                                                    <Button className="btn btn-secondary btn-sm bg-success">
-                                                                        <i className="fas fa-edit fa-fw btn-icon"></i>
-                                                                    </Button>
-                                                                    <Button className="btn btn-secondary btn-sm bg-danger">
-                                                                        <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                                    </Button>
-                                                                </div>
-                                                            }
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='date'>
-                                                            <Now format="dddd" className="text-uppercase text-bold" />
-                                                            <br />
-                                                            <Now format="h:mm" className="h2 mt0 text-sm" />
-                                                            <Now format="a" className="text-muted text-sm" />
-                                                        </td>
-                                                        <td className="announcement">
-                                                            <span className="h4 text-bold">Final grades released</span>
-                                                        </td>
-                                                        <td className="buttons">
-                                                            {this.state.privileges === "owner" &&
-                                                                <div className='button-container'>
-                                                                    <Button className="btn btn-secondary btn-sm bg-success">
-                                                                        <i className="fas fa-edit fa-fw btn-icon"></i>
-                                                                    </Button>
-                                                                    <Button className="btn btn-secondary btn-sm bg-danger">
-                                                                        <i className="fas fa-trash fa-fw btn-icon"></i>
-                                                                    </Button>
-                                                                </div>
-                                                            }
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='date'>
-                                                            <Now format="dddd" className="text-uppercase text-bold" />
-                                                            <br />
-                                                            <Now format="h:mm" className="h2 mt0 text-sm" />
-                                                            <Now format="a" className="text-muted text-sm" />
-                                                        </td>
-                                                        <td className="announcement">
-                                                            <span className="h4 text-bold">Assignment 4 Due</span>
-                                                            <br />
-                                                            <span>Please submit before 12 AM</span>
-                                                        </td>
-                                                        <td className="buttons">
-                                                            {this.state.privileges === "owner" &&
-                                                                <div className='button-container'>
-                                                                    <Button className="btn btn-secondary btn-sm bg-success">
-                                                                        <i className="fas fa-edit fa-fw btn-icon"></i>
-                                                                    </Button>
-                                                                    <Button className="btn btn-secondary btn-sm bg-danger">
-                                                                        <i className="fas fa-trash fa-fw btn-icon"></i>
-                                                                    </Button>
-                                                                </div>
-                                                            }
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
+                                                {this.state.announcements.length > 0 &&
+                                                    this.state.announcements.map((announcement) => {
+                                                        var date = new Date(announcement.date * 1000);
+                                                        return (
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td className='date'>
+                                                                        <span className="text-uppercase text-bold">
+                                                                            {days[date.getDay()]}
+                                                                            {' '}
+                                                                            {months[date.getMonth()]}
+                                                                            {' '}
+                                                                            {date.getDate()}
+                                                                        </span>
+                                                                        <br />
+                                                                        <span className="h2 mt0 text-sm">
+                                                                            {moment(date).format("h:mm A")}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td className="announcement">
+                                                                        <span className="h4 text-bold">{announcement.title}</span>
+                                                                        <br />
+                                                                        <span>{announcement.message}</span>
+                                                                    </td>
+                                                                    <td className="buttons">
+                                                                        {this.state.privileges === "owner" &&
+                                                                            <div className='button-container'>
+                                                                                <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAnnouncement(announcement.date)}>
+                                                                                    <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                                                </Button>
+                                                                            </div>
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        )
+                                                    }
+                                                    )
+                                                }
                                             </Table>
+                                            <div>
+                                                <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
+                                            </div>
                                         </TabPane>
                                         <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>

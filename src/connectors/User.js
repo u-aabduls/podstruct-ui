@@ -53,7 +53,7 @@ function _initialize(method) {
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
     request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
-    request.onload = __execute(method);
+    request.onload = __execute;
 }
 
 /********************
@@ -68,8 +68,22 @@ function __execute(method) {
     } else {
         result.isSuccess = true;
         result.data = data;
-        result.message = (httpMethod == "POST") ? "Successfully created account. Please check your email to verify your account." 
-            : "Successfully reached User endpoint";
+        switch (httpMethod) {
+            case "GET":
+                result.message = "Successfully fetched account"
+                break;
+            case "POST":
+                result.message = "Successfully created account"
+                break;
+            case "PUT":
+                result.message = "Successfully edited account"
+                break;
+            case "DELETE":
+                result.message = "Successfully deleted account"
+                break;
+            default:
+                result.message = "Successfully reached User endpoint";
+        }
     }
 }
 

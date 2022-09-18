@@ -91,6 +91,25 @@ class EditCourseForm extends Component {
         return isNullPod || isNullDay || isNullTime;
     }
 
+    validateSelectorsOnChange = e => {
+        var isNullPod = this.state.formAddCourse.selectedPod === '';
+        var isNullDay = this.state.formAddCourse.daysOfWeekInterval === '';
+        var isNullTime = this.state.formAddCourse.startTime === '' || this.state.formAddCourse.endTime === '';
+        var stateCopy = this.state.formAddCourse;
+        switch (e){
+            case "pod":
+                stateCopy.selector.error.isNullPod = isNullPod ? true : false;
+                break;
+            case "day":
+                stateCopy.selector.error.isNullDay = isNullDay ? true : false;
+                break;
+            case "time":
+                stateCopy.selector.error.isNullTime = isNullTime ? true : false;
+                break;
+        }
+        this.setState(stateCopy);
+    }
+
     /* Simplify error check */
     hasError = (formName, inputName, method) => {
         return this.state[formName] &&
@@ -100,14 +119,22 @@ class EditCourseForm extends Component {
     }
 
     constructRequestPayload = () => {
-        return JSON.stringify({
-            "subject": this.state.formEditCourse.subject,
-            "daysOfWeekInterval": this.state.formEditCourse.daysOfWeekInterval,
-            "startTime": this.state.formEditCourse.startTime,
-            "endTime": this.state.formEditCourse.endTime,
-            "description": this.state.formEditCourse.description,
-            // "teacher": this.state.formEditCourse.teacher,
-        })
+        var payload = {
+            "subject": this.state.formAddCourse.subject,
+            "daysOfWeekInterval": this.state.formAddCourse.daysOfWeekInterval,
+            "startTime": this.state.formAddCourse.startTime,
+            "endTime": this.state.formAddCourse.endTime
+        };
+
+        if (this.state.formAddCourse.description) {
+            payload.description = this.state.formAddCourse.description
+        }
+
+        if (this.state.formAddCourse.teacher) {
+            payload.teacher = this.state.formAddCourse.teacher
+        }
+
+        return JSON.stringify(payload);
     }
 
     setDays = (day) => {
@@ -233,6 +260,7 @@ class EditCourseForm extends Component {
                                 name="podSelector"
                                 hasError={this.state.formEditCourse.selector.error.isNullPod}
                                 defaultV={this.state.formEditCourse.selectedPod}
+                                validate={this.validateSelectorsOnChange}
                                 disabled={true}
                             />
                             {this.state.formEditCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
@@ -274,6 +302,7 @@ class EditCourseForm extends Component {
                                 name="daysOfWeekSelector"
                                 defaultv={this.state.formEditCourse.daysOfWeekInterval.split(",")}
                                 hasError={this.state.formEditCourse.selector.error.isNullDay}
+                                validate={this.validateSelectorsOnChange}
                                 setDays={(day) => this.setDays(day)}
                             />
                             {this.state.formEditCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
@@ -286,7 +315,10 @@ class EditCourseForm extends Component {
                                     <Datetime
                                         inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
                                         dateFormat={false}
-                                        onChange={(date) => this.setTime(date, "AM")}
+                                        onChange={(date) => {
+                                            this.setTime(date, "AM")
+                                            this.validateSelectorsOnChange("time")
+                                        }}
                                         value={moment(this.state.formEditCourse.startTime, "HH:mm:ss").format("h:mm A")}
                                     />
                                 </Col>
@@ -295,7 +327,10 @@ class EditCourseForm extends Component {
                                     <Datetime
                                         inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
                                         dateFormat={false}
-                                        onChange={(date) => this.setTime(date, "PM")}
+                                        onChange={(date) => {
+                                            this.setTime(date, "PM")
+                                            this.validateSelectorsOnChange("time")
+                                        }}
                                         value={moment(this.state.formEditCourse.endTime, "HH:mm:ss").format("h:mm A")}
                                     />
                                 </Col>

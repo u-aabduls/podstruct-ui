@@ -2,7 +2,7 @@ import handleError from '../utils/ErrorHandler.js'
 
 // private members
 var request = new XMLHttpRequest();
-var result = {};
+var result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
@@ -52,6 +52,7 @@ function deactivatePod(podID) {
  ********************/
 
 function _initialize(method, endpointPathEXT) {
+    httpMethod = method;
     switch (method) {
         case "GET":
             request.open("GET", devServer + endpointPathEXT, false);
@@ -85,7 +86,22 @@ function __execute() {
     } else {
         result.isSuccess = true;
         result.data = data;
-        result.message = "Successfully reached Pod endpoint.";
+        switch (httpMethod) {
+            case "GET":
+                result.message = "Successfully fetched pod(s)"
+                break;
+            case "POST":
+                result.message = "Successfully created pod"
+                break;
+            case "PUT":
+                result.message = "Successfully edited pod"
+                break;
+            case "DELETE":
+                result.message = "Successfully deleted pod"
+                break;
+            default:
+                result.message = "Successfully reached pod endpoint";
+        }
     }
 }
 

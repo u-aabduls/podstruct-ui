@@ -59,7 +59,10 @@ function _initialize(method) {
 
 function __execute() {
     if (this.response) var data = JSON.parse(this.response);
-    if (request.status >= 200 && request.status < 400) {
+    if (request.status >= 400) {
+        result.isSuccess = false;
+        result.message = handleError(request.status, data);
+    } else {
         result.isSuccess = true;
         if (!authorizationToken) {
             localStorage.setItem('token', data.authorizationToken);
@@ -67,10 +70,6 @@ function __execute() {
             return;
         }
         localStorage.clear();
-
-    } else {
-        result.isSuccess = false;
-        result.message = handleError(request.status, data);
     }
 }
 
