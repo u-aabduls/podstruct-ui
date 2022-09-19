@@ -147,9 +147,9 @@ class CourseManagement extends Component {
             payload.description = this.state.formAddCourse.description
         }
 
-        if (this.state.formAddCourse.teacher) {
-            payload.teacher = this.state.formAddCourse.teacher
-        }
+        // if (this.state.formAddCourse.teacher) {
+        //     payload.teacher = this.state.formAddCourse.teacher
+        // }
 
         return JSON.stringify(payload);
     }

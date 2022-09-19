@@ -17,7 +17,7 @@ import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
 import { getPod } from '../../../connectors/Pod';
 import { getCourse, editCourse } from '../../../connectors/Course';
-import FormValidator from '../../Forms/FormValidator';
+import FormValidator from '../FormValidator';
 
 class EditCourseForm extends Component {
 
@@ -130,9 +130,9 @@ class EditCourseForm extends Component {
             payload.description = this.state.formAddCourse.description
         }
 
-        if (this.state.formAddCourse.teacher) {
-            payload.teacher = this.state.formAddCourse.teacher
-        }
+        // if (this.state.formAddCourse.teacher) {
+        //     payload.teacher = this.state.formAddCourse.teacher
+        // }
 
         return JSON.stringify(payload);
     }

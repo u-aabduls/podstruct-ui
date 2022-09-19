@@ -72,7 +72,8 @@ class PodDetail extends Component {
     updateOnAnnouncementAdd = (res) => {
         if (res.isSuccess) {
             this.setState({
-                announcements: res.data.announcements
+                announcements: res.data.announcements,
+                lastEvaluatedKey: res.data.lastEvaluatedKey
             })
         }
     }
@@ -87,6 +88,7 @@ class PodDetail extends Component {
                 this.setState(stateCopy)
             }
         }
+        console.log(stateCopy.lastEvaluatedKey)
     }
 
     deleteAnnouncement = (date) => {
@@ -276,9 +278,11 @@ class PodDetail extends Component {
                                                     )
                                                 }
                                             </Table>
-                                            <div>
-                                                <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
-                                            </div>
+                                            {typeof this.state.lastEvaluatedKey !== 'undefined' &&
+                                                <div>
+                                                    <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
+                                                </div>
+                                            }
                                         </TabPane>
                                         <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
