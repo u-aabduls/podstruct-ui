@@ -50,7 +50,6 @@ function _initialize(method) {
             request.open("DELETE", devServer + endpointPath, false);
             break;
     }
-    // request.open("POST", prodServer + endpointPath, false);
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
     request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
@@ -61,7 +60,7 @@ function _initialize(method) {
  * Event handlers
  ********************/
 
-function __execute() {
+function __execute(method) {
     if (this.response) var data = JSON.parse(this.response);
     if (request.status >= 400) {
         result.isSuccess = false;
