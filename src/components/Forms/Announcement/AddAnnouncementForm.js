@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 import { getPodAnnouncements, addPodAnnouncement, getCourseAnnouncements, addCourseAnnouncement } from '../../../connectors/Announcement';
 import Swal from 'sweetalert2';
-import FormValidator from '../../Forms/FormValidator';
+import FormValidator from '../FormValidator';
 
 class AddAnnouncementForm extends Component {
 
@@ -24,7 +24,13 @@ class AddAnnouncementForm extends Component {
     }
 
     toggleModal = () => {
-       this.props.toggle()
+        this.setState({
+            formAddAnnouncement: {
+                title: '',
+                message: ''
+            },
+        });
+        this.props.toggle()
     }
 
     errorMessageStyling = {
