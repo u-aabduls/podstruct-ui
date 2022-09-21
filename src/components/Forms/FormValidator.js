@@ -189,6 +189,7 @@ const FormValidator = {
 
         // use getAttribute to support IE10+
         const param = element.getAttribute('data-param');
+        const minParam = element.getAttribute('min-param');
         const validations = JSON.parse(element.getAttribute('data-validate'));
 
         let result = []
@@ -221,7 +222,7 @@ const FormValidator = {
                         result[m] = !validator.equals(value, value2)
                         break;
                     case 'minlen':
-                        result[m] = !validator.isLength(value, { min: param })
+                        result[m] = !validator.isLength(value, { min: minParam })
                         break;
                     case 'maxlen':
                         result[m] = !validator.isLength(value, { max: param })

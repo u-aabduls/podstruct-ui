@@ -80,7 +80,6 @@ class AddAnnouncementForm extends Component {
         if (this.state.formAddAnnouncement.message) {
             payload.message = this.state.formAddAnnouncement.message
         }
-
         return JSON.stringify(payload);
     }
 
@@ -155,14 +154,14 @@ class AddAnnouncementForm extends Component {
                                     placeholder="Enter announcement title"
                                     invalid={
                                         this.hasError('formAddAnnouncement', 'title', 'required')
-                                        || this.hasError('formAddAnnouncement', 'title', 'maxlen')
+                                        || this.hasError('formAddAnnouncement', 'title', 'len')
                                         || this.hasError('formAddAnnouncement', 'title', 'contains-alpha')
                                         || this.hasError('formAddAnnouncement', 'title', 'begin-end-spacing')
                                         || this.hasError('formAddAnnouncement', 'title', 'consecutive-spacing')
                                     }
                                     onChange={this.validateOnChange}
-                                    data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
-                                    data-param='50'
+                                    data-validate='["required", "len", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                    data-param='[3, 100]'
                                     value={this.state.formAddAnnouncement.title} />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -170,7 +169,7 @@ class AddAnnouncementForm extends Component {
                                     </span>
                                 </div>
                                 {this.hasError('formAddAnnouncement', 'title', 'required') && <span className="invalid-feedback">Title is required</span>}
-                                {this.hasError('formAddAnnouncement', 'title', 'maxlen') && <span className="invalid-feedback">Title must not have more than 50 characters</span>}
+                                {this.hasError('formAddAnnouncement', 'title', 'len') && <span className="invalid-feedback">Title must be between 3 and 100 characters in length</span>}
                                 {this.hasError('formAddAnnouncement', 'title', 'contains-alpha') && <span className="invalid-feedback">Title must contain at least one alpha character</span>}
                                 {this.hasError('formAddAnnouncement', 'title', 'begin-end-spacing') && <span className="invalid-feedback">Title must not begin or end with a space character</span>}
                                 {this.hasError('formAddAnnouncement', 'title', 'consecutive-spacing') && <span className="invalid-feedback">Title must not contain consecutive space characters</span>}

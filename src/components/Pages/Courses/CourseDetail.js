@@ -83,7 +83,7 @@ class CourseDetail extends Component {
         if (this.state.lastEvaluatedKey) {
             var stateCopy = this.state
             var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0)
-            if (res.isSuccess && !res.data.announcements.length == 0) {
+            if (res.isSuccess) {
                 stateCopy.announcements = this.state.announcements.concat(res.data.announcements)
                 stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
                 this.setState(stateCopy)
@@ -279,7 +279,7 @@ class CourseDetail extends Component {
                                                     )
                                                 }
                                             </Table>
-                                            {typeof this.state.lastEvaluatedKey !== 'undefined' &&
+                                            {this.state.lastEvaluatedKey &&
                                                 <div>
                                                     <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
                                                 </div>
