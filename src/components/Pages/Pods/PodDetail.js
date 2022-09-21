@@ -11,7 +11,7 @@ import {
     Row,
     Card,
     CardBody,
-    Col, 
+    Col,
     TabContent,
     TabPane,
     Table,
@@ -82,13 +82,12 @@ class PodDetail extends Component {
         if (this.state.lastEvaluatedKey) {
             var stateCopy = this.state
             var res = getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0)
-            if (res.isSuccess && !res.data.announcements.length == 0) {
+            if (res.isSuccess) {
                 stateCopy.announcements = this.state.announcements.concat(res.data.announcements)
                 stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
                 this.setState(stateCopy)
             }
         }
-        console.log(stateCopy.lastEvaluatedKey)
     }
 
     deleteAnnouncement = (date) => {
@@ -177,7 +176,7 @@ class PodDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body">
                                 <h4 className="mt-1 text-muted">Pod Owner</h4>
-                                <p className="text-primary font-weight-bold">{this.state.pod.roleInPod}</p>
+                                <p className="text-primary font-weight-bold"></p>
                             </div>
                         </div>
                         {/* END card */}
@@ -187,7 +186,11 @@ class PodDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body">
                                 <h4 className="mt-1 text-muted">Contact Information</h4>
-                                <p className="text-primary font-weight-bold">{this.state.pod.roleInPod}</p>
+                                <p className="text-primary font-weight-bold">
+                                    Address: {this.state.pod.address}
+                                    <br></br>
+                                    Phone Number: {this.state.pod.phone}
+                                </p>
                             </div>
                         </div>
                         {/* END card */}
@@ -278,7 +281,7 @@ class PodDetail extends Component {
                                                     )
                                                 }
                                             </Table>
-                                            {typeof this.state.lastEvaluatedKey !== 'undefined' &&
+                                            {this.state.lastEvaluatedKey &&
                                                 <div>
                                                     <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
                                                 </div>
