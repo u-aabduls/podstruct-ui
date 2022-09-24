@@ -69,13 +69,13 @@ function __execute() {
         result.isSuccess = true;
         switch (httpMethod) {
             case "POST":
-                result.message = "Successfully recovered password"
+                result.message = "Successfully recovered password."
                 break;
             case "PUT":
-                result.message = "Successfully reset password"
+                result.message = "Successfully reset password."
                 break;
             default:
-                result.message = "Successfully reached password endpoint";
+                result.message = "Successfully reached password endpoint.";
         }
     }
 }

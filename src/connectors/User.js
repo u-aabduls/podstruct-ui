@@ -70,19 +70,19 @@ function __execute(method) {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched account"
+                result.message = "Successfully fetched account."
                 break;
             case "POST":
-                result.message = "Successfully created account"
+                result.message = "Successfully created account."
                 break;
             case "PUT":
-                result.message = "Successfully edited account"
+                result.message = "Successfully edited account."
                 break;
             case "DELETE":
-                result.message = "Successfully deleted account"
+                result.message = "Successfully deleted account."
                 break;
             default:
-                result.message = "Successfully reached User endpoint";
+                result.message = "Successfully reached User endpoint.";
         }
     }
 }
