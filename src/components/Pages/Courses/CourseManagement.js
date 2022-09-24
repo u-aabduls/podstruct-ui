@@ -398,7 +398,7 @@ class CourseManagement extends Component {
                                                 placeholder="Enter teacher's name"
                                                 invalid={
                                                     this.hasError('formAddCourse', 'teacher', 'maxlen')
-                                                    || this.hasError('formAddCourse', 'teacher', 'contains-alpha')
+                                                    || (this.state.formAddCourse.teacher && this.hasError('formAddCourse', 'teacher', 'contains-alpha'))
                                                     || this.hasError('formAddCourse', 'teacher', 'name')
                                                     || this.hasError('formAddCourse', 'teacher', 'begin-end-spacing')
                                                     || this.hasError('formAddCourse', 'teacher', 'consecutive-spacing')
@@ -425,11 +425,11 @@ class CourseManagement extends Component {
                                             <Input
                                                 type="textarea"
                                                 name="description"
-                                                className="border-right-0"
+                                                className="border-right-0 no-resize"
                                                 placeholder="Enter course description"
                                                 invalid={
                                                     this.hasError('formAddCourse', 'description', 'maxlen')
-                                                    || this.hasError('formAddCourse', 'description', 'contains-alpha')
+                                                    || (this.state.formAddCourse.description && this.hasError('formAddCourse', 'description', 'contains-alpha'))
                                                     || this.hasError('formAddCourse', 'description', 'begin-end-spacing')
                                                     || this.hasError('formAddCourse', 'description', 'consecutive-spacing')
                                                 }
