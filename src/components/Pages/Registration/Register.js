@@ -321,10 +321,11 @@ class Register extends Component {
                                         placeholder="(XXX) XXX-XXXX"
                                         invalid={
                                             this.hasError('formRegister', 'phone', 'required')
-                                            || this.hasError('formRegister', 'phone', 'phone')
+                                            || this.hasError('formRegister', 'phone', 'phone-digits')
+                                            || this.hasError('formRegister', 'phone', 'phone-chars')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "phone"]'
+                                        data-validate='["required", "phone-digits", "phone-chars"]'
                                         data-param='10'
                                         value={this.state.formRegister.phone}
                                     />
@@ -334,7 +335,8 @@ class Register extends Component {
                                         </span>
                                     </div>
                                     {this.hasError('formRegister', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
-                                    {this.hasError('formRegister', 'phone', 'phone') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
+                                    {this.hasError('formRegister', 'phone', 'phone-digits') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
+                                    {this.hasError('formRegister', 'phone', 'phone-chars') && <span className="invalid-feedback">Phone number must only contain digits 0-9, () or -</span>}
                                 </div>
                             </div>
                             <div className="form-group">

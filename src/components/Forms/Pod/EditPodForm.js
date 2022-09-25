@@ -231,7 +231,7 @@ class EditPodForm extends Component {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="signupInputPhone">Phone Number</label>
+                            <label className="text-muted" htmlFor="id-phone">Phone Number</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
@@ -241,10 +241,11 @@ class EditPodForm extends Component {
                                     placeholder="(XXX) XXX-XXXX"
                                     invalid={
                                         this.hasError('formEditPod', 'phone', 'required')
-                                        || this.hasError('formEditPod', 'phone', 'phone')
+                                        || this.hasError('formEditPod', 'phone', 'phone-digits')
+                                        || this.hasError('formEditPod', 'phone', 'phone-chars')
                                     }
                                     onChange={this.validateOnChange}
-                                    data-validate='["required", "phone"]'
+                                    data-validate='["required", "phone-digits", "phone-chars"]'
                                     data-param='10'
                                     value={this.state.formEditPod.phone || ''}
                                 />
@@ -254,15 +255,16 @@ class EditPodForm extends Component {
                                     </span>
                                 </div>
                                 {this.hasError('formEditPod', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
-                                {this.hasError('formEditPod', 'phone', 'phone') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
+                                {this.hasError('formEditPod', 'phone', 'phone-digits') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
+                                {this.hasError('formEditPod', 'phone', 'phone-chars') && <span className="invalid-feedback">Phone number must only contain digits 0-9, () or -</span>}
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted">Address</label>
+                            <label className="text-muted" htmlFor="id-address">Address</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
-                                    id="address"
+                                    id="id-address"
                                     name="address"
                                     className="border-right-0"
                                     placeholder="Address"

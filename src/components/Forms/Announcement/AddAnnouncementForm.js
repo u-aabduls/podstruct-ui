@@ -145,13 +145,14 @@ class AddAnnouncementForm extends Component {
                     <ModalHeader toggle={this.toggleModal}>Add Announcement</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addAnnouncementTitle">Title</label>
+                            <label className="text-muted" htmlFor="id-announcementTitle">Title</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
+                                    id="id-announcementTitle"
                                     name="title"
                                     className="border-right-0"
-                                    placeholder="Enter announcement title"
+                                    placeholder="Announcement title"
                                     invalid={
                                         this.hasError('formAddAnnouncement', 'title', 'required')
                                         || this.hasError('formAddAnnouncement', 'title', 'len')
@@ -176,13 +177,14 @@ class AddAnnouncementForm extends Component {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addAnnouncementMessage">Message</label>
+                            <label className="text-muted" htmlFor="id-announcementMessage">Message</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
+                                    id="id-announcementMessage"
                                     name="message"
                                     className="border-right-0"
-                                    placeholder="Enter announcement message"
+                                    placeholder="Announcement message"
                                     invalid={
                                         this.hasError('formAddAnnouncement', 'message', 'maxlen')
                                         || this.hasError('formAddAnnouncement', 'message', 'begin-end-spacing')

@@ -266,13 +266,14 @@ class EditCourseForm extends Component {
                             {this.state.formEditCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addCourseSubject">Course Subject</label>
+                            <label className="text-muted" htmlFor="id-courseSubject">Subject</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
+                                    id="id-courseSubject"
                                     name="subject"
                                     className="border-right-0"
-                                    placeholder="Enter course subject"
+                                    placeholder="Subject"
                                     invalid={
                                         this.hasError('formEditCourse', 'subject', 'required')
                                         || this.hasError('formEditCourse', 'subject', 'maxlen')
@@ -338,13 +339,14 @@ class EditCourseForm extends Component {
                             {this.state.formEditCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Time schedule is required</p>}
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addCourseTeacher">Teacher</label>
+                            <label className="text-muted" htmlFor="id-teacher">Teacher</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
+                                    id="id-teacher"
                                     name="teacher"
                                     className="border-right-0"
-                                    placeholder="Enter teacher's name"
+                                    placeholder="Teacher's name"
                                     invalid={
                                         this.hasError('formEditCourse', 'teacher', 'maxlen')
                                         || this.hasError('formEditCourse', 'teacher', 'contains-alpha')
@@ -369,13 +371,14 @@ class EditCourseForm extends Component {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addDescription">Course Description</label>
+                            <label className="text-muted" htmlFor="id-courseDescription">Description</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="textarea"
+                                    id="id-courseDescription"
                                     name="description"
-                                    className="border-right-0"
-                                    placeholder="Enter course description"
+                                    className="border-right-0 no-resize"
+                                    placeholder="Description"
                                     invalid={
                                         this.hasError('formEditCourse', 'description', 'maxlen')
                                         || this.hasError('formEditCourse', 'description', 'contains-alpha')
@@ -385,7 +388,8 @@ class EditCourseForm extends Component {
                                     onChange={this.validateOnChange}
                                     data-validate='["maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
                                     data-param='150'
-                                    value={this.state.formEditCourse.description} />
+                                    value={this.state.formEditCourse.description} 
+                                    rows={3} />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-book"></em>

@@ -305,10 +305,10 @@ class CourseManagement extends Component {
                         </button>
                         <Modal isOpen={this.state.modal}>
                             <form className="mb-3" name="formAddCourse" onSubmit={this.onSubmit}>
-                                <ModalHeader toggle={this.toggleModal}>Add Course</ModalHeader>
+                                <ModalHeader toggle={this.toggleModal}>Create Course</ModalHeader>
                                 <ModalBody>
                                     <div className="form-group">
-                                        <label className="text-muted" htmlFor="addCourseSubject">Select Pod</label>
+                                        <label className="text-muted">Select Pod</label>
                                         <PodSelector
                                             name="podSelector"
                                             pods={this.state.pods}
@@ -320,13 +320,14 @@ class CourseManagement extends Component {
                                         {this.state.formAddCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
                                     </div>
                                     <div className="form-group">
-                                        <label className="text-muted" htmlFor="addCourseSubject">Course Subject</label>
+                                        <label className="text-muted" htmlFor="id-courseSubject">Subject</label>
                                         <div className="input-group with-focus">
                                             <Input
                                                 type="text"
+                                                id="id-courseSubject"
                                                 name="subject"
                                                 className="border-right-0"
-                                                placeholder="Enter course subject"
+                                                placeholder="Subject"
                                                 invalid={
                                                     this.hasError('formAddCourse', 'subject', 'required')
                                                     || this.hasError('formAddCourse', 'subject', 'maxlen')
@@ -351,7 +352,7 @@ class CourseManagement extends Component {
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label className="text-muted" htmlFor="addDaySchedule">Day Schedule</label>
+                                        <label className="text-muted">Days</label>
                                         <DaysOfWeekSelector
                                             name="daysOfWeekSelector"
                                             hasError={this.state.formAddCourse.selector.error.isNullDay}
@@ -361,7 +362,7 @@ class CourseManagement extends Component {
                                         {this.state.formAddCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
                                     </div>
                                     <div className="form-group">
-                                        <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule</label>
+                                        <label className="text-muted">Time</label>
                                         <Row>
                                             <Col lg="6">
                                                 <label className="text-muted">Start time: </label>
@@ -389,13 +390,14 @@ class CourseManagement extends Component {
                                         {this.state.formAddCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Time schedule is required</p>}
                                     </div>
                                     <div className="form-group">
-                                        <label className="text-muted" htmlFor="addCourseTeacher">Teacher</label>
+                                        <label className="text-muted" htmlFor="id-courseTeacher">Teacher</label>
                                         <div className="input-group with-focus">
                                             <Input
                                                 type="text"
+                                                id="id-courseTeacher"
                                                 name="teacher"
                                                 className="border-right-0"
-                                                placeholder="Enter teacher's name"
+                                                placeholder="Teacher's name"
                                                 invalid={
                                                     this.hasError('formAddCourse', 'teacher', 'maxlen')
                                                     || (this.state.formAddCourse.teacher && this.hasError('formAddCourse', 'teacher', 'contains-alpha'))
@@ -420,13 +422,14 @@ class CourseManagement extends Component {
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label className="text-muted" htmlFor="addDescription">Course Description</label>
+                                        <label className="text-muted" htmlFor="id-courseDescription">Description</label>
                                         <div className="input-group with-focus">
                                             <Input
                                                 type="textarea"
+                                                id="id-courseDescription"
                                                 name="description"
                                                 className="border-right-0 no-resize"
-                                                placeholder="Enter course description"
+                                                placeholder="Description"
                                                 invalid={
                                                     this.hasError('formAddCourse', 'description', 'maxlen')
                                                     || (this.state.formAddCourse.description && this.hasError('formAddCourse', 'description', 'contains-alpha'))
@@ -436,7 +439,8 @@ class CourseManagement extends Component {
                                                 onChange={this.validateOnChange}
                                                 data-validate='["maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
                                                 data-param='150'
-                                                value={this.state.formAddCourse.description || ''} />
+                                                value={this.state.formAddCourse.description || ''}
+                                                rows={3} />
                                             <div className="input-group-append">
                                                 <span className="input-group-text text-muted bg-transparent border-left-0">
                                                     <em className="fa fa-book"></em>
@@ -451,7 +455,7 @@ class CourseManagement extends Component {
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                                    <Button color="primary" type="submit">Add</Button>{' '}
+                                    <Button color="primary" type="submit">Create</Button>{' '}
                                 </ModalFooter>
                             </form>
                         </Modal>

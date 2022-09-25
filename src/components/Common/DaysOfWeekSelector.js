@@ -27,7 +27,7 @@ const customStylesError = {
 export default function DaysOfWeekSelector(props) {
     return (
         <Select
-            placeholder="Select the days your course will occur"
+            placeholder="Select days of the week"
             isMulti={true}
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
