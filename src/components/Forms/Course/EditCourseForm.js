@@ -278,11 +278,9 @@ class EditCourseForm extends Component {
                                         this.hasError('formEditCourse', 'subject', 'required')
                                         || this.hasError('formEditCourse', 'subject', 'maxlen')
                                         || this.hasError('formEditCourse', 'subject', 'contains-alpha')
-                                        || this.hasError('formEditCourse', 'subject', 'begin-end-spacing')
-                                        || this.hasError('formEditCourse', 'subject', 'consecutive-spacing')
                                     }
                                     onChange={this.validateOnChange}
-                                    data-validate='["required", "maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                    data-validate='["required", "maxlen", "contains-alpha"]'
                                     data-param='50'
                                     value={this.state.formEditCourse.subject} />
                                 <div className="input-group-append">
@@ -293,8 +291,6 @@ class EditCourseForm extends Component {
                                 {this.hasError('formEditCourse', 'subject', 'required') && <span className="invalid-feedback">Subject is required</span>}
                                 {this.hasError('formEditCourse', 'subject', 'maxlen') && <span className="invalid-feedback">Subject must not have more than 50 characters</span>}
                                 {this.hasError('formEditCourse', 'subject', 'contains-alpha') && <span className="invalid-feedback">Subject must contain at least one alpha character</span>}
-                                {this.hasError('formEditCourse', 'subject', 'begin-end-spacing') && <span className="invalid-feedback">Subject must not begin or end with a space character</span>}
-                                {this.hasError('formEditCourse', 'subject', 'consecutive-spacing') && <span className="invalid-feedback">Subject must not contain consecutive space characters</span>}
                             </div>
                         </div>
                         <div className="form-group">
@@ -351,11 +347,9 @@ class EditCourseForm extends Component {
                                         this.hasError('formEditCourse', 'teacher', 'maxlen')
                                         || this.hasError('formEditCourse', 'teacher', 'contains-alpha')
                                         || this.hasError('formEditCourse', 'teacher', 'name')
-                                        || this.hasError('formEditCourse', 'teacher', 'begin-end-spacing')
-                                        || this.hasError('formEditCourse', 'teacher', 'consecutive-spacing')
                                     }
                                     onChange={this.validateOnChange}
-                                    data-validate='["maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
+                                    data-validate='["maxlen", "contains-alpha", "name"]'
                                     data-param='50'
                                     value={this.state.formEditCourse.teacher} />
                                 <div className="input-group-append">
@@ -366,8 +360,6 @@ class EditCourseForm extends Component {
                                 {this.hasError('formEditCourse', 'teacher', 'maxlen') && <span className="invalid-feedback">Teacher must not have more than 50 characters</span>}
                                 {this.hasError('formEditCourse', 'teacher', 'contains-alpha') && <span className="invalid-feedback">Teacher must contain at least one alpha character</span>}
                                 {this.hasError('formEditCourse', 'teacher', 'name') && <span className="invalid-feedback">Teacher must contain alpha, apostrophe, or hyphen characters only</span>}
-                                {this.hasError('formEditCourse', 'teacher', 'begin-end-spacing') && <span className="invalid-feedback">Teacher must not begin or end with a space character</span>}
-                                {this.hasError('formEditCourse', 'teacher', 'consecutive-spacing') && <span className="invalid-feedback">Teacher must not contain consecutive space characters</span>}
                             </div>
                         </div>
                         <div className="form-group">
@@ -382,11 +374,9 @@ class EditCourseForm extends Component {
                                     invalid={
                                         this.hasError('formEditCourse', 'description', 'maxlen')
                                         || this.hasError('formEditCourse', 'description', 'contains-alpha')
-                                        || this.hasError('formEditCourse', 'description', 'begin-end-spacing')
-                                        || this.hasError('formEditCourse', 'description', 'consecutive-spacing')
                                     }
                                     onChange={this.validateOnChange}
-                                    data-validate='["maxlen", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                    data-validate='["maxlen", "contains-alpha"]'
                                     data-param='150'
                                     value={this.state.formEditCourse.description} 
                                     rows={3} />
@@ -397,8 +387,6 @@ class EditCourseForm extends Component {
                                 </div>
                                 {this.hasError('formEditCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 150 characters</span>}
                                 {this.hasError('formEditCourse', 'description', 'contains-alpha') && <span className="invalid-feedback">Course description must contain at least one alpha character</span>}
-                                {this.hasError('formEditCourse', 'description', 'begin-end-spacing') && <span className="invalid-feedback">Course description must not begin or end with a space character</span>}
-                                {this.hasError('formEditCourse', 'description', 'consecutive-spacing') && <span className="invalid-feedback">Course description must not contain consecutive space characters</span>}
                             </div>
                         </div>
                     </ModalBody>

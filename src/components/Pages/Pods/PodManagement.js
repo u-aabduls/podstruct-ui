@@ -180,11 +180,9 @@ class PodManagement extends Component {
                                                     this.hasError('podCreate', 'podName', 'required')
                                                     || this.hasError('podCreate', 'podName', 'maxlen')
                                                     || this.hasError('podCreate', 'podName', 'podname')
-                                                    || this.hasError('podCreate', 'podName', 'begin-end-spacing')
-                                                    || this.hasError('podCreate', 'podName', 'consecutive-spacing')
                                                 }
                                                 onChange={this.validateOnChange}
-                                                data-validate='["required", "maxlen", "podname", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-validate='["required", "maxlen", "podname"]'
                                                 data-param='50'
                                                 value={this.state.podCreate.podName || ''}
                                             />
@@ -196,8 +194,6 @@ class PodManagement extends Component {
                                             {this.hasError('podCreate', 'podName', 'required') && <span className="invalid-feedback">Name is required</span>}
                                             {this.hasError('podCreate', 'podName', 'maxlen') && <span className="invalid-feedback">Name must not have more than 50 characters</span>}
                                             {this.hasError('podCreate', 'podName', 'podname') && <span className="invalid-feedback">Name must contain alpha, numeric, or hyphen characters only</span>}
-                                            {this.hasError('podCreate', 'podName', 'begin-end-spacing') && <span className="invalid-feedback">Name must not begin or end with a space character</span>}
-                                            {this.hasError('podCreate', 'podName', 'consecutive-spacing') && <span className="invalid-feedback">Name must not contain consecutive space characters</span>}
                                         </div>
                                     </div>
                                     <div className="form-group">
@@ -211,11 +207,9 @@ class PodManagement extends Component {
                                                 placeholder="Description"
                                                 invalid={
                                                     this.hasError('podCreate', 'description', 'maxlen')
-                                                    || this.hasError('podCreate', 'description', 'begin-end-spacing')
-                                                    || this.hasError('podCreate', 'description', 'consecutive-spacing')
                                                 }
                                                 onChange={this.validateOnChange}
-                                                data-validate='["maxlen", "begin-end-spacing", "consecutive-spacing"]'
+                                                data-validate='["maxlen"]'
                                                 data-param='100'
                                                 value={this.state.podCreate.description || ''}
                                                 rows={5}
@@ -226,8 +220,6 @@ class PodManagement extends Component {
                                                 </span>
                                             </div>
                                             {this.hasError('podCreate', 'description', 'maxlen') && <span className="invalid-feedback">Description must have not have more than 100 characters</span>}
-                                            {this.hasError('podCreate', 'description', 'begin-end-spacing') && <span className="invalid-feedback">Description must not begin or end with a space character</span>}
-                                            {this.hasError('podCreate', 'description', 'consecutive-spacing') && <span className="invalid-feedback">Description must not contain consecutive space characters</span>}
                                         </div>
                                     </div>
                                     <div className="form-group">
