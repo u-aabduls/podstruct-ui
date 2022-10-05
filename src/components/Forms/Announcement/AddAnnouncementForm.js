@@ -145,22 +145,21 @@ class AddAnnouncementForm extends Component {
                     <ModalHeader toggle={this.toggleModal}>Add Announcement</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addAnnouncementTitle">Title</label>
+                            <label className="text-muted" htmlFor="id-announcementTitle">Title</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
+                                    id="id-announcementTitle"
                                     name="title"
                                     className="border-right-0"
-                                    placeholder="Enter announcement title"
+                                    placeholder="Announcement title"
                                     invalid={
                                         this.hasError('formAddAnnouncement', 'title', 'required')
                                         || this.hasError('formAddAnnouncement', 'title', 'len')
                                         || this.hasError('formAddAnnouncement', 'title', 'contains-alpha')
-                                        || this.hasError('formAddAnnouncement', 'title', 'begin-end-spacing')
-                                        || this.hasError('formAddAnnouncement', 'title', 'consecutive-spacing')
                                     }
                                     onChange={this.validateOnChange}
-                                    data-validate='["required", "len", "contains-alpha", "begin-end-spacing", "consecutive-spacing"]'
+                                    data-validate='["required", "len", "contains-alpha"]'
                                     data-param='[3, 100]'
                                     value={this.state.formAddAnnouncement.title} />
                                 <div className="input-group-append">
@@ -171,25 +170,22 @@ class AddAnnouncementForm extends Component {
                                 {this.hasError('formAddAnnouncement', 'title', 'required') && <span className="invalid-feedback">Title is required</span>}
                                 {this.hasError('formAddAnnouncement', 'title', 'len') && <span className="invalid-feedback">Title must be between 3 and 100 characters in length</span>}
                                 {this.hasError('formAddAnnouncement', 'title', 'contains-alpha') && <span className="invalid-feedback">Title must contain at least one alpha character</span>}
-                                {this.hasError('formAddAnnouncement', 'title', 'begin-end-spacing') && <span className="invalid-feedback">Title must not begin or end with a space character</span>}
-                                {this.hasError('formAddAnnouncement', 'title', 'consecutive-spacing') && <span className="invalid-feedback">Title must not contain consecutive space characters</span>}
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addAnnouncementMessage">Message</label>
+                            <label className="text-muted" htmlFor="id-announcementMessage">Message</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
+                                    id="id-announcementMessage"
                                     name="message"
                                     className="border-right-0"
-                                    placeholder="Enter announcement message"
+                                    placeholder="Announcement message"
                                     invalid={
                                         this.hasError('formAddAnnouncement', 'message', 'maxlen')
-                                        || this.hasError('formAddAnnouncement', 'message', 'begin-end-spacing')
-                                        || this.hasError('formAddAnnouncement', 'message', 'consecutive-spacing')
                                     }
                                     onChange={this.validateOnChange}
-                                    data-validate='["maxlen", "begin-end-spacing", "consecutive-spacing"]'
+                                    data-validate='["maxlen"]'
                                     data-param='50'
                                     value={this.state.formAddAnnouncement.message} />
                                 <div className="input-group-append">
@@ -198,8 +194,6 @@ class AddAnnouncementForm extends Component {
                                     </span>
                                 </div>
                                 {this.hasError('formAddAnnouncement', 'message', 'maxlen') && <span className="invalid-feedback">Message must not have more than 50 characters</span>}
-                                {this.hasError('formAddAnnouncement', 'message', 'begin-end-spacing') && <span className="invalid-feedback">Message must not begin or end with a space character</span>}
-                                {this.hasError('formAddAnnouncement', 'message', 'consecutive-spacing') && <span className="invalid-feedback">Message must not contain consecutive space characters</span>}
                             </div>
                         </div>
                     </ModalBody>

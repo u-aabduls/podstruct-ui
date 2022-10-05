@@ -88,19 +88,19 @@ function __execute() {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched pod(s)"
+                result.message = "Successfully fetched pods."
                 break;
             case "POST":
-                result.message = "Successfully created pod"
+                result.message = "Successfully created pod."
                 break;
             case "PUT":
-                result.message = "Successfully edited pod"
+                result.message = "Successfully edited pod."
                 break;
             case "DELETE":
-                result.message = "Successfully deleted pod"
+                result.message = "Successfully deleted pod."
                 break;
             default:
-                result.message = "Successfully reached pod endpoint";
+                result.message = "Successfully reached pod endpoint.";
         }
     }
 }
