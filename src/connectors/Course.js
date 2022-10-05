@@ -1,4 +1,5 @@
 import handleError from '../utils/ErrorHandler.js'
+import formatParams from '../utils/ParamFormatter.js';
 
 // private members
 var request = new XMLHttpRequest();
@@ -13,8 +14,10 @@ var authorizationToken = localStorage.getItem('token');
  ********************/
 
 function getCourses(podID, subject) {
-    var endpointPathEXT = subject ? endpointPath + podID + "/courses?subject=" + subject : endpointPath + podID + "/courses"
-    _initialize("GET", endpointPathEXT);
+    var endpointPathEXT = endpointPath + podID + "/courses"
+    var params = {};
+    if (subject) params.subject = subject
+    _initialize("GET", endpointPathEXT + formatParams(params));
     request.send();
     return result;
 }
@@ -26,7 +29,7 @@ function getCourse(podID, courseID) {
     return result;
 }
 
-function addCourse(podID, requestBody) {
+function createCourse(podID, requestBody) {
     var endpointPathEXT = endpointPath + podID + "/courses";
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
@@ -98,4 +101,4 @@ function __execute() {
     }
 }
 
-export { getCourses, getCourse, addCourse, editCourse };
+export { getCourses, getCourse, createCourse, editCourse };

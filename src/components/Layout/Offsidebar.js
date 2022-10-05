@@ -23,6 +23,10 @@ class Offsidebar extends Component {
         this.setState({ offsidebarReady: true });
     }
 
+    toggleOffsidebar = e => {
+        this.props.actions.toggleSetting('offsidebarOpen');
+    }
+
     handleSettingCheckbox = event => {
         this.props.actions.changeSetting(event.target.name, event.target.checked);
     }
@@ -35,6 +39,7 @@ class Offsidebar extends Component {
         if (localStorage.getItem('token')) {
             var res = logoutUser();
             if (res.isSuccess) {
+                this.toggleOffsidebar();
                 this.props.history.push('/login');
             }
         }

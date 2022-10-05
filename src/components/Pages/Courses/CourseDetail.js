@@ -14,24 +14,21 @@ import {
     Col,
     TabContent,
     TabPane,
-    Table,
     Nav,
     NavItem,
     NavLink,
 } from 'reactstrap';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
-import { getCourseAnnouncements, deleteCourseAnnouncement } from '../../../connectors/Announcement';
 import EditCourseForm from '../../Forms/Course/EditCourseForm';
 import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
+import CourseAnnouncementsTable from '../../Tables/CourseAnnouncementsTable';
 
 class CourseDetail extends Component {
 
     state = {
         privileges: "owner",
         course: this.props.location.state,
-        announcements: [],
-        lastEvaluatedKey: '',
         editModal: false,
         annModal: false,
         ddOpen: false,
@@ -76,39 +73,6 @@ class CourseDetail extends Component {
                 announcements: res.data.announcements,
                 lastEvaluatedKey: res.data.lastEvaluatedKey
             })
-        }
-    }
-
-    fetchMore = () => {
-        if (this.state.lastEvaluatedKey) {
-            var stateCopy = this.state
-            var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0)
-            if (res.isSuccess) {
-                stateCopy.announcements = this.state.announcements.concat(res.data.announcements)
-                stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-                this.setState(stateCopy)
-            }
-        }
-    }
-
-    deleteAnnouncement = (date) => {
-        var stateCopy = this.state
-        var res = deleteCourseAnnouncement(this.state.course.podId, this.state.course.id, date)
-        if (res.isSuccess) {
-            res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0)
-            stateCopy.announcements = res.data.announcements
-            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-            this.setState(stateCopy)
-        }
-    }
-
-    componentDidMount() {
-        var stateCopy = this.state
-        var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0)
-        if (res.isSuccess) {
-            stateCopy.announcements = res.data.announcements
-            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-            this.setState(stateCopy)
         }
     }
 
@@ -238,52 +202,9 @@ class CourseDetail extends Component {
                                                 updateOnAdd={this.updateOnAnnouncementAdd}
                                                 toggle={this.toggleAnnModal}
                                             />
-                                            <Table hover responsive>
-                                                {this.state.announcements.length > 0 &&
-                                                    this.state.announcements.map((announcement) => {
-                                                        var date = new Date(announcement.date * 1000);
-                                                        return (
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td className='date'>
-                                                                        <span className="text-uppercase text-bold">
-                                                                            {days[date.getDay()]}
-                                                                            {' '}
-                                                                            {months[date.getMonth()]}
-                                                                            {' '}
-                                                                            {date.getDate()}
-                                                                        </span>
-                                                                        <br />
-                                                                        <span className="h2 mt0 text-sm">
-                                                                            {moment(date).format("h:mm A")}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td className="announcement">
-                                                                        <span className="h4 text-bold">{announcement.title}</span>
-                                                                        <br />
-                                                                        <span>{announcement.message}</span>
-                                                                    </td>
-                                                                    <td className="buttons">
-                                                                        {this.state.privileges === "owner" &&
-                                                                            <div className='button-container'>
-                                                                                <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAnnouncement(announcement.date)}>
-                                                                                    <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                                                </Button>
-                                                                            </div>
-                                                                        }
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        )
-                                                    }
-                                                    )
-                                                }
-                                            </Table>
-                                            {this.state.lastEvaluatedKey &&
-                                                <div>
-                                                    <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
-                                                </div>
-                                            }
+                                            <CourseAnnouncementsTable
+                                                course={this.state.course}
+                                            />
                                         </TabPane>
                                         <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
