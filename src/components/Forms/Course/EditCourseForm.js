@@ -120,18 +120,18 @@ class EditCourseForm extends Component {
 
     constructRequestPayload = () => {
         var payload = {
-            "subject": this.state.formAddCourse.subject,
-            "daysOfWeekInterval": this.state.formAddCourse.daysOfWeekInterval,
-            "startTime": this.state.formAddCourse.startTime,
-            "endTime": this.state.formAddCourse.endTime
+            "subject": this.state.formEditCourse.subject,
+            "daysOfWeekInterval": this.state.formEditCourse.daysOfWeekInterval,
+            "startTime": this.state.formEditCourse.startTime,
+            "endTime": this.state.formEditCourse.endTime
         };
 
-        if (this.state.formAddCourse.description) {
-            payload.description = this.state.formAddCourse.description
+        if (this.state.formEditCourse.description) {
+            payload.description = this.state.formEditCourse.description
         }
 
         // if (this.state.formAddCourse.teacher) {
-        //     payload.teacher = this.state.formAddCourse.teacher
+        //     payload.teacher = this.state.formEditCourse.teacher
         // }
 
         return JSON.stringify(payload);
@@ -255,7 +255,7 @@ class EditCourseForm extends Component {
                     <ModalHeader toggle={this.toggleModal}>Edit Course</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addCourseSubject">Select Pod</label>
+                            <label className="text-muted" htmlFor="podSelector">Select Pod</label>
                             <PodSelector
                                 name="podSelector"
                                 hasError={this.state.formEditCourse.selector.error.isNullPod}
@@ -392,7 +392,7 @@ class EditCourseForm extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Edit</Button>{' '}
+                        <Button color="primary" type="submit">Edit Course</Button>{' '}
                     </ModalFooter>
                 </form>
             </Modal>

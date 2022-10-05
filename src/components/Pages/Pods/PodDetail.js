@@ -14,25 +14,24 @@ import {
     Col,
     TabContent,
     TabPane,
-    Table,
     Nav,
     NavItem,
     NavLink,
 } from 'reactstrap';
-import moment from 'moment';
-import { getPodAnnouncements, deletePodAnnouncement } from '../../../connectors/Announcement';
 import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
 import EditPodForm from '../../Forms/Pod/EditPodForm';
+import AddUserForm from '../../Forms/PodUser/AddUserForm';
+import PodUserTable from '../../Tables/PodUserTable';
+import PodAnnouncementsTable from '../../Tables/PodAnnouncementsTable';
 
 class PodDetail extends Component {
 
     state = {
         privileges: "owner",
         pod: this.props.location.state,
-        announcements: [],
-        lastEvaluatedKey: '',
         editModal: false,
         annModal: false,
+        userModal: false,
         ddOpen: false,
         activeTab: '1',
     }
@@ -53,12 +52,19 @@ class PodDetail extends Component {
         });
     }
 
+    toggleUserModal = () => {
+        this.setState({
+            userModal: !this.state.userModal
+        });
+    }
+
     toggleTab = tab => {
         if (this.state.activeTab !== tab) {
             this.setState({
                 activeTab: tab
             });
         }
+
     }
 
     updateOnPodEdit = (res) => {
@@ -78,42 +84,15 @@ class PodDetail extends Component {
         }
     }
 
-    fetchMore = () => {
-        if (this.state.lastEvaluatedKey) {
-            var stateCopy = this.state
-            var res = getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0)
-            if (res.isSuccess) {
-                stateCopy.announcements = this.state.announcements.concat(res.data.announcements)
-                stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-                this.setState(stateCopy)
-            }
-        }
-    }
-
-    deleteAnnouncement = (date) => {
-        var stateCopy = this.state
-        var res = deletePodAnnouncement(this.state.pod.id, date)
+    updateOnUserAdd = (res) => {
         if (res.isSuccess) {
-            res = getPodAnnouncements(this.state.pod.id, '', 0)
-            stateCopy.announcements = res.data.announcements
-            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-            this.setState(stateCopy)
-        }
-    }
-
-    componentDidMount() {
-        var stateCopy = this.state
-        var res = getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0)
-        if (res.isSuccess) {
-            stateCopy.announcements = res.data.announcements
-            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-            this.setState(stateCopy)
+            this.setState({
+                users: res.data.users,
+            })
         }
     }
 
     render() {
-        var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
-        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <ContentWrapper>
                 <div className="content-heading">
@@ -136,7 +115,7 @@ class PodDetail extends Component {
                             pod={this.state.pod}
                             modal={this.state.editModal}
                             toggle={this.toggleEditModal}
-                            updateOnEdit={this.updateOnEdit}
+                            updateOnEdit={this.updateOnPodEdit}
                         />
                     </div>
                 </div>
@@ -215,14 +194,14 @@ class PodDetail extends Component {
                                             <NavLink
                                                 className={classnames({ active: this.state.activeTab === '2' })}
                                                 onClick={() => { this.toggleTab('2'); }}>
-                                                Assignments
+                                                Users
                                             </NavLink>
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
                                                 className={classnames({ active: this.state.activeTab === '3' })}
                                                 onClick={() => { this.toggleTab('3'); }}>
-                                                Upcoming Events
+                                                Courses
                                             </NavLink>
                                         </NavItem>
                                     </Nav>
@@ -240,54 +219,26 @@ class PodDetail extends Component {
                                                 updateOnAdd={this.updateOnAnnouncementAdd}
                                                 toggle={this.toggleAnnModal}
                                             />
-                                            <Table hover responsive>
-                                                {this.state.announcements.length > 0 &&
-                                                    this.state.announcements.map((announcement) => {
-                                                        var date = new Date(announcement.date * 1000);
-                                                        return (
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td className='date'>
-                                                                        <span className="text-uppercase text-bold">
-                                                                            {days[date.getDay()]}
-                                                                            {' '}
-                                                                            {months[date.getMonth()]}
-                                                                            {' '}
-                                                                            {date.getDate()}
-                                                                        </span>
-                                                                        <br />
-                                                                        <span className="h2 mt0 text-sm">
-                                                                            {moment(date).format("h:mm A")}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td className="announcement">
-                                                                        <span className="h4 text-bold">{announcement.title}</span>
-                                                                        <br />
-                                                                        <span>{announcement.message}</span>
-                                                                    </td>
-                                                                    <td className="buttons">
-                                                                        {this.state.privileges === "owner" &&
-                                                                            <div className='button-container'>
-                                                                                <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAnnouncement(announcement.date)}>
-                                                                                    <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                                                </Button>
-                                                                            </div>
-                                                                        }
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        )
-                                                    }
-                                                    )
-                                                }
-                                            </Table>
-                                            {this.state.lastEvaluatedKey &&
-                                                <div>
-                                                    <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
+                                            <PodAnnouncementsTable
+                                                pod={this.state.pod}
+                                            />
+                                        </TabPane>
+                                        <TabPane tabId="2">
+                                            {this.state.privileges === "owner" &&
+                                                <div className="float-right">
+                                                    <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleUserModal}>Add User</Button>
                                                 </div>
                                             }
+                                            <AddUserForm
+                                                pod={this.state.pod}
+                                                modal={this.state.userModal}
+                                                updateOnAdd={this.updateOnUserAdd}
+                                                toggle={this.toggleUserModal}
+                                            />
+                                            <PodUserTable
+                                                pod={this.state.pod}
+                                            />
                                         </TabPane>
-                                        <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
                                         <TabPane tabId="4">Sed commodo tellus ut mi tristique pharetra.</TabPane>
                                     </TabContent>

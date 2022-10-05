@@ -7,7 +7,7 @@ import {
     ModalBody,
     ModalFooter,
 } from 'reactstrap';
-import { getPodAnnouncements, addPodAnnouncement, getCourseAnnouncements, addCourseAnnouncement } from '../../../connectors/Announcement';
+import { getPodAnnouncements, createPodAnnouncement, getCourseAnnouncements, createCourseAnnouncement } from '../../../connectors/Announcement';
 import Swal from 'sweetalert2';
 import FormValidator from '../FormValidator';
 
@@ -109,8 +109,8 @@ class AddAnnouncementForm extends Component {
         if (!hasError) {
             var res;
             this.state.course ?
-                res = addCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload()) :
-                res = addPodAnnouncement(this.state.pod.id, this.constructRequestPayload());
+                res = createCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload()) :
+                res = createPodAnnouncement(this.state.pod.id, this.constructRequestPayload());
             if (res.isSuccess) {
                 this.toggleModal()
                 Swal.fire({
@@ -199,7 +199,7 @@ class AddAnnouncementForm extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Add</Button>{' '}
+                        <Button color="primary" type="submit">Add Announcement</Button>{' '}
                     </ModalFooter>
                 </form>
             </Modal>

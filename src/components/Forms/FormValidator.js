@@ -204,7 +204,6 @@ const FormValidator = {
 
         // use getAttribute to support IE10+
         const param = element.getAttribute('data-param');
-        const minParam = element.getAttribute('min-param');
         const validations = JSON.parse(element.getAttribute('data-validate'));
 
         let result = []
@@ -218,6 +217,15 @@ const FormValidator = {
                         break;
                     case 'email':
                         result[m] = !validator.isEmail(value)
+                        break;
+                    case 'emails':
+                        value.replace(/\s/g, "").split(",").map((email) => {
+                            if (!validator.isEmail(email)){
+                                result[m] = true
+                                return
+                            }
+                            result[m] = false
+                        })
                         break;
                     case 'number':
                         result[m] = !validator.isNumeric(value)
@@ -237,7 +245,7 @@ const FormValidator = {
                         result[m] = !validator.equals(value, value2)
                         break;
                     case 'minlen':
-                        result[m] = !validator.isLength(value, { min: minParam })
+                        result[m] = !validator.isLength(value, { min: param })
                         break;
                     case 'maxlen':
                         result[m] = !validator.isLength(value, { max: param })
@@ -286,7 +294,6 @@ const FormValidator = {
 
             })
         }
-
         return result;
     },
 

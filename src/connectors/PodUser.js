@@ -13,33 +13,28 @@ var authorizationToken = localStorage.getItem('token');
  * Public Methods
  ********************/
 
-function getCourses(podID, subject) {
-    var endpointPathEXT = endpointPath + podID + "/courses"
+function getUsers(podID, page, size, sort) {
+    var endpointPathEXT = endpointPath + podID + '/users'
     var params = {};
-    if (subject) params.subject = subject
+    if (page) params.page = page
+    if (size) params.size = size
+    if (sort) params.sort = sort
     _initialize("GET", endpointPathEXT + formatParams(params));
     request.send();
     return result;
 }
 
-function getCourse(podID, courseID) {
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
-    _initialize("GET", endpointPathEXT);
-    request.send();
-    return result;
-}
-
-function createCourse(podID, requestBody) {
-    var endpointPathEXT = endpointPath + podID + "/courses";
+function createUser(podID, requestBody) {
+    var endpointPathEXT = endpointPath + podID + '/users'
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
     return result;
 }
 
-function editCourse(podID, courseID, requestBody) {
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
-    _initialize("PUT", endpointPathEXT);
-    request.send(requestBody);
+function deleteUser(podID) {
+    var endpointPathEXT = endpointPath + podID + '/users'
+    _initialize("DELETE", endpointPathEXT);
+    request.send();
     return result;
 }
 
@@ -84,21 +79,21 @@ function __execute() {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched courses."
+                result.message = "Successfully fetched user(s)"
                 break;
             case "POST":
-                result.message = "Successfully created course."
+                result.message = "Successfully created user"
                 break;
             case "PUT":
-                result.message = "Successfully edited course."
+                result.message = "Successfully edited user"
                 break;
             case "DELETE":
-                result.message = "Successfully deleted course."
+                result.message = "Successfully deleted user"
                 break;
             default:
-                result.message = "Successfully reached course endpoint.";
+                result.message = "Successfully reached podUser endpoint";
         }
     }
 }
 
-export { getCourses, getCourse, createCourse, editCourse };
+export { getUsers, createUser, deleteUser };

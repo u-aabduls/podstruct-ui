@@ -273,7 +273,7 @@ class EditPodForm extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Edit</Button>
+                        <Button color="primary" type="submit">Edit Pod</Button>
                     </ModalFooter>
                 </form>
             </Modal>

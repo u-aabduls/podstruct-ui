@@ -70,16 +70,16 @@ function __execute() {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched account."
+                result.message = "Successfully fetched user"
                 break;
             case "POST":
-                result.message = "Successfully created account."
+                result.message = "Successfully created user"
                 break;
             case "PUT":
-                result.message = "Successfully edited account."
+                result.message = "Successfully edited user"
                 break;
             case "DELETE":
-                result.message = "Successfully deleted account."
+                result.message = "Successfully deleted user"
                 break;
             default:
                 result.message = "Successfully reached User endpoint.";
