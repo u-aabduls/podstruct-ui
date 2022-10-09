@@ -36,6 +36,10 @@ export default function PodSelector(props) {
             defaultValue={props.defaultV ? { label: props.defaultV.podName, value: props.defaultV.id } : null}
             value={options.find(o => o.value === props.defaultv)}
             onChange={(e) => { 
+                if (!props.validate) {
+                    props.setPod(e.value) 
+                    return
+                }
                 props.setPod(e.value) 
                 props.validate("pod") }}
             isDisabled={props.disabled}

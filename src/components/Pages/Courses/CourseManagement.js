@@ -17,7 +17,7 @@ class CourseManagement extends Component {
         subjectFilter: '',
         pods: response.data,
         courses: [],
-        addCourseModal: false
+        addCourseModal: false,
     }
 
     toggleAddCourseModal = () => {
@@ -33,25 +33,6 @@ class CourseManagement extends Component {
                 courses: res.data
             })
         }
-    }
-
-    validateSelectorsOnChange = e => {
-        var isNullPod = this.state.formAddCourse.selectedPod === '';
-        var isNullDay = this.state.formAddCourse.daysOfWeekInterval === '';
-        var isNullTime = this.state.formAddCourse.startTime === '' && this.state.formAddCourse.endTime === '';
-        var stateCopy = this.state.formAddCourse;
-        switch (e) {
-            case "pod":
-                stateCopy.selector.error.isNullPod = isNullPod ? true : false;
-                break;
-            case "day":
-                stateCopy.selector.error.isNullDay = isNullDay ? true : false;
-                break;
-            case "time":
-                stateCopy.selector.error.isNullTime = isNullTime ? true : false;
-                break;
-        }
-        this.setState(stateCopy);
     }
 
     setPod = (pod) => {
@@ -133,7 +114,6 @@ class CourseManagement extends Component {
                                 pods={this.state.pods}
                                 setPod={(pod) => this.setPod(pod)}
                                 defaultv={this.state.selectedPod}
-                                validate={this.validateSelectorsOnChange}
                                 active="required"
                             />
                         </div>
