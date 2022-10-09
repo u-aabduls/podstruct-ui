@@ -102,19 +102,19 @@ function __execute() {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched announcement(s)"
+                result.message = "Successfully fetched announcements."
                 break;
             case "POST":
-                result.message = "Successfully created announcement"
+                result.message = "Successfully created announcement."
                 break;
             case "PUT":
-                result.message = "Successfully edited announcement"
+                result.message = "Successfully edited announcement."
                 break;
             case "DELETE":
-                result.message = "Successfully deleted announcement"
+                result.message = "Successfully deleted announcement."
                 break;
             default:
-                result.message = "Successfully reached announcement endpoint";
+                result.message = "Successfully reached announcement endpoint.";
         }
     }
 }

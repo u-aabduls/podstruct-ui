@@ -5,7 +5,7 @@ var request = new XMLHttpRequest();
 var result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
-var endpointPath = "podstruct/api/user/";
+var endpointPath = "podstruct/api/user";
 var authorizationToken = localStorage.getItem('token');
 
 /********************
@@ -26,6 +26,7 @@ function createUser(requestBody) {
 
 function updateUser(requestBody) {
     _initialize("PUT");
+    request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
     request.send(requestBody);
     return result;
 }
@@ -52,7 +53,6 @@ function _initialize(method) {
     }
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
-    request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
     request.onload = __execute;
 }
 
@@ -60,7 +60,7 @@ function _initialize(method) {
  * Event handlers
  ********************/
 
-function __execute(method) {
+function __execute() {
     if (this.response) var data = JSON.parse(this.response);
     if (request.status >= 400) {
         result.isSuccess = false;
@@ -82,7 +82,7 @@ function __execute(method) {
                 result.message = "Successfully deleted user"
                 break;
             default:
-                result.message = "Successfully reached User endpoint";
+                result.message = "Successfully reached User endpoint.";
         }
     }
 }

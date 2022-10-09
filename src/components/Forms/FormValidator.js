@@ -104,30 +104,45 @@ const FormValidator = {
 
     /**
      * Returns true iff:
-     *     1) input has exactly 10 numbers
-     *     2) contains only numbers or '(',')', or '-' characters
+     *     1) input has exactly 10 digits
      */
-    isValidPhoneNumber(input) {
+    containsTenDigits(input) {
         const num = "0123456789".split("");
-        const special = "()-".split("");
 
         if (input.length < 10) {
             return false;
         }
 
         var i = input.length,
-            numbers = 0,
+            numbers = 0;
+
+        while (i--) {
+            var char = input.charAt(i);
+            if (num.includes(char)) {
+                numbers++;
+            }
+        }
+        return numbers === 10;
+    },
+
+    /**
+     * Returns true iff:
+     *     1) contains only numbers or '(',')', or '-' characters
+     */
+    containsInvalidChars(input) {
+        const num = "0123456789".split("");
+        const special = "()-".split("");
+
+        var i = input.length,
             containsInvalidChar = false;
 
         while (i-- && !containsInvalidChar) {
             var char = input.charAt(i);
-            if (num.includes(char)) {
-                numbers++;
-            } else if (!special.includes(char)) {
+            if (!num.includes(char) && !special.includes(char)) {
                 containsInvalidChar = true;
             }
         }
-        return numbers === 10 && !containsInvalidChar;
+        return containsInvalidChar;
     },
 
     /**
@@ -258,8 +273,11 @@ const FormValidator = {
                     case 'podname':
                         result[m] = !this.isValidPODName(value)
                         break;
-                    case 'phone':
-                        result[m] = !this.isValidPhoneNumber(value)
+                    case 'phone-digits':
+                        result[m] = !this.containsTenDigits(value)
+                        break;
+                    case 'phone-chars':
+                        result[m] = this.containsInvalidChars(value)
                         break;
                     case 'password':
                         result[m] = !this.isValidPassword(value)

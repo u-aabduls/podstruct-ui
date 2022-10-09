@@ -232,11 +232,9 @@ class Register extends Component {
                                             || this.hasError('formRegister', 'firstName', 'maxlen')
                                             || this.hasError('formRegister', 'firstName', 'contains-alpha')
                                             || this.hasError('formRegister', 'firstName', 'name')
-                                            || this.hasError('formRegister', 'firstName', 'begin-end-spacing')
-                                            || this.hasError('formRegister', 'firstName', 'consecutive-spacing')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
+                                        data-validate='["required", "maxlen", "contains-alpha", "name"]'
                                         data-param='50'
                                         value={this.state.formRegister.firstName}
                                     />
@@ -249,8 +247,6 @@ class Register extends Component {
                                     {this.hasError('formRegister', 'firstName', 'maxlen') && <span className="invalid-feedback">First name must not have more than 50 characters</span>}
                                     {this.hasError('formRegister', 'firstName', 'contains-alpha') && <span className="invalid-feedback">First name must contain at least one alpha character</span>}
                                     {this.hasError('formRegister', 'firstName', 'name') && <span className="invalid-feedback">First name must contain alpha, apostrophe, or hyphen characters only</span>}
-                                    {this.hasError('formRegister', 'firstName', 'begin-end-spacing') && <span className="invalid-feedback">First name must not begin or end with a space character</span>}
-                                    {this.hasError('formRegister', 'firstName', 'consecutive-spacing') && <span className="invalid-feedback">First name must not contain consecutive space characters</span>}
                                 </div>
                             </div>
                             <div className="form-group">
@@ -267,11 +263,9 @@ class Register extends Component {
                                             || this.hasError('formRegister', 'lastName', 'maxlen')
                                             || this.hasError('formRegister', 'lastName', 'contains-alpha')
                                             || this.hasError('formRegister', 'lastName', 'name')
-                                            || this.hasError('formRegister', 'lastName', 'begin-end-spacing')
-                                            || this.hasError('formRegister', 'lastName', 'consecutive-spacing')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
+                                        data-validate='["required", "maxlen", "contains-alpha", "name"]'
                                         data-param='50'
                                         value={this.state.formRegister.lastName}
                                     />
@@ -284,8 +278,6 @@ class Register extends Component {
                                     {this.hasError('formRegister', 'lastName', 'maxlen') && <span className="invalid-feedback">Last name must have not have more than 50 characters</span>}
                                     {this.hasError('formRegister', 'lastName', 'contains-alpha') && <span className="invalid-feedback">Last name must contain at least one alpha character</span>}
                                     {this.hasError('formRegister', 'lastName', 'name') && <span className="invalid-feedback">Last name must contain alpha, apostrophe, or hyphen characters only</span>}
-                                    {this.hasError('formRegister', 'lastName', 'begin-end-spacing') && <span className="invalid-feedback">Last name must not begin or end with a space character</span>}
-                                    {this.hasError('formRegister', 'lastName', 'consecutive-spacing') && <span className="invalid-feedback">Last name must not contain consecutive space characters</span>}
                                 </div>
                             </div>
                             <div className="form-group">
@@ -321,10 +313,11 @@ class Register extends Component {
                                         placeholder="(XXX) XXX-XXXX"
                                         invalid={
                                             this.hasError('formRegister', 'phone', 'required')
-                                            || this.hasError('formRegister', 'phone', 'phone')
+                                            || this.hasError('formRegister', 'phone', 'phone-digits')
+                                            || this.hasError('formRegister', 'phone', 'phone-chars')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "phone"]'
+                                        data-validate='["required", "phone-digits", "phone-chars"]'
                                         data-param='10'
                                         value={this.state.formRegister.phone}
                                     />
@@ -334,7 +327,8 @@ class Register extends Component {
                                         </span>
                                     </div>
                                     {this.hasError('formRegister', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
-                                    {this.hasError('formRegister', 'phone', 'phone') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
+                                    {this.hasError('formRegister', 'phone', 'phone-digits') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
+                                    {this.hasError('formRegister', 'phone', 'phone-chars') && <span className="invalid-feedback">Phone number must only contain digits 0-9, () or -</span>}
                                 </div>
                             </div>
                             <div className="form-group">

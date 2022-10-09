@@ -113,9 +113,10 @@ class PasswordReset extends Component {
                         <form name="formPasswordReset" onSubmit={this.onSubmit}>
                             <p className="text-left">Enter the verification code and your new password. If the verification code matches, your password will be reset.</p>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="resetInputEmail1">Verification code</label>
+                                <label className="text-muted" htmlFor="id-email">Verification code</label>
                                 <div className="input-group with-focus">
                                     <Input
+                                        id="id-email"
                                         name="verificationCode"
                                         className="form-control border-right-0" 
                                         type="text" 
@@ -142,7 +143,7 @@ class PasswordReset extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="resetInputEmail1">New password</label>
+                                <label className="text-muted" htmlFor="id-password">New password</label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="password"
@@ -173,10 +174,11 @@ class PasswordReset extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="resetInputEmail1">Confirm password</label>
+                                <label className="text-muted" htmlFor="id-passwordConfirm">Confirm password</label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="password"
+                                        id="id-passwordConfirm"
                                         name="confirmedPassword"
                                         className="border-right-0"
                                         placeholder="Retype password"
