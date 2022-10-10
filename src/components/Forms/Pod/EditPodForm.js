@@ -120,6 +120,7 @@ class EditPodForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully edited pod",
+                    confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
                 var res = getPod(this.state.pod.id)

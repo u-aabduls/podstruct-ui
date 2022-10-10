@@ -155,6 +155,7 @@ class AddUserForm extends Component {
                     this.toggleModal()
                     Swal.fire({
                         title: "Successfully added " + successCount + " user(s)",
+                        confirmButtonColor: "#5d9cec",
                         icon: "success",
                     })
                     var res = getUsers(this.state.pod.id, 0, 10, "")

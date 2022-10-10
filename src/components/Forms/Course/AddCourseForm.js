@@ -144,13 +144,12 @@ class AddCourseForm extends Component {
             "endTime": this.state.formAddCourse.endTime
         };
 
+        if (this.state.formAddCourse.teacher) {
+            payload.teacher = this.state.formAddCourse.teacher
+        }
         if (this.state.formAddCourse.description) {
             payload.description = this.state.formAddCourse.description
         }
-
-        // if (this.state.formAddCourse.teacher) {
-        //     payload.teacher = this.state.formAddCourse.teacher
-        // }
 
         return JSON.stringify(payload);
     }
@@ -223,6 +222,7 @@ class AddCourseForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully created course",
+                    confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
                 var res = getCourses(this.state.selectedPod, "")

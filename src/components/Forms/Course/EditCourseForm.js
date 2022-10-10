@@ -126,7 +126,7 @@ class EditCourseForm extends Component {
             "endTime": this.state.formEditCourse.endTime
         };
 
-        if (this.state.formAddCourse.teacher) {
+        if (this.state.formEditCourse.teacher) {
             payload.teacher = this.state.formEditCourse.teacher
         }
         if (this.state.formEditCourse.description) {
@@ -198,6 +198,7 @@ class EditCourseForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully edited course",
+                    confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
                 var res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)

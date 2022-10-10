@@ -115,6 +115,7 @@ class AddAnnouncementForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully added announcement",
+                    confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
                 this.state.course ?
