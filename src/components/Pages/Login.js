@@ -107,7 +107,7 @@ class Login extends Component {
                         </a>
                     </div>
                     <div className="card-body">
-                        <p className="text-center py-2">SIGN IN TO CONTINUE - Does that actually work? Let's find out</p>
+                        <p className="text-center py-2">SIGN IN TO CONTINUE</p>
                         <form className="mb-3" name="formLogin" onSubmit={this.onSubmit}>
                             <div className="form-group">
                                 <div className="input-group with-focus">
