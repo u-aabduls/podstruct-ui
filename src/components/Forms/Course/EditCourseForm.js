@@ -126,13 +126,12 @@ class EditCourseForm extends Component {
             "endTime": this.state.formEditCourse.endTime
         };
 
+        if (this.state.formAddCourse.teacher) {
+            payload.teacher = this.state.formEditCourse.teacher
+        }
         if (this.state.formEditCourse.description) {
             payload.description = this.state.formEditCourse.description
         }
-
-        // if (this.state.formAddCourse.teacher) {
-        //     payload.teacher = this.state.formEditCourse.teacher
-        // }
 
         return JSON.stringify(payload);
     }
