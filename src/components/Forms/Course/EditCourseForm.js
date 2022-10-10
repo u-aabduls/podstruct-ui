@@ -392,7 +392,7 @@ class EditCourseForm extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Edit Course</Button>{' '}
+                        <Button color="primary" type="submit">Edit</Button>{' '}
                     </ModalFooter>
                 </form>
             </Modal>
