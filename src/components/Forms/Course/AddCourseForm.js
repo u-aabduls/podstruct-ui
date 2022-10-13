@@ -234,6 +234,7 @@ class AddCourseForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
+                    confirmButtonColor: "#5d9cec",
                     text: result.message
                 })
             }

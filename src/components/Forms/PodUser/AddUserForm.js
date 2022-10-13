@@ -165,6 +165,7 @@ class AddUserForm extends Component {
                     Swal.fire({
                         title: "Error, Successfully added " + successCount + " user(s)",
                         icon: "error",
+                        confirmButtonColor: "#5d9cec",
                         text: errorMessage
                     })
                 }
