@@ -126,6 +126,9 @@ class EditCourseForm extends Component {
             "endTime": this.state.formEditCourse.endTime
         };
 
+        if (this.state.formEditCourse.teacher) {
+            payload.teacher = this.state.formEditCourse.teacher
+        }
         if (this.state.formEditCourse.description) {
             payload.description = this.state.formEditCourse.description
         }
@@ -199,6 +202,7 @@ class EditCourseForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully edited course",
+                    confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
                 var res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)
@@ -208,6 +212,7 @@ class EditCourseForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
+                    confirmButtonColor: "#5d9cec",
                     text: res.message
                 })
             }
@@ -392,7 +397,7 @@ class EditCourseForm extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Edit Course</Button>{' '}
+                        <Button color="primary" type="submit">Edit</Button>{' '}
                     </ModalFooter>
                 </form>
             </Modal>

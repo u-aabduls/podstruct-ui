@@ -30,12 +30,16 @@ const FormValidator = {
 
     /**
      * Returns true iff:
-     *     1) input contains at least 1 alpha character
+     *     1) input contains at least 1 alpha character OR is empty
      */
     containsAlphaChar(input) {
         const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
         var i = input.length;
+
+        if (i == 0) {
+            return true;
+        }
         input = input.toUpperCase();
         while (i--) {
             var char = input.charAt(i);

@@ -170,6 +170,7 @@ class AddUserForm extends Component {
                     this.toggleModal()
                     Swal.fire({
                         title: "Successfully added " + successCount + " user(s)",
+                        confirmButtonColor: "#5d9cec",
                         icon: "success",
                     })
                     var params = this.state.getUserParams.users
@@ -182,6 +183,7 @@ class AddUserForm extends Component {
                     Swal.fire({
                         title: "Error, Successfully added " + successCount + " user(s)",
                         icon: "error",
+                        confirmButtonColor: "#5d9cec",
                         text: errorMessage
                     })
                 }

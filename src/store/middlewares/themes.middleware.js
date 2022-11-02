@@ -24,8 +24,13 @@ const injectStylesheet = stylesheet => {
     Export this method to talk directly with the middleware
 */
 export const updateTheme = state => {
-    if(state.theme.path !== '')
+    const DEFAULT_THEME = "themes/theme-a.css";
+    if(state.theme.path !== ''){
         injectStylesheet(state.theme.path)
+    }
+    else {
+        injectStylesheet(DEFAULT_THEME);
+    }
 }
 
 /*
