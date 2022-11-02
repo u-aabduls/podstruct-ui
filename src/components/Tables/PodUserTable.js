@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import {
     Button,
-    Table
+    Table,
+    ButtonDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
 } from 'reactstrap';
-import { getUsers } from '../../connectors/PodUser';
+import { getUsers, deleteUser } from '../../connectors/PodUser';
 
 
 class PodUserTable extends Component {
@@ -12,126 +16,179 @@ class PodUserTable extends Component {
         privileges: "owner",
         pod: this.props.pod,
         users: [],
-        userPage: 0,
-        userSize: 10,
+        pending: [],
+        getUserParams: {
+            users: {
+                page: 0,
+                size: 10,
+                sort: '',
+                role: '',
+                inviteStatus: 'ACCEPTED'
+            },
+            pending: {
+                page: 0,
+                size: 10,
+                sort: '',
+                role: '',
+                inviteStatus: 'INVITED'
+            }
+        },
         sortTypes: {
             asc: 'sort-up',
             desc: 'sort-down',
             default: 'sort',
         },
         currentSort: {
-            fname: 'default',
-            lname: 'default',
-            role: 'default',
+            users: {
+                fname: 'default',
+                lname: 'default',
+                role: 'default',
+            },
+            pending: {
+                fname: 'default',
+                lname: 'default',
+                role: 'default',
+            }
         },
-        selectedSort: ''
     }
 
-    nextUserPage = () => {
-        if (this.state.users.length >= this.state.userSize) {
-            var stateCopy = this.state
-            var res = getUsers(this.state.pod.id, this.state.userPage + 1, this.state.userSize, this.state.selectedSort)
+    toggleDD = dd => {
+        this.setState({
+            [dd]: !this.state[dd]
+        })
+    }
+
+    deleteUser = (username) => {
+        var stateCopy = this.state
+        var res = deleteUser(this.state.pod.id, username)
+        if (res.isSuccess) {
+            var params = this.state.getUserParams.pending
+            var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
             if (res.isSuccess) {
-                stateCopy.users = res.data.users
-                stateCopy.userPage = this.state.userPage + 1
+                stateCopy.pending = res.data.users
                 this.setState(stateCopy)
             }
         }
     }
 
-    prevUserPage = () => {
-        if (this.state.userPage) {
+    nextUserPage = (table) => {
+        if (this.state[table].length >= this.state.getUserParams[table].size) {
             var stateCopy = this.state
-            var res = getUsers(this.state.pod.id, this.state.userPage - 1, this.state.userSize, this.state.selectedSort)
+            var params = this.state.getUserParams[table]
+            var res = getUsers(this.state.pod.id, params.page + 1, params.size, params.sort, params.role, params.inviteStatus)
             if (res.isSuccess) {
-                stateCopy.users = res.data.users
-                stateCopy.userPage = this.state.userPage - 1
+                stateCopy[table] = res.data.users
+                stateCopy.getUserParams[table].page = this.state.getUserParams[table].page + 1
                 this.setState(stateCopy)
             }
         }
     }
 
-    onSortChange = (header) => {
-        const currentSort = this.state.currentSort;
-        var nextSort;
+    prevUserPage = (table) => {
+        if (this.state.getUserParams[table].page) {
+            var stateCopy = this.state
+            var params = this.state.getUserParams[table]
+            var res = getUsers(this.state.pod.id, params.page - 1, params.size, params.sort, params.role, params.inviteStatus)
+            if (res.isSuccess) {
+                stateCopy[table] = res.data.users
+                stateCopy.getUserParams[table].page = this.state.getUserParams[table].page - 1
+                this.setState(stateCopy)
+            }
+        }
+    }
+
+    onSortChange = (table, header) => {
+        var nextSort, res, getUserParams, currentSort;
+        getUserParams = this.state.getUserParams[table];
+        currentSort = this.state.currentSort[table];
+        if (currentSort[header] === 'desc') nextSort = 'asc';
+        else if (currentSort[header] === 'asc') nextSort = 'default';
+        else if (currentSort[header] === 'default') nextSort = 'desc';
         switch (header) {
-            case "fname":
-                if (currentSort[header] === 'desc') nextSort = 'asc';
-                else if (currentSort[header] === 'asc') nextSort = 'default';
-                else if (currentSort[header] === 'default') nextSort = 'desc';
-                var res;
-                var selectedSort;
-                if (nextSort == 'default') selectedSort = '';
-                else selectedSort = "firstName," + nextSort;
-                res = getUsers(this.state.pod.id, this.state.userPage, this.state.userSize, selectedSort)
-                this.setState({
-                    users: res.data.users,
-                    currentSort: {
-                        fname: nextSort,
-                        lname: 'default',
-                        role: 'default',
-                    },
-                    selectedSort: selectedSort
-                });
-                break;
             case "lname":
-                if (currentSort[header] === 'desc') nextSort = 'asc';
-                else if (currentSort[header] === 'asc') nextSort = 'default';
-                else if (currentSort[header] === 'default') nextSort = 'desc';
-                var res;
-                var selectedSort;
-                if (nextSort == 'default') selectedSort = '';
-                else selectedSort = "lastName," + nextSort;
-                res = getUsers(this.state.pod.id, this.state.userPage, this.state.userSize, selectedSort)
+                if (nextSort === 'default') getUserParams.sort = '';
+                else getUserParams.sort = "lastName," + nextSort;
+                var params = getUserParams
+                res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 this.setState({
-                    users: res.data.users,
-                    currentSort: {
-                        fname: 'default',
-                        lname: nextSort,
-                        role: 'default',
+                    [table]: res.data.users,
+                    getUserParams: {
+                        ...this.state.getUserParams,
+                        [table]: {
+                            ...this.state.getUserParams[table],
+                            sort: getUserParams.sort
+                        }
                     },
-                    selectedSort: selectedSort
+                    currentSort: {
+                        ...this.state.currentSort,
+                        [table]: {
+                            lname: nextSort,
+                            role: 'default'
+                        },
+
+                    }
                 });
                 break;
             case "role":
-                if (currentSort[header] === 'desc') nextSort = 'asc';
-                else if (currentSort[header] === 'asc') nextSort = 'default';
-                else if (currentSort[header] === 'default') nextSort = 'desc';
-                var res;
-                var selectedSort;
-                if (nextSort == 'default') selectedSort = '';
-                else selectedSort = "role," + nextSort;
-                res = getUsers(this.state.pod.id, this.state.userPage, this.state.userSize, selectedSort)
+                if (nextSort === 'default') getUserParams.sort = '';
+                else getUserParams.sort = "role," + nextSort;
+                var params = getUserParams
+                res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 this.setState({
-                    users: res.data.users,
-                    currentSort: {
-                        fname: 'default',
-                        lname: 'default',
-                        role: nextSort,
+                    [table]: res.data.users,
+                    getUserParams: {
+                        ...this.state.getUserParams,
+                        [table]: {
+                            ...this.state.getUserParams[table],
+                            sort: getUserParams.sort
+                        }
                     },
-                    selectedSort: selectedSort
+                    currentSort: {
+                        ...this.state.currentSort,
+                        [table]: {
+                            lname: 'default',
+                            role: nextSort,
+                        },
+
+                    }
                 });
                 break;
         }
-
     }
 
     componentDidMount() {
         var stateCopy = this.state
-        var res = getUsers(this.state.pod.id, 0, this.state.userSize, this.state.selectedSort)
+        var params = this.state.getUserParams.users
+        var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
         if (res.isSuccess) {
             stateCopy.users = res.data.users
             this.setState(stateCopy)
+        }
+        params = this.state.getUserParams.pending
+        res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+        if (res.isSuccess) {
+            stateCopy.pending = res.data.users
+            this.setState(stateCopy)
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.users !== prevProps.users) {
+            this.setState({ users: this.props.users })
+        }
+        if (this.props.pending !== prevProps.pending) {
+            this.setState({ pending: this.props.pending })
         }
     }
 
     render() {
         return (
             <div>
-                <Table hover responsive ordering>
+                <h4 className="mt-5">Users</h4>
+                <Table hover responsive ordering striped>
                     <thead>
                         <tr>
-                            <th onClick={() => this.onSortChange("fname")}>
+                            {/* <th onClick={() => this.onSortChange("fname")}>
                                 First Name
                                 <i className={`fas fa-${this.state.sortTypes[this.state.currentSort.fname]} float-right`} />
                             </th>
@@ -139,41 +196,151 @@ class PodUserTable extends Component {
                                 Last Name
                                 <i className={`fas fa-${this.state.sortTypes[this.state.currentSort.lname]} float-right`} />
                             </th>
-                            <th>Email</th>
-                            <th onClick={() => this.onSortChange("role")}>
+                            <th>Email</th> */}
+                            <th onClick={() => this.onSortChange('users', 'lname')}>
+                                User
+                                <i className={`fas fa-${this.state.sortTypes[this.state.currentSort.users.lname]} float-right`} />
+                            </th>
+                            <th onClick={() => this.onSortChange('users', 'role')}>
                                 Role
-                                <i className={`fas fa-${this.state.sortTypes[this.state.currentSort.role]} float-right`} />
+                                <i className={`fas fa-${this.state.sortTypes[this.state.currentSort.users.role]} float-right`} />
                             </th>
                         </tr>
                     </thead>
-                    {this.state.users.length > 0 &&
-                        this.state.users.map((user) => {
+                    {this.state.users.length > 0 ?
+                        this.state.users.map((user, i) => {
                             return (
                                 <tbody>
                                     <tr>
+                                        {/* <td>
+                                                {user.firstName}
+                                            </td>
+                                            <td>
+                                                {user.lastName}
+                                            </td>
+                                            <td>
+                                                {user.username}
+                                            </td> */}
                                         <td>
-                                            {user.firstName}
+                                            {user.firstName} {user.lastName}
+                                            <br />
+                                            <small>{user.username}</small>
                                         </td>
                                         <td>
-                                            {user.lastName}
+                                            {<ButtonDropdown isOpen={this.state[`ddRole${i}`]} toggle={() => this.toggleDD(`ddRole${i}`)}>
+                                                <DropdownToggle disabled={user.role === "ROLE_ADMIN"} caret size="sm" style={{ width: "130px" }}>
+                                                    {user.role}
+                                                </DropdownToggle>
+                                                <DropdownMenu>
+                                                    {user.role === "ROLE_STUDENT" ?
+                                                        <DropdownItem>Teacher</DropdownItem>
+                                                        : null}
+                                                    {user.role === "ROLE_TEACHER" ?
+                                                        <DropdownItem>Student</DropdownItem>
+                                                        : null}
+                                                </DropdownMenu>
+                                            </ButtonDropdown>}
                                         </td>
-                                        <td>
-                                            {user.username}
-                                        </td>
-                                        <td>
-                                            {user.role}
+                                        <td className="buttons">
+                                            {this.state.privileges === "owner" ?
+                                                <div className='button-container'>
+                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user.username)}>
+                                                        <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                    </Button>
+                                                </div>
+                                                : null
+                                            }
                                         </td>
                                     </tr>
                                 </tbody>
                             )
                         }
                         )
-                    }
+                        : null}
                 </Table>
-                <Button color="secondary" className="btn float-right mt-3" size="sm" onClick={this.nextUserPage}>
+                <div>
+                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={() => this.nextUserPage('users')}>
+                        <span><i className="fa fa-chevron-right"></i></span>
+                    </Button>
+                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={() => this.prevUserPage('users')}>
+                        <span><i className="fa fa-chevron-left"></i></span>
+                    </Button>
+                </div>
+                <h4 className="mt-5">Pending Invites</h4>
+                <Table hover responsive ordering striped>
+                    <thead>
+                        <tr>
+                            {/* <th onClick={() => this.onSortChange("fname")}>
+                                First Name
+                                <i className={`fas fa-${this.state.sortTypes[this.state.currentSort.fname]} float-right`} />
+                            </th>
+                            <th onClick={() => this.onSortChange("lname")}>
+                                Last Name
+                                <i className={`fas fa-${this.state.sortTypes[this.state.currentSort.lname]} float-right`} />
+                            </th>
+                            <th>Email</th> */}
+                            {/* <th onClick={() => this.onSortChange('pending', 'lname')}> */}
+                            <th>
+                                User
+                                {/* <i className={`fas fa-${this.state.sortTypes[this.state.currentSort.pending.lname]} float-right`} /> */}
+                            </th>
+                            <th onClick={() => this.onSortChange('pending', 'role')}>
+                                Role
+                                <i className={`fas fa-${this.state.sortTypes[this.state.currentSort.pending.role]} float-right`} />
+                            </th>
+                        </tr>
+                    </thead>
+                    {this.state.pending.length > 0 ?
+                        this.state.pending.map((user, i) => {
+                            return (
+                                <tbody>
+                                    <tr>
+                                        {/* <td>
+                                                {user.firstName}
+                                            </td>
+                                            <td>
+                                                {user.lastName}
+                                            </td>
+                                            <td>
+                                                {user.username}
+                                            </td> */}
+                                        <td>
+                                            {user.firstName} {user.lastName}
+                                            {user.username}
+                                        </td>
+                                        <td>
+                                            {user.role}
+                                        </td>
+                                        <td className="buttons">
+                                            {this.state.privileges === "owner" ?
+                                                <div className='button-container'>
+                                                    <Button className="btn btn-secondary btn-sm" onClick={() => this.deleteUser(user.username)}>
+                                                        Resend Invite
+                                                    </Button>
+                                                </div>
+                                                : null
+                                            }
+                                        </td>
+                                        <td className="buttons">
+                                            {this.state.privileges === "owner" ?
+                                                <div className='button-container'>
+                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user.username)}>
+                                                        Revoke Invite
+                                                    </Button>
+                                                </div>
+                                                : null
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            )
+                        })
+                        : null}
+                </Table >
+                <Button color="secondary" className="btn float-right mt-3" size="sm" onClick={() => this.nextUserPage('pending')}>
                     <span><i className="fa fa-chevron-right"></i></span>
                 </Button>
-                <Button color="secondary" className="btn float-right mt-3" size="sm" onClick={this.prevUserPage}>
+                <Button color="secondary" className="btn float-right mt-3" size="sm" onClick={() => this.prevUserPage('pending')}>
                     <span><i className="fa fa-chevron-left"></i></span>
                 </Button>
             </div>

@@ -18,9 +18,11 @@ import {
     NavItem,
     NavLink,
 } from 'reactstrap';
+import { getPod } from '../../../connectors/Pod';
 import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
 import EditPodForm from '../../Forms/Pod/EditPodForm';
 import AddUserForm from '../../Forms/PodUser/AddUserForm';
+import InvitedPodForm from '../../Forms/PodUser/InvitedPodForm';
 import PodUserTable from '../../Tables/PodUserTable';
 import PodAnnouncementsTable from '../../Tables/PodAnnouncementsTable';
 
@@ -29,6 +31,8 @@ class PodDetail extends Component {
     state = {
         privileges: "owner",
         pod: this.props.location.state,
+        users: [],
+        pending: [],
         editModal: false,
         annModal: false,
         userModal: false,
@@ -84,17 +88,31 @@ class PodDetail extends Component {
         }
     }
 
-    updateOnUserAdd = (res) => {
-        if (res.isSuccess) {
+    updateOnUserAdd = (resUser, resPending) => {
+        if (resUser.isSuccess && resPending.isSuccess) {
             this.setState({
-                users: res.data.users,
+                users: resUser.data.users,
+                pending: resPending.data.users,
             })
+        }
+    }
+
+    componentWillMount() {
+        var stateCopy = this.state;
+        var res = getPod(this.props.match.params.id)
+        if (res.isSuccess) {
+            stateCopy.pod = res.data
+            this.setState(stateCopy)
         }
     }
 
     render() {
         return (
             <ContentWrapper>
+                <InvitedPodForm
+                    pod={this.state.pod}
+                    modal={this.state.pod.inviteStatus === 'INVITED'}
+                />
                 <div className="content-heading">
                     <div>Pod Details
                         <small>Check out the details and edit a specific Pod</small>
@@ -106,8 +124,9 @@ class PodDetail extends Component {
                                 <em className="fas fa-ellipsis-v fa-lg"></em>
                             </DropdownToggle>
                             <DropdownMenu>
-                                {this.state.privileges === "owner" &&
+                                {this.state.privileges === "owner" ?
                                     <DropdownItem onClick={this.toggleEditModal}>Edit Pod</DropdownItem>
+                                    : null
                                 }
                             </DropdownMenu>
                         </Dropdown>
@@ -119,6 +138,10 @@ class PodDetail extends Component {
                         />
                     </div>
                 </div>
+                <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={() => this.props.history.goBack()}>
+                    <i className="fas fa-arrow-left fa-fw btn-icon"></i>
+                    Go back
+                </Button>
                 <Row noGutters={true}>
                     <Col>
                         {/* START card */}
@@ -221,13 +244,16 @@ class PodDetail extends Component {
                                             />
                                             <PodAnnouncementsTable
                                                 pod={this.state.pod}
+                                                announcements={this.state.announcements}
+                                                lastEvaluatedKey={this.state.lastEvaluatedKey}
                                             />
                                         </TabPane>
                                         <TabPane tabId="2">
-                                            {this.state.privileges === "owner" &&
+                                            {this.state.privileges === "owner" ?
                                                 <div className="float-right">
                                                     <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleUserModal}>Add User</Button>
                                                 </div>
+                                                : null
                                             }
                                             <AddUserForm
                                                 pod={this.state.pod}
@@ -237,6 +263,8 @@ class PodDetail extends Component {
                                             />
                                             <PodUserTable
                                                 pod={this.state.pod}
+                                                users={this.state.users}
+                                                pending={this.state.pending}
                                             />
                                         </TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>

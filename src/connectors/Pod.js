@@ -1,4 +1,5 @@
 import handleError from '../utils/ErrorHandler.js'
+import formatParams from '../utils/ParamFormatter.js';
 
 // private members
 var request = new XMLHttpRequest();
@@ -12,9 +13,11 @@ var authorizationToken = localStorage.getItem('token');
  * Public Methods
  ********************/
 
-function getPods() {
+function getPods(inviteStatus) {
     var endpointPathEXT = endpointPath
-    _initialize("GET", endpointPathEXT);
+    var params = {};
+    if (inviteStatus) params.inviteStatus = inviteStatus
+    _initialize("GET", endpointPathEXT + formatParams(params));
     request.send();
     return result;
 }

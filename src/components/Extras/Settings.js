@@ -3,202 +3,14 @@ import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, CustomInput, Button } from 'reactstrap';
 import EditableProfile from "./EditableProfile"
 import UnEditableProfile from './UnEditableProfile';
-import { updateUser, getUser } from "../../connectors/User";
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import FormValidator from '../Forms/FormValidator.js';
 
 class Settings extends Component {
 
     state = {
         activeTab: 'profile',
-        personalInformation: {
-            firstName: '',
-            lastName: '',
-            phone: '',
-            dob: {
-                month: '',
-                day: '',
-                year: '',
-                error: {
-                    isNull: false,
-                    isInFuture: false
-                }
-            },
-            address: '',
-            status: '',
-            userImageUrl: '',
-            email: ''
-        },
         editMode: false,
         editButtonText: "Edit",
-        errorMessage: null
-    }
-
-    backendInfo = {
-        firstName: '',
-        lastName: '',
-        phone: '',
-        dob: {
-            month: '',
-            day: '',
-            year: '',
-        },
-    };
-
-    changedInputStyling = {
-        color: '#f0ad4e',
-        width: '100%',
-        marginTop: '0.5rem',
-        fontSize: '80%'
-    }
-
-    setMonth = (month) => {
-        var stateCopy = this.state.personalInformation;
-        stateCopy.dob.month = month;
-        this.setState(stateCopy);
-    };
-
-    setDay = (day) => {
-        var stateCopy = this.state.personalInformation;
-        stateCopy.dob.day = day;
-        this.setState(stateCopy);
-    };
-
-    setYear = (year) => {
-        var stateCopy = this.state.personalInformation;
-        stateCopy.dob.year = year;
-        this.setState(stateCopy);
-    };
-
-    /**
-     * Validate input using onChange event
-     * @param  {String} formName The name of the form in the state object
-     * @return {Function} a function used for the event
-     */
-    validateOnChange = event => {
-        const input = event.target;
-        const form = input.form
-        const value = input.type === 'checkbox' ? input.checked : input.value;
-
-        const result = FormValidator.validate(input);
-
-        this.setState({
-            [form.name]: {
-                ...this.state[form.name],
-                [input.name]: value,
-                errors: {
-                    ...this.state[form.name].errors,
-                    [input.name]: result
-                }
-            }
-        });
-    }
-
-    validateDateOfBirth = event => {
-        var isNullDateOfBirth = this.state.personalInformation.dob.day === ''
-            || this.state.personalInformation.dob.month === ''
-            || this.state.personalInformation.dob.year === '';
-
-        if (!isNullDateOfBirth) {
-            var DOB = new Date(this.state.personalInformation.dob.year,
-                this.state.personalInformation.dob.month - 1,
-                this.state.personalInformation.dob.day),
-                today = new Date(),
-                isFutureDateOfBirth = DOB.getTime() > today.getTime();
-        }
-
-        var stateCopy = this.state.personalInformation;
-        stateCopy.dob.error.isNull = isNullDateOfBirth ? true : false;
-        stateCopy.dob.error.isInFuture = isFutureDateOfBirth ? true : false;
-        this.setState(stateCopy);
-        return isNullDateOfBirth || isFutureDateOfBirth;
-    }
-
-    /* Simplify error check */
-    hasError = (formName, inputName, method) => {
-        return this.state[formName] &&
-            this.state[formName].errors &&
-            this.state[formName].errors[inputName] &&
-            this.state[formName].errors[inputName][method]
-    }
-
-    /* Clean phone input */
-    cleanPhoneNumber = (phoneNumber) => {
-        return "+" + phoneNumber.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "");
-    }
-
-    /* Build payload */
-    constructRequestPayload = () => {
-        return JSON.stringify({
-            "firstName": this.state.personalInformation.firstName,
-            "lastName": this.state.personalInformation.lastName,
-            "birthDate": this.state.personalInformation.dob.year
-                + "-" + this.state.personalInformation.dob.month
-                + "-" + this.state.personalInformation.dob.day,
-            "phone": this.cleanPhoneNumber(this.state.personalInformation.phone),
-        })
-
-    }
-
-    displayToast = (toastMessage, toastType, toastPosition) => toast(toastMessage, {
-        type: toastType,
-        position: toastPosition
-    })
-
-    onEditChange = () => {
-        if (this.state.editMode) {
-            this.resetUserState();
-            this.setState({ editButtonText: "Edit" })
-            this.setState({ editMode: false })
-        }
-        else {
-            this.setState({ editButtonText: "Cancel" })
-            this.setState({ editMode: true })
-        }
-    }
-
-    onSubmit = e => {
-
-        const form = e.target;
-
-        const inputsToValidate = [
-            'firstName',
-            'lastName',
-            'phone',
-        ];
-
-        const inputs = [...form.elements].filter(i => inputsToValidate.includes(i.name))
-
-        const { errors, hasError } = FormValidator.bulkValidate(inputs)
-
-        this.setState({
-            [form.name]: {
-                ...this.state[form.name],
-                errors
-            }
-        });
-
-        const invalidDOB = this.validateDateOfBirth();
-
-        console.log((hasError || invalidDOB) ? 'Form has errors. Check!' : 'Form Submitted!')
-
-        if (!hasError && !invalidDOB) {
-            var result = updateUser(this.constructRequestPayload());
-            if (result.isSuccess) {
-                this.setState({ errorMessage: null });
-                this.displayToast(result.message, "success", "bottom-center");
-                this.setUserState();
-                this.setState({ editButtonText: "Edit" })
-                this.setState({ editMode: false })
-            } else {
-                this.setState({ errorMessage: result.message });
-            }
-
-        }
-
-        e.preventDefault();
     }
 
     toggleTab = tab => {
@@ -209,38 +21,17 @@ class Settings extends Component {
         }
     }
 
-    setUserState() {
-        var result = getUser();
-        if (result.isSuccess) {
-            var stateCopy = this.state;
-            var dob = result.data.birthDate.split("-");
-            stateCopy.personalInformation.email = result.data.username;
-            stateCopy.personalInformation.firstName = result.data.firstName;
-            stateCopy.personalInformation.lastName = result.data.lastName;
-            stateCopy.personalInformation.phone = result.data.phone.substring(1);
-            stateCopy.personalInformation.dob.month = dob[1];
-            stateCopy.personalInformation.dob.day = dob[2];
-            stateCopy.personalInformation.dob.year = dob[0];
-            stateCopy.personalInformation.address = result.data.address;
-            stateCopy.personalInformation.status = result.data.status;
-            this.backendInfo = JSON.parse(JSON.stringify(stateCopy.personalInformation));
-            this.setState(stateCopy);
+    onEditChange = () => {
+        if (this.state.editMode) {
+            // this.resetUserState();
+            this.setState({ editButtonText: "Edit" })
+            this.setState({ editMode: false })
+        }
+        else {
+            this.setState({ editButtonText: "Cancel" })
+            this.setState({ editMode: true })
         }
     }
-
-    resetUserState() {
-        this.state.personalInformation.firstName = this.backendInfo.firstName;
-        this.state.personalInformation.lastName = this.backendInfo.lastName;
-        this.state.personalInformation.phone = this.backendInfo.phone;
-        this.state.personalInformation.dob.month = this.backendInfo.dob.month;
-        this.state.personalInformation.dob.day = this.backendInfo.dob.day;
-        this.state.personalInformation.dob.year = this.backendInfo.dob.year;
-    }
-
-    componentDidMount() {
-        this.setUserState();
-    }
-
     render() {
         return (
             <ContentWrapper>
@@ -287,42 +78,16 @@ class Settings extends Component {
                                                 <Button color="info" className="btn float-right" onClick={this.onEditChange}>{this.state.editButtonText}</Button>
                                             </Col>
                                         </div>
-                                        <div className="card-body">
-                                            <form className="mb-3" name="personalInformation" onSubmit={this.onSubmit}>
-                                                {this.state.editMode ?
-                                                    <>
-                                                        <EditableProfile
-                                                            state={this.state}
-                                                            backendInfo={this.backendInfo}
-                                                            errorMessageStyling={this.errorMessageStyling}
-                                                            changedInputStyling={this.changedInputStyling}
-                                                            setDay={this.setDay}
-                                                            setMonth={this.setMonth}
-                                                            setYear={this.setYear}
-                                                            hasError={this.hasError}
-                                                            validateOnChange={this.validateOnChange}
-                                                        />
-                                                        <button className="btn btn-info" type="submit">Save Changes</button>
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <UnEditableProfile
-                                                            state={this.state}
-                                                            backendInfo={this.backendInfo}
-                                                            errorMessageStyling={this.errorMessageStyling}
-                                                            changedInputStyling={this.changedInputStyling}
-                                                            setDay={this.setDay}
-                                                            setMonth={this.setMonth}
-                                                            setYear={this.setYear}
-                                                            hasError={this.hasError}
-                                                            validateOnChange={this.validateOnChange}
-                                                        />
-                                                        <button className="btn btn-info" disabled>Save Changes</button>
-                                                        <ToastContainer />
-                                                    </>
-                                                }
-                                            </form>
-                                        </div>
+                                        {this.state.editMode ?
+                                            <EditableProfile
+                                                editMode={this.state.editMode}
+                                                toggleEdit={this.onEditChange}
+                                            />
+                                            :
+                                            <UnEditableProfile
+                                                editMode={this.state.editMode}
+                                            />
+                                        }
                                     </div>
                                 </TabPane>
                                 <TabPane tabId="account">

@@ -29,6 +29,7 @@ class CourseDetail extends Component {
     state = {
         privileges: "owner",
         course: this.props.location.state,
+        announcements: [],
         editModal: false,
         annModal: false,
         ddOpen: false,
@@ -67,6 +68,15 @@ class CourseDetail extends Component {
         }
     }
 
+    updateOnPodAnnouncementAdd = (res) => {
+        if (res.isSuccess) {
+            this.setState({
+                announcements: res.data.announcements,
+                lastEvaluatedKey: res.data.lastEvaluatedKey
+            })
+        }
+    }
+
     updateOnAnnouncementAdd = (res) => {
         if (res.isSuccess) {
             this.setState({
@@ -93,8 +103,9 @@ class CourseDetail extends Component {
                                 <em className="fas fa-ellipsis-v fa-lg"></em>
                             </DropdownToggle>
                             <DropdownMenu>
-                                {this.state.privileges === "owner" &&
+                                {this.state.privileges === "owner" ?
                                     <DropdownItem onClick={this.toggleEditModal}>Edit Course</DropdownItem>
+                                    : null
                                 }
                             </DropdownMenu>
                         </Dropdown>
@@ -106,6 +117,10 @@ class CourseDetail extends Component {
                         />
                     </div>
                 </div>
+                <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={() => this.props.history.goBack()}>
+                    <i className="fas fa-arrow-left fa-fw btn-icon"></i>
+                    Go back
+                </Button>
                 <Row noGutters={true}>
                     <Col>
                         {/* START card */}
@@ -204,6 +219,8 @@ class CourseDetail extends Component {
                                             />
                                             <CourseAnnouncementsTable
                                                 course={this.state.course}
+                                                announcements={this.state.announcements}
+                                                lastEvaluatedKey={this.state.lastEvaluatedKey}
                                             />
                                         </TabPane>
                                         <TabPane tabId="2">Integer lobortis commodo auctor.</TabPane>

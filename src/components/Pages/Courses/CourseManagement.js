@@ -5,7 +5,7 @@ import { Button, Input, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } f
 import PodSelector from '../../Common/PodSelector';
 import CourseCard from './CourseCard';
 import { getPods } from '../../../connectors/Pod';
-import { getCourses} from '../../../connectors/Course';
+import { getCourses } from '../../../connectors/Course';
 import AddCourseForm from '../../Forms/Course/AddCourseForm';
 
 const response = getPods()
@@ -18,6 +18,7 @@ class CourseManagement extends Component {
         pods: response.data,
         courses: [],
         addCourseModal: false,
+        rolePerms: '',
     }
 
     toggleAddCourseModal = () => {
@@ -40,7 +41,8 @@ class CourseManagement extends Component {
         var res = getCourses(pod, "")
         if (res.isSuccess) {
             this.setState({
-                courses: [...res.data]
+                courses: [...res.data.courses],
+                rolePerms: res.data.role
             })
         }
     };
@@ -93,10 +95,13 @@ class CourseManagement extends Component {
                     </div>
 
                     <div className="ml-auto">
-                        <button className="btn btn-success"
-                            onClick={this.toggleAddCourseModal}>
-                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course
-                        </button>
+                        {this.state.rolePerms != 'ROLE_STUDENT' ?
+                            <button className="btn btn-success"
+                                onClick={this.toggleAddCourseModal}>
+                                <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course
+                            </button>
+                            : null
+                        }
                         <AddCourseForm
                             pods={this.state.pods}
                             modal={this.state.addCourseModal}
