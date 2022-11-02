@@ -3,7 +3,7 @@ import formatParams from '../utils/ParamFormatter.js';
 
 // private members
 var request = new XMLHttpRequest();
-var result = {}, httpMethod = null;
+var result = {}, httpMethod = null, email = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
@@ -13,12 +13,14 @@ var authorizationToken = localStorage.getItem('token');
  * Public Methods
  ********************/
 
-function getUsers(podID, page, size, sort) {
+function getUsers(podID, page, size, sort, role, inviteStatus) {
     var endpointPathEXT = endpointPath + podID + '/users'
     var params = {};
     if (page) params.page = page
     if (size) params.size = size
     if (sort) params.sort = sort
+    if (role) params.role = role
+    if (inviteStatus) params.inviteStatus = inviteStatus
     _initialize("GET", endpointPathEXT + formatParams(params));
     request.send();
     return result;
@@ -31,9 +33,24 @@ function createUser(podID, requestBody) {
     return result;
 }
 
-function deleteUser(podID) {
+function deleteUser(podID, username) {
+    email = username;
     var endpointPathEXT = endpointPath + podID + '/users'
     _initialize("DELETE", endpointPathEXT);
+    request.send();
+    return result;
+}
+
+function denyInvite(podID) {
+    var endpointPathEXT = endpointPath + podID + '/users' + '/denyinvite'
+    _initialize("PUT", endpointPathEXT);
+    request.send();
+    return result;
+}
+
+function acceptInvite(podID) {
+    var endpointPathEXT = endpointPath + podID + '/users' + '/acceptinvite'
+    _initialize("PUT", endpointPathEXT);
     request.send();
     return result;
 }
@@ -62,6 +79,7 @@ function _initialize(method, endpointPathEXT) {
     request.setRequestHeader("accept", "*/*");
     request.setRequestHeader("Content-Type", "application/json");
     request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
+    if(email) request.setRequestHeader('username', email)
     request.onload = __execute;
 }
 
@@ -96,4 +114,4 @@ function __execute() {
     }
 }
 
-export { getUsers, createUser, deleteUser };
+export { getUsers, createUser, deleteUser, denyInvite, acceptInvite };

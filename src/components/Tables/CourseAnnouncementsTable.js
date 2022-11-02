@@ -49,13 +49,22 @@ class CourseAnnouncementsTable extends Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.announcements !== prevProps.announcements) {
+            this.setState({ announcements: this.props.announcements})
+        }
+        if (this.props.lastEvaluatedKey !== prevProps.lastEvaluatedKey) {
+            this.setState({ lastEvaluatedKey: this.props.lastEvaluatedKey})
+        }
+    }
+
     render() {
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <div>
                 <Table hover responsive>
-                    {this.state.announcements.length > 0 &&
+                    {this.state.announcements.length > 0 ?
                         this.state.announcements.map((announcement) => {
                             var date = new Date(announcement.date * 1000);
                             return (
@@ -80,12 +89,13 @@ class CourseAnnouncementsTable extends Component {
                                             <span>{announcement.message}</span>
                                         </td>
                                         <td className="buttons">
-                                            {this.state.privileges === "owner" &&
+                                            {this.state.privileges === "owner" ?
                                                 <div className='button-container'>
                                                     <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAnnouncement(announcement.date)}>
                                                         <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                                     </Button>
                                                 </div>
+                                                : null
                                             }
                                         </td>
                                     </tr>
@@ -93,12 +103,13 @@ class CourseAnnouncementsTable extends Component {
                             )
                         }
                         )
-                    }
+                        : null}
                 </Table>
-                {this.state.lastEvaluatedKey &&
+                {this.state.lastEvaluatedKey ?
                     <div>
                         <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
                     </div>
+                    : null
                 }
             </div>
         )

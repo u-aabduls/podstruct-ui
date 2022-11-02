@@ -70,13 +70,15 @@ class Login extends Component {
             var result = loginUser(this.constructRequestPayload());
             if (localStorage.getItem('token') && result.isSuccess){
                 this.setState({errorMessage: null});
-                this.props.history.push('/dashboard');
+                if (/(?:\/pod\b\/details\b)(?:\/[-\w.]+)/.test(document.referrer)) {
+                    window.location.href = document.referrer
+                 }
+                 else this.props.history.push('/dashboard');
             } 
             else {
                 this.setState({errorMessage: result.message});
             }
         }
-
         e.preventDefault()
     }
 

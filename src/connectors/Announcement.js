@@ -18,7 +18,6 @@ function getPodAnnouncements(podID, lastEvaluatedKey, pageSize) {
     var params = {};
     if (lastEvaluatedKey) params.lastEvaluatedKey = lastEvaluatedKey
     if (pageSize) params.pageSize = pageSize
-    console.log(formatParams(params))
     _initialize("GET", endpointPathEXT + formatParams(params));
     request.send();
     return result;
@@ -102,19 +101,19 @@ function __execute() {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched announcements."
+                result.message = "Successfully fetched announcement(s)"
                 break;
             case "POST":
-                result.message = "Successfully created announcement."
+                result.message = "Successfully created announcement"
                 break;
             case "PUT":
-                result.message = "Successfully edited announcement."
+                result.message = "Successfully edited announcement"
                 break;
             case "DELETE":
-                result.message = "Successfully deleted announcement."
+                result.message = "Successfully deleted announcement"
                 break;
             default:
-                result.message = "Successfully reached announcement endpoint.";
+                result.message = "Successfully reached announcement endpoint";
         }
     }
 }

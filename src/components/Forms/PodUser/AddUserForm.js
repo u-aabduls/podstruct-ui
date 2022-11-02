@@ -12,7 +12,6 @@ import PodSelector from '../../Common/PodSelector';
 import RoleSelector from '../../Common/RoleSelector';
 import Swal from 'sweetalert2';
 import FormValidator from '../FormValidator';
-import { responsiveArray } from 'antd/lib/_util/responsiveObserve';
 
 class AddUserForm extends Component {
 
@@ -27,6 +26,22 @@ class AddUserForm extends Component {
             }
         },
         pod: this.props.pod,
+        getUserParams: {
+            users: {
+                page: 0,
+                size: 10,
+                sort: '',
+                role: '',
+                inviteStatus: 'ACCEPTED'
+            },
+            pending: {
+                page: 0,
+                size: 10,
+                sort: '',
+                role: '',
+                inviteStatus: 'INVITED'
+            }
+        },
         modal: false,
     }
 
@@ -158,8 +173,11 @@ class AddUserForm extends Component {
                         confirmButtonColor: "#5d9cec",
                         icon: "success",
                     })
-                    var res = getUsers(this.state.pod.id, 0, 10, "")
-                    this.props.updateOnAdd(res)
+                    var params = this.state.getUserParams.users
+                    var resUsers = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                    params = this.state.getUserParams.pending
+                    var resPending = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                    this.props.updateOnAdd(resUsers, resPending)
                 }
                 else {
                     Swal.fire({

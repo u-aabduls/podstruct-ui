@@ -10,6 +10,15 @@ class PodManagement extends Component {
 
     state = {
         pods: [],
+        pendingPods: [],
+        getPodParams: {
+            accepted: {
+                inviteStatus: 'ACCEPTED'
+            },
+            pending: {
+                inviteStatus: 'INVITED'
+            }
+        },
         podCreate: {
             name: '',
             description: '',
@@ -141,12 +150,21 @@ class PodManagement extends Component {
     }
 
     componentDidMount() {
-        var result = getPods().data;
+        var params = this.state.getPodParams.accepted
+        var result = getPods(params.inviteStatus).data;
         if (result) {
             result.sort(function (a, b) {
                 return (a.podName).localeCompare(b.podName);
             })
             this.setState({ pods: result });
+        }
+        params = this.state.getPodParams.pending
+        result = getPods(params.inviteStatus).data;
+        if (result) {
+            result.sort(function (a, b) {
+                return (a.podName).localeCompare(b.podName);
+            })
+            this.setState({ pendingPods: result });
         }
     }
 
@@ -279,12 +297,13 @@ class PodManagement extends Component {
                         </Modal>
                     </div>
                 </div>
-                <Row>
-                    {this.state.pods.map(function (object, i) {
+                {this.state.pendingPods.length > 0 ? <h3>Pending Pods</h3> : null}
+                <Row className={`${this.state.pendingPods.length > 0 && "mb-5 pb-5"}`}>
+                    {this.state.pendingPods.map(function (object, i) {
                         return (
-                            object.active &&
-                            <Col key={i} xl="4" lg="6">
-                                {/* <PodCard
+                            object.active ?
+                                <Col key={i} xl="4" lg="6">
+                                    {/* <PodCard
                                     name={object.podName}
                                     description={object.podDescription}
                                     role={object.roleInPod}
@@ -295,10 +314,36 @@ class PodManagement extends Component {
                                     id={object.id}
                                     key={i}
                                 /> */}
-                                <PodCard
-                                    pod={object}
-                                />
-                            </Col>
+                                    <PodCard
+                                        pod={object}
+                                    />
+                                </Col>
+                                : null
+                        );
+                    })}
+                </Row>
+                {this.state.pods.length > 0 ? <h3>Accepted Pods</h3> : null}
+                <Row>
+                    {this.state.pods.map(function (object, i) {
+                        return (
+                            object.active ?
+                                <Col key={i} xl="4" lg="6">
+                                    {/* <PodCard
+                                    name={object.podName}
+                                    description={object.podDescription}
+                                    role={object.roleInPod}
+                                    courseCount={0}
+                                    studentCount={0}
+                                    action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] :
+                                        object.roleInPod === "ROLE_TEACHER" ? ["Manage"] : ["View"]}
+                                    id={object.id}
+                                    key={i}
+                                /> */}
+                                    <PodCard
+                                        pod={object}
+                                    />
+                                </Col>
+                                : null
                         );
                     })}
                 </Row>

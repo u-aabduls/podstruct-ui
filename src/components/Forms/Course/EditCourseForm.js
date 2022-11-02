@@ -92,10 +92,10 @@ class EditCourseForm extends Component {
     }
 
     validateSelectorsOnChange = e => {
-        var isNullPod = this.state.formAddCourse.selectedPod === '';
-        var isNullDay = this.state.formAddCourse.daysOfWeekInterval === '';
-        var isNullTime = this.state.formAddCourse.startTime === '' || this.state.formAddCourse.endTime === '';
-        var stateCopy = this.state.formAddCourse;
+        var isNullPod = this.state.formEditCourse.selectedPod === '';
+        var isNullDay = this.state.formEditCourse.daysOfWeekInterval === '';
+        var isNullTime = this.state.formEditCourse.startTime === '' || this.state.formEditCourse.endTime === '';
+        var stateCopy = this.state.formEditCourse;
         switch (e){
             case "pod":
                 stateCopy.selector.error.isNullPod = isNullPod ? true : false;
@@ -132,6 +132,10 @@ class EditCourseForm extends Component {
         if (this.state.formEditCourse.description) {
             payload.description = this.state.formEditCourse.description
         }
+
+        // if (this.state.formEditCourse.teacher) {
+        //     payload.teacher = this.state.formEditCourse.teacher
+        // }
 
         return JSON.stringify(payload);
     }

@@ -26,7 +26,6 @@ function createUser(requestBody) {
 
 function updateUser(requestBody) {
     _initialize("PUT");
-    request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
     request.send(requestBody);
     return result;
 }
@@ -40,15 +39,18 @@ function _initialize(method) {
     switch (method) {
         case "GET":
             request.open("GET", devServer + endpointPath, false);
+            request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
             break;
         case "POST":
             request.open("POST", devServer + endpointPath, false);
             break;
         case "PUT":
             request.open("PUT", devServer + endpointPath, false);
+            request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
             break;
         case "DELETE":
             request.open("DELETE", devServer + endpointPath, false);
+            request.setRequestHeader('Authorization', 'Bearer ' + authorizationToken)
             break;
     }
     request.setRequestHeader("accept", "*/*");
@@ -65,6 +67,7 @@ function __execute() {
     if (request.status >= 400) {
         result.isSuccess = false;
         result.message = handleError(request.status, data);
+        console.log(result.message)
     } else {
         result.isSuccess = true;
         result.data = data;
