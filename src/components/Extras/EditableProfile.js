@@ -226,7 +226,7 @@ class EditableProfile extends Component {
                         <CustomInput type="file" id="exampleCustomFileBrowser" name="customFile" />
                     </div>
                     <div className="form-group">
-                        <label className="text-muted" htmlFor="signupInputEmail1">Email address</label>
+                        <label className="text-muted" htmlFor="signupInputEmail">Email address</label>
                         <div className="input-group with-focus">
                             <Input
                                 type="email"
@@ -242,7 +242,7 @@ class EditableProfile extends Component {
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="text-muted" htmlFor="signupInputFirstName">First name</label>
+                        <label className="text-muted" htmlFor="id-firstName">First name</label>
                         <div className="input-group with-focus">
                             <Input
                                 type="text"
@@ -278,7 +278,7 @@ class EditableProfile extends Component {
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="text-muted" htmlFor="signupInputLastName">Last name</label>
+                        <label className="text-muted" htmlFor="id-lastName">Last name</label>
                         <div className="input-group with-focus">
                             <Input
                                 type="text"
@@ -314,7 +314,7 @@ class EditableProfile extends Component {
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="text-muted" htmlFor="signupInputPhone">Phone number</label>
+                        <label className="text-muted" htmlFor="id-phone">Phone number</label>
                         <div className="input-group with-focus">
                             <Input
                                 type="text"
@@ -371,7 +371,7 @@ class EditableProfile extends Component {
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="text-muted">Address</label>
+                        <label className="text-muted" htmlFor="address">Address</label>
                         <div className="input-group with-focus">
                             <Input
                                 type="text"

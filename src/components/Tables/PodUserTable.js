@@ -8,12 +8,15 @@ import {
     DropdownItem,
 } from 'reactstrap';
 import { getUsers, deleteUser } from '../../connectors/PodUser';
+import { resendInvite } from '../../connectors/PodUserInvite';
+import {isAdmin, isTeacher, isStudent} from '../../utils/PermissionChecker'
+import Swal from 'sweetalert2';
 
 
 class PodUserTable extends Component {
 
     state = {
-        privileges: "owner",
+        rolePerms: this.props.pod.roleInPod,
         pod: this.props.pod,
         users: [],
         pending: [],
@@ -56,6 +59,24 @@ class PodUserTable extends Component {
         this.setState({
             [dd]: !this.state[dd]
         })
+    }
+
+    resendInvite = (username) => {
+        var res = resendInvite(this.state.pod.id, username)
+        if (res.isSuccess) {
+            this.toggleModal()
+            Swal.fire({
+                title: "Resent Invitation",
+                icon: "success",
+            })
+        }
+        else {
+            Swal.fire({
+                title: "Error",
+                icon: "error",
+                text: res.message
+            })
+        }
     }
 
     deleteUser = (username) => {
@@ -228,21 +249,21 @@ class PodUserTable extends Component {
                                         </td>
                                         <td>
                                             {<ButtonDropdown isOpen={this.state[`ddRole${i}`]} toggle={() => this.toggleDD(`ddRole${i}`)}>
-                                                <DropdownToggle disabled={user.role === "ROLE_ADMIN"} caret size="sm" style={{ width: "130px" }}>
+                                                <DropdownToggle disabled={!isAdmin(this.state.rolePerms) || isAdmin(user.role)} caret size="sm" style={{ width: "130px" }}>
                                                     {user.role}
                                                 </DropdownToggle>
                                                 <DropdownMenu>
-                                                    {user.role === "ROLE_STUDENT" ?
+                                                    {isStudent(user.role) ?
                                                         <DropdownItem>Teacher</DropdownItem>
                                                         : null}
-                                                    {user.role === "ROLE_TEACHER" ?
+                                                    {isTeacher(user.role) ?
                                                         <DropdownItem>Student</DropdownItem>
                                                         : null}
                                                 </DropdownMenu>
                                             </ButtonDropdown>}
                                         </td>
                                         <td className="buttons">
-                                            {this.state.privileges === "owner" ?
+                                            {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
                                                     <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user.username)}>
                                                         <i className="fas fa-trash-alt fa-fw btn-icon"></i>
@@ -312,9 +333,9 @@ class PodUserTable extends Component {
                                             {user.role}
                                         </td>
                                         <td className="buttons">
-                                            {this.state.privileges === "owner" ?
+                                            {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm" onClick={() => this.deleteUser(user.username)}>
+                                                    <Button className="btn btn-secondary btn-sm" onClick={() => this.resendInvite(user.username)}>
                                                         Resend Invite
                                                     </Button>
                                                 </div>
@@ -322,7 +343,7 @@ class PodUserTable extends Component {
                                             }
                                         </td>
                                         <td className="buttons">
-                                            {this.state.privileges === "owner" ?
+                                            {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
                                                     <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user.username)}>
                                                         Revoke Invite

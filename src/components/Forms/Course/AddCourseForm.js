@@ -11,10 +11,12 @@ import {
 } from 'reactstrap';
 import PodSelector from '../../Common/PodSelector';
 import DaysOfWeekSelector from '../../Common/DaysOfWeekSelector';
+import TeacherSelector from '../../Common/TeacherSelector';
 import Datetime from 'react-datetime';
 import Swal from 'sweetalert2';
 import 'react-datetime/css/react-datetime.css';
 import { getCourses, createCourse } from '../../../connectors/Course';
+import { getUsers } from '../../../connectors/PodUser';
 import FormValidator from '../FormValidator';
 
 class AddCourseForm extends Component {
@@ -33,12 +35,20 @@ class AddCourseForm extends Component {
                 error: {
                     isNullPod: false,
                     isNullDay: false,
-                    isNullTime: false
+                    isNullTime: false,
+                    isNullTeacher: false,
                 }
             }
         },
+        getUserParams: {
+            page: 0,
+            size: 10,
+            sort: '',
+            role: 'TEACHER,ADMIN',
+            inviteStatus: 'ACCEPTED'
+        },
         pods: this.props.pods,
-        selectedPod: '',
+        teachers: [],
         modal: false
     }
 
@@ -65,7 +75,8 @@ class AddCourseForm extends Component {
                     error: {
                         isNullPod: false,
                         isNullDay: false,
-                        isNullTime: false
+                        isNullTime: false,
+                        sNullTeacher: false,
                     }
                 }
             },
@@ -77,7 +88,7 @@ class AddCourseForm extends Component {
      * @param  {String} formName The name of the form in the state object
      * @return {Function} a function used for the event
      */
-     validateOnChange = event => {
+    validateOnChange = event => {
         const input = event.target;
         const form = input.form
         const value = input.type === 'checkbox' ? input.checked : input.value;
@@ -96,23 +107,26 @@ class AddCourseForm extends Component {
         });
     }
 
-    validateSelectors = e => {
+    validateSelectors = event => {
         var isNullPod = this.state.formAddCourse.selectedPod === '';
         var isNullDay = this.state.formAddCourse.daysOfWeekInterval === '';
         var isNullTime = this.state.formAddCourse.startTime === '' || this.state.formAddCourse.endTime === '';
+        var isNullTeacher = this.state.formAddCourse.teacher === '';
 
         var stateCopy = this.state.formAddCourse;
         stateCopy.selector.error.isNullPod = isNullPod ? true : false;
         stateCopy.selector.error.isNullDay = isNullDay ? true : false;
         stateCopy.selector.error.isNullTime = isNullTime ? true : false;
+        stateCopy.selector.error.isNullTeacher = isNullTeacher ? true : false;
         this.setState(stateCopy);
-        return isNullPod || isNullDay || isNullTime;
+        return isNullPod || isNullDay || isNullTime || isNullTeacher;
     }
 
     validateSelectorsOnChange = e => {
         var isNullPod = this.state.formAddCourse.selectedPod === '';
         var isNullDay = this.state.formAddCourse.daysOfWeekInterval === '';
-        var isNullTime = this.state.formAddCourse.startTime === '' && this.state.formAddCourse.endTime === '';
+        var isNullTime = this.state.formAddCourse.startTime === '' || this.state.formAddCourse.endTime === '';
+        var isNullTeacher = this.state.formAddCourse.teacher === '';
         var stateCopy = this.state.formAddCourse;
         switch (e) {
             case "pod":
@@ -123,6 +137,9 @@ class AddCourseForm extends Component {
                 break;
             case "time":
                 stateCopy.selector.error.isNullTime = isNullTime ? true : false;
+                break;
+            case "teacher":
+                stateCopy.selector.error.isNullTeacher = isNullTeacher ? true : false;
                 break;
         }
         this.setState(stateCopy);
@@ -145,7 +162,7 @@ class AddCourseForm extends Component {
         };
 
         if (this.state.formAddCourse.teacher) {
-            payload.teacher = this.state.formAddCourse.teacher
+            payload.teacherEmailId = this.state.formAddCourse.teacher
         }
         if (this.state.formAddCourse.description) {
             payload.description = this.state.formAddCourse.description
@@ -156,9 +173,12 @@ class AddCourseForm extends Component {
 
 
     setFormPod = (pod) => {
-        var stateCopy = this.state.formAddCourse;
-        stateCopy.selectedPod = pod;
-        this.setState(stateCopy);
+        this.setState({
+            formAddCourse: {
+                ...this.state.formAddCourse,
+                selectedPod: pod,
+            },
+        });
     }
 
     setDays = (day) => {
@@ -186,6 +206,12 @@ class AddCourseForm extends Component {
         else {
             stateCopy.endTime = date.format("HH:mm:ss")
         }
+        this.setState(stateCopy);
+    }
+
+    setTeacher = (teacher) => {
+        var stateCopy = this.state.formAddCourse;
+        stateCopy.teacher = teacher
         this.setState(stateCopy);
     }
 
@@ -225,8 +251,10 @@ class AddCourseForm extends Component {
                     confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
-                var res = getCourses(this.state.selectedPod, "")
+                var res = getCourses(this.state.formAddCourse.selectedPod, "")
                 if (res.isSuccess) {
+                    console.log(res)
+                    console.log(this.state.formAddCourse.selectedPod)
                     this.props.updateOnAdd(res, this.state.formAddCourse.selectedPod)
                 }
             }
@@ -241,9 +269,17 @@ class AddCourseForm extends Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
         if (this.props.modal !== prevProps.modal) {
             this.setState({ modal: this.props.modal })
+        }
+        if (this.state.formAddCourse.selectedPod !== prevState.formAddCourse.selectedPod) {
+            if(!this.state.formAddCourse.selectedPod) return
+            var params = this.state.getUserParams
+            var res = getUsers(this.state.formAddCourse.selectedPod, params.page, params.size, params.sort, params.role, params.inviteStatus)
+            if (res.isSuccess) {
+                this.setState({ teachers: res.data.users })
+            }
         }
     }
 
@@ -260,17 +296,17 @@ class AddCourseForm extends Component {
                                     name="podSelector"
                                     pods={this.state.pods}
                                     hasError={this.state.formAddCourse.selector.error.isNullPod}
-                                    validate={this.validateSelectorsOnChange}
                                     setPod={(pod) => this.setFormPod(pod)}
                                     active="required"
                                 />
                                 {this.state.formAddCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="addCourseSubject">Course Subject</label>
+                                <label className="text-muted" htmlFor="id-courseSubject">Subject</label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="text"
+                                        id="id-courseSubject"
                                         name="subject"
                                         className="border-right-0"
                                         placeholder="Enter course subject"
@@ -332,37 +368,21 @@ class AddCourseForm extends Component {
                                 {this.state.formAddCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Time schedule is required</p>}
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="addCourseTeacher">Teacher</label>
-                                <div className="input-group with-focus">
-                                    <Input
-                                        type="text"
-                                        name="teacher"
-                                        className="border-right-0"
-                                        placeholder="Enter teacher's name"
-                                        invalid={
-                                            this.hasError('formAddCourse', 'teacher', 'maxlen')
-                                            || this.hasError('formAddCourse', 'teacher', 'contains-alpha')
-                                            || this.hasError('formAddCourse', 'teacher', 'name')
-                                        }
-                                        onChange={this.validateOnChange}
-                                        data-validate='["maxlen", "contains-alpha", "name"]'
-                                        data-param='50'
-                                        value={this.state.formAddCourse.teacher || ''} />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text text-muted bg-transparent border-left-0">
-                                            <em className="fa fa-book"></em>
-                                        </span>
-                                    </div>
-                                    {this.hasError('formAddCourse', 'teacher', 'maxlen') && <span className="invalid-feedback">Teacher must not have more than 50 characters</span>}
-                                    {this.hasError('formAddCourse', 'teacher', 'contains-alpha') && <span className="invalid-feedback">Teacher must contain at least one alpha character</span>}
-                                    {this.hasError('formAddCourse', 'teacher', 'name') && <span className="invalid-feedback">Teacher must contain alpha, apostrophe, or hyphen characters only</span>}
-                                </div>
+                                <label className="text-muted" htmlFor="id-teacher">Teacher</label>
+                                <TeacherSelector
+                                    name="teacherSelector"
+                                    teachers={this.state.teachers}
+                                    hasError={this.state.formAddCourse.selector.error.isNullTeacher}
+                                    validate={this.validateSelectorsOnChange}
+                                    setTeacher={this.setTeacher}
+                                />
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="addDescription">Course Description</label>
+                                <label className="text-muted" htmlFor="id-courseDescription">Description</label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="textarea"
+                                        id="id-courseDescription"
                                         name="description"
                                         className="border-right-0 no-resize"
                                         placeholder="Enter course description"

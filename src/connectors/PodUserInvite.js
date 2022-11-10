@@ -13,30 +13,24 @@ var authorizationToken = localStorage.getItem('token');
  * Public Methods
  ********************/
 
-function getUsers(podID, page, size, sort, role, inviteStatus) {
-    var endpointPathEXT = endpointPath + podID + '/users'
-    var params = {};
-    if (page) params.page = page
-    if (size) params.size = size
-    if (sort) params.sort = sort
-    if (role) params.role = role
-    if (inviteStatus) params.inviteStatus = inviteStatus
-    _initialize("GET", endpointPathEXT + formatParams(params));
+function acceptInvite(podID) {
+    var endpointPathEXT = endpointPath + podID + '/users' + '/invite'
+    _initialize("PUT", endpointPathEXT);
     request.send();
     return result;
 }
 
-function createUser(podID, requestBody) {
-    var endpointPathEXT = endpointPath + podID + '/users'
-    _initialize("POST", endpointPathEXT);
-    request.send(requestBody);
+function denyInvite(podID) {
+    var endpointPathEXT = endpointPath + podID + '/users' + '/invite'
+    _initialize("DELETE", endpointPathEXT);
+    request.send();
     return result;
 }
 
-function deleteUser(podID, username) {
+function resendInvite(podID, username) {
     email = username;
-    var endpointPathEXT = endpointPath + podID + '/users'
-    _initialize("DELETE", endpointPathEXT);
+    var endpointPathEXT = endpointPath + podID + '/users' + '/invite'
+    _initialize("POST", endpointPathEXT);
     request.send();
     return result;
 }
@@ -83,21 +77,21 @@ function __execute() {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched user(s)"
+                result.message = ""
                 break;
             case "POST":
-                result.message = "Successfully created user"
+                result.message = "Successfully sent invitation"
                 break;
             case "PUT":
-                result.message = "Successfully edited user"
+                result.message = "Successfully accepted invitation"
                 break;
             case "DELETE":
-                result.message = "Successfully deleted user"
+                result.message = "Successfully denied invitation"
                 break;
             default:
-                result.message = "Successfully reached podUser endpoint";
+                result.message = "Successfully reached podUser invitation endpoint";
         }
     }
 }
 
-export { getUsers, createUser, deleteUser};
+export {acceptInvite, denyInvite, resendInvite };

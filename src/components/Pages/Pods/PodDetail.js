@@ -25,11 +25,12 @@ import AddUserForm from '../../Forms/PodUser/AddUserForm';
 import InvitedPodForm from '../../Forms/PodUser/InvitedPodForm';
 import PodUserTable from '../../Tables/PodUserTable';
 import PodAnnouncementsTable from '../../Tables/PodAnnouncementsTable';
+import { isAdmin } from '../../../utils/PermissionChecker';
 
 class PodDetail extends Component {
 
     state = {
-        privileges: "owner",
+        rolePerms: this.props.location.state.roleInPod,
         pod: this.props.location.state,
         users: [],
         pending: [],
@@ -88,11 +89,10 @@ class PodDetail extends Component {
         }
     }
 
-    updateOnUserAdd = (resUser, resPending) => {
-        if (resUser.isSuccess && resPending.isSuccess) {
+    updateOnUserAdd = (res) => {
+        if (res.isSuccess) {
             this.setState({
-                users: resUser.data.users,
-                pending: resPending.data.users,
+                pending: res.data.users,
             })
         }
     }
@@ -124,7 +124,7 @@ class PodDetail extends Component {
                                 <em className="fas fa-ellipsis-v fa-lg"></em>
                             </DropdownToggle>
                             <DropdownMenu>
-                                {this.state.privileges === "owner" ?
+                                {isAdmin(this.state.rolePerms) ?
                                     <DropdownItem onClick={this.toggleEditModal}>Edit Pod</DropdownItem>
                                     : null
                                 }
@@ -146,7 +146,7 @@ class PodDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Pod Name</h4>
                                 <p className="text-primary font-weight-bold">{this.state.pod.podName}</p>
                             </div>
@@ -156,7 +156,7 @@ class PodDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Pod Description</h4>
                                 <p className="text-primary font-weight-bold">{this.state.pod.podDescription}</p>
                             </div>
@@ -166,7 +166,7 @@ class PodDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">My Role</h4>
                                 <p className="text-primary font-weight-bold">{this.state.pod.roleInPod}</p>
                             </div>
@@ -176,7 +176,7 @@ class PodDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Pod Owner</h4>
                                 <p className="text-primary font-weight-bold"></p>
                             </div>
@@ -186,11 +186,12 @@ class PodDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Contact Information</h4>
                                 <p className="text-primary font-weight-bold">
                                     Address: {this.state.pod.address}
-                                    <br></br>
+                                </p>
+                                <p className="text-primary font-weight-bold">
                                     Phone Number: {this.state.pod.phone}
                                 </p>
                             </div>
@@ -208,6 +209,7 @@ class PodDetail extends Component {
                                     <Nav tabs>
                                         <NavItem>
                                             <NavLink
+                                                href="#"
                                                 className={classnames({ active: this.state.activeTab === '1' })}
                                                 onClick={() => { this.toggleTab('1'); }}>
                                                 Announcements
@@ -215,6 +217,7 @@ class PodDetail extends Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
+                                                href="#"
                                                 className={classnames({ active: this.state.activeTab === '2' })}
                                                 onClick={() => { this.toggleTab('2'); }}>
                                                 Users
@@ -222,6 +225,7 @@ class PodDetail extends Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
+                                                href="#"
                                                 className={classnames({ active: this.state.activeTab === '3' })}
                                                 onClick={() => { this.toggleTab('3'); }}>
                                                 Courses
@@ -231,10 +235,11 @@ class PodDetail extends Component {
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
-                                            {this.state.privileges === "owner" &&
+                                            {isAdmin(this.state.rolePerms) ?
                                                 <div className="float-right">
                                                     <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>Add Announcement</Button>
                                                 </div>
+                                                : null
                                             }
                                             <AddAnnouncementForm
                                                 pod={this.state.pod}
@@ -249,7 +254,7 @@ class PodDetail extends Component {
                                             />
                                         </TabPane>
                                         <TabPane tabId="2">
-                                            {this.state.privileges === "owner" ?
+                                            {isAdmin(this.state.rolePerms) ?
                                                 <div className="float-right">
                                                     <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleUserModal}>Add User</Button>
                                                 </div>

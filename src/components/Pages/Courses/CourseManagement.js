@@ -31,7 +31,7 @@ class CourseManagement extends Component {
         if (res.isSuccess) {
             this.setState({
                 selectedPod: pod,
-                courses: res.data
+                courses: res.data.courses
             })
         }
     }
@@ -95,7 +95,7 @@ class CourseManagement extends Component {
                     </div>
 
                     <div className="ml-auto">
-                        {this.state.rolePerms != 'ROLE_STUDENT' ?
+                        {this.state.rolePerms === 'ADMIN' ?
                             <button className="btn btn-success"
                                 onClick={this.toggleAddCourseModal}>
                                 <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course

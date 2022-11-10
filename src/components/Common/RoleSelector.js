@@ -1,8 +1,8 @@
 import Select from 'react-select';
 
 const options = [
-    { value: 'ROLE_TEACHER', label: 'Teacher' },
-    { value: 'ROLE_STUDENT', label: 'Student' },
+    { value: 'TEACHER', label: 'Teacher' },
+    { value: 'STUDENT', label: 'Student' },
   ];
 
 const customStylesDefault = {
