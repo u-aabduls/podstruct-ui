@@ -23,11 +23,11 @@ import 'react-datetime/css/react-datetime.css';
 import EditCourseForm from '../../Forms/Course/EditCourseForm';
 import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
 import CourseAnnouncementsTable from '../../Tables/CourseAnnouncementsTable';
-
+import { isAdmin } from '../../../utils/PermissionChecker'
 class CourseDetail extends Component {
 
     state = {
-        privileges: "owner",
+        rolePerms: this.props.location.state.role,
         course: this.props.location.state,
         announcements: [],
         editModal: false,
@@ -103,7 +103,7 @@ class CourseDetail extends Component {
                                 <em className="fas fa-ellipsis-v fa-lg"></em>
                             </DropdownToggle>
                             <DropdownMenu>
-                                {this.state.privileges === "owner" ?
+                                {isAdmin(this.state.rolePerms) ?
                                     <DropdownItem onClick={this.toggleEditModal}>Edit Course</DropdownItem>
                                     : null
                                 }
@@ -125,7 +125,7 @@ class CourseDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Course Subject</h4>
                                 <p className="text-primary font-weight-bold">{this.state.course.subject}</p>
                             </div>
@@ -135,7 +135,7 @@ class CourseDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Course Description</h4>
                                 <p className="text-primary font-weight-bold">{this.state.course.description}</p>
                             </div>
@@ -145,7 +145,7 @@ class CourseDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Teacher</h4>
                                 <p className="text-primary font-weight-bold"></p>
                             </div>
@@ -155,7 +155,7 @@ class CourseDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Course Schedule</h4>
                                 <p className="text-primary font-weight-bold">{this.state.course.daysOfWeekInterval.split(',').forEach(function (i, idx, array) {
                                     if (idx === array.length - 1) {
@@ -183,6 +183,7 @@ class CourseDetail extends Component {
                                     <Nav tabs>
                                         <NavItem>
                                             <NavLink
+                                                href="#"
                                                 className={classnames({ active: this.state.activeTab === '1' })}
                                                 onClick={() => { this.toggleTab('1'); }}>
                                                 Announcements
@@ -190,6 +191,7 @@ class CourseDetail extends Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
+                                                href="#"
                                                 className={classnames({ active: this.state.activeTab === '2' })}
                                                 onClick={() => { this.toggleTab('2'); }}>
                                                 Assignments
@@ -197,6 +199,7 @@ class CourseDetail extends Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
+                                                href="#"
                                                 className={classnames({ active: this.state.activeTab === '3' })}
                                                 onClick={() => { this.toggleTab('3'); }}>
                                                 Upcoming Events
@@ -206,10 +209,11 @@ class CourseDetail extends Component {
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
-                                            {this.state.privileges === "owner" &&
+                                            {isAdmin(this.state.rolePerms) ?
                                                 <div className="float-right">
                                                     <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>Add Announcement</Button>
                                                 </div>
+                                                : null
                                             }
                                             <AddAnnouncementForm
                                                 course={this.state.course}

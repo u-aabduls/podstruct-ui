@@ -7,7 +7,7 @@ import {
     ModalFooter,
 } from 'reactstrap';
 import { withRouter } from "react-router-dom";
-import { denyInvite, acceptInvite } from '../../../connectors/PodUser';
+import { denyInvite, acceptInvite } from '../../../connectors/PodUserInvite';
 import Swal from 'sweetalert2';
 
 class InvitedPodForm extends Component {

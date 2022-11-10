@@ -5,12 +5,13 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import { getCourseAnnouncements, deleteCourseAnnouncement } from '../../connectors/Announcement';
+import { isAdmin } from '../../utils/PermissionChecker';
 
 
 class CourseAnnouncementsTable extends Component {
 
     state = {
-        privileges: "owner",
+        rolePerms: this.props.course.role,
         course: this.props.course,
         announcements: [],
         lastEvaluatedKey: '',
@@ -89,7 +90,7 @@ class CourseAnnouncementsTable extends Component {
                                             <span>{announcement.message}</span>
                                         </td>
                                         <td className="buttons">
-                                            {this.state.privileges === "owner" ?
+                                            {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
                                                     <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAnnouncement(announcement.date)}>
                                                         <i className="fas fa-trash-alt fa-fw btn-icon"></i>

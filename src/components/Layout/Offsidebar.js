@@ -35,6 +35,12 @@ class Offsidebar extends Component {
         this.props.actions.changeTheme(event.target.value);
     }
 
+    settingsRedirect = e => {
+        this.toggleOffsidebar();
+        this.props.history.push('/settings')
+
+    }
+
     logout = e => {
         if (localStorage.getItem('token')) {
             var res = logoutUser();
@@ -57,12 +63,11 @@ class Offsidebar extends Component {
                             <TabContent activeTab={this.state.activeTab}>
                                 <TabPane tabId="settings">
                                     <h3 className="text-center text-thin mt-4">Settings</h3>
-
                                     <div className="clearfix">
-                                        <Link to="/settings" className="btn btn-block btn-secondary">
+                                        <button className="btn btn-block btn-secondary" onClick={this.settingsRedirect}>
                                             <i className="icon-settings fa-pull-left btn-icon"></i>
                                             Manage Profile
-                                        </Link>
+                                        </button>
                                     </div>
                                     <div className="clearfix">
                                         <button type="button" className="btn btn-block btn-secondary">

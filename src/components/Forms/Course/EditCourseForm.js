@@ -11,12 +11,14 @@ import {
 } from 'reactstrap';
 import PodSelector from '../../Common/PodSelector';
 import DaysOfWeekSelector from '../../Common/DaysOfWeekSelector';
+import TeacherSelector from '../../Common/TeacherSelector';
 import Datetime from 'react-datetime';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
 import { getPod } from '../../../connectors/Pod';
 import { getCourse, editCourse } from '../../../connectors/Course';
+import { getUsers } from '../../../connectors/PodUser';
 import FormValidator from '../FormValidator';
 
 class EditCourseForm extends Component {
@@ -34,11 +36,20 @@ class EditCourseForm extends Component {
                 error: {
                     isNullPod: false,
                     isNullDay: false,
-                    isNullTime: false
+                    isNullTime: false,
+                    isNullTeacher: false,
                 }
             }
         },
+        getUserParams: {
+            page: 0,
+            size: 10,
+            sort: '',
+            role: 'TEACHER,ADMIN',
+            inviteStatus: 'ACCEPTED'
+        },
         course: this.props.course,
+        teachers: [],
         modal: this.props.modal,
     }
 
@@ -82,21 +93,24 @@ class EditCourseForm extends Component {
         var isNullPod = this.state.formEditCourse.selectedPod === '';
         var isNullDay = this.state.formEditCourse.daysOfWeekInterval === '';
         var isNullTime = this.state.formEditCourse.startTime === '' || this.state.formEditCourse.endTime === '';
+        var isNullTeacher = this.state.formEditCourse.teacher === '';
 
         var stateCopy = this.state.formEditCourse;
         stateCopy.selector.error.isNullPod = isNullPod ? true : false;
         stateCopy.selector.error.isNullDay = isNullDay ? true : false;
         stateCopy.selector.error.isNullTime = isNullTime ? true : false;
+        stateCopy.selector.error.isNullTeacher = isNullTeacher ? true : false;
         this.setState(stateCopy);
-        return isNullPod || isNullDay || isNullTime;
+        return isNullPod || isNullDay || isNullTime || isNullTeacher;
     }
 
     validateSelectorsOnChange = e => {
         var isNullPod = this.state.formEditCourse.selectedPod === '';
         var isNullDay = this.state.formEditCourse.daysOfWeekInterval === '';
         var isNullTime = this.state.formEditCourse.startTime === '' || this.state.formEditCourse.endTime === '';
+        var isNullTeacher = this.state.formEditCourse.teacher === '';
         var stateCopy = this.state.formEditCourse;
-        switch (e){
+        switch (e) {
             case "pod":
                 stateCopy.selector.error.isNullPod = isNullPod ? true : false;
                 break;
@@ -105,6 +119,9 @@ class EditCourseForm extends Component {
                 break;
             case "time":
                 stateCopy.selector.error.isNullTime = isNullTime ? true : false;
+                break;
+            case "teacher":
+                stateCopy.selector.error.isNullTeacher = isNullTeacher ? true : false;
                 break;
         }
         this.setState(stateCopy);
@@ -127,7 +144,7 @@ class EditCourseForm extends Component {
         };
 
         if (this.state.formEditCourse.teacher) {
-            payload.teacher = this.state.formEditCourse.teacher
+            payload.teacherEmailId = this.state.formEditCourse.teacher
         }
         if (this.state.formEditCourse.description) {
             payload.description = this.state.formEditCourse.description
@@ -166,6 +183,12 @@ class EditCourseForm extends Component {
         else {
             stateCopy.endTime = date.format("HH:mm:ss")
         }
+        this.setState(stateCopy);
+    }
+
+    setTeacher = (teacher) => {
+        var stateCopy = this.state.formEditCourse;
+        stateCopy.teacher = teacher
         this.setState(stateCopy);
     }
 
@@ -237,10 +260,16 @@ class EditCourseForm extends Component {
     }
 
     componentDidMount() {
-        var stateCopy = this.state.formEditCourse;
+        var stateCopy = this.state
         var res = getPod(this.props.course.podId)
         if (res.isSuccess) {
-            stateCopy.selectedPod = res.data
+            stateCopy.formEditCourse.selectedPod = res.data
+            this.setState(stateCopy)
+        }
+        var params = this.state.getUserParams
+        res = getUsers(this.state.formEditCourse.selectedPod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+        if (res.isSuccess) {
+            stateCopy.teachers = res.data.users
             this.setState(stateCopy)
         }
         this.populateForm()
@@ -341,31 +370,13 @@ class EditCourseForm extends Component {
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="id-teacher">Teacher</label>
-                            <div className="input-group with-focus">
-                                <Input
-                                    type="text"
-                                    id="id-teacher"
-                                    name="teacher"
-                                    className="border-right-0"
-                                    placeholder="Teacher's name"
-                                    invalid={
-                                        this.hasError('formEditCourse', 'teacher', 'maxlen')
-                                        || this.hasError('formEditCourse', 'teacher', 'contains-alpha')
-                                        || this.hasError('formEditCourse', 'teacher', 'name')
-                                    }
-                                    onChange={this.validateOnChange}
-                                    data-validate='["maxlen", "contains-alpha", "name"]'
-                                    data-param='50'
-                                    value={this.state.formEditCourse.teacher} />
-                                <div className="input-group-append">
-                                    <span className="input-group-text text-muted bg-transparent border-left-0">
-                                        <em className="fa fa-book"></em>
-                                    </span>
-                                </div>
-                                {this.hasError('formEditCourse', 'teacher', 'maxlen') && <span className="invalid-feedback">Teacher must not have more than 50 characters</span>}
-                                {this.hasError('formEditCourse', 'teacher', 'contains-alpha') && <span className="invalid-feedback">Teacher must contain at least one alpha character</span>}
-                                {this.hasError('formEditCourse', 'teacher', 'name') && <span className="invalid-feedback">Teacher must contain alpha, apostrophe, or hyphen characters only</span>}
-                            </div>
+                                <TeacherSelector
+                                    name="teacherSelector"
+                                    teachers={this.state.teachers}
+                                    hasError={this.state.formEditCourse.selector.error.isNullTeacher}
+                                    validate={this.validateSelectorsOnChange}
+                                    setTeacher={this.setTeacher}
+                                />
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="id-courseDescription">Description</label>
@@ -383,7 +394,7 @@ class EditCourseForm extends Component {
                                     onChange={this.validateOnChange}
                                     data-validate='["maxlen", "contains-alpha"]'
                                     data-param='150'
-                                    value={this.state.formEditCourse.description} 
+                                    value={this.state.formEditCourse.description}
                                     rows={3} />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">

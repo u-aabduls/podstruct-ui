@@ -173,10 +173,12 @@ class AddUserForm extends Component {
                         confirmButtonColor: "#5d9cec",
                         icon: "success",
                     })
-                    var params = this.state.getUserParams.users
-                    var resUsers = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
-                    params = this.state.getUserParams.pending
-                    var resPending = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                    let params = this.state.getUserParams.users
+                    let resUsers = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                    console.log(resUsers)
+                    let paramsPending = this.state.getUserParams.pending
+                    let resPending = getUsers(this.state.pod.id, paramsPending.page, paramsPending.size, paramsPending.sort, paramsPending.role, paramsPending.inviteStatus)
+                    console.log(resPending)
                     this.props.updateOnAdd(resUsers, resPending)
                 }
                 else {
@@ -212,10 +214,11 @@ class AddUserForm extends Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="AddUserEmail">Email</label>
+                            <label className="text-muted" htmlFor="id-email">Email</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
+                                    id="id-email"
                                     name="email"
                                     className="border-right-0"
                                     placeholder="Enter user's email"

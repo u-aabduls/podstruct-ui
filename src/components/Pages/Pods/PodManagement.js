@@ -5,6 +5,7 @@ import { getPods, createPod } from "../../../connectors/Pod";
 import PodCard from './PodCard';
 import FormValidator from '../../Forms/FormValidator';
 import Swal from 'sweetalert2';
+import { Divider } from '@material-ui/core';
 
 class PodManagement extends Component {
 
@@ -297,8 +298,8 @@ class PodManagement extends Component {
                         </Modal>
                     </div>
                 </div>
-                {this.state.pendingPods.length > 0 ? <h3>Pending Pods</h3> : null}
-                <Row className={`${this.state.pendingPods.length > 0 && "mb-5 pb-5"}`}>
+                {this.state.pendingPods.length > 0 ? <h3>Invitations</h3> : null}
+                <Row className={`${this.state.pendingPods.length > 0 && "mb-5"}`}>
                     {this.state.pendingPods.map(function (object, i) {
                         return (
                             object.active ?
@@ -322,7 +323,8 @@ class PodManagement extends Component {
                         );
                     })}
                 </Row>
-                {this.state.pods.length > 0 ? <h3>Accepted Pods</h3> : null}
+                {this.state.pendingPods.length > 0 ? <Divider className="mb-5"/> : null}
+                {this.state.pods.length > 0 ? <h3>Pods</h3> : null}
                 <Row>
                     {this.state.pods.map(function (object, i) {
                         return (
