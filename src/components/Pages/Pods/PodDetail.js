@@ -99,9 +99,7 @@ class PodDetail extends Component {
 
     componentWillMount() {
         var stateCopy = this.state;
-        localStorage.setItem('id', this.props.match.params.id);
-        console.log(this.props.match.params.id)
-        var res = getPod(this.props.match.params.id)
+        var res = getPod("4850c8c6-17f0-4988-aff6-a06a06bb2d37")
         if (res.isSuccess) {
             stateCopy.pod = res.data
             stateCopy.rolePerms = res.data.roleInPod
@@ -110,7 +108,6 @@ class PodDetail extends Component {
     }
 
     render() {
-        localStorage.setItem('id', this.props.match.params.id);
         return (
             <ContentWrapper>
                 <InvitedPodForm
