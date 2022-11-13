@@ -99,7 +99,7 @@ class PodDetail extends Component {
 
     componentWillMount() {
         var stateCopy = this.state;
-        var res = getPod("4850c8c6-17f0-4988-aff6-a06a06bb2d37")
+        var res = getPod(this.props.match.params.id)
         if (res.isSuccess) {
             stateCopy.pod = res.data
             stateCopy.rolePerms = res.data.roleInPod
