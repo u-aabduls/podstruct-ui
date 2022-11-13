@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 import { getUsers, deleteUser } from '../../connectors/PodUser';
 import { resendInvite } from '../../connectors/PodUserInvite';
-import {isAdmin, isTeacher, isStudent} from '../../utils/PermissionChecker'
+import { isAdmin, isTeacher, isStudent } from '../../utils/PermissionChecker'
 import Swal from 'sweetalert2';
 
 
@@ -23,7 +23,7 @@ class PodUserTable extends Component {
         getUserParams: {
             users: {
                 page: 0,
-                size: 10,
+                size: 0,
                 sort: '',
                 role: '',
                 inviteStatus: 'ACCEPTED'
@@ -177,10 +177,11 @@ class PodUserTable extends Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         var stateCopy = this.state
         var params = this.state.getUserParams.users
         var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+        console.log(res)
         if (res.isSuccess) {
             stateCopy.users = res.data.users
             this.setState(stateCopy)
@@ -277,7 +278,12 @@ class PodUserTable extends Component {
                             )
                         }
                         )
-                        : null}
+                        :
+                        <tr>
+                            <td colspan="2" className='text-center pt-5 pb-4'>
+                                <h3>No users found</h3>
+                            </td>
+                        </tr>}
                 </Table>
                 <div>
                     <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={() => this.nextUserPage('users')}>
@@ -356,7 +362,12 @@ class PodUserTable extends Component {
                                 </tbody>
                             )
                         })
-                        : null}
+                        : <tr>
+                            <td colspan="2" className='text-center pt-5 pb-4'>
+                                <h3>No users found</h3>
+                            </td>
+                        </tr>
+                    }
                 </Table >
                 <Button color="secondary" className="btn float-right mt-3" size="sm" onClick={() => this.nextUserPage('pending')}>
                     <span><i className="fa fa-chevron-right"></i></span>

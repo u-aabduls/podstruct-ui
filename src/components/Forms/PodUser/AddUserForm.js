@@ -173,13 +173,9 @@ class AddUserForm extends Component {
                         confirmButtonColor: "#5d9cec",
                         icon: "success",
                     })
-                    let params = this.state.getUserParams.users
-                    let resUsers = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
-                    console.log(resUsers)
-                    let paramsPending = this.state.getUserParams.pending
-                    let resPending = getUsers(this.state.pod.id, paramsPending.page, paramsPending.size, paramsPending.sort, paramsPending.role, paramsPending.inviteStatus)
-                    console.log(resPending)
-                    this.props.updateOnAdd(resUsers, resPending)
+                    let params = this.state.getUserParams.pending
+                    let res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                    this.props.updateOnAdd(res)
                 }
                 else {
                     Swal.fire({

@@ -147,7 +147,7 @@ class CourseDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Teacher</h4>
-                                <p className="text-primary font-weight-bold"></p>
+                                <p className="text-primary font-weight-bold">{this.state.course.teacherName}</p>
                             </div>
                         </div>
                         {/* END card */}

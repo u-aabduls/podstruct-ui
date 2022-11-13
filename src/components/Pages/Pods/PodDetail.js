@@ -30,8 +30,8 @@ import { isAdmin } from '../../../utils/PermissionChecker';
 class PodDetail extends Component {
 
     state = {
-        rolePerms: this.props.location.state.roleInPod,
-        pod: this.props.location.state,
+        rolePerms: '',
+        pod: '',
         users: [],
         pending: [],
         editModal: false,
@@ -102,11 +102,13 @@ class PodDetail extends Component {
         var res = getPod(this.props.match.params.id)
         if (res.isSuccess) {
             stateCopy.pod = res.data
+            stateCopy.rolePerms = res.data.roleInPod
             this.setState(stateCopy)
         }
     }
 
     render() {
+        console.log(this.state)
         return (
             <ContentWrapper>
                 <InvitedPodForm
