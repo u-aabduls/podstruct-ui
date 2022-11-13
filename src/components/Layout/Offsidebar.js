@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
@@ -18,9 +19,12 @@ class Offsidebar extends Component {
         offsidebarReady: false
     }
 
-    componentDidMount() {
-        // When mounted display the offsidebar
-        this.setState({ offsidebarReady: true });
+    handleClickOutside = event => {
+        const domNode = ReactDOM.findDOMNode(this);
+    
+        if (!domNode || !domNode.contains(event.target)) {
+            if (this.props.settings.offsidebarOpen) this.toggleOffsidebar();
+        }
     }
 
     toggleOffsidebar = e => {
@@ -50,6 +54,16 @@ class Offsidebar extends Component {
             }
         }
         e.preventDefault()
+    }
+
+    componentDidMount() {
+        // When mounted display the offsidebar
+        this.setState({ offsidebarReady: true });
+        document.addEventListener('click', this.handleClickOutside, true);
+    }
+    
+    componentWillUnmount() {
+        document.removeEventListener('click', this.handleClickOutside, true);
     }
 
     render() {

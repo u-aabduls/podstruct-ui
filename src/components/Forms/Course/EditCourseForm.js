@@ -229,6 +229,7 @@ class EditCourseForm extends Component {
                     icon: "success",
                 })
                 var res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)
+                console.log(res)
                 this.props.updateOnEdit(res)
             }
             else {

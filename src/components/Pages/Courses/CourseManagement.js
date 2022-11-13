@@ -87,6 +87,7 @@ class CourseManagement extends Component {
     }
 
     render() {
+        console.log(this.state.courses)
         return (
             <ContentWrapper>
                 <div className="content-heading">

@@ -52,10 +52,10 @@ class PodAnnouncementsTable extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.announcements !== prevProps.announcements) {
-            this.setState({ announcements: this.props.announcements})
+            this.setState({ announcements: this.props.announcements })
         }
         if (this.props.lastEvaluatedKey !== prevProps.lastEvaluatedKey) {
-            this.setState({ lastEvaluatedKey: this.props.lastEvaluatedKey})
+            this.setState({ lastEvaluatedKey: this.props.lastEvaluatedKey })
         }
     }
 
@@ -104,7 +104,9 @@ class PodAnnouncementsTable extends Component {
                             )
                         }
                         )
-                        : null}
+                        : <tr>
+                            <h3 className='text-center pt-5 pb-4'>No announcements found</h3>
+                        </tr>}
                 </Table>
                 {this.state.lastEvaluatedKey ?
                     <div>
