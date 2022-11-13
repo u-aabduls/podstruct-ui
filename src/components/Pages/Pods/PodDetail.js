@@ -99,6 +99,7 @@ class PodDetail extends Component {
 
     componentWillMount() {
         var stateCopy = this.state;
+        localStorage.setItem('id', this.props.match.params.id);
         console.log(this.props.match.params.id)
         var res = getPod(this.props.match.params.id)
         if (res.isSuccess) {
@@ -109,6 +110,7 @@ class PodDetail extends Component {
     }
 
     render() {
+        localStorage.setItem('id', this.props.match.params.id);
         return (
             <ContentWrapper>
                 <InvitedPodForm
