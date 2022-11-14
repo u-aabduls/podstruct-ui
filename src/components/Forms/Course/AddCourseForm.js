@@ -253,8 +253,6 @@ class AddCourseForm extends Component {
                 })
                 var res = getCourses(this.state.formAddCourse.selectedPod, "")
                 if (res.isSuccess) {
-                    console.log(res)
-                    console.log(this.state.formAddCourse.selectedPod)
                     this.props.updateOnAdd(res, this.state.formAddCourse.selectedPod)
                 }
             }
@@ -272,6 +270,9 @@ class AddCourseForm extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (this.props.modal !== prevProps.modal) {
             this.setState({ modal: this.props.modal })
+        }
+        if (this.props.pods !== prevProps.pods) {
+            this.setState({ pods: this.props.pods })
         }
         if (this.state.formAddCourse.selectedPod !== prevState.formAddCourse.selectedPod) {
             if(!this.state.formAddCourse.selectedPod) return

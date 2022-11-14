@@ -67,7 +67,6 @@ function __execute() {
     if (request.status >= 400) {
         result.isSuccess = false;
         result.message = handleError(request.status, data);
-        console.log(result.message)
     } else {
         result.isSuccess = true;
         result.data = data;
