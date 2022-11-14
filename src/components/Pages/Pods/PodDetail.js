@@ -179,7 +179,7 @@ class PodDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Pod Owner</h4>
-                                <p className="text-primary font-weight-bold"></p>
+                                {/* <p className="text-primary font-weight-bold">{this.state.pod.roleInPod}</p> */}
                             </div>
                         </div>
                         {/* END card */}

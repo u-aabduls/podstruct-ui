@@ -150,7 +150,7 @@ class PodManagement extends Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         var params = this.state.getPodParams.accepted
         var result = getPods(params.inviteStatus).data;
         if (result) {

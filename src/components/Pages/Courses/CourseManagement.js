@@ -7,15 +7,14 @@ import CourseCard from './CourseCard';
 import { getPods } from '../../../connectors/Pod';
 import { getCourses } from '../../../connectors/Course';
 import AddCourseForm from '../../Forms/Course/AddCourseForm';
-
-const response = getPods()
+import { isAdmin } from '../../../utils/PermissionChecker';
 
 class CourseManagement extends Component {
 
     state = {
         selectedPod: '',
         subjectFilter: '',
-        pods: response.data,
+        pods: [],
         courses: [],
         addCourseModal: false,
         rolePerms: '',
@@ -69,11 +68,10 @@ class CourseManagement extends Component {
     }, 500);
 
     componentDidMount() {
-        var stateCopy = this.state
         var res = getPods()
         if (res.isSuccess) {
-            stateCopy.pods = res.data
-            this.setState(stateCopy)
+            this.setState({ pods: res.data })
+            this.setState({ test: "test" })
         }
     }
 
@@ -87,7 +85,6 @@ class CourseManagement extends Component {
     }
 
     render() {
-        console.log(this.state.courses)
         return (
             <ContentWrapper>
                 <div className="content-heading">
@@ -96,7 +93,7 @@ class CourseManagement extends Component {
                     </div>
 
                     <div className="ml-auto">
-                        {this.state.rolePerms === 'ADMIN' ?
+                        {isAdmin(this.state.rolePerms) ?
                             <button className="btn btn-success"
                                 onClick={this.toggleAddCourseModal}>
                                 <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course

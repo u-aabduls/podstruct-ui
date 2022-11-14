@@ -21,7 +21,6 @@ function getUsers(podID, page, size, sort, role, inviteStatus) {
     if (sort) params.sort = sort
     if (role) params.role = role
     if (inviteStatus) params.inviteStatus = inviteStatus
-    console.log(endpointPathEXT + formatParams(params))
     _initialize("GET", endpointPathEXT + formatParams(params));
     request.send();
     return result;

@@ -83,10 +83,10 @@ class AddUserForm extends Component {
             [form.name]: {
                 ...this.state[form.name],
                 [input.name]: value,
-                errors: {
-                    ...this.state[form.name].errors,
-                    [input.name]: result
-                }
+                // errors: {
+                //     ...this.state[form.name].errors,
+                //     [input.name]: result
+                // }
             }
         });
     }
@@ -166,25 +166,25 @@ class AddUserForm extends Component {
             })
 
             Promise.all(all).then(() => {
-                if (!errorMessage) {
-                    this.toggleModal()
-                    Swal.fire({
-                        title: "Successfully added " + successCount + " user(s)",
-                        confirmButtonColor: "#5d9cec",
-                        icon: "success",
-                    })
-                    let params = this.state.getUserParams.pending
-                    let res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
-                    this.props.updateOnAdd(res)
-                }
-                else {
-                    Swal.fire({
-                        title: "Error, Successfully added " + successCount + " user(s)",
-                        icon: "error",
-                        confirmButtonColor: "#5d9cec",
-                        text: errorMessage
-                    })
-                }
+                this.toggleModal()
+                Swal.fire({
+                    title: "Successfully added " + successCount + " user(s)",
+                    confirmButtonColor: "#5d9cec",
+                    icon: "success",
+                })
+                let params = this.state.getUserParams.pending
+                let res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                this.props.updateOnAdd(res)
+            }).catch(()=> {
+                Swal.fire({
+                    title: "Error, Successfully added " + successCount + " user(s)",
+                    icon: "error",
+                    confirmButtonColor: "#5d9cec",
+                    text: errorMessage
+                })
+                let params = this.state.getUserParams.pending
+                let res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                this.props.updateOnAdd(res)
             });
         }
     }
@@ -201,6 +201,9 @@ class AddUserForm extends Component {
                 <form className="mb-3" name="formAddUser" onSubmit={this.onSubmit}>
                     <ModalHeader toggle={this.toggleModal}>Add User</ModalHeader>
                     <ModalBody>
+                        <div className="form-group">
+                            <label>Provide a comma seperated email list to add multiple users at once</label>
+                        </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="podSelector">Select Pod</label>
                             <PodSelector

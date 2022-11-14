@@ -23,11 +23,12 @@ import 'react-datetime/css/react-datetime.css';
 import EditCourseForm from '../../Forms/Course/EditCourseForm';
 import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
 import CourseAnnouncementsTable from '../../Tables/CourseAnnouncementsTable';
-import { isAdmin } from '../../../utils/PermissionChecker'
+import { getCourse } from '../../../connectors/Course';
+import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
 class CourseDetail extends Component {
 
     state = {
-        rolePerms: this.props.location.state.role,
+        rolePerms: '',
         course: this.props.location.state,
         announcements: [],
         editModal: false,
@@ -83,6 +84,16 @@ class CourseDetail extends Component {
                 announcements: res.data.announcements,
                 lastEvaluatedKey: res.data.lastEvaluatedKey
             })
+        }
+    }
+
+    componentDidMount() {
+        var stateCopy = this.state;
+        var res = getCourse(this.state.course.podId, this.props.match.params.id)
+        if (res.isSuccess) {
+            stateCopy.course = res.data
+            stateCopy.rolePerms = res.data.role
+            this.setState(stateCopy)
         }
     }
 
@@ -209,7 +220,7 @@ class CourseDetail extends Component {
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
-                                            {isAdmin(this.state.rolePerms) ?
+                                            {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right">
                                                     <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>Add Announcement</Button>
                                                 </div>

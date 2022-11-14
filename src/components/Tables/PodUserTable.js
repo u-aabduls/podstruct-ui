@@ -181,7 +181,6 @@ class PodUserTable extends Component {
         var stateCopy = this.state
         var params = this.state.getUserParams.users
         var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
-        console.log(res)
         if (res.isSuccess) {
             stateCopy.users = res.data.users
             this.setState(stateCopy)
@@ -264,7 +263,7 @@ class PodUserTable extends Component {
                                             </ButtonDropdown>}
                                         </td>
                                         <td className="buttons">
-                                            {isAdmin(this.state.rolePerms) ?
+                                            {isAdmin(this.state.rolePerms) && !isAdmin(user.role) ?
                                                 <div className='button-container'>
                                                     <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user.username)}>
                                                         <i className="fas fa-trash-alt fa-fw btn-icon"></i>

@@ -23,7 +23,7 @@ class CourseCard extends Component {
                                         <strong>Teacher:</strong>
                                     </td>
                                     <td>
-
+                                        {this.props.course.teacherName}
                                     </td>
                                 </tr>
                                 <tr>
