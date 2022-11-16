@@ -7,13 +7,14 @@ var result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
-var authorizationToken = localStorage.getItem('token');
+var authorizationToken;
 
 /********************
  * Public Methods
  ********************/
 
 function getPodAnnouncements(podID, lastEvaluatedKey, pageSize) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/announcements"
     var params = {};
     if (lastEvaluatedKey) params.lastEvaluatedKey = lastEvaluatedKey
@@ -24,6 +25,7 @@ function getPodAnnouncements(podID, lastEvaluatedKey, pageSize) {
 }
 
 function createPodAnnouncement(podID, requestBody) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/announcements"
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
@@ -31,12 +33,14 @@ function createPodAnnouncement(podID, requestBody) {
 }
 
 function deletePodAnnouncement(podID, announcementDate) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/announcements/" + announcementDate
     _initialize("DELETE", endpointPathEXT);
     request.send();
     return result;
 }
 function getCourseAnnouncements(podID, courseID, lastEvaluatedKey, pageSize) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements"
     var params = {};
     if (lastEvaluatedKey) params.lastEvaluatedKey = lastEvaluatedKey
@@ -47,6 +51,7 @@ function getCourseAnnouncements(podID, courseID, lastEvaluatedKey, pageSize) {
 }
 
 function createCourseAnnouncement(podID, courseID, requestBody) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements"
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
@@ -54,6 +59,7 @@ function createCourseAnnouncement(podID, courseID, requestBody) {
 }
 
 function deleteCourseAnnouncement(podID, courseID, announcementDate) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements/" + announcementDate
     _initialize("DELETE", endpointPathEXT);
     request.send();

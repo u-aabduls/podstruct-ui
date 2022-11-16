@@ -7,13 +7,14 @@ var result = {}, httpMethod = null, email = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
-var authorizationToken = localStorage.getItem('token');
+var authorizationToken;
 
 /********************
  * Public Methods
  ********************/
 
 function getUsers(podID, page, size, sort, role, inviteStatus) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + '/users'
     var params = {};
     if (page) params.page = page
@@ -27,6 +28,7 @@ function getUsers(podID, page, size, sort, role, inviteStatus) {
 }
 
 function createUser(podID, requestBody) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + '/users'
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
@@ -34,6 +36,7 @@ function createUser(podID, requestBody) {
 }
 
 function deleteUser(podID, username) {
+    authorizationToken = localStorage.getItem('token');
     email = username;
     var endpointPathEXT = endpointPath + podID + '/users'
     _initialize("DELETE", endpointPathEXT);

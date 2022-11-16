@@ -7,13 +7,14 @@ var result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
-var authorizationToken = localStorage.getItem('token');
+var authorizationToken;
 
 /********************
  * Public Methods
  ********************/
 
 function getPods(inviteStatus) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath
     var params = {};
     if (inviteStatus) params.inviteStatus = inviteStatus
@@ -23,6 +24,7 @@ function getPods(inviteStatus) {
 }
 
 function getPod(podID) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID
     _initialize("GET", endpointPathEXT);
     request.send();
@@ -30,6 +32,7 @@ function getPod(podID) {
 }
 
 function createPod(requestBody) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
@@ -37,6 +40,7 @@ function createPod(requestBody) {
 }
 
 function editPod(podID, requestBody) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID
     _initialize("PUT", endpointPathEXT);
     request.send(requestBody);
@@ -44,6 +48,7 @@ function editPod(podID, requestBody) {
 }
 
 function deactivatePod(podID) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID
     _initialize("DELETE", endpointPathEXT);
     request.send();
