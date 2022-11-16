@@ -6,25 +6,28 @@ var result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/user";
-var authorizationToken = localStorage.getItem('token');
+var authorizationToken;
 
 /********************
  * Public Methods
  ********************/
 
 function getUser() {
+    authorizationToken = localStorage.getItem('token');
     _initialize("GET");
     request.send();
     return result;
 }
 
 function createUser(requestBody) {
+    authorizationToken = localStorage.getItem('token');
     _initialize("POST");
     request.send(requestBody);
     return result;
 }
 
 function updateUser(requestBody) {
+    authorizationToken = localStorage.getItem('token');
     _initialize("PUT");
     request.send(requestBody);
     return result;

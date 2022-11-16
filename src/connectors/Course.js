@@ -7,13 +7,14 @@ var result = {}, httpMethod = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
-var authorizationToken = localStorage.getItem('token');
+var authorizationToken;
 
 /********************
  * Public Methods
  ********************/
 
 function getCourses(podID, subject) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/courses"
     var params = {};
     if (subject) params.subject = subject
@@ -23,6 +24,7 @@ function getCourses(podID, subject) {
 }
 
 function getCourse(podID, courseID) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
     _initialize("GET", endpointPathEXT);
     request.send();
@@ -30,6 +32,7 @@ function getCourse(podID, courseID) {
 }
 
 function createCourse(podID, requestBody) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/courses";
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
@@ -37,6 +40,7 @@ function createCourse(podID, requestBody) {
 }
 
 function editCourse(podID, courseID, requestBody) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
     _initialize("PUT", endpointPathEXT);
     request.send(requestBody);

@@ -7,13 +7,14 @@ var result = {}, httpMethod = null, email = null;
 var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
     prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
-var authorizationToken = localStorage.getItem('token');
+var authorizationToken;
 
 /********************
  * Public Methods
  ********************/
 
 function acceptInvite(podID) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + '/users' + '/invite'
     _initialize("PUT", endpointPathEXT);
     request.send();
@@ -21,6 +22,7 @@ function acceptInvite(podID) {
 }
 
 function denyInvite(podID) {
+    authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + '/users' + '/invite'
     _initialize("DELETE", endpointPathEXT);
     request.send();
@@ -28,6 +30,7 @@ function denyInvite(podID) {
 }
 
 function resendInvite(podID, username) {
+    authorizationToken = localStorage.getItem('token');
     email = username;
     var endpointPathEXT = endpointPath + podID + '/users' + '/invite'
     _initialize("POST", endpointPathEXT);
