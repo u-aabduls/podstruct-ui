@@ -8,7 +8,6 @@ import {
     ModalFooter,
 } from 'reactstrap';
 import { createUser, getUsers } from '../../../connectors/PodUser';
-import PodSelector from '../../Common/PodSelector';
 import RoleSelector from '../../Common/RoleSelector';
 import Swal from 'sweetalert2';
 import FormValidator from '../FormValidator';
@@ -146,9 +145,10 @@ class AddUserForm extends Component {
         const invalidSelector = this.validateSelectors();
 
         console.log((hasError || invalidSelector) ? 'Form has errors. Check!' : 'Form Submitted!')
-        var successCount = 0
-        var errorMessage = ""
-        var all = []
+        var successCount = 0;
+        var errorMessage = "";
+        var errorEmails = [];
+        var all = [];
         if (!hasError && !invalidSelector) {
             this.state.formAddUser.email.replace(/\s/g, "").split(",").map((email) => {
                 var p = new Promise((resolve, reject) => {
@@ -158,6 +158,7 @@ class AddUserForm extends Component {
                         resolve(resp)
                     }
                     else {
+                        errorEmails.push(email)
                         errorMessage = resp.message
                         reject(resp.message)
                     }
@@ -175,12 +176,12 @@ class AddUserForm extends Component {
                 let params = this.state.getUserParams.pending
                 let res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 this.props.updateOnAdd(res)
-            }).catch(()=> {
+            }).catch(() => {
                 Swal.fire({
-                    title: "Error, Successfully added " + successCount + " user(s)",
-                    icon: "error",
+                    title: "Warning, the follwing emails could not be added ",
+                    icon: "warning",
                     confirmButtonColor: "#5d9cec",
-                    text: errorMessage
+                    html: errorEmails.join(', ') + "<br><br>" + errorMessage
                 })
                 let params = this.state.getUserParams.pending
                 let res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
@@ -188,7 +189,6 @@ class AddUserForm extends Component {
             });
         }
     }
-
     componentDidUpdate(prevProps) {
         if (this.props.modal !== prevProps.modal) {
             this.setState({ modal: this.props.modal })
@@ -201,19 +201,20 @@ class AddUserForm extends Component {
                 <form className="mb-3" name="formAddUser" onSubmit={this.onSubmit}>
                     <ModalHeader toggle={this.toggleModal}>Add User</ModalHeader>
                     <ModalBody>
-                        <div className="form-group">
-                            <label>Provide a comma seperated email list to add multiple users at once</label>
-                        </div>
-                        <div className="form-group">
-                            <label className="text-muted" htmlFor="podSelector">Select Pod</label>
-                            <PodSelector
-                                name="podSelector"
-                                defaultV={this.state.pod}
+                    <div className="form-group">
+                            <label className="text-muted" htmlFor="pod">Pod</label>
+                            <Input
+                                name="pod"
+                                placeholder={this.state.pod.podName}
                                 disabled={true}
                             />
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-email">Email</label>
+                            <label className="text-muted" htmlFor="id-email">
+                                Email
+                                <br />
+                                <small>Provide a comma seperated email list to add multiple users at once</small>
+                            </label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"

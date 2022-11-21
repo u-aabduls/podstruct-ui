@@ -9,7 +9,6 @@ import {
     ModalBody,
     ModalFooter,
 } from 'reactstrap';
-import PodSelector from '../../Common/PodSelector';
 import DaysOfWeekSelector from '../../Common/DaysOfWeekSelector';
 import TeacherSelector from '../../Common/TeacherSelector';
 import Datetime from 'react-datetime';
@@ -176,14 +175,16 @@ class EditCourseForm extends Component {
     }
 
     setTime = (date, id) => {
-        var stateCopy = this.state.formEditCourse;
-        if (id === "AM") {
-            stateCopy.startTime = date.format("HH:mm:ss")
-        }
-        else {
-            stateCopy.endTime = date.format("HH:mm:ss")
-        }
-        this.setState(stateCopy);
+        if (date instanceof moment){
+            var stateCopy = this.state.formAddCourse;
+            if (id === "start") {
+                stateCopy.startTime = date.format("HH:mm:ss")
+            }
+            else {
+                stateCopy.endTime = date.format("HH:mm:ss")
+            }
+            this.setState(stateCopy);
+        } 
     }
 
     setTeacher = (teacher) => {
@@ -289,15 +290,12 @@ class EditCourseForm extends Component {
                     <ModalHeader toggle={this.toggleModal}>Edit Course</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="podSelector">Select Pod</label>
-                            <PodSelector
-                                name="podSelector"
-                                hasError={this.state.formEditCourse.selector.error.isNullPod}
-                                defaultV={this.state.formEditCourse.selectedPod}
-                                validate={this.validateSelectorsOnChange}
+                            <label className="text-muted" htmlFor="pod">Pod</label>
+                            <Input
+                                name="pod"
+                                placeholder={this.state.formEditCourse.selectedPod.podName}
                                 disabled={true}
                             />
-                            {this.state.formEditCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="id-courseSubject">Subject</label>
@@ -344,10 +342,10 @@ class EditCourseForm extends Component {
                                 <Col lg="6">
                                     <label className="text-muted">Start time: </label>
                                     <Datetime
-                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
+                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error'} : { className: 'form-control'}}
                                         dateFormat={false}
                                         onChange={(date) => {
-                                            this.setTime(date, "AM")
+                                            this.setTime(date, "start")
                                             this.validateSelectorsOnChange("time")
                                         }}
                                         value={moment(this.state.formEditCourse.startTime, "HH:mm:ss").format("h:mm A")}
@@ -356,17 +354,17 @@ class EditCourseForm extends Component {
                                 <Col lg="6">
                                     <label className="text-muted">End time: </label>
                                     <Datetime
-                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
+                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error'} : { className: 'form-control'}}
                                         dateFormat={false}
                                         onChange={(date) => {
-                                            this.setTime(date, "PM")
+                                            this.setTime(date, "end")
                                             this.validateSelectorsOnChange("time")
                                         }}
                                         value={moment(this.state.formEditCourse.endTime, "HH:mm:ss").format("h:mm A")}
                                     />
                                 </Col>
                             </Row>
-                            {this.state.formEditCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Time schedule is required</p>}
+                            {this.state.formEditCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Both start and end times are required and must be valid times</p>}
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="id-teacher">Teacher</label>
@@ -393,7 +391,7 @@ class EditCourseForm extends Component {
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["maxlen", "contains-alpha"]'
-                                    data-param='150'
+                                    data-param='250'
                                     value={this.state.formEditCourse.description}
                                     rows={3} />
                                 <div className="input-group-append">
@@ -401,7 +399,7 @@ class EditCourseForm extends Component {
                                         <em className="fa fa-book"></em>
                                     </span>
                                 </div>
-                                {this.hasError('formEditCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 150 characters</span>}
+                                {this.hasError('formEditCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 250 characters</span>}
                                 {this.hasError('formEditCourse', 'description', 'contains-alpha') && <span className="invalid-feedback">Course description must contain at least one alpha character</span>}
                             </div>
                         </div>

@@ -21,7 +21,6 @@ import "./Vendor";
 import './styles/bootstrap.scss';
 import './styles/app.scss'
 
-
 class App extends Component {
   render() {
 

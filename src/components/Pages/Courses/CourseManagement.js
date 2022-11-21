@@ -60,9 +60,10 @@ class CourseManagement extends Component {
 
     filterRequest = this.debounce(() => {
         var res = getCourses(this.state.selectedPod, this.state.subjectFilter)
+        console.log(res)
         if (res.isSuccess) {
             this.setState({
-                courses: [...res.data]
+                courses: [...res.data.courses]
             })
         }
     }, 500);

@@ -18,6 +18,9 @@ import 'react-datetime/css/react-datetime.css';
 import { getCourses, createCourse } from '../../../connectors/Course';
 import { getUsers } from '../../../connectors/PodUser';
 import FormValidator from '../FormValidator';
+import { TimePicker } from 'antd';
+import moment from 'moment';
+
 
 class AddCourseForm extends Component {
 
@@ -49,7 +52,7 @@ class AddCourseForm extends Component {
         },
         pods: this.props.pods,
         teachers: [],
-        modal: false
+        modal: false,
     }
 
     errorMessageStyling = {
@@ -199,14 +202,16 @@ class AddCourseForm extends Component {
     }
 
     setTime = (date, id) => {
-        var stateCopy = this.state.formAddCourse;
-        if (id === "AM") {
-            stateCopy.startTime = date.format("HH:mm:ss")
-        }
-        else {
-            stateCopy.endTime = date.format("HH:mm:ss")
-        }
-        this.setState(stateCopy);
+        if (date instanceof moment){
+            var stateCopy = this.state.formAddCourse;
+            if (id === "start") {
+                stateCopy.startTime = date.format("HH:mm:ss")
+            }
+            else {
+                stateCopy.endTime = date.format("HH:mm:ss")
+            }
+            this.setState(stateCopy);
+        } 
     }
 
     setTeacher = (teacher) => {
@@ -275,7 +280,7 @@ class AddCourseForm extends Component {
             this.setState({ pods: this.props.pods })
         }
         if (this.state.formAddCourse.selectedPod !== prevState.formAddCourse.selectedPod) {
-            if(!this.state.formAddCourse.selectedPod) return
+            if (!this.state.formAddCourse.selectedPod) return
             var params = this.state.getUserParams
             var res = getUsers(this.state.formAddCourse.selectedPod, params.page, params.size, params.sort, params.role, params.inviteStatus)
             if (res.isSuccess) {
@@ -346,10 +351,10 @@ class AddCourseForm extends Component {
                                     <Col lg="6">
                                         <label className="text-muted">Start time: </label>
                                         <Datetime
-                                            inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
+                                            inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error'  } : { className: 'form-control' }}
                                             dateFormat={false}
                                             onChange={(date) => {
-                                                this.setTime(date, "AM")
+                                                this.setTime(date, "start")
                                                 this.validateSelectorsOnChange("time")
                                             }}
                                         />
@@ -357,16 +362,16 @@ class AddCourseForm extends Component {
                                     <Col lg="6">
                                         <label className="text-muted">End time: </label>
                                         <Datetime
-                                            inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error', readOnly: true } : { className: 'form-control', readOnly: true }}
+                                            inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error'} : { className: 'form-control'}}
                                             dateFormat={false}
                                             onChange={(date) => {
-                                                this.setTime(date, "PM")
+                                                this.setTime(date, "end")
                                                 this.validateSelectorsOnChange("time")
                                             }}
                                         />
                                     </Col>
                                 </Row>
-                                {this.state.formAddCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Time schedule is required</p>}
+                                {this.state.formAddCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Both start and end times are required and must be valid times</p>}
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="id-teacher">Teacher</label>
@@ -393,14 +398,14 @@ class AddCourseForm extends Component {
                                         }
                                         onChange={this.validateOnChange}
                                         data-validate='["maxlen", "contains-alpha"]'
-                                        data-param='150'
+                                        data-param='250'
                                         value={this.state.formAddCourse.description || ''} />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
-                                    {this.hasError('formAddCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 150 characters</span>}
+                                    {this.hasError('formAddCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 250 characters</span>}
                                     {this.hasError('formAddCourse', 'description', 'contains-alpha') && <span className="invalid-feedback">Course description must contain at least one alpha character</span>}
                                 </div>
                             </div>
