@@ -136,7 +136,7 @@ class CourseDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden'}}>
                                 <h4 className="mt-1 text-muted">Course Subject</h4>
                                 <p className="text-primary font-weight-bold">{this.state.course.subject}</p>
                             </div>
@@ -146,7 +146,7 @@ class CourseDetail extends Component {
                     <Col>
                         {/* START card */}
                         <div className="card-fixed-height">
-                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden', overflowWrap: 'anywhere' }}>
                                 <h4 className="mt-1 text-muted">Course Description</h4>
                                 <p className="text-primary font-weight-bold">{this.state.course.description}</p>
                             </div>
@@ -222,7 +222,10 @@ class CourseDetail extends Component {
                                         <TabPane tabId="1">
                                             {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right">
-                                                    <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>Add Announcement</Button>
+                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>
+                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                        Add Announcement
+                                                    </button>
                                                 </div>
                                                 : null
                                             }

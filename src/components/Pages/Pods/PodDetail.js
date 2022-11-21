@@ -32,7 +32,6 @@ class PodDetail extends Component {
     state = {
         rolePerms: '',
         pod: '',
-        users: [],
         pending: [],
         editModal: false,
         annModal: false,
@@ -238,7 +237,10 @@ class PodDetail extends Component {
                                         <TabPane tabId="1">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className="float-right">
-                                                    <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>Add Announcement</Button>
+                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>
+                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                        Add Announcement
+                                                    </button>
                                                 </div>
                                                 : null
                                             }
@@ -257,7 +259,10 @@ class PodDetail extends Component {
                                         <TabPane tabId="2">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className="float-right">
-                                                    <Button className="btn btn-secondary btn-sm mb-3 mt-2" onClick={this.toggleUserModal}>Add User</Button>
+                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleUserModal}>
+                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                        Add User
+                                                    </button>
                                                 </div>
                                                 : null
                                             }
@@ -269,7 +274,6 @@ class PodDetail extends Component {
                                             />
                                             <PodUserTable
                                                 pod={this.state.pod}
-                                                users={this.state.users}
                                                 pending={this.state.pending}
                                             />
                                         </TabPane>

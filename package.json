@@ -28,6 +28,8 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@coreui/coreui": "^4.2.2",
+    "@coreui/react": "^4.4.0",
     "@fortawesome/fontawesome-free": "5.15.3",
     "@fullcalendar/bootstrap": "4.4.2",
     "@fullcalendar/core": "4.4.2",
@@ -108,6 +110,7 @@
     "react-router-dom": "5.2.0",
     "react-select": "^3.2.0",
     "react-sweetalert2": "^0.5.2",
+    "react-time-picker": "^5.1.0",
     "react-toastify": "4.5.2",
     "react-transition-group": "4.4.1",
     "reactstrap": "8.9.0",

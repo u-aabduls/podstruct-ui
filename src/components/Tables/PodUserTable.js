@@ -79,15 +79,28 @@ class PodUserTable extends Component {
         }
     }
 
-    deleteUser = (username) => {
+    deleteUser = (user) => {
         var stateCopy = this.state
-        var res = deleteUser(this.state.pod.id, username)
-        if (res.isSuccess) {
-            var params = this.state.getUserParams.pending
-            var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+        if (user.inviteStatus === 'ACCEPTED') {
+            var res = deleteUser(this.state.pod.id, user.username)
             if (res.isSuccess) {
-                stateCopy.pending = res.data.users
-                this.setState(stateCopy)
+                var params = this.state.getUserParams.users
+                var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                if (res.isSuccess) {
+                    stateCopy.users = res.data.users
+                    this.setState(stateCopy)
+                }
+            }
+        }
+        else {
+            var res = deleteUser(this.state.pod.id, user.username)
+            if (res.isSuccess) {
+                var params = this.state.getUserParams.pending
+                var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                if (res.isSuccess) {
+                    stateCopy.pending = res.data.users
+                    this.setState(stateCopy)
+                }
             }
         }
     }
@@ -265,7 +278,7 @@ class PodUserTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) && !isAdmin(user.role) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user.username)}>
+                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user)}>
                                                         <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                                     </Button>
                                                 </div>
@@ -350,7 +363,7 @@ class PodUserTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user.username)}>
+                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user)}>
                                                         Revoke Invite
                                                     </Button>
                                                 </div>

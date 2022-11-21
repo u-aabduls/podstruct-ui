@@ -20,10 +20,14 @@ class CourseCard extends Component {
                             <tbody>
                                 <tr>
                                     <td>
-                                        <strong>Teacher:</strong>
+                                        <strong>Description:</strong>
                                     </td>
-                                    <td>
-                                        {this.props.course.teacherName}
+                                    <td style={{ overflowY: 'auto', overflowX: 'hidden', overflowWrap: 'anywhere' }}>
+                                        {this.props.course.description ?
+                                            this.props.course.description.length >= 65 ?
+                                                this.props.course.description.substring(0, 60) + "..."
+                                                : this.props.course.description
+                                            : null}
                                     </td>
                                 </tr>
                                 <tr>
