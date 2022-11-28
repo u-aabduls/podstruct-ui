@@ -1,11 +1,10 @@
 import handleError from '../utils/ErrorHandler.js'
 import formatParams from '../utils/ParamFormatter.js';
+import {devServer, prodServer} from './Paths.js';
 
 // private members
 var request = new XMLHttpRequest();
 var result = {}, httpMethod = null;
-var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
-    prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
 var authorizationToken;
 

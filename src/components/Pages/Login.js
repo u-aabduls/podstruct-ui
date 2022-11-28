@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Input, CustomInput } from 'reactstrap';
 import { loginUser } from "../../connectors/UserAuth";
 import 'react-toastify/dist/ReactToastify.css';
+import { webServer } from '../../connectors/Paths';
 
 import FormValidator from '../Forms/FormValidator.js';
 
@@ -50,7 +51,8 @@ class Login extends Component {
     }
 
     onSubmit = e => {
-      
+        e.preventDefault()
+    
         // TODO redirect only on valid login
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
@@ -70,7 +72,7 @@ class Login extends Component {
             var result = loginUser(this.constructRequestPayload());
             if (localStorage.getItem('token') && result.isSuccess){
                 this.setState({errorMessage: null});
-                if (/(?:\/pod\b\/details\b)(?:\/[-\w.]+)/.test(document.referrer)) {
+                if (document.referrer.includes(webServer) && !document.referrer.includes("login")) {
                     window.location.href = document.referrer
                  }
                  else this.props.history.push('/dashboard');
@@ -79,7 +81,7 @@ class Login extends Component {
                 this.setState({errorMessage: result.message});
             }
         }
-        e.preventDefault()
+       
     }
 
     /* Simplify error check */

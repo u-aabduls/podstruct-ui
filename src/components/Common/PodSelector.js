@@ -1,3 +1,4 @@
+import React from 'react';
 import Select from 'react-select';
 
 var options = [];
@@ -22,26 +23,31 @@ function setOptions(pods, active) {
         if (active === "required" && pod.active) {
             return { value: pod.id, label: pod.podName }
         }
-        return { value: pod.id, label: pod.podName }
     })
 }
 
 export default function PodSelector(props) {
     if (props.pods) setOptions(props.pods, props.active);
+
+    React.useEffect(() => {
+        if (props.defaultV && props.defaultCall) props.defaultCall(props.defaultV)
+    }, [props.defaultV]);
+
     return (
         <Select
             placeholder="Select a Pod..."
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
             defaultValue={props.defaultV ? { label: props.defaultV.podName, value: props.defaultV.id } : null}
-            value={options.find(o => o.value === props.defaultv)}
-            onChange={(e) => { 
+            value={options.find(o => o.value === props.defaultV.id)}
+            onChange={(e) => {
                 if (!props.validate) {
-                    props.setPod(e.value) 
+                    props.setPod(e.value)
                     return
                 }
-                props.setPod(e.value) 
-                props.validate("pod") }}
+                props.setPod(e.value)
+                props.validate("pod")
+            }}
             isDisabled={props.disabled}
         />
     )

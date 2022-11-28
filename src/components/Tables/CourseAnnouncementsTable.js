@@ -105,7 +105,7 @@ class CourseAnnouncementsTable extends Component {
                         }
                         )
                         : <tr>
-                            <h3 className='text-center pt-5 pb-4'>No announcements found</h3>
+                            <h3 className='text-center pt-5 pb-4'>No Announcements</h3>
                         </tr>}
                 </Table>
                 {this.state.lastEvaluatedKey ?

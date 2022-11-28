@@ -41,6 +41,7 @@ class EditCourseForm extends Component {
             }
         },
         getUserParams: {
+            name: '',
             page: 0,
             size: 10,
             sort: '',
@@ -268,7 +269,7 @@ class EditCourseForm extends Component {
             this.setState(stateCopy)
         }
         var params = this.state.getUserParams
-        res = getUsers(this.state.formEditCourse.selectedPod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+        res = getUsers(this.state.formEditCourse.selectedPod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
         if (res.isSuccess) {
             stateCopy.teachers = res.data.users
             this.setState(stateCopy)
