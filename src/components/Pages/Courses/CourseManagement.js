@@ -86,6 +86,9 @@ class CourseManagement extends Component {
         if (this.props.history.location.state?.pod){
             this.setState({ defaultPod: this.props.history.location.state?.pod})
         }
+        else if (res.isSuccess){
+            this.setState({ defaultPod: res.data[0] })
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
