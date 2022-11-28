@@ -180,7 +180,7 @@ class AddUserForm extends Component {
                 this.props.updateOnAdd(res)
             }).catch(() => {
                 Swal.fire({
-                    title: "Warning, the follwing emails could not be added ",
+                    title: "Warning, the following emails could not be added ",
                     icon: "warning",
                     confirmButtonColor: "#5d9cec",
                     html: errorEmails.join(', ') + "<br><br>" + errorMessage

@@ -177,7 +177,7 @@ class EditCourseForm extends Component {
 
     setTime = (date, id) => {
         if (date instanceof moment){
-            var stateCopy = this.state.formAddCourse;
+            var stateCopy = this.state.formEditCourse;
             if (id === "start") {
                 stateCopy.startTime = date.format("HH:mm:ss")
             }
