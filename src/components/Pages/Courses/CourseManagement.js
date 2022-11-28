@@ -13,6 +13,7 @@ class CourseManagement extends Component {
 
     state = {
         selectedPod: '',
+        defaultPod: '',
         subjectFilter: '',
         pods: [],
         courses: [],
@@ -46,6 +47,16 @@ class CourseManagement extends Component {
         }
     };
 
+    defaultPod = (pod) => {
+        var res = getCourses(pod.id, "")
+        if (res.isSuccess) {
+            this.setState({
+                courses: [...res.data.courses],
+                rolePerms: res.data.role,
+            })
+        }
+    };
+
     handleSearchChange = event => {
         this.setState({ subjectFilter: event.target.value })
     }
@@ -60,7 +71,6 @@ class CourseManagement extends Component {
 
     filterRequest = this.debounce(() => {
         var res = getCourses(this.state.selectedPod, this.state.subjectFilter)
-        console.log(res)
         if (res.isSuccess) {
             this.setState({
                 courses: [...res.data.courses]
@@ -72,7 +82,9 @@ class CourseManagement extends Component {
         var res = getPods()
         if (res.isSuccess) {
             this.setState({ pods: res.data })
-            this.setState({ test: "test" })
+        }
+        if (this.props.history.location.state?.pod){
+            this.setState({ defaultPod: this.props.history.location.state?.pod})
         }
     }
 
@@ -117,14 +129,21 @@ class CourseManagement extends Component {
                                 name="podSelector"
                                 pods={this.state.pods}
                                 setPod={(pod) => this.setPod(pod)}
-                                defaultv={this.state.selectedPod}
+                                defaultCall={(pod) => this.defaultPod(pod)}
+                                defaultV={this.state.defaultPod}
                                 active="required"
                             />
                         </div>
                     </Col>
                     <Col lg="2">
                         <div className="form-group mb-5">
-                            <input className="form-control mb-2" type="text" placeholder="Search courses by subject" value={this.state.subjectFilter} onChange={this.handleSearchChange} />
+                            <input
+                                className="form-control mb-2"
+                                type="text"
+                                placeholder="Search courses by subject"
+                                value={this.state.subjectFilter}
+                                onChange={this.handleSearchChange}
+                            />
                         </div>
                     </Col>
                 </Row>
@@ -142,7 +161,7 @@ class CourseManagement extends Component {
                             )
                         }) :
                         <div className='not-found'>
-                            <h1>No courses found</h1>
+                            <h1>No Courses</h1>
                         </div>
                     }
                 </div>

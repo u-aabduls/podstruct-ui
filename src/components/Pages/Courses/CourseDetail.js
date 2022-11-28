@@ -24,7 +24,9 @@ import EditCourseForm from '../../Forms/Course/EditCourseForm';
 import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
 import CourseAnnouncementsTable from '../../Tables/CourseAnnouncementsTable';
 import { getCourse } from '../../../connectors/Course';
+import { getPod } from '../../../connectors/Pod';
 import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
+
 class CourseDetail extends Component {
 
     state = {
@@ -87,6 +89,10 @@ class CourseDetail extends Component {
         }
     }
 
+    goBack = () => {
+        this.props.history.push('/courses', { pod:  getPod(this.state.course.podId).data})
+    }
+
     componentDidMount() {
         var stateCopy = this.state;
         var res = getCourse(this.state.course.podId, this.props.match.params.id)
@@ -128,7 +134,7 @@ class CourseDetail extends Component {
                         />
                     </div>
                 </div>
-                <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={() => this.props.history.goBack()}>
+                <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
                     <i className="fas fa-arrow-left fa-fw btn-icon"></i>
                     Go back
                 </Button>

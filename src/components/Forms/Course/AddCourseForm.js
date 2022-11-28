@@ -44,6 +44,7 @@ class AddCourseForm extends Component {
             }
         },
         getUserParams: {
+            name: '',
             page: 0,
             size: 10,
             sort: '',
@@ -282,7 +283,7 @@ class AddCourseForm extends Component {
         if (this.state.formAddCourse.selectedPod !== prevState.formAddCourse.selectedPod) {
             if (!this.state.formAddCourse.selectedPod) return
             var params = this.state.getUserParams
-            var res = getUsers(this.state.formAddCourse.selectedPod, params.page, params.size, params.sort, params.role, params.inviteStatus)
+            var res = getUsers(this.state.formAddCourse.selectedPod, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
             if (res.isSuccess) {
                 this.setState({ teachers: res.data.users })
             }

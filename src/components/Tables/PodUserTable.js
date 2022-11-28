@@ -6,6 +6,8 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
+    Row,
+    Col
 } from 'reactstrap';
 import { getUsers, deleteUser } from '../../connectors/PodUser';
 import { resendInvite } from '../../connectors/PodUserInvite';
@@ -22,6 +24,7 @@ class PodUserTable extends Component {
         pending: [],
         getUserParams: {
             users: {
+                name: '',
                 page: 0,
                 size: 0,
                 sort: '',
@@ -29,6 +32,7 @@ class PodUserTable extends Component {
                 inviteStatus: 'ACCEPTED'
             },
             pending: {
+                name: '',
                 page: 0,
                 size: 10,
                 sort: '',
@@ -85,7 +89,7 @@ class PodUserTable extends Component {
             var res = deleteUser(this.state.pod.id, user.username)
             if (res.isSuccess) {
                 var params = this.state.getUserParams.users
-                var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 if (res.isSuccess) {
                     stateCopy.users = res.data.users
                     this.setState(stateCopy)
@@ -96,7 +100,7 @@ class PodUserTable extends Component {
             var res = deleteUser(this.state.pod.id, user.username)
             if (res.isSuccess) {
                 var params = this.state.getUserParams.pending
-                var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 if (res.isSuccess) {
                     stateCopy.pending = res.data.users
                     this.setState(stateCopy)
@@ -109,7 +113,7 @@ class PodUserTable extends Component {
         if (this.state[table].length >= this.state.getUserParams[table].size) {
             var stateCopy = this.state
             var params = this.state.getUserParams[table]
-            var res = getUsers(this.state.pod.id, params.page + 1, params.size, params.sort, params.role, params.inviteStatus)
+            var res = getUsers(this.state.pod.id, params.name, params.page + 1, params.size, params.sort, params.role, params.inviteStatus)
             if (res.isSuccess) {
                 stateCopy[table] = res.data.users
                 stateCopy.getUserParams[table].page = this.state.getUserParams[table].page + 1
@@ -122,7 +126,7 @@ class PodUserTable extends Component {
         if (this.state.getUserParams[table].page) {
             var stateCopy = this.state
             var params = this.state.getUserParams[table]
-            var res = getUsers(this.state.pod.id, params.page - 1, params.size, params.sort, params.role, params.inviteStatus)
+            var res = getUsers(this.state.pod.id, params.name, params.page - 1, params.size, params.sort, params.role, params.inviteStatus)
             if (res.isSuccess) {
                 stateCopy[table] = res.data.users
                 stateCopy.getUserParams[table].page = this.state.getUserParams[table].page - 1
@@ -190,35 +194,97 @@ class PodUserTable extends Component {
         }
     }
 
+    handleUserSearchChange = event => {
+        this.setState({ 
+            getUserParams: {
+                ...this.state.getUserParams,
+                ["users"]: {
+                    ...this.state.getUserParams["users"],
+                    name: event.target.value
+                }
+            },
+        })
+    }
+
+    handlePendingSearchChange = event => {
+        this.setState({ 
+            getUserParams: {
+                ...this.state.getUserParams,
+                ["pending"]: {
+                    ...this.state.getUserParams["pending"],
+                    name: event.target.value
+                }
+            },
+        })
+    }
+
+    debounce = (fn, delay) => {
+        let timerId;
+        return (...args) => {
+            clearTimeout(timerId);
+            timerId = setTimeout(fn, delay, [...args]);
+        };
+    };
+
+    filterRequest = this.debounce((table) => {
+        var stateCopy = this.state
+        var params = this.state.getUserParams[table];
+        var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
+        if (res.isSuccess) {
+            stateCopy[table] = res.data.users
+            this.setState(stateCopy)
+        }
+    }, 500);
+
     componentWillMount() {
         var stateCopy = this.state
         var params = this.state.getUserParams.users
-        var res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+        var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
         if (res.isSuccess) {
             stateCopy.users = res.data.users
             this.setState(stateCopy)
         }
         params = this.state.getUserParams.pending
-        res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+        res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
         if (res.isSuccess) {
             stateCopy.pending = res.data.users
             this.setState(stateCopy)
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
         if (this.props.users !== prevProps.users) {
             this.setState({ users: this.props.users })
         }
         if (this.props.pending !== prevProps.pending) {
             this.setState({ pending: this.props.pending })
         }
+        if (prevState.getUserParams.users.name !== this.state.getUserParams.users.name) {
+            this.filterRequest("users");
+        }
+        if (prevState.getUserParams.pending.name !== this.state.getUserParams.pending.name) {
+            this.filterRequest("pending");
+        }
     }
 
     render() {
         return (
             <div>
-                <h4 className="mt-5">Users</h4>
+                <Row>
+                    <h4 className="mt-3">Users</h4>
+                    <Col sm="2">
+                        <div className="form-group mt-2">
+                            <input
+                                className="form-control"
+                                type="text"
+                                placeholder="Search users by name"
+                                value={this.state.getUserParams.users.name}
+                                onChange={this.handleUserSearchChange}
+                            />
+                        </div>
+                    </Col>
+                </Row>
+
                 <Table hover responsive ordering striped>
                     <thead>
                         <tr>
@@ -293,7 +359,7 @@ class PodUserTable extends Component {
                         :
                         <tr>
                             <td colspan="2" className='text-center pt-5 pb-4'>
-                                <h3>No users found</h3>
+                                <h3>No Users</h3>
                             </td>
                         </tr>}
                 </Table>
@@ -305,7 +371,20 @@ class PodUserTable extends Component {
                         <span><i className="fa fa-chevron-left"></i></span>
                     </Button>
                 </div>
-                <h4 className="mt-5">Pending Invites</h4>
+                <Row>
+                    <h4 className="mt-5 pt-2">Pending Invites</h4>
+                    <Col sm="2">
+                        <div className="form-group mt-4 pt-4">
+                            <input
+                                className="form-control"
+                                type="text"
+                                placeholder="Search users by name"
+                                value={this.state.getUserParams.pending.name}
+                                onChange={this.handlePendingSearchChange}
+                            />
+                        </div>
+                    </Col>
+                </Row>
                 <Table hover responsive ordering striped>
                     <thead>
                         <tr>
@@ -376,7 +455,7 @@ class PodUserTable extends Component {
                         })
                         : <tr>
                             <td colspan="2" className='text-center pt-5 pb-4'>
-                                <h3>No users found</h3>
+                                <h3>No Users</h3>
                             </td>
                         </tr>
                     }

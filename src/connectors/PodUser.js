@@ -1,11 +1,10 @@
 import handleError from '../utils/ErrorHandler.js'
 import formatParams from '../utils/ParamFormatter.js';
+import {devServer, prodServer} from './Paths.js';
 
 // private members
 var request = new XMLHttpRequest();
 var result = {}, httpMethod = null, email = null;
-var devServer = "http://podstruct-api-intg-env.eba-espxmmpg.us-east-1.elasticbeanstalk.com/",
-    prodServer = "https://d1vp98nn3zy5j1.cloudfront.net/";
 var endpointPath = "podstruct/api/pods/";
 var authorizationToken;
 
@@ -13,10 +12,11 @@ var authorizationToken;
  * Public Methods
  ********************/
 
-function getUsers(podID, page, size, sort, role, inviteStatus) {
+function getUsers(podID, name, page, size, sort, role, inviteStatus) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + '/users'
     var params = {};
+    if (name) params.name = name
     if (page) params.page = page
     if (size) params.size = size
     if (sort) params.sort = sort

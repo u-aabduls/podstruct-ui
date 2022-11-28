@@ -27,13 +27,15 @@ class AddUserForm extends Component {
         pod: this.props.pod,
         getUserParams: {
             users: {
+                name: '',
                 page: 0,
-                size: 10,
+                size: 0,
                 sort: '',
                 role: '',
                 inviteStatus: 'ACCEPTED'
             },
             pending: {
+                name: '',
                 page: 0,
                 size: 10,
                 sort: '',
@@ -174,7 +176,7 @@ class AddUserForm extends Component {
                     icon: "success",
                 })
                 let params = this.state.getUserParams.pending
-                let res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                let res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 this.props.updateOnAdd(res)
             }).catch(() => {
                 Swal.fire({
@@ -184,7 +186,7 @@ class AddUserForm extends Component {
                     html: errorEmails.join(', ') + "<br><br>" + errorMessage
                 })
                 let params = this.state.getUserParams.pending
-                let res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                let res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 this.props.updateOnAdd(res)
             });
         }
@@ -213,7 +215,7 @@ class AddUserForm extends Component {
                             <label className="text-muted" htmlFor="id-email">
                                 Email
                                 <br />
-                                <small>Provide a comma seperated email list to add multiple users at once</small>
+                                <small>To add multiple users, separate email addresses by a comma</small>
                             </label>
                             <div className="input-group with-focus">
                                 <Input
