@@ -42,7 +42,8 @@ class CourseManagement extends Component {
         if (res.isSuccess) {
             this.setState({
                 courses: [...res.data.courses],
-                rolePerms: res.data.role
+                rolePerms: res.data.role,
+                defaultPod: ''
             })
         }
     };
@@ -164,7 +165,7 @@ class CourseManagement extends Component {
                             )
                         }) :
                         <div className='not-found'>
-                            <h1>No Courses</h1>
+                            <h1>{this.state.fake}</h1>
                         </div>
                     }
                 </div>
