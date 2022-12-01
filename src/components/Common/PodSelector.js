@@ -38,8 +38,7 @@ export default function PodSelector(props) {
             placeholder="Select a Pod..."
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
-            defaultValue={props.defaultV ? { label: props.defaultV.podName, value: props.defaultV.id } : null}
-            value={props.defaultV ? options.find(o => o.value === props.defaultV.id) : null}
+            value={props.defaultV ? {value: props.defaultV.id, label: props.defaultV.podName} : options.find(o => o.value === props.defaultV)}
             onChange={(e) => {
                 if (!props.validate) {
                     props.setPod(e.value)

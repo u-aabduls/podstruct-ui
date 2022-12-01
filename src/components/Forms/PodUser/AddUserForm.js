@@ -84,10 +84,10 @@ class AddUserForm extends Component {
             [form.name]: {
                 ...this.state[form.name],
                 [input.name]: value,
-                // errors: {
-                //     ...this.state[form.name].errors,
-                //     [input.name]: result
-                // }
+                errors: {
+                    ...this.state[form.name].errors,
+                    [input.name]: result
+                }
             }
         });
     }
@@ -99,6 +99,17 @@ class AddUserForm extends Component {
         stateCopy.selector.error.isNullRole = isNullRole ? true : false;
         this.setState(stateCopy);
         return isNullRole
+    }
+
+    validateSelectorsOnChange = e => {
+        var isNullRole = this.state.formAddUser.role === '';
+        var stateCopy = this.state.formAddUser;
+        switch (e) {
+            case "role":
+                stateCopy.selector.error.isNullRole = isNullRole ? true : false;
+                break;
+        }
+        this.setState(stateCopy);
     }
 
     /* Simplify error check */
@@ -198,12 +209,13 @@ class AddUserForm extends Component {
     }
 
     render() {
+        console.log(this.state)
         return (
             <Modal isOpen={this.state.modal}>
                 <form className="mb-3" name="formAddUser" onSubmit={this.onSubmit}>
                     <ModalHeader toggle={this.toggleModal}>Add User</ModalHeader>
                     <ModalBody>
-                    <div className="form-group">
+                        <div className="form-group">
                             <label className="text-muted" htmlFor="pod">Pod</label>
                             <Input
                                 name="pod"
@@ -230,7 +242,7 @@ class AddUserForm extends Component {
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["required", "emails"]'
-                                    value={this.state.formAddUser.email} />
+                                    value={this.state.formAddUser.email || ''} />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-book"></em>
@@ -245,6 +257,7 @@ class AddUserForm extends Component {
                             <RoleSelector
                                 hasError={this.state.formAddUser.selector.error.isNullRole}
                                 setRole={(role) => this.setRole(role)}
+                                validate={this.validateSelectorsOnChange}
                             />
                             {this.state.formAddUser.selector.error.isNullRole && <p style={this.errorMessageStyling}>Role is required</p>}
                         </div>

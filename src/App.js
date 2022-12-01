@@ -15,6 +15,9 @@ import { BrowserRouter } from 'react-router-dom';
 // App Routes
 import Routes from './Routes';
 
+// Error Boundaries
+import ErrorBoundary from './utils/ErrorBoundary';
+
 // Vendor dependencies
 import "./Vendor";
 // Application Styles
@@ -31,8 +34,11 @@ class App extends Component {
     const basename = process.env.NODE_ENV === 'development' ? '/' : (PUBLIC_URL || '/');
 
     return (
+
       <BrowserRouter basename={basename}>
+        <ErrorBoundary>
           <Routes />
+        </ErrorBoundary>
       </BrowserRouter>
     );
 

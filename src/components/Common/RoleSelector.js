@@ -27,7 +27,9 @@ export default function RoleSelector(props) {
             options={options}
             defaultValue={props.defaultV ? { label: props.defaultV.role, value: props.defaultV.role } : null}
             value={options.find(o => o.value === props.defaultv)}
-            onChange={(e) => { props.setRole(e.value) }}
+            onChange={(e) => { 
+                props.setRole(e.value)
+                props.validate("role") }}
             isDisabled={props.disabled}
         />
     )

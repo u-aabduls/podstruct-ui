@@ -128,6 +128,7 @@ class PodDetail extends Component {
                                     <DropdownItem onClick={this.toggleEditModal}>Edit Pod</DropdownItem>
                                     : null
                                 }
+                                <DropdownItem onClick={() => this.props.history.push('/courses', { pod:  this.state.pod})}>Courses</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                         <EditPodForm
