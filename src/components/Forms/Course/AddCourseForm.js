@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 import 'react-datetime/css/react-datetime.css';
 import { getCourses, createCourse } from '../../../connectors/Course';
 import { getUsers } from '../../../connectors/PodUser';
+import { isAdmin } from '../../../utils/PermissionChecker';
 import FormValidator from '../FormValidator';
 import { TimePicker } from 'antd';
 import moment from 'moment';
@@ -278,7 +279,11 @@ class AddCourseForm extends Component {
             this.setState({ modal: this.props.modal })
         }
         if (this.props.pods !== prevProps.pods) {
-            this.setState({ pods: this.props.pods })
+            const filteredPods = [];
+            this.props.pods.forEach((pod) => {
+                if(isAdmin(pod.roleInPod)) filteredPods.push(pod)
+            })
+            this.setState({ pods: filteredPods })
         }
         if (this.state.formAddCourse.selectedPod !== prevState.formAddCourse.selectedPod) {
             if (!this.state.formAddCourse.selectedPod) return

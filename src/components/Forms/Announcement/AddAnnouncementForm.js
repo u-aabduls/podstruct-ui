@@ -162,7 +162,7 @@ class AddAnnouncementForm extends Component {
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["required", "len", "contains-alpha"]'
-                                    data-param='[3, 100]'
+                                    data-param='[3, 50]'
                                     value={this.state.formAddAnnouncement.title} />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -170,7 +170,7 @@ class AddAnnouncementForm extends Component {
                                     </span>
                                 </div>
                                 {this.hasError('formAddAnnouncement', 'title', 'required') && <span className="invalid-feedback">Title is required</span>}
-                                {this.hasError('formAddAnnouncement', 'title', 'len') && <span className="invalid-feedback">Title must be between 3 and 100 characters in length</span>}
+                                {this.hasError('formAddAnnouncement', 'title', 'len') && <span className="invalid-feedback">Title must be between 3 and 50 characters in length</span>}
                                 {this.hasError('formAddAnnouncement', 'title', 'contains-alpha') && <span className="invalid-feedback">Title must contain at least one alpha character</span>}
                             </div>
                         </div>
@@ -188,14 +188,14 @@ class AddAnnouncementForm extends Component {
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["maxlen"]'
-                                    data-param='50'
+                                    data-param='100'
                                     value={this.state.formAddAnnouncement.message} />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-book"></em>
                                     </span>
                                 </div>
-                                {this.hasError('formAddAnnouncement', 'message', 'maxlen') && <span className="invalid-feedback">Message must not have more than 50 characters</span>}
+                                {this.hasError('formAddAnnouncement', 'message', 'maxlen') && <span className="invalid-feedback">Message must not have more than 100 characters</span>}
                             </div>
                         </div>
                     </ModalBody>

@@ -26,6 +26,7 @@ const PodManagement = lazy(() => import('./components/Pages/Pods/PodManagement')
 const PodDetail = lazy(() => import('./components/Pages/Pods/PodDetail'));
 const CourseManagement = lazy(() => import('./components/Pages/Courses/CourseManagement'));
 const CourseDetail = lazy(() => import('./components/Pages/Courses/CourseDetail'));
+const AssignmentDetail =  lazy(() => import('./components/Pages/Courses/AssignmentDetail'));
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -88,6 +89,7 @@ const Routes = ({ location }) => {
                                     <Route path="/pod/details/:id" component={waitFor(PodDetail)} />
                                     <Route path="/courses" component={waitFor(CourseManagement)} />
                                     <Route path="/course/details/:id" component={waitFor(CourseDetail)} />
+                                    <Route path="/course/assignment/details/:id" component={waitFor(AssignmentDetail)} />
 
                                     {/*Default*/}
                                     <Redirect to="/login" />

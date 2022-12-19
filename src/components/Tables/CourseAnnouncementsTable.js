@@ -4,6 +4,7 @@ import {
     Table
 } from 'reactstrap';
 import moment from 'moment';
+import Swal from 'sweetalert2';
 import { getCourseAnnouncements, deleteCourseAnnouncement } from '../../connectors/Announcement';
 import { isAdmin } from '../../utils/PermissionChecker';
 
@@ -30,14 +31,23 @@ class CourseAnnouncementsTable extends Component {
     }
 
     deleteAnnouncement = (date) => {
-        var stateCopy = this.state
-        var res = deleteCourseAnnouncement(this.state.course.podId, this.state.course.id, date)
-        if (res.isSuccess) {
-            res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0)
-            stateCopy.announcements = res.data.announcements
-            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-            this.setState(stateCopy)
-        }
+        Swal.fire({
+            title: 'Are you sure you want to delete the annoucement?',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var stateCopy = this.state
+                var res = deleteCourseAnnouncement(this.state.course.podId, this.state.course.id, date)
+                if (res.isSuccess) {
+                    res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0)
+                    stateCopy.announcements = res.data.announcements
+                    stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
+                    this.setState(stateCopy)
+                }
+                Swal.fire('Successfully deleted announcement', '', 'success')
+            }
+        })
     }
 
     componentDidMount() {

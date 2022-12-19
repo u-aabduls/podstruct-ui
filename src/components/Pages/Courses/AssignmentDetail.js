@@ -20,22 +20,15 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
-import EditCourseForm from '../../Forms/Course/EditCourseForm';
-import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
-import AddAssignmentForm from '../../Forms/Assignment/AddAssignmentForm';
-import CourseAnnouncementsTable from '../../Tables/CourseAnnouncementsTable';
-import AssignmentsTable from '../../Tables/AssignmentsTable';
-import { getCourse } from '../../../connectors/Course';
+import { getAssignment } from '../../../connectors/Assignments';
 import { getPod } from '../../../connectors/Pod';
 import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
 
-class CourseDetail extends Component {
+class AssignmentDetail extends Component {
 
     state = {
         rolePerms: '',
-        course: '',
-        announcements: [],
-        assignments: [],
+        assignment: '',
         editModal: false,
         annModal: false,
         assignmentsModal: false,
@@ -59,7 +52,7 @@ class CourseDetail extends Component {
         });
     }
 
-    toggleAssignmentModal  = () => {
+    toggleAssignmentModal = () => {
         this.setState({
             assignmentsModal: !this.state.assignmentsModal
         });
@@ -99,15 +92,15 @@ class CourseDetail extends Component {
     }
 
     goBack = () => {
-        this.props.history.push('/courses', { pod: getPod(this.state.course.podId).data })
+        this.props.history.push(`/course/details/${this.props.history.location.state.courseID}`)
     }
 
     componentWillMount() {
         var stateCopy = this.state;
-        var res = getCourse(this.state.course.podId, this.props.match.params.id)
+        var res = getAssignment(this.props.history.location.state.podID, this.props.history.location.state.courseID, this.props.match.params.id)
         if (res.isSuccess) {
-            stateCopy.course = res.data
-            stateCopy.rolePerms = res.data.role
+            stateCopy.assignment = res.data
+            // stateCopy.rolePerms = res.data.role
             this.setState(stateCopy)
         }
     }
@@ -116,14 +109,13 @@ class CourseDetail extends Component {
         console.log(this.state)
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-        var output = "";
+        var dueDate = new Date(this.state.assignment.dueDateTime);
         return (
             <ContentWrapper>
                 <div className="content-heading">
-                    <div>Course Details
-                        <small>Check out the details and edit a specific course</small>
+                    <div>Assignment Details
+                        <small>Check out the details and edit a specific assignment</small>
                     </div>
-
                     <div className="ml-auto">
                         <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
                             <DropdownToggle>
@@ -136,12 +128,12 @@ class CourseDetail extends Component {
                                 }
                             </DropdownMenu>
                         </Dropdown>
-                        <EditCourseForm
+                        {/* <EditCourseForm
                             course={this.state.course}
                             modal={this.state.editModal}
                             toggle={this.toggleEditModal}
                             updateOnEdit={this.updateOnCourseEdit}
-                        />
+                        /> */}
                     </div>
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
@@ -153,8 +145,8 @@ class CourseDetail extends Component {
                         {/* START card */}
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                                <h4 className="mt-1 text-muted">Course Subject</h4>
-                                <p className="text-primary font-weight-bold">{this.state.course.subject}</p>
+                                <h4 className="mt-1 text-muted">Assignment Title</h4>
+                                <p className="text-primary font-weight-bold">{this.state.assignment.title}</p>
                             </div>
                         </div>
                         {/* END card */}
@@ -163,8 +155,8 @@ class CourseDetail extends Component {
                         {/* START card */}
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden', overflowWrap: 'anywhere' }}>
-                                <h4 className="mt-1 text-muted">Course Description</h4>
-                                <p className="text-primary font-weight-bold">{this.state.course.description}</p>
+                                <h4 className="mt-1 text-muted">Assignment Type</h4>
+                                <p className="text-primary font-weight-bold">{this.state.assignment.type}</p>
                             </div>
                         </div>
                         {/* END card */}
@@ -173,8 +165,20 @@ class CourseDetail extends Component {
                         {/* START card */}
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                                <h4 className="mt-1 text-muted">Teacher</h4>
-                                <p className="text-primary font-weight-bold">{this.state.course.teacherName}</p>
+                                <h4 className="mt-1 text-muted">Due Date</h4>
+                                <p className="text-primary font-weight-bold">
+                                    <span className="text-uppercase text-bold">
+                                        {days[dueDate.getDay()]}
+                                        {' '}
+                                        {months[dueDate.getMonth()]}
+                                        {' '}
+                                        {dueDate.getDate()}
+                                    </span>
+                                    <br />
+                                    <span className="h2 mt0 text-sm">
+                                        {moment(dueDate).format("h:mm A")}
+                                    </span>
+                                </p>
                             </div>
                         </div>
                         {/* END card */}
@@ -183,18 +187,18 @@ class CourseDetail extends Component {
                         {/* START card */}
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                                <h4 className="mt-1 text-muted">Course Schedule</h4>
-                                <p className="text-primary font-weight-bold">{this.state.course.daysOfWeekInterval.split(',').forEach(function (i, idx, array) {
-                                    if (idx === array.length - 1) {
-                                        output += days[i]
-                                    }
-                                    else {
-                                        output += days[i] + '/'
-                                    }
-                                })}
-                                    {output}
-                                    <br></br>
-                                    {moment(this.state.course.startTime, "HH:mm:ss").format("h:mm A") + " - " + moment(this.state.course.endTime, "HH:mm:ss").format("h:mm A")}</p>
+                                <h4 className="mt-1 text-muted">Points Possible</h4>
+                                <p className="text-primary font-weight-bold">{this.state.assignment.points}</p>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </Col>
+                    <Col>
+                        {/* START card */}
+                        <div className="card-fixed-height">
+                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                                <h4 className="mt-1 text-muted">Reference Material</h4>
+
                             </div>
                         </div>
                         {/* END card */}
@@ -213,7 +217,7 @@ class CourseDetail extends Component {
                                                 href="#"
                                                 className={classnames({ active: this.state.activeTab === '1' })}
                                                 onClick={() => { this.toggleTab('1'); }}>
-                                                Announcements
+                                                Assignment Details
                                             </NavLink>
                                         </NavItem>
                                         <NavItem>
@@ -221,15 +225,7 @@ class CourseDetail extends Component {
                                                 href="#"
                                                 className={classnames({ active: this.state.activeTab === '2' })}
                                                 onClick={() => { this.toggleTab('2'); }}>
-                                                Assignments
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                href="#"
-                                                className={classnames({ active: this.state.activeTab === '3' })}
-                                                onClick={() => { this.toggleTab('3'); }}>
-                                                Upcoming Events
+                                                Grades
                                             </NavLink>
                                         </NavItem>
                                     </Nav>
@@ -240,12 +236,12 @@ class CourseDetail extends Component {
                                                 <div className="float-right">
                                                     <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                        Add Announcement
+                                                        Edit Assignment
                                                     </button>
                                                 </div>
                                                 : null
                                             }
-                                            <AddAnnouncementForm
+                                            {/* <AddAnnouncementForm
                                                 course={this.state.course}
                                                 modal={this.state.annModal}
                                                 updateOnAdd={this.updateOnAnnouncementAdd}
@@ -255,28 +251,10 @@ class CourseDetail extends Component {
                                                 course={this.state.course}
                                                 announcements={this.state.announcements}
                                                 lastEvaluatedKey={this.state.lastEvaluatedKey}
-                                            />
+                                            /> */}
                                         </TabPane>
                                         <TabPane tabId="2">
-                                            {!isStudent(this.state.rolePerms) ?
-                                                <div className="float-right">
-                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAssignmentModal}>
-                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                        Add Assignment
-                                                    </button>
-                                                </div>
-                                                : null
-                                            }
-                                            <AddAssignmentForm
-                                                course={this.state.course}
-                                                modal={this.state.assignmentsModal}
-                                                toggle={this.toggleAssignmentModal}
-                                                updateOnAdd={this.updateOnAssignmentAdd}
-                                            />
-                                            <AssignmentsTable
-                                                course={this.state.course}
-                                                assignments={this.state.assignments}
-                                            />
+
                                         </TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
                                         <TabPane tabId="4">Sed commodo tellus ut mi tristique pharetra.</TabPane>
@@ -291,4 +269,4 @@ class CourseDetail extends Component {
     }
 }
 
-export default withRouter(CourseDetail)
+export default withRouter(AssignmentDetail)
