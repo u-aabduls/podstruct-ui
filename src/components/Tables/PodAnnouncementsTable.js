@@ -4,6 +4,7 @@ import {
     Table
 } from 'reactstrap';
 import moment from 'moment';
+import Swal from 'sweetalert2';
 import { getPodAnnouncements, deletePodAnnouncement } from '../../connectors/Announcement';
 import { isAdmin } from '../../utils/PermissionChecker';
 
@@ -30,14 +31,23 @@ class PodAnnouncementsTable extends Component {
     }
 
     deleteAnnouncement = (date) => {
-        var stateCopy = this.state
-        var res = deletePodAnnouncement(this.state.pod.id, date)
-        if (res.isSuccess) {
-            res = getPodAnnouncements(this.state.pod.id, '', 0)
-            stateCopy.announcements = res.data.announcements
-            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-            this.setState(stateCopy)
-        }
+        Swal.fire({
+            title: 'Are you sure you want to delete the annoucement?',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var stateCopy = this.state
+                var res = deletePodAnnouncement(this.state.pod.id, date)
+                if (res.isSuccess) {
+                    res = getPodAnnouncements(this.state.pod.id, '', 0)
+                    stateCopy.announcements = res.data.announcements
+                    stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
+                    this.setState(stateCopy)
+                }
+                Swal.fire('Successfully deleted announcement', '', 'success')
+            }
+        })   
     }
 
     componentDidMount() {

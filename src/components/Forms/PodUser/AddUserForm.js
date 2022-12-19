@@ -164,19 +164,22 @@ class AddUserForm extends Component {
         var all = [];
         if (!hasError && !invalidSelector) {
             this.state.formAddUser.email.replace(/\s/g, "").split(",").map((email) => {
-                var p = new Promise((resolve, reject) => {
-                    var resp = createUser(this.state.pod.id, this.constructRequestPayload(email))
-                    if (resp.isSuccess) {
-                        successCount = successCount + 1
-                        resolve(resp)
-                    }
-                    else {
-                        errorEmails.push(email)
-                        errorMessage = resp.message
-                        reject(resp.message)
-                    }
-                });
-                all.push(p);
+                // only submit emails that are not empty strings from trailing commas
+                if (email) {
+                    var p = new Promise((resolve, reject) => {
+                        var resp = createUser(this.state.pod.id, this.constructRequestPayload(email))
+                        if (resp.isSuccess) {
+                            successCount = successCount + 1
+                            resolve(resp)
+                        }
+                        else {
+                            errorEmails.push(email)
+                            errorMessage = resp.message
+                            reject(resp.message)
+                        }
+                    });
+                    all.push(p);
+                }
             })
 
             Promise.all(all).then(() => {
@@ -209,7 +212,6 @@ class AddUserForm extends Component {
     }
 
     render() {
-        console.log(this.state)
         return (
             <Modal isOpen={this.state.modal}>
                 <form className="mb-3" name="formAddUser" onSubmit={this.onSubmit}>

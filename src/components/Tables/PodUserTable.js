@@ -68,7 +68,6 @@ class PodUserTable extends Component {
     resendInvite = (username) => {
         var res = resendInvite(this.state.pod.id, username)
         if (res.isSuccess) {
-            this.toggleModal()
             Swal.fire({
                 title: "Resent Invitation",
                 icon: "success",
@@ -84,28 +83,47 @@ class PodUserTable extends Component {
     }
 
     deleteUser = (user) => {
-        var stateCopy = this.state
         if (user.inviteStatus === 'ACCEPTED') {
-            var res = deleteUser(this.state.pod.id, user.username)
-            if (res.isSuccess) {
-                var params = this.state.getUserParams.users
-                var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
-                if (res.isSuccess) {
-                    stateCopy.users = res.data.users
-                    this.setState(stateCopy)
+            Swal.fire({
+                title: 'Are you sure you want to delete ' + user.firstName + ' ' + user.lastName + ' from the pod',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var stateCopy = this.state
+                    var res = deleteUser(this.state.pod.id, user.username)
+                    if (res.isSuccess) {
+                        var params = this.state.getUserParams.users
+                        var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                        if (res.isSuccess) {
+                            stateCopy.users = res.data.users
+                            this.setState(stateCopy)
+                        }
+                    }
+                    Swal.fire('Successfully deleted user from the pod', '', 'success')
                 }
-            }
+            })
         }
         else {
-            var res = deleteUser(this.state.pod.id, user.username)
-            if (res.isSuccess) {
-                var params = this.state.getUserParams.pending
-                var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
-                if (res.isSuccess) {
-                    stateCopy.pending = res.data.users
-                    this.setState(stateCopy)
+            Swal.fire({
+                title: 'Are you sure you revoke the invitation?',
+                showCancelButton: true,
+                confirmButtonText: 'Revoke',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var stateCopy = this.state
+                    var res = deleteUser(this.state.pod.id, user.username)
+                    if (res.isSuccess) {
+                        var params = this.state.getUserParams.pending
+                        var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                        if (res.isSuccess) {
+                            stateCopy.pending = res.data.users
+                            this.setState(stateCopy)
+                        }
+                    }
+                    Swal.fire('Successfully revoked invitation', '', 'success')
                 }
-            }
+            })
         }
     }
 
@@ -147,7 +165,7 @@ class PodUserTable extends Component {
                 if (nextSort === 'default') getUserParams.sort = '';
                 else getUserParams.sort = "lastName," + nextSort;
                 var params = getUserParams
-                res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 this.setState({
                     [table]: res.data.users,
                     getUserParams: {
@@ -171,7 +189,7 @@ class PodUserTable extends Component {
                 if (nextSort === 'default') getUserParams.sort = '';
                 else getUserParams.sort = "role," + nextSort;
                 var params = getUserParams
-                res = getUsers(this.state.pod.id, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 this.setState({
                     [table]: res.data.users,
                     getUserParams: {
@@ -195,7 +213,7 @@ class PodUserTable extends Component {
     }
 
     handleUserSearchChange = event => {
-        this.setState({ 
+        this.setState({
             getUserParams: {
                 ...this.state.getUserParams,
                 ["users"]: {
@@ -207,7 +225,7 @@ class PodUserTable extends Component {
     }
 
     handlePendingSearchChange = event => {
-        this.setState({ 
+        this.setState({
             getUserParams: {
                 ...this.state.getUserParams,
                 ["pending"]: {
@@ -424,7 +442,8 @@ class PodUserTable extends Component {
                                             </td> */}
                                         <td>
                                             {user.firstName} {user.lastName}
-                                            {user.username}
+                                            <br />
+                                            <small>{user.username}</small>
                                         </td>
                                         <td>
                                             {user.role}
