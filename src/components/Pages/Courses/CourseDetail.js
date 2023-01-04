@@ -113,7 +113,6 @@ class CourseDetail extends Component {
     }
 
     render() {
-        console.log(this.state)
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         var output = "";

@@ -5,8 +5,8 @@ import {
     Table
 } from 'reactstrap';
 import moment from 'moment';
-import { getAssignments } from '../../connectors/Assignments';
-import { isAdmin } from '../../utils/PermissionChecker';
+import { getAssignments, deleteAssignment } from '../../connectors/Assignments';
+import { isAdmin, isStudent } from '../../utils/PermissionChecker';
 
 
 class AssignmentsTable extends Component {
@@ -30,12 +30,19 @@ class AssignmentsTable extends Component {
         // }
     }
 
-    deleteAssignments = (date) => {
-
+    deleteAssignments = (assignmentId) => {
+        var stateCopy = this.state
+        var res = deleteAssignment(this.state.course.podId, this.state.course.id, assignmentId)
+        res = getAssignments(this.state.course.podId, this.state.course.id, 10)
+        if (res.isSuccess) {
+            stateCopy.assignments = res.data
+            this.setState(stateCopy)
+        }
     }
 
-    assignmentDetailRedirect = (assignmentId) => {
-        this.props.history.push(`/course/assignment/details/${assignmentId}`, { podID:  this.state.course.podId, courseID: this.state.course.id, assignmentID: assignmentId})
+    assignmentDetailRedirect = (event, assignmentId) => {
+        if(event.target.id === 'delete') return;
+        this.props.history.push(`/course/assignment/details/${assignmentId}`, { podID: this.state.course.podId, courseID: this.state.course.id })
     }
 
     componentDidMount() {
@@ -77,9 +84,10 @@ class AssignmentsTable extends Component {
                     </thead>
                     {this.state.assignments.length > 0 ?
                         this.state.assignments.map((assignment) => {
-                            var dueDate = new Date(assignment.dueDateTime);
+                            if (!assignment.published && isStudent(this.state.rolePerms)) return
+                            var dueDate = new Date(moment.utc(assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
                             return (
-                                <tbody onClick={() => this.assignmentDetailRedirect(assignment.id)}>
+                                <tbody onClick={(event) => this.assignmentDetailRedirect(event, assignment.id)}>
                                     <tr>
                                         <td>
 
@@ -87,7 +95,7 @@ class AssignmentsTable extends Component {
                                         <td>
                                             {assignment.title}
                                         </td>
-                                        <td >
+                                        <td>
                                             <span className="text-uppercase text-bold">
                                                 {days[dueDate.getDay()]}
                                                 {' '}
@@ -106,8 +114,8 @@ class AssignmentsTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAnnouncement(assignment.date)}>
-                                                        <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAssignments(assignment.id)}>
+                                                        <i className="fas fa-trash-alt fa-fw btn-icon" id='delete'></i>
                                                     </Button>
                                                 </div>
                                                 : null
@@ -116,8 +124,7 @@ class AssignmentsTable extends Component {
                                     </tr>
                                 </tbody>
                             )
-                        }
-                        )
+                        })
                         : <tr>
                             <td colspan="4" className='text-center pt-5 pb-4'>
                                 <h3>No Assignments</h3>

@@ -297,6 +297,23 @@
   border: 0 solid $card-border-color;
 }
 
+.card-fixed-height-assignment {
+  position: relative;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
+  height: 140px;
+  width: 80%;
+  word-wrap: break-word;
+  background-color: $card-bg;
+  background-clip: border-box;
+  border: solid 1px black;
+}
+
+.add-question-button {
+  position:relative;
+}
 .course-preview a{
   text-decoration: none;
 }
