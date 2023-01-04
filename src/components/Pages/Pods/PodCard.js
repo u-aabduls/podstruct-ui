@@ -63,22 +63,6 @@ class PodCard extends Component {
                                         {this.state.pod.roleInPod}
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <strong>Number of Students</strong>
-                                    </td>
-                                    <td>
-                                        {this.state.pod.numberOfStudents}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <strong>Number of Courses</strong>
-                                    </td>
-                                    <td>
-                                        {this.state.pod.numberOfTeachers}
-                                    </td>
-                                </tr>
                             </tbody>
                         </Table>
                     </Card >
