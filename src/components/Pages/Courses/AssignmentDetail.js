@@ -21,16 +21,19 @@ import {
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
 import { getAssignment } from '../../../connectors/Assignments';
+import { getAnswerKeys } from '../../../connectors/AnswerKey';
 import { getPod } from '../../../connectors/Pod';
 import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
+import AddQuestionForm from '../../Forms/Assignment/AddQuestionForm';
 
 class AssignmentDetail extends Component {
 
     state = {
         rolePerms: '',
         assignment: '',
+        questions: [],
         editModal: false,
-        annModal: false,
+        addQuestionModal: false,
         assignmentsModal: false,
         ddOpen: false,
         activeTab: '1',
@@ -46,9 +49,9 @@ class AssignmentDetail extends Component {
         });
     }
 
-    toggleAnnModal = () => {
+    toggleAddQuestionModal = () => {
         this.setState({
-            annModal: !this.state.annModal
+            addQuestionModal: !this.state.addQuestionModal
         });
     }
 
@@ -74,11 +77,10 @@ class AssignmentDetail extends Component {
         }
     }
 
-    updateOnAnnouncementAdd = (res) => {
+    updateOnQuestionAdd = (res) => {
         if (res.isSuccess) {
             this.setState({
-                announcements: res.data.announcements,
-                lastEvaluatedKey: res.data.lastEvaluatedKey
+                questions: res.data
             })
         }
     }
@@ -100,16 +102,20 @@ class AssignmentDetail extends Component {
         var res = getAssignment(this.props.history.location.state.podID, this.props.history.location.state.courseID, this.props.match.params.id)
         if (res.isSuccess) {
             stateCopy.assignment = res.data
-            // stateCopy.rolePerms = res.data.role
+            this.setState(stateCopy)
+        }
+        res = getAnswerKeys(this.props.history.location.state.podID, this.props.history.location.state.courseID, this.props.match.params.id)
+        if (res.isSuccess) {
+            stateCopy.questions = res.data
             this.setState(stateCopy)
         }
     }
 
     render() {
-        console.log(this.state)
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-        var dueDate = new Date(this.state.assignment.dueDateTime);
+        var dueDate = new Date(moment.utc(this.state.assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
+        console.log(this.state)
         return (
             <ContentWrapper>
                 <div className="content-heading">
@@ -232,22 +238,73 @@ class AssignmentDetail extends Component {
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
+
                                             {!isStudent(this.state.rolePerms) ?
-                                                <div className="float-right">
-                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>
+                                                <div className="float-right" style={{ clear: 'both' }}>
+                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAddQuestionModal}>
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                        Edit Assignment
+                                                        Add Question
                                                     </button>
                                                 </div>
                                                 : null
                                             }
-                                            {/* <AddAnnouncementForm
-                                                course={this.state.course}
-                                                modal={this.state.annModal}
-                                                updateOnAdd={this.updateOnAnnouncementAdd}
-                                                toggle={this.toggleAnnModal}
+                                            <div className="mt-5 card-fixed-height-assignment" style={{ clear: 'both' }}>
+                                                <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                                                    <h4 className="mt-1 ml-3 text-muted">Instructions</h4>
+                                                    <p className="ml-3 text-primary font-weight-bold">{this.state.assignment.instructions}</p>
+                                                </div>
+                                            </div>
+                                            {this.state.questions.length ?
+                                                this.state.questions.map(function (question, i) {
+                                                    var choices = [];
+                                                    var answers = [];
+                                                    var alphabet = ["A", "B", "C", "D", "E"];
+                                                    for (let i = 0; i < 5; i++) {
+                                                        if (question['choice' + alphabet[i]])
+                                                            choices.push(question['choice' + alphabet[i]])
+                                                    }
+                                                    for (let i = 0; i < 5; i++) {
+                                                        if (question['answer' + (i + 1)])
+                                                            answers.push(question['answer' + (i + 1)])
+                                                    }
+                                                    return (
+                                                        <div className="mt-5 card-fixed-height-assignment" style={{ clear: 'both', width: '60%' }}>
+                                                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                                                                {!isStudent("ADMIN") ?
+                                                                    <div className="float-right" style={{ clear: 'both' }}>
+                                                                        <button className="btn btn-success btn-sm mb-3 mt-2" >
+                                                                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                                            Edit Question
+                                                                        </button>
+                                                                    </div>
+                                                                    : null
+                                                                }
+                                                                <h4 className="mt-1 ml-3 text-muted">Question {i + 1}</h4>
+                                                                <span className="ml-3 text-primary font-weight-bold">{question.question}</span>
+                                                                <span className="ml-3 text-primary font-weight-bold">{question.questionType}</span>
+                                                                {choices.map(function (choice, i) {
+                                                                    return <span className="ml-3 text-primary font-weight-bold">{'choice' + alphabet[i]}: {choice} </span>
+                                                                })}
+                                                                {answers.map(function (answer, i) {
+                                                                    return <span className="ml-3 text-primary font-weight-bold">{'answer' + (i + 1)}: {answer} </span>
+                                                                })}
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                }) :
+                                                <div className='not-found'>
+                                                    <h1>No Questions Found</h1>
+                                                </div>
+                                            }
+                                            <AddQuestionForm
+                                                podId={this.props.history.location.state.podID}
+                                                courseId={this.props.history.location.state.courseID}
+                                                assignmentId={this.state.assignment.id}
+                                                modal={this.state.addQuestionModal}
+                                                updateOnAdd={this.updateOnQuestionAdd}
+                                                toggle={this.toggleAddQuestionModal}
                                             />
-                                            <CourseAnnouncementsTable
+                                            {/* <CourseAnnouncementsTable
                                                 course={this.state.course}
                                                 announcements={this.state.announcements}
                                                 lastEvaluatedKey={this.state.lastEvaluatedKey}

@@ -12,37 +12,29 @@ var authorizationToken;
  * Public Methods
  ********************/
 
-function getAssignments(podID, courseID, pageSize) {
+function getAnswerKeys(podID, courseID, assignmentID) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment";
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID + "/question/";
     var params = {};
-    if (pageSize) params.pageSize = pageSize
-    _initialize("GET", endpointPathEXT + formatParams(params));
-    request.send();
-    return result;
-}
-
-function getAssignment(podID, courseID, assignmentID) {
-    authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID;
+   
     _initialize("GET", endpointPathEXT);
     request.send();
     return result;
 }
 
-function createAssignment(podID, courseID, requestBody) {
+function getAnswerKey(podID, courseID, assignmentID, questionID) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment";
-    _initialize("POST", endpointPathEXT);
-    request.send(requestBody);
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID + "/question/" + questionID;
+    _initialize("GET", endpointPathEXT);
+    request.send();
     return result;
 }
 
-function deleteAssignment(podID, courseID, assignmentID) {
+function createAnswerKey(podID, courseID, assignmentID, requestBody) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID;
-    _initialize("DELETE", endpointPathEXT);
-    request.send();
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID + "/question";
+    _initialize("POST", endpointPathEXT);
+    request.send(requestBody);
     return result;
 }
 
@@ -87,21 +79,21 @@ function __execute() {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched assignment(s)"
+                result.message = "Successfully fetched answer Key(s)"
                 break;
             case "POST":
-                result.message = "Successfully created assignment"
+                result.message = "Successfully created answer Key"
                 break;
             case "PUT":
-                result.message = "Successfully edited assignment"
+                result.message = "Successfully edited answer Key"
                 break;
             case "DELETE":
-                result.message = "Successfully deleted assignment"
+                result.message = "Successfully deleted answer Key"
                 break;
             default:
-                result.message = "Successfully reached assignment endpoint";
+                result.message = "Successfully reached answer Key endpoint";
         }
     }
 }
 
-export { getAssignments, getAssignment, createAssignment, deleteAssignment};
+export { getAnswerKeys, getAnswerKey, createAnswerKey};

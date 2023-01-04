@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import {
     Button,
     Input,
@@ -12,7 +13,7 @@ import {
 import Datetime from 'react-datetime';
 import Swal from 'sweetalert2';
 import 'react-datetime/css/react-datetime.css';
-import { createAssignment, getAssignments } from '../../../connectors/Assignments';
+import { createAssignment, getAssignment } from '../../../connectors/Assignments';
 import AssignmentTypeSelector from '../../Common/AssignmentTypeSelector';
 import FormValidator from '../FormValidator';
 import moment from 'moment';
@@ -151,6 +152,9 @@ class AddAssignmentForm extends Component {
         if (this.state.formAddAssignment.points) {
             payload.points = this.state.formAddAssignment.points
         }
+        if (this.state.ungraded) {
+            payload.points = 0
+        }
         if (this.state.formAddAssignment.rubric) {
             payload.rubricId = this.state.formAddAssignment.rubric
         }
@@ -200,9 +204,9 @@ class AddAssignmentForm extends Component {
                     confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
-                var res = getAssignments(this.state.course.podId, this.state.course.id, "")
+                var res = getAssignment(this.state.course.podId, this.state.course.id, result.data.id)
                 if (res.isSuccess) {
-                    this.props.updateOnAdd(res)
+                    this.props.history.push(`/course/assignment/details/${result.data.id}`, { podID:  this.state.course.podId, courseID: this.state.course.id})
                 }
             }
             else {
@@ -333,7 +337,7 @@ class AddAssignmentForm extends Component {
                                             || this.hasError('formAddAssignment', 'points', 'number')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate='["required", "number"]'
+                                        data-validate={!this.state.ungraded ? '["required", "number"]': null}
                                         disabled={this.state.ungraded}
                                         value={this.state.formAddAssignment.points || ''} />
                                     <div className="input-group-append">
@@ -341,8 +345,8 @@ class AddAssignmentForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
-                                    {this.hasError('formAddAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span>}
-                                    {this.hasError('formAddAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span>}
+                                    {!this.state.ungraded ? this.hasError('formAddAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span> : null}
+                                    {!this.state.ungraded ? this.hasError('formAddAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span> : null}
                                     <div className="input-group">
                                         <input className="mr-2" type="checkbox" onClick={this.toggleUngraded} />
                                         <label className="text-muted pt-2"> Ungraded</label>
@@ -361,4 +365,4 @@ class AddAssignmentForm extends Component {
     }
 }
 
-export default AddAssignmentForm
+export default withRouter(AddAssignmentForm)
