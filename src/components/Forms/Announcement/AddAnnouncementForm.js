@@ -188,14 +188,14 @@ class AddAnnouncementForm extends Component {
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["maxlen"]'
-                                    data-param='100'
+                                    data-param='4500'
                                     value={this.state.formAddAnnouncement.message} />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-book"></em>
                                     </span>
                                 </div>
-                                {this.hasError('formAddAnnouncement', 'message', 'maxlen') && <span className="invalid-feedback">Message must not have more than 100 characters</span>}
+                                {this.hasError('formAddAnnouncement', 'message', 'maxlen') && <span className="invalid-feedback">Message must not have more than 4500 characters</span>}
                             </div>
                         </div>
                     </ModalBody>
