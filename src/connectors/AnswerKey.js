@@ -38,6 +38,14 @@ function createAnswerKey(podID, courseID, assignmentID, requestBody) {
     return result;
 }
 
+function editAnswerKey(podID, courseID, assignmentID, questionID, requestBody) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID + "/question/" + questionID;
+    _initialize("PUT", endpointPathEXT);
+    request.send(requestBody);
+    return result;
+}
+
 /********************
  * Private Methods
  ********************/
@@ -96,4 +104,4 @@ function __execute() {
     }
 }
 
-export { getAnswerKeys, getAnswerKey, createAnswerKey};
+export { getAnswerKeys, getAnswerKey, createAnswerKey, editAnswerKey};

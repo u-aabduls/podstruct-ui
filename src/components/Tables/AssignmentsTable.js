@@ -5,8 +5,9 @@ import {
     Table
 } from 'reactstrap';
 import moment from 'moment';
-import { getAssignments, deleteAssignment } from '../../connectors/Assignments';
+import { getAssignments, deleteAssignment, publishAssignment } from '../../connectors/Assignments';
 import { isAdmin, isStudent } from '../../utils/PermissionChecker';
+import Swal from 'sweetalert2';
 
 
 class AssignmentsTable extends Component {
@@ -30,9 +31,16 @@ class AssignmentsTable extends Component {
         // }
     }
 
-    deleteAssignments = (assignmentId) => {
+    publish = (assignmentId) => {
         var stateCopy = this.state
-        var res = deleteAssignment(this.state.course.podId, this.state.course.id, assignmentId)
+        var res = publishAssignment(this.state.course.podId, this.state.course.id, assignmentId)
+        if (res.isSuccess) {
+            Swal.fire({
+                title: "Successfully published assignment",
+                confirmButtonColor: "#5d9cec",
+                icon: "success",
+            })
+        }
         res = getAssignments(this.state.course.podId, this.state.course.id, 10)
         if (res.isSuccess) {
             stateCopy.assignments = res.data
@@ -40,8 +48,27 @@ class AssignmentsTable extends Component {
         }
     }
 
+    deleteAssignments = (assignmentId) => {
+        Swal.fire({
+            title: 'Are you sure you want to delete the assignment?',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var stateCopy = this.state
+                var res = deleteAssignment(this.state.course.podId, this.state.course.id, assignmentId)
+                res = getAssignments(this.state.course.podId, this.state.course.id, 10)
+                if (res.isSuccess) {
+                    stateCopy.assignments = res.data
+                    this.setState(stateCopy)
+                }
+                Swal.fire('Successfully deleted assignment', '', 'success')
+            }
+        })
+    }
+
     assignmentDetailRedirect = (event, assignmentId) => {
-        if(event.target.id === 'delete') return;
+        if (event.target.id === 'button') return;
         this.props.history.push(`/course/assignment/details/${assignmentId}`, { podID: this.state.course.podId, courseID: this.state.course.id })
     }
 
@@ -114,8 +141,19 @@ class AssignmentsTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
+                                                    <button className="btn btn-success btn-sm" id='button' onClick={() => this.publish(assignment.id)}>
+                                                        <i className="fa fa-cloud fa-sm button-create-icon"></i>
+                                                        Publish
+                                                    </button>
+                                                </div>
+                                                : null
+                                            }
+                                        </td>
+                                        <td className="buttons">
+                                            {isAdmin(this.state.rolePerms) ?
+                                                <div className='button-container'>
                                                     <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAssignments(assignment.id)}>
-                                                        <i className="fas fa-trash-alt fa-fw btn-icon" id='delete'></i>
+                                                        <i className="fas fa-trash-alt fa-fw btn-icon" id='button'></i>
                                                     </Button>
                                                 </div>
                                                 : null

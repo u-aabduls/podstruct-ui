@@ -46,6 +46,14 @@ function deleteAssignment(podID, courseID, assignmentID) {
     return result;
 }
 
+function publishAssignment(podID, courseID, assignmentID) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID;
+    _initialize("POST", endpointPathEXT);
+    request.send();
+    return result;
+}
+
 /********************
  * Private Methods
  ********************/
@@ -90,7 +98,7 @@ function __execute() {
                 result.message = "Successfully fetched assignment(s)"
                 break;
             case "POST":
-                result.message = "Successfully created assignment"
+                result.message = "Successfully created/published assignment"
                 break;
             case "PUT":
                 result.message = "Successfully edited assignment"
@@ -104,4 +112,4 @@ function __execute() {
     }
 }
 
-export { getAssignments, getAssignment, createAssignment, deleteAssignment};
+export { getAssignments, getAssignment, createAssignment, deleteAssignment, publishAssignment};

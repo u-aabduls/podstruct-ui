@@ -26,8 +26,7 @@ export default function QuestionTypeSelector(props) {
             placeholder="Select a question type..."
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
-            value={options.find(o => o.value === props.defaultv)}
-            defaultValue = {{ value: 'MULTIPLE_CHOICE', label: 'Multiple Choice' }}
+            value={props.defaultV ? options.find(o => o.value === props.defaultV) : { value: 'MC', label: 'Multiple Choice' }}
             onChange={(e) => props.setType(e.value)}
             isDisabled={props.disabled}
         />
