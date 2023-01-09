@@ -79,7 +79,7 @@ class CourseManagement extends Component {
         }
     }, 500);
 
-    componentDidMount() {
+    componentWillMount() {
         var res = getPods('ACCEPTED')
         if (res.isSuccess) {
             this.setState({ pods: res.data })

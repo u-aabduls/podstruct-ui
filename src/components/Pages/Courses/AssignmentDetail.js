@@ -4,14 +4,17 @@ import classnames from 'classnames';
 import { withRouter } from 'react-router';
 import {
     Button,
+    Card,
+    CardHeader,
+    CardTitle,
+    CardBody,
     Dropdown,
     DropdownMenu,
     DropdownToggle,
     DropdownItem,
     Row,
-    Card,
-    CardBody,
     Col,
+    Table,
     TabContent,
     TabPane,
     Nav,
@@ -22,9 +25,9 @@ import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
 import { getAssignment } from '../../../connectors/Assignments';
 import { getAnswerKeys } from '../../../connectors/AnswerKey';
-import { getPod } from '../../../connectors/Pod';
 import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
 import AddQuestionForm from '../../Forms/Assignment/AddQuestionForm';
+import EditQuestionForm from '../../Forms/Assignment/EditQuestionForm';
 
 class AssignmentDetail extends Component {
 
@@ -32,7 +35,8 @@ class AssignmentDetail extends Component {
         rolePerms: '',
         assignment: '',
         questions: [],
-        editModal: false,
+        editQuestionModals: {
+        },
         addQuestionModal: false,
         assignmentsModal: false,
         ddOpen: false,
@@ -43,10 +47,13 @@ class AssignmentDetail extends Component {
         ddOpen: !this.state.ddOpen
     })
 
-    toggleEditModal = () => {
-        this.setState({
-            editModal: !this.state.editModal
-        });
+    toggleEditQuestionModal = (i) => {
+        var stateCopy = this.state.editQuestionModals;
+        stateCopy["questionModal" + (i+1)] = !this.state.editQuestionModals["questionModal" + (i+1)]
+        this.setState(stateCopy)
+        // this.setState({
+        //     editQuestionModal: !this.state.editQuestionModal
+        // });
     }
 
     toggleAddQuestionModal = () => {
@@ -69,10 +76,10 @@ class AssignmentDetail extends Component {
         }
     }
 
-    updateOnCourseEdit = (res) => {
+    updateOnQuestionEdit = (res) => {
         if (res.isSuccess) {
             this.setState({
-                course: res.data
+                questions: res.data
             })
         }
     }
@@ -107,6 +114,9 @@ class AssignmentDetail extends Component {
         res = getAnswerKeys(this.props.history.location.state.podID, this.props.history.location.state.courseID, this.props.match.params.id)
         if (res.isSuccess) {
             stateCopy.questions = res.data
+            res.data.map((question, i) => {
+                stateCopy.editQuestionModals["questionModal" + (i+1)] = false;
+            })
             this.setState(stateCopy)
         }
     }
@@ -238,7 +248,6 @@ class AssignmentDetail extends Component {
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
-
                                             {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right" style={{ clear: 'both' }}>
                                                     <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAddQuestionModal}>
@@ -248,17 +257,18 @@ class AssignmentDetail extends Component {
                                                 </div>
                                                 : null
                                             }
-                                            <div className="mt-5 card-fixed-height-assignment" style={{ clear: 'both' }}>
-                                                <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                                                    <h4 className="mt-1 ml-3 text-muted">Instructions</h4>
+                                            <Card outline color="dark" className="mt-5 card-default card-fixed-height-assignment" style={{ clear: 'both' }}>
+                                                <CardHeader><CardTitle tag="h3">Instructions</CardTitle></CardHeader>
+                                                <CardBody style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                                     <p className="ml-3 text-primary font-weight-bold">{this.state.assignment.instructions}</p>
-                                                </div>
-                                            </div>
+                                                </CardBody>
+                                            </Card>
                                             {this.state.questions.length ?
-                                                this.state.questions.map(function (question, i) {
+                                                this.state.questions.map((question, i) => {
                                                     var choices = [];
                                                     var answers = [];
                                                     var alphabet = ["A", "B", "C", "D", "E"];
+                                                    var answerList = "";
                                                     for (let i = 0; i < 5; i++) {
                                                         if (question['choice' + alphabet[i]])
                                                             choices.push(question['choice' + alphabet[i]])
@@ -268,28 +278,83 @@ class AssignmentDetail extends Component {
                                                             answers.push(question['answer' + (i + 1)])
                                                     }
                                                     return (
-                                                        <div className="mt-5 card-fixed-height-assignment" style={{ clear: 'both', width: '60%' }}>
-                                                            <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                                                        <Card outline color="dark" className="mt-5 card-default" style={{ clear: 'both', width: '60%', margin: "auto" }}>
+                                                            <CardHeader><CardTitle tag="h3">
+                                                                Question {i + 1}
                                                                 {!isStudent("ADMIN") ?
                                                                     <div className="float-right" style={{ clear: 'both' }}>
-                                                                        <button className="btn btn-success btn-sm mb-3 mt-2" >
+                                                                        <button className="btn btn-success btn-sm mb-3" onClick={() => this.toggleEditQuestionModal(i)}>
                                                                             <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                                            Edit Question
+                                                                            Edit
                                                                         </button>
                                                                     </div>
                                                                     : null
-                                                                }
-                                                                <h4 className="mt-1 ml-3 text-muted">Question {i + 1}</h4>
-                                                                <span className="ml-3 text-primary font-weight-bold">{question.question}</span>
-                                                                <span className="ml-3 text-primary font-weight-bold">{question.questionType}</span>
-                                                                {choices.map(function (choice, i) {
-                                                                    return <span className="ml-3 text-primary font-weight-bold">{'choice' + alphabet[i]}: {choice} </span>
-                                                                })}
-                                                                {answers.map(function (answer, i) {
-                                                                    return <span className="ml-3 text-primary font-weight-bold">{'answer' + (i + 1)}: {answer} </span>
-                                                                })}
-                                                            </div>
-                                                        </div>
+                                                                }</CardTitle></CardHeader>
+                                                            <EditQuestionForm
+                                                                podId={this.props.history.location.state.podID}
+                                                                courseId={this.props.history.location.state.courseID}
+                                                                assignmentId={this.state.assignment.id}
+                                                                questionId={question.id}
+                                                                modal={this.state.editQuestionModals["questionModal" + (i+1)]}
+                                                                updateOnEdit={this.updateOnQuestionEdit}
+                                                                toggle={() => this.toggleEditQuestionModal(i)}
+                                                            />
+                                                            <CardBody style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                                                                <Table>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <strong>Question:</strong>
+                                                                            </td>
+                                                                            <td>
+                                                                                {question.question}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <strong>Question Type</strong>
+                                                                            </td>
+                                                                            <td>
+                                                                                {question.questionType}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                    {choices.map(function (choice, i) {
+                                                                        return (
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <strong>Choice {alphabet[i]}: </strong>
+                                                                                </td>
+                                                                                <td>
+                                                                                    {choice}
+                                                                                </td>
+                                                                            </tr>
+                                                                        )
+                                                                    })}
+                                                                    {answers.map(function (answer, i) {
+                                                                        answerList += answer + ' '
+                                                                        // return (
+                                                                        //     <tr>
+                                                                        //         <td>
+                                                                        //             <strong>Answers: </strong>
+                                                                        //         </td>
+                                                                        //         <td>
+                                                                        //             {answer}
+                                                                        //         </td>
+                                                                        //     </tr>
+                                                                        // )
+                                                                    })}
+                                                                    <tr>
+                                                                        <td>
+                                                                            <strong>Answers: </strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            {answerList}
+                                                                        </td>
+                                                                    </tr>
+                                                                </Table>
+                                                            </CardBody>
+                                                        </Card>
                                                     )
                                                 }) :
                                                 <div className='not-found'>
@@ -304,11 +369,6 @@ class AssignmentDetail extends Component {
                                                 updateOnAdd={this.updateOnQuestionAdd}
                                                 toggle={this.toggleAddQuestionModal}
                                             />
-                                            {/* <CourseAnnouncementsTable
-                                                course={this.state.course}
-                                                announcements={this.state.announcements}
-                                                lastEvaluatedKey={this.state.lastEvaluatedKey}
-                                            /> */}
                                         </TabPane>
                                         <TabPane tabId="2">
 
