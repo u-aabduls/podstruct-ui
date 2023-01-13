@@ -27,7 +27,7 @@ export default function AssignmentTypeSelector(props) {
             placeholder="Select an assignment type..."
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
-            value={options.find(o => o.value === props.defaultv)}
+            value={options.find(o => o.value === props.defaultV)}
             onChange={(e) => { 
                 props.setType(e.value)
                 props.validate("type") }}

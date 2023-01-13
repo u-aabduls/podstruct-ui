@@ -69,7 +69,7 @@ class AssignmentsTable extends Component {
 
     assignmentDetailRedirect = (event, assignmentId) => {
         if (event.target.id === 'button') return;
-        this.props.history.push(`/course/assignment/details/${assignmentId}`, { podID: this.state.course.podId, courseID: this.state.course.id })
+        this.props.history.push(`/course/assignment/details/${assignmentId}`, { podID: this.state.course.podId, course: this.state.course, rolePerms: this.state.rolePerms })
     }
 
     componentDidMount() {

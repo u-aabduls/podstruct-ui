@@ -38,6 +38,14 @@ function createAssignment(podID, courseID, requestBody) {
     return result;
 }
 
+function editAssignment(podID, courseID, assignmentID, requestBody) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID;
+    _initialize("PUT", endpointPathEXT);
+    request.send(requestBody);
+    return result;
+}
+
 function deleteAssignment(podID, courseID, assignmentID) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID;
@@ -112,4 +120,4 @@ function __execute() {
     }
 }
 
-export { getAssignments, getAssignment, createAssignment, deleteAssignment, publishAssignment};
+export { getAssignments, getAssignment, createAssignment, deleteAssignment, editAssignment, publishAssignment};
