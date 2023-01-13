@@ -301,6 +301,7 @@ class addQuestionForm extends Component {
                                 <label className="text-muted" htmlFor="addCourseSubject">Question Type</label>
                                 <QuestionTypeSelector
                                     name="typeSelector"
+                                    defaultV={this.state.formAddQuestion.questionType}
                                     setType={(type) => this.setType(type)}
                                 />
                             </div>

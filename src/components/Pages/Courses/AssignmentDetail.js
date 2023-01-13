@@ -28,17 +28,18 @@ import { getAnswerKeys } from '../../../connectors/AnswerKey';
 import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
 import AddQuestionForm from '../../Forms/Assignment/AddQuestionForm';
 import EditQuestionForm from '../../Forms/Assignment/EditQuestionForm';
+import EditAssignmentForm from '../../Forms/Assignment/EditAssignmentForm';
 
 class AssignmentDetail extends Component {
 
     state = {
-        rolePerms: '',
+        rolePerms: this.props.history.location.state?.rolePerms,
         assignment: '',
         questions: [],
         editQuestionModals: {
         },
         addQuestionModal: false,
-        assignmentsModal: false,
+        editAssignmentModal: false,
         ddOpen: false,
         activeTab: '1',
     }
@@ -49,7 +50,7 @@ class AssignmentDetail extends Component {
 
     toggleEditQuestionModal = (i) => {
         var stateCopy = this.state.editQuestionModals;
-        stateCopy["questionModal" + (i+1)] = !this.state.editQuestionModals["questionModal" + (i+1)]
+        stateCopy["questionModal" + (i + 1)] = !this.state.editQuestionModals["questionModal" + (i + 1)]
         this.setState(stateCopy)
         // this.setState({
         //     editQuestionModal: !this.state.editQuestionModal
@@ -62,9 +63,9 @@ class AssignmentDetail extends Component {
         });
     }
 
-    toggleAssignmentModal = () => {
+    toggleEditAssignmentModal = () => {
         this.setState({
-            assignmentsModal: !this.state.assignmentsModal
+            editAssignmentModal: !this.state.editAssignmentModal
         });
     }
 
@@ -92,30 +93,34 @@ class AssignmentDetail extends Component {
         }
     }
 
-    updateOnAssignmentAdd = (res) => {
+    updateOnAssignmentEdit = (res) => {
         if (res.isSuccess) {
             this.setState({
-                assignments: res.data
+                assignment: res.data
             })
         }
     }
 
+    updateOnAssignmentAdd = (res) => {
+        
+    }
+
     goBack = () => {
-        this.props.history.push(`/course/details/${this.props.history.location.state.courseID}`)
+        this.props.history.push(`/course/details/${this.props.history.location.state?.course.id}`)
     }
 
     componentWillMount() {
         var stateCopy = this.state;
-        var res = getAssignment(this.props.history.location.state.podID, this.props.history.location.state.courseID, this.props.match.params.id)
+        var res = getAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
         if (res.isSuccess) {
             stateCopy.assignment = res.data
             this.setState(stateCopy)
         }
-        res = getAnswerKeys(this.props.history.location.state.podID, this.props.history.location.state.courseID, this.props.match.params.id)
+        res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
         if (res.isSuccess) {
             stateCopy.questions = res.data
             res.data.map((question, i) => {
-                stateCopy.editQuestionModals["questionModal" + (i+1)] = false;
+                stateCopy.editQuestionModals["questionModal" + (i + 1)] = false;
             })
             this.setState(stateCopy)
         }
@@ -125,7 +130,6 @@ class AssignmentDetail extends Component {
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         var dueDate = new Date(moment.utc(this.state.assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
-        console.log(this.state)
         return (
             <ContentWrapper>
                 <div className="content-heading">
@@ -139,17 +143,19 @@ class AssignmentDetail extends Component {
                             </DropdownToggle>
                             <DropdownMenu>
                                 {isAdmin(this.state.rolePerms) ?
-                                    <DropdownItem onClick={this.toggleEditModal}>Edit Course</DropdownItem>
+                                    <DropdownItem onClick={this.toggleEditAssignmentModal}>Edit Assignment</DropdownItem>
                                     : null
                                 }
                             </DropdownMenu>
                         </Dropdown>
-                        {/* <EditCourseForm
-                            course={this.state.course}
-                            modal={this.state.editModal}
-                            toggle={this.toggleEditModal}
-                            updateOnEdit={this.updateOnCourseEdit}
-                        /> */}
+                        <EditAssignmentForm
+                            podId={this.props.history.location.state?.podID}
+                            course={this.props.history.location.state?.course}
+                            assignmentId={this.state.assignment.id}
+                            toggle={this.toggleEditAssignmentModal}
+                            updateOnEdit={this.updateOnAssignmentEdit}
+                            modal={this.state.editAssignmentModal}
+                        />
                     </div>
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
@@ -281,7 +287,7 @@ class AssignmentDetail extends Component {
                                                         <Card outline color="dark" className="mt-5 card-default" style={{ clear: 'both', width: '60%', margin: "auto" }}>
                                                             <CardHeader><CardTitle tag="h3">
                                                                 Question {i + 1}
-                                                                {!isStudent("ADMIN") ?
+                                                                {!isStudent(this.state.rolePerms) ?
                                                                     <div className="float-right" style={{ clear: 'both' }}>
                                                                         <button className="btn btn-success btn-sm mb-3" onClick={() => this.toggleEditQuestionModal(i)}>
                                                                             <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
@@ -291,11 +297,11 @@ class AssignmentDetail extends Component {
                                                                     : null
                                                                 }</CardTitle></CardHeader>
                                                             <EditQuestionForm
-                                                                podId={this.props.history.location.state.podID}
-                                                                courseId={this.props.history.location.state.courseID}
+                                                                podId={this.props.history.location.state?.podID}
+                                                                courseId={this.props.history.location.state?.course.id}
                                                                 assignmentId={this.state.assignment.id}
                                                                 questionId={question.id}
-                                                                modal={this.state.editQuestionModals["questionModal" + (i+1)]}
+                                                                modal={this.state.editQuestionModals["questionModal" + (i + 1)]}
                                                                 updateOnEdit={this.updateOnQuestionEdit}
                                                                 toggle={() => this.toggleEditQuestionModal(i)}
                                                             />
@@ -362,8 +368,8 @@ class AssignmentDetail extends Component {
                                                 </div>
                                             }
                                             <AddQuestionForm
-                                                podId={this.props.history.location.state.podID}
-                                                courseId={this.props.history.location.state.courseID}
+                                                podId={this.props.history.location.state?.podID}
+                                                courseId={this.props.history.location.state?.course.id}
                                                 assignmentId={this.state.assignment.id}
                                                 modal={this.state.addQuestionModal}
                                                 updateOnAdd={this.updateOnQuestionAdd}
