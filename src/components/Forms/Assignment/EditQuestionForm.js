@@ -26,6 +26,7 @@ class editQuestionForm extends Component {
             choices: {
                 error: {
                     isNullAnswer: false,
+                    IsNullAnswerChoice: false,
                     isNullChoice: false,
                 }
             }
@@ -54,19 +55,31 @@ class editQuestionForm extends Component {
     }
 
     setMCAnswer = (event) => {
-        // don't allow assigning answer if empty choice
-        if (!this.state.formEditQuestion['choice' + event.target.value]) return;
         var stateCopy = this.state.formEditQuestion;
+        // don't allow assigning answer if empty choice
+        if (!this.state.formEditQuestion['choice' + event.target.value]) {
+            stateCopy.choices.error.IsNullAnswerChoice = true;
+            this.setState(stateCopy);
+            return;
+        }
         stateCopy['answer1'] = event.target.value;
+        stateCopy.choices.error.IsNullAnswerChoice = false;
         this.setState(stateCopy);
     }
 
     setMAAnswer = (event) => {
-        // don't allow assigning answer if empty choice
-        if (!this.state.formEditQuestion['choice' + event.target.value[0]]) return;
         var stateCopy = this.state.formEditQuestion;
+        // don't allow assigning answer if empty choice
+        if (!this.state.formEditQuestion['choice' + event.target.value[0]]) {
+            stateCopy.choices.error.IsNullAnswerChoice = true;
+            this.setState(stateCopy);
+            return;
+        }
 
-        if (event.target.checked) stateCopy['answer' + event.target.value[2]] = event.target.value[0];
+        if (event.target.checked) {
+            stateCopy['answer' + event.target.value[2]] = event.target.value[0];
+            stateCopy.choices.error.IsNullAnswerChoice = false;
+        } 
         else stateCopy['answer' + event.target.value[2]] = ""
 
         this.setState(stateCopy);
@@ -92,6 +105,7 @@ class editQuestionForm extends Component {
                 choices: {
                     error: {
                         isNullAnswer: false,
+                        IsNullAnswerChoice: false,
                         isNullChoice: false,
                     }
                 }
@@ -366,8 +380,9 @@ class editQuestionForm extends Component {
                                                         <em className="fa fa-book"></em>
                                                     </span>
                                                 </div>
-                                                {this.state.formEditQuestion.choices.error.isNullAnswer && <p style={this.errorMessageStyling}>Answer is required</p>}
-                                                {this.state.formEditQuestion.choices.error.isNullChoice && <p style={this.errorMessageStyling}>Two choices are required</p>}
+                                                {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
+                                                {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
+                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
                                                 {this.state.formEditQuestion['answer' + i] === e ?
                                                     <div className="input-group">
                                                         <input className="mr-2" type="radio" value={e} name="answer" id={e} defaultChecked onChange={(event) => {
@@ -412,8 +427,9 @@ class editQuestionForm extends Component {
                                                         <em className="fa fa-book"></em>
                                                     </span>
                                                 </div>
-                                                {this.state.formEditQuestion.choices.error.isNullAnswer && <p style={this.errorMessageStyling}>Answer is required</p>}
-                                                {this.state.formEditQuestion.choices.error.isNullChoice && <p style={this.errorMessageStyling}>Two choices are required</p>}
+                                                {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
+                                                {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
+                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Answer for an empty choice won't be saved</span>}
                                                 {this.state.formEditQuestion['answer' + i] === e ?
                                                     <div className="input-group">
                                                         <input className="mr-2" type="checkbox" value={[e, i]} id={e} name="answer" defaultChecked onChange={this.setMAAnswer} />
@@ -449,13 +465,13 @@ class editQuestionForm extends Component {
                                         <div>
                                             <input className="mr-2 ml-2" type="radio" value="B" name="answer" defaultChecked onChange={this.setTFAnswer} />
                                             <label className="text-muted pt-2">False</label>
-                                            {this.state.formEditQuestion.choices.error.isNullAnswer && <p style={this.errorMessageStyling}>Answer is required</p>}
+                                            {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
                                         </div>
                                         :
                                         <div>
                                             <input className="mr-2 ml-2" type="radio" value="B" name="answer" onChange={this.setTFAnswer} />
                                             <label className="text-muted pt-2">False</label>
-                                            {this.state.formEditQuestion.choices.error.isNullAnswer && <p style={this.errorMessageStyling}>Answer is required</p>}
+                                            {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
                                         </div>
                                     }
                                 </div>

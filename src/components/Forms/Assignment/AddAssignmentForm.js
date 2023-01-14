@@ -280,7 +280,7 @@ class AddAssignmentForm extends Component {
                                     setType={(type) => this.setType(type)}
                                     validate={this.validateSelectorsOnChange}
                                 />
-                                {this.state.formAddAssignment.selector.error.isNullType && <p style={this.errorMessageStyling}>Assignment type is required</p>}
+                                {this.state.formAddAssignment.selector.error.isNullType && <span style={this.errorMessageStyling}>Assignment type is required</span>}
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="id-assignmentInstructions">Instructions</label>
@@ -319,7 +319,7 @@ class AddAssignmentForm extends Component {
                                         this.validateSelectorsOnChange("time")
                                     }}
                                 />
-                                {this.state.formAddAssignment.selector.error.isNullDueDate && <p style={this.errorMessageStyling}>Due Date is required</p>}
+                                {this.state.formAddAssignment.selector.error.isNullDueDate && <span style={this.errorMessageStyling}>Due Date is required</span>}
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="id-points">Points Possible</label>
