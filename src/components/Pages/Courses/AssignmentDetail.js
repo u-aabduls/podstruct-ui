@@ -23,7 +23,7 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
-import { getAssignment, deleteAssignment } from '../../../connectors/Assignments';
+import { getAssignment, publishAssignment, deleteAssignment } from '../../../connectors/Assignments';
 import { getAnswerKeys } from '../../../connectors/AnswerKey';
 import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
 import AddQuestionForm from '../../Forms/Assignment/AddQuestionForm';
@@ -43,6 +43,11 @@ class AssignmentDetail extends Component {
         editAssignmentModal: false,
         ddOpen: false,
         activeTab: '1',
+        getAnswerKeysParams: {
+            page: 0,
+            size: 10,
+            sort: 'createDate,asc',
+        },
     }
 
     toggleDD = () => this.setState({
@@ -102,6 +107,33 @@ class AssignmentDetail extends Component {
         }
     }
 
+    publish = () => {
+        Swal.fire({
+            title: this.state.assignment.title + 'will be published and available to all users in this course',
+            showCancelButton: true,
+            confirmButtonColor: "#5d9cec",
+            confirmButtonText: 'Ok',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var stateCopy = this.state
+                var res = publishAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
+                if (res.isSuccess) {
+                    Swal.fire({
+                        title: "Successfully published assignment",
+                        confirmButtonColor: "#5d9cec",
+                        icon: "success",
+                    })
+                    res = getAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
+                    if (res.isSuccess) {
+                        stateCopy.assignment = res.data
+                        this.setState(stateCopy)
+                    }
+                }
+
+            }
+        })
+    }
+
     deleteAssignment = () => {
         Swal.fire({
             title: 'Are you sure you want to delete the assignment?',
@@ -131,7 +163,8 @@ class AssignmentDetail extends Component {
             stateCopy.assignment = res.data
             this.setState(stateCopy)
         }
-        res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
+        var params = this.state.getAnswerKeysParams
+        res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page, params.size, params.sort)
         if (res.isSuccess) {
             stateCopy.questions = res.data
             res.data.map((question, i) => {
@@ -239,8 +272,19 @@ class AssignmentDetail extends Component {
                         {/* START card */}
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                                <h4 className="mt-1 text-muted">Reference Material</h4>
-
+                                <h4 className="mt-1 text-muted">Status</h4>
+                                <p className="text-primary font-weight-bold">{this.state.assignment.published ? "Published" : 'Unpublished'}</p>
+                                {isAdmin(this.state.rolePerms) ?
+                                    !this.state.assignment.published ?
+                                        <div className='button-container'>
+                                            <button className="btn btn-success btn-sm" id='button' onClick={this.publish}>
+                                                <i className="fa fa-cloud fa-sm button-create-icon"></i>
+                                                Publish
+                                            </button>
+                                        </div>
+                                        : null
+                                    : null
+                                }
                             </div>
                         </div>
                         {/* END card */}

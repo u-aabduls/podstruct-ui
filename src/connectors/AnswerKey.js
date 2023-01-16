@@ -12,11 +12,13 @@ var authorizationToken;
  * Public Methods
  ********************/
 
-function getAnswerKeys(podID, courseID, assignmentID) {
+function getAnswerKeys(podID, courseID, assignmentID, page, size, sort) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID + "/question/";
     var params = {};
-   
+    if (page) params.page = page
+    if (size) params.size = size
+    if (sort) params.sort = sort
     _initialize("GET", endpointPathEXT);
     request.send();
     return result;

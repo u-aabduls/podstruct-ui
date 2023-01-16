@@ -314,6 +314,7 @@ class AddAssignmentForm extends Component {
                                 <label className="text-muted">Due Date/Time</label>
                                 <Datetime
                                     inputProps={this.state.formAddAssignment.selector.error.isNullDueDate ? { className: 'form-control time-error' } : { className: 'form-control' }}
+                                    isValidDate={current => {return current.isAfter(moment().subtract(1, 'day'))}}
                                     onChange={(date) => {
                                         this.setTime(date)
                                         this.validateSelectorsOnChange("time")
