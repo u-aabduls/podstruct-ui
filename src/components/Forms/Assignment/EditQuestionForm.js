@@ -382,7 +382,7 @@ class editQuestionForm extends Component {
                                                 </div>
                                                 {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
                                                 {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
-                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
+                                                {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
                                                 {this.state.formEditQuestion['answer' + i] === e ?
                                                     <div className="input-group">
                                                         <input className="mr-2" type="radio" value={e} name="answer" id={e} defaultChecked onChange={(event) => {
@@ -429,7 +429,7 @@ class editQuestionForm extends Component {
                                                 </div>
                                                 {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
                                                 {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
-                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Answer for an empty choice won't be saved</span>}
+                                                {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Answer for an empty choice won't be saved</span>}
                                                 {this.state.formEditQuestion['answer' + i] === e ?
                                                     <div className="input-group">
                                                         <input className="mr-2" type="checkbox" value={[e, i]} id={e} name="answer" defaultChecked onChange={this.setMAAnswer} />

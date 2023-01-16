@@ -23,12 +23,13 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
-import { getAssignment } from '../../../connectors/Assignments';
+import { getAssignment, deleteAssignment } from '../../../connectors/Assignments';
 import { getAnswerKeys } from '../../../connectors/AnswerKey';
 import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
 import AddQuestionForm from '../../Forms/Assignment/AddQuestionForm';
 import EditQuestionForm from '../../Forms/Assignment/EditQuestionForm';
 import EditAssignmentForm from '../../Forms/Assignment/EditAssignmentForm';
+import Swal from 'sweetalert2';
 
 class AssignmentDetail extends Component {
 
@@ -101,8 +102,22 @@ class AssignmentDetail extends Component {
         }
     }
 
-    updateOnAssignmentAdd = (res) => {
-        
+    deleteAssignment = () => {
+        Swal.fire({
+            title: 'Are you sure you want to delete the assignment?',
+            showCancelButton: true,
+            confirmButtonColor: "#5d9cec",
+            confirmButtonText: 'Delete',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var res = deleteAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
+                if (res.isSuccess) {
+                    Swal.fire('Successfully deleted assignment', '', 'success');
+                    this.goBack();
+                }
+
+            }
+        })
     }
 
     goBack = () => {
@@ -146,6 +161,10 @@ class AssignmentDetail extends Component {
                                     <DropdownItem onClick={this.toggleEditAssignmentModal}>Edit Assignment</DropdownItem>
                                     : null
                                 }
+                                {isAdmin(this.state.rolePerms) ?
+                                    <DropdownItem onClick={this.deleteAssignment}>Delete Assignment</DropdownItem>
+                                    : null
+                                }
                             </DropdownMenu>
                         </Dropdown>
                         <EditAssignmentForm
@@ -187,7 +206,7 @@ class AssignmentDetail extends Component {
                         {/* START card */}
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                                <h4 className="mt-1 text-muted">Due Date</h4>
+                                <h4 className="mt-1 text-muted">Due Date/Time</h4>
                                 <p className="text-primary font-weight-bold">
                                     <span className="text-uppercase text-bold">
                                         {days[dueDate.getDay()]}
@@ -210,7 +229,7 @@ class AssignmentDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Points Possible</h4>
-                                <p className="text-primary font-weight-bold">{this.state.assignment.points}</p>
+                                <p className="text-primary font-weight-bold">{this.state.assignment.points ? this.state.assignment.points : 'Ungraded'}</p>
                             </div>
                         </div>
                         {/* END card */}
@@ -363,7 +382,7 @@ class AssignmentDetail extends Component {
                                                         </Card>
                                                     )
                                                 }) :
-                                                <div className='not-found'>
+                                                <div className='text-center mt-5 mb-5'>
                                                     <h1>No Questions Found</h1>
                                                 </div>
                                             }
