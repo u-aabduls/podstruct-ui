@@ -33,6 +33,11 @@ class addQuestionForm extends Component {
         },
         numberOfChoices: 2,
         modal: false,
+        getAnswerKeysParams: {
+            page: 0,
+            size: 10,
+            sort: 'createDate,asc',
+        },
     }
 
     alphabet = ["A", "B", "C", "D", "E"];
@@ -280,7 +285,8 @@ class addQuestionForm extends Component {
                     confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
-                var res = getAnswerKeys(this.props.podId, this.props.courseId, this.props.assignmentId)
+                var params = this.state.getAnswerKeysParams
+                var res = getAnswerKeys(this.props.podId, this.props.courseId, this.props.assignmentId, params.page, params.size, params.sort)
                 if (res.isSuccess) {
                     this.props.updateOnAdd(res)
                 }

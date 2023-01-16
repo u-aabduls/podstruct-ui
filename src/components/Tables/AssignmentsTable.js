@@ -15,6 +15,11 @@ class AssignmentsTable extends Component {
         rolePerms: this.props.course.role,
         course: this.props.course,
         assignments: [],
+        getAssignmentsParams: {
+            page: 0,
+            size: 10,
+            sort: 'createDate,desc',
+        },
         lastEvaluatedKey: '',
     }
 
@@ -30,21 +35,32 @@ class AssignmentsTable extends Component {
         // }
     }
 
-    publish = (assignmentId) => {
-        var stateCopy = this.state
-        var res = publishAssignment(this.state.course.podId, this.state.course.id, assignmentId)
-        if (res.isSuccess) {
-            Swal.fire({
-                title: "Successfully published assignment",
-                confirmButtonColor: "#5d9cec",
-                icon: "success",
-            })
-        }
-        res = getAssignments(this.state.course.podId, this.state.course.id, 10)
-        if (res.isSuccess) {
-            stateCopy.assignments = res.data
-            this.setState(stateCopy)
-        }
+    publish = (assignmentId, assignmentTitle) => {
+        Swal.fire({
+            title: assignmentTitle + 'will be published and available to all users in this course',
+            showCancelButton: true,
+            confirmButtonColor: "#5d9cec",
+            confirmButtonText: 'Ok',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var stateCopy = this.state
+                var res = publishAssignment(this.state.course.podId, this.state.course.id, assignmentId)
+                if (res.isSuccess) {
+                    Swal.fire({
+                        title: "Successfully published assignment",
+                        confirmButtonColor: "#5d9cec",
+                        icon: "success",
+                    })
+                    var params = this.state.getAssignmentsParams
+                    res = getAssignments(this.state.course.podId, this.state.course.id, params.page, params.size, params.sort)
+                    if (res.isSuccess) {
+                        stateCopy.assignments = res.data
+                        this.setState(stateCopy)
+                    }
+                }
+
+            }
+        })
     }
 
     deleteAssignments = (assignmentId) => {
@@ -57,7 +73,8 @@ class AssignmentsTable extends Component {
             if (result.isConfirmed) {
                 var stateCopy = this.state
                 var res = deleteAssignment(this.state.course.podId, this.state.course.id, assignmentId)
-                res = getAssignments(this.state.course.podId, this.state.course.id, 10)
+                var params = this.state.getAssignmentsParams
+                res = getAssignments(this.state.course.podId, this.state.course.id, params.page, params.size, params.sort)
                 if (res.isSuccess) {
                     stateCopy.assignments = res.data
                     this.setState(stateCopy)
@@ -74,7 +91,8 @@ class AssignmentsTable extends Component {
 
     componentDidMount() {
         var stateCopy = this.state
-        var res = getAssignments(this.state.course.podId, this.state.course.id, 10)
+        var params = this.state.getAssignmentsParams
+        var res = getAssignments(this.state.course.podId, this.state.course.id, params.page, params.size, params.sort)
         if (res.isSuccess) {
             stateCopy.assignments = res.data
             this.setState(stateCopy)
@@ -96,13 +114,13 @@ class AssignmentsTable extends Component {
                     <thead>
                         <tr>
                             <th>
-                                Date of Issue
+                                Date Assigned
                             </th>
                             <th>
                                 Assignment Title
                             </th>
                             <th>
-                                Due Date
+                                Due Date/Time
                             </th>
                             <th>
                                 Status
@@ -140,12 +158,19 @@ class AssignmentsTable extends Component {
                                         </td>
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
-                                                <div className='button-container'>
-                                                    <button className="btn btn-success btn-sm" id='button' onClick={() => this.publish(assignment.id)}>
-                                                        <i className="fa fa-cloud fa-sm button-create-icon"></i>
-                                                        Publish
-                                                    </button>
-                                                </div>
+                                                !assignment.published ?
+                                                    <div className='button-container'>
+                                                        <button className="btn btn-success btn-sm" id='button' onClick={() => this.publish(assignment.id, assignment.title)}>
+                                                            <i className="fa fa-cloud fa-sm button-create-icon"></i>
+                                                            Publish
+                                                        </button>
+                                                    </div>
+                                                    : <div className='button-container'>
+                                                        <button disabled className="btn btn-success btn-sm" id='button'>
+                                                            <i className="fa fa-cloud fa-sm button-create-icon"></i>
+                                                            Publish
+                                                        </button>
+                                                    </div>
                                                 : null
                                             }
                                         </td>
