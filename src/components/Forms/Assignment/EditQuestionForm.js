@@ -134,10 +134,10 @@ class editQuestionForm extends Component {
 
     validateMAQuestion = () => {
         var numberOfChoices = 0;
-        var isNullAnswer = false;
+        var isNullAnswer = true;
         var isNullChoice = true;
-        if (!this.state.formEditQuestion.answer1) isNullAnswer = true;
         for (let i = 0; i < this.state.numberOfChoices; i++) {
+            if (this.state.formEditQuestion['answer' + (i+1)]) isNullAnswer = false;
             if (this.state.formEditQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
             if (numberOfChoices >= 2) {
                 isNullChoice = false;
@@ -383,7 +383,7 @@ class editQuestionForm extends Component {
                                                 {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
                                                 {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
                                                 {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
-                                                {this.state.formEditQuestion['answer' + i] === e ?
+                                                {this.state.formEditQuestion['answer1'] === e ?
                                                     <div className="input-group">
                                                         <input className="mr-2" type="radio" value={e} name="answer" id={e} defaultChecked onChange={(event) => {
                                                             this.setMCAnswer(event)

@@ -140,10 +140,11 @@ class addQuestionForm extends Component {
 
     validateMAQuestion = () => {
         var numberOfChoices = 0;
-        var isNullAnswer = false;
+        var isNullAnswer = true;
         var isNullChoice = true;
-        if (!this.state.formAddQuestion.answer1) isNullAnswer = true;
+       
         for (let i = 0; i < this.state.numberOfChoices; i++) {
+            if (this.state.formAddQuestion['answer' + (i+1)]) isNullAnswer = false;
             if (this.state.formAddQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
             if (numberOfChoices >= 2) {
                 isNullChoice = false;
