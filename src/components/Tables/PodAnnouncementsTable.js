@@ -34,6 +34,7 @@ class PodAnnouncementsTable extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the annoucement?',
             showCancelButton: true,
+            confirmButtonColor: "#5d9cec",
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -45,7 +46,11 @@ class PodAnnouncementsTable extends Component {
                     stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
                     this.setState(stateCopy)
                 }
-                Swal.fire('Successfully deleted announcement', '', 'success')
+                Swal.fire({
+                    title: 'Successfully deleted announcement',
+                    icon: 'success',
+                    confirmButtonColor: "#5d9cec"
+                })
             }
         })   
     }
@@ -102,8 +107,10 @@ class PodAnnouncementsTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAnnouncement(announcement.date)}>
-                                                        <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                    <Button className="btn btn-secondary btn-sm bg-danger" 
+                                                            onMouseDown={e => e.preventDefault()} 
+                                                            onClick={() => this.deleteAnnouncement(announcement.date)}>
+                                                            <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                                     </Button>
                                                 </div>
                                                 : null

@@ -112,8 +112,9 @@ class CourseManagement extends Component {
                     <div className="ml-auto">
                         {isAdmin(this.state.rolePerms) ?
                             <button className="btn btn-success"
-                                onClick={this.toggleAddCourseModal}>
-                                <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course
+                                    onMouseDown={e => e.preventDefault()} 
+                                    onClick={this.toggleAddCourseModal}>
+                                    <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course
                             </button>
                             : null
                         }
