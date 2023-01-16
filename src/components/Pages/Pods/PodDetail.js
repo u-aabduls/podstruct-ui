@@ -232,6 +232,14 @@ class PodDetail extends Component {
                                                 Courses
                                             </NavLink>
                                         </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                href="#"
+                                                className={classnames({ active: this.state.activeTab === '4' })}
+                                                onClick={() => { this.toggleTab('4'); }}>
+                                                Documents
+                                            </NavLink>
+                                        </NavItem>
                                     </Nav>
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
