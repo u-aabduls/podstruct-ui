@@ -311,7 +311,7 @@ class AddAssignmentForm extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted">Due Date</label>
+                                <label className="text-muted">Due Date/Time</label>
                                 <Datetime
                                     inputProps={this.state.formAddAssignment.selector.error.isNullDueDate ? { className: 'form-control time-error' } : { className: 'form-control' }}
                                     onChange={(date) => {

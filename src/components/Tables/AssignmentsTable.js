@@ -9,7 +9,6 @@ import { getAssignments, deleteAssignment, publishAssignment } from '../../conne
 import { isAdmin, isStudent } from '../../utils/PermissionChecker';
 import Swal from 'sweetalert2';
 
-
 class AssignmentsTable extends Component {
 
     state = {
