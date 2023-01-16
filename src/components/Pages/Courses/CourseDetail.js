@@ -237,8 +237,10 @@ class CourseDetail extends Component {
                                         <TabPane tabId="1">
                                             {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right">
-                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAnnModal}>
-                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                    <button className="btn btn-success btn-sm mb-3 mt-2" 
+                                                            onMouseDown={e => e.preventDefault()} 
+                                                            onClick={this.toggleAnnModal}>
+                                                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
                                                         Add Announcement
                                                     </button>
                                                 </div>

@@ -29,6 +29,7 @@ class InvitedPodForm extends Component {
             this.toggleModal()
             Swal.fire({
                 title: "Denied pod invite",
+                confirmButtonColor: "#5d9cec",
                 icon: "success",
             })
             this.props.history.push('/pods')
@@ -37,6 +38,7 @@ class InvitedPodForm extends Component {
             Swal.fire({
                 title: "Error",
                 icon: "error",
+                confirmButtonColor: "#5d9cec",
                 text: res.message
             })
         }
@@ -48,6 +50,7 @@ class InvitedPodForm extends Component {
             this.toggleModal()
             Swal.fire({
                 title: "Accepted pod invite",
+                confirmButtonColor: "#5d9cec",
                 icon: "success",
             })
             window.location.reload(false);
@@ -56,6 +59,7 @@ class InvitedPodForm extends Component {
             Swal.fire({
                 title: "Error",
                 icon: "error",
+                confirmButtonColor: "#5d9cec",
                 text: res.message
             })
         }

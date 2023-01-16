@@ -52,6 +52,7 @@ class AssignmentsTable extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the assignment?',
             showCancelButton: true,
+            confirmButtonColor: "#5d9cec",
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {

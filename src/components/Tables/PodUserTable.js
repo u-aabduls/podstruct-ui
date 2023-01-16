@@ -71,12 +71,14 @@ class PodUserTable extends Component {
             Swal.fire({
                 title: "Resent Invitation",
                 icon: "success",
+                confirmButtonColor: "#5d9cec"
             })
         }
         else {
             Swal.fire({
                 title: "Error",
                 icon: "error",
+                confirmButtonColor: "#5d9cec",
                 text: res.message
             })
         }
@@ -87,6 +89,7 @@ class PodUserTable extends Component {
             Swal.fire({
                 title: 'Are you sure you want to delete ' + user.firstName + ' ' + user.lastName + ' from the pod',
                 showCancelButton: true,
+                confirmButtonColor: "#5d9cec",
                 confirmButtonText: 'Delete',
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -100,7 +103,11 @@ class PodUserTable extends Component {
                             this.setState(stateCopy)
                         }
                     }
-                    Swal.fire('Successfully deleted user from the pod', '', 'success')
+                    Swal.fire({
+                        title: 'Successfully deleted user from the pod',
+                        icon: 'success',
+                        confirmButtonColor: "#5d9cec"
+                    })
                 }
             })
         }
@@ -108,6 +115,7 @@ class PodUserTable extends Component {
             Swal.fire({
                 title: 'Are you sure you revoke the invitation?',
                 showCancelButton: true,
+                confirmButtonColor: "#5d9cec",
                 confirmButtonText: 'Revoke',
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -121,7 +129,11 @@ class PodUserTable extends Component {
                             this.setState(stateCopy)
                         }
                     }
-                    Swal.fire('Successfully revoked invitation', '', 'success')
+                    Swal.fire({
+                        title: 'Successfully revoked invitation',
+                        icon: 'success',
+                        confirmButtonColor: "#5d9cec"
+                    })
                 }
             })
         }
@@ -451,7 +463,9 @@ class PodUserTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm" onClick={() => this.resendInvite(user.username)}>
+                                                    <Button className="btn btn-secondary btn-sm" 
+                                                            onMouseDown={e => e.preventDefault()} 
+                                                            onClick={() => this.resendInvite(user.username)}>
                                                         Resend Invite
                                                     </Button>
                                                 </div>
@@ -461,7 +475,9 @@ class PodUserTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user)}>
+                                                    <Button className="btn btn-secondary btn-sm bg-danger" 
+                                                            onMouseDown={e => e.preventDefault()} 
+                                                            onClick={() => this.deleteUser(user)}>
                                                         Revoke Invite
                                                     </Button>
                                                 </div>

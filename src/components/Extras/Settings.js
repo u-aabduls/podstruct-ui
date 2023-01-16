@@ -75,7 +75,10 @@ class Settings extends Component {
                                     <div className="card b">
                                         <div className="card-header bg-gray-lighter text-bold">Profile
                                             <Col md={13}>
-                                                <Button color="info" className="btn float-right" onClick={this.onEditChange}>{this.state.editButtonText}</Button>
+                                                <Button color="info" 
+                                                        className="btn float-right"
+                                                        onMouseDown={e => e.preventDefault()} 
+                                                        onClick={this.onEditChange}>{this.state.editButtonText}</Button>
                                             </Col>
                                         </div>
                                         {this.state.editMode ?
@@ -107,7 +110,10 @@ class Settings extends Component {
                                                     <label>Confirm new password</label>
                                                     <input className="form-control" type="password" />
                                                 </div>
-                                                <button className="btn btn-info" type="button">Update password</button>
+                                                <button className="btn btn-info" 
+                                                        type="button"
+                                                        onMouseDown={e => e.preventDefault()} 
+                                                    >Update password</button>
                                                 <p>
                                                     <small className="text-muted">* Integer fermentum accumsan metus, id sagittis ipsum molestie vitae</small>
                                                 </p>
@@ -118,7 +124,10 @@ class Settings extends Component {
                                         <div className="card-header bg-danger text-bold">Delete account</div>
                                         <div className="card-body bt">
                                             <p>You will be asked for confirmation before delete account.</p>
-                                            <button className="btn btn-secondary" type="button">
+                                            <button className="btn btn-secondary" 
+                                                    type="button"
+                                                    onMouseDown={e => e.preventDefault()} 
+                                                >
                                                 <span className="text-danger">Delete account</span>
                                             </button>
                                         </div>

@@ -179,7 +179,9 @@ class PodManagement extends Component {
                     </div>
                     <div>
                         <button className="btn btn-success"
-                            onClick={this.toggleModal}>
+                            onClick={this.toggleModal}
+                            onMouseDown={e => e.preventDefault()} 
+                            >
                             <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Pod
                         </button>
                         <Modal isOpen={this.state.modal}>
