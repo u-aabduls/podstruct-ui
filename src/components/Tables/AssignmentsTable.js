@@ -27,7 +27,6 @@ class AssignmentsTable extends Component {
             var stateCopy = this.state
             var params = this.state.getAssignmentsParams
             var res = getAssignments(this.state.course.podId, this.state.course.id, params.page + 1, params.size, params.sort)
-            console.log(res)
             if (res.isSuccess) {
                 stateCopy.assignments = res.data
                 stateCopy.getAssignmentsParams.page = this.state.getAssignmentsParams.page + 1

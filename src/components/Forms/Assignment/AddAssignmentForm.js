@@ -326,7 +326,7 @@ class AddAssignmentForm extends Component {
                                 <label className="text-muted" htmlFor="id-points">Points Possible</label>
                                 <div className="input-group with-focus">
                                     <Input
-                                        type="number"
+                                        type="text"
                                         id="id-points"
                                         name="points"
                                         className="border-right-0"
