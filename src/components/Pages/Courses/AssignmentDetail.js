@@ -107,9 +107,35 @@ class AssignmentDetail extends Component {
         }
     }
 
+    nextPage = () => {
+        if (this.state.questions.length >= this.state.getAnswerKeysParams.size) {
+            var stateCopy = this.state
+            var params = this.state.getAnswerKeysParams
+            var res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page+1, params.size, params.sort)
+            if (res.isSuccess) {
+                stateCopy.questions = res.data
+                stateCopy.getAnswerKeysParams.page = this.state.getAnswerKeysParams.page + 1
+                this.setState(stateCopy)
+            }
+        }
+    }
+
+    prevPage = () => {
+        if (this.state.getAnswerKeysParams.page) {
+           var stateCopy = this.state
+            var params = this.state.getAnswerKeysParams
+            var res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page-1, params.size, params.sort)
+            if (res.isSuccess) {
+                stateCopy.questions = res.data
+                stateCopy.getAnswerKeysParams.page = this.state.getAnswerKeysParams.page - 1
+                this.setState(stateCopy)
+            }
+        }
+    }
+
     publish = () => {
         Swal.fire({
-            title: this.state.assignment.title + 'will be published and available to all users in this course',
+            title: this.state.assignment.title + ' will be published and available to all users in this course',
             showCancelButton: true,
             confirmButtonColor: "#5d9cec",
             confirmButtonText: 'Ok',
@@ -430,6 +456,14 @@ class AssignmentDetail extends Component {
                                                     <h1>No Questions Found</h1>
                                                 </div>
                                             }
+                                            <div>
+                                                <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.nextPage}>
+                                                    <span><i className="fa fa-chevron-right"></i></span>
+                                                </Button>
+                                                <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.prevPage}>
+                                                    <span><i className="fa fa-chevron-left"></i></span>
+                                                </Button>
+                                            </div>
                                             <AddQuestionForm
                                                 podId={this.props.history.location.state?.podID}
                                                 courseId={this.props.history.location.state?.course.id}
