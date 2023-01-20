@@ -312,7 +312,6 @@ class addQuestionForm extends Component {
     }
 
     render() {
-        console.log(this.state)
         return (
             <div>
                 <Modal isOpen={this.state.modal}>

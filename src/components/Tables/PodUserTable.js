@@ -26,7 +26,7 @@ class PodUserTable extends Component {
             users: {
                 name: '',
                 page: 0,
-                size: 0,
+                size: 10,
                 sort: '',
                 role: '',
                 inviteStatus: 'ACCEPTED'

@@ -20,19 +20,33 @@ class AssignmentsTable extends Component {
             size: 10,
             sort: 'createDate,desc',
         },
-        lastEvaluatedKey: '',
     }
 
-    fetchMore = () => {
-        // if (this.state.lastEvaluatedKey) {
-        //     var stateCopy = this.state
-        //     var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0)
-        //     if (res.isSuccess) {
-        //         stateCopy.announcements = this.state.announcements.concat(res.data.announcements)
-        //         stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-        //         this.setState(stateCopy)
-        //     }
-        // }
+    nextPage = () => {
+        if (this.state.assignments.length >= this.state.getAssignmentsParams.size) {
+            var stateCopy = this.state
+            var params = this.state.getAssignmentsParams
+            var res = getAssignments(this.state.course.podId, this.state.course.id, params.page + 1, params.size, params.sort)
+            console.log(res)
+            if (res.isSuccess) {
+                stateCopy.assignments = res.data
+                stateCopy.getAssignmentsParams.page = this.state.getAssignmentsParams.page + 1
+                this.setState(stateCopy)
+            }
+        }
+    }
+
+    prevPage = () => {
+        if (this.state.getAssignmentsParams.page) {
+           var stateCopy = this.state
+            var params = this.state.getAssignmentsParams
+            var res = getAssignments(this.state.course.podId, this.state.course.id, params.page - 1, params.size, params.sort)
+            if (res.isSuccess) {
+                stateCopy.assignments = res.data
+                stateCopy.getAssignmentsParams.page = this.state.getAssignmentsParams.page - 1
+                this.setState(stateCopy)
+            }
+        }
     }
 
     publish = (assignmentId, assignmentTitle) => {
@@ -194,12 +208,14 @@ class AssignmentsTable extends Component {
                             </td>
                         </tr>}
                 </Table>
-                {this.state.lastEvaluatedKey ?
-                    <div>
-                        <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
-                    </div>
-                    : null
-                }
+                <div>
+                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.nextPage}>
+                        <span><i className="fa fa-chevron-right"></i></span>
+                    </Button>
+                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.prevPage}>
+                        <span><i className="fa fa-chevron-left"></i></span>
+                    </Button>
+                </div>
             </div>
         )
     }
