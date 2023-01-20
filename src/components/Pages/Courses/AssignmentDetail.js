@@ -178,7 +178,6 @@ class AssignmentDetail extends Component {
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         var dueDate = new Date(moment.utc(this.state.assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
-        console.log(this.state)
         return (
             <ContentWrapper>
                 <div className="content-heading">
