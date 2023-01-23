@@ -18,9 +18,9 @@ class Login extends Component {
     }
 
     errorMessageStyling = {
-        color: '#f05050', 
-        width: '100%', 
-        marginTop: '0.5rem', 
+        color: '#f05050',
+        width: '100%',
+        marginTop: '0.5rem',
         fontSize: '80%'
     }
 
@@ -52,7 +52,7 @@ class Login extends Component {
 
     onSubmit = e => {
         e.preventDefault()
-    
+
         // TODO redirect only on valid login
         const form = e.target;
         const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
@@ -70,18 +70,18 @@ class Login extends Component {
 
         if (!hasError) {
             var result = loginUser(this.constructRequestPayload());
-            if (localStorage.getItem('token') && result.isSuccess){
-                this.setState({errorMessage: null});
+            if (localStorage.getItem('token') && result.isSuccess) {
+                this.setState({ errorMessage: null });
                 if (document.referrer.includes(webServer) && !document.referrer.includes("login")) {
                     window.location.href = document.referrer
-                 }
-                 else this.props.history.push('/dashboard');
-            } 
+                }
+                else this.props.history.push('/dashboard');
+            }
             else {
-                this.setState({errorMessage: result.message});
+                this.setState({ errorMessage: result.message });
             }
         }
-       
+
     }
 
     /* Simplify error check */
@@ -152,7 +152,7 @@ class Login extends Component {
                                     <span className="invalid-feedback">Password is required</span>
                                 </div>
                             </div>
-                            { this.state.errorMessage && <p style={this.errorMessageStyling}>{this.state.errorMessage}</p>}
+                            {this.state.errorMessage && <p style={this.errorMessageStyling}>{this.state.errorMessage}</p>}
                             <div className="clearfix">
                                 <CustomInput type="checkbox" id="rememberme"
                                     className="float-left mt-0"

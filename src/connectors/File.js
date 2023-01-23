@@ -12,37 +12,35 @@ var authorizationToken;
  * Public Methods
  ********************/
 
-function getCourses(podID, subject) {
+function getPodDocuments(podId) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses"
-    var params = {};
-    if (subject) params.subject = subject
-    _initialize("GET", endpointPathEXT + formatParams(params));
-    request.send();
-    return result;
-}
-
-function getCourse(podID, courseID) {
-    authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
+    var endpointPathEXT = endpointPath + podId + "/document";
     _initialize("GET", endpointPathEXT);
     request.send();
     return result;
 }
 
-function createCourse(podID, requestBody) {
+function getPodDocument(podId, fileName) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses";
+    var endpointPathEXT = endpointPath + podId + "/document/" + fileName;
+    _initialize("GET", endpointPathEXT);
+    request.send();
+    return result;
+}
+
+function createPodDocument(podId, requestBody) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/document";
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
     return result;
 }
 
-function editCourse(podID, courseID, requestBody) {
+function deletePodDocument(podId, fileName) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID;
-    _initialize("PUT", endpointPathEXT);
-    request.send(requestBody);
+    var endpointPathEXT = endpointPath + podId + "/document/" + fileName;
+    _initialize("DELETE", endpointPathEXT);
+    request.send();
     return result;
 }
 
@@ -58,9 +56,6 @@ function _initialize(method, endpointPathEXT) {
             break;
         case "POST":
             request.open("POST", devServer + endpointPathEXT, false);
-            break;
-        case "PUT":
-            request.open("PUT", devServer + endpointPathEXT, false);
             break;
         case "DELETE":
             request.open("DELETE", devServer + endpointPathEXT, false);
@@ -87,21 +82,18 @@ function __execute() {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched course(s)"
+                result.message = "Successfully fetched document(s)"
                 break;
             case "POST":
-                result.message = "Successfully created course"
-                break;
-            case "PUT":
-                result.message = "Successfully edited course"
+                result.message = "Successfully created document"
                 break;
             case "DELETE":
-                result.message = "Successfully deleted course"
+                result.message = "Successfully deleted document"
                 break;
             default:
-                result.message = "Successfully reached course endpoint";
+                result.message = "Successfully reached document endpoint";
         }
     }
 }
 
-export { getCourses, getCourse, createCourse, editCourse };
+export { getPodDocuments, getPodDocument, createPodDocument, deletePodDocument };

@@ -113,7 +113,7 @@ class PodUserTable extends Component {
         }
         else {
             Swal.fire({
-                title: 'Are you sure you revoke the invitation?',
+                title: 'Are you sure you want to revoke the invitation?',
                 showCancelButton: true,
                 confirmButtonColor: "#5d9cec",
                 confirmButtonText: 'Revoke',
