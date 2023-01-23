@@ -26,6 +26,7 @@ import InvitedPodForm from '../../Forms/PodUser/InvitedPodForm';
 import PodUserTable from '../../Tables/PodUserTable';
 import PodAnnouncementsTable from '../../Tables/PodAnnouncementsTable';
 import { isAdmin } from '../../../utils/PermissionChecker';
+import DocumentsTable from '../../Tables/DocumentsTable';
 
 class PodDetail extends Component {
 
@@ -128,7 +129,7 @@ class PodDetail extends Component {
                                     <DropdownItem onClick={this.toggleEditModal}>Edit Pod</DropdownItem>
                                     : null
                                 }
-                                <DropdownItem onClick={() => this.props.history.push('/courses', { pod:  this.state.pod})}>Courses</DropdownItem>
+                                <DropdownItem onClick={() => this.props.history.push('/courses', { pod: this.state.pod })}>Courses</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                         <EditPodForm
@@ -232,16 +233,24 @@ class PodDetail extends Component {
                                                 Courses
                                             </NavLink>
                                         </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                href="#"
+                                                className={classnames({ active: this.state.activeTab === '4' })}
+                                                onClick={() => { this.toggleTab('4'); }}>
+                                                Documents
+                                            </NavLink>
+                                        </NavItem>
                                     </Nav>
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className="float-right">
-                                                    <button className="btn btn-success btn-sm mb-3 mt-2" 
-                                                            onMouseDown={e => e.preventDefault()} 
-                                                            onClick={this.toggleAnnModal}>
-                                                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                    <button className="btn btn-success btn-sm mb-3 mt-2"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={this.toggleAnnModal}>
+                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
                                                         Add Announcement
                                                     </button>
                                                 </div>
@@ -262,10 +271,10 @@ class PodDetail extends Component {
                                         <TabPane tabId="2">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className="float-right">
-                                                    <button className="btn btn-success btn-sm mb-3 mt-2" 
-                                                            onMouseDown={e => e.preventDefault()} 
-                                                            onClick={this.toggleUserModal}>
-                                                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                    <button className="btn btn-success btn-sm mb-3 mt-2"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={this.toggleUserModal}>
+                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
                                                         Add User
                                                     </button>
                                                 </div>
@@ -283,7 +292,12 @@ class PodDetail extends Component {
                                             />
                                         </TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
-                                        <TabPane tabId="4">Sed commodo tellus ut mi tristique pharetra.</TabPane>
+                                        <TabPane tabId="4">
+                                            <DocumentsTable
+                                                pod={this.state.pod}
+                                                documents={this.state.documents}
+                                            />
+                                        </TabPane>
                                     </TabContent>
                                 </div>
                             </CardBody>
