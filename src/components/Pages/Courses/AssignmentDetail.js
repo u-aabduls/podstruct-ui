@@ -24,7 +24,7 @@ import {
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
 import { getAssignment, publishAssignment, deleteAssignment } from '../../../connectors/Assignments';
-import { getAnswerKeys } from '../../../connectors/AnswerKey';
+import { getAnswerKeys, deleteAnswerKey } from '../../../connectors/AnswerKey';
 import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
 import AddQuestionForm from '../../Forms/Assignment/AddQuestionForm';
 import EditQuestionForm from '../../Forms/Assignment/EditQuestionForm';
@@ -111,7 +111,7 @@ class AssignmentDetail extends Component {
         if (this.state.questions.length >= this.state.getAnswerKeysParams.size) {
             var stateCopy = this.state
             var params = this.state.getAnswerKeysParams
-            var res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page+1, params.size, params.sort)
+            var res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page + 1, params.size, params.sort)
             if (res.isSuccess) {
                 stateCopy.questions = res.data
                 stateCopy.getAnswerKeysParams.page = this.state.getAnswerKeysParams.page + 1
@@ -122,9 +122,9 @@ class AssignmentDetail extends Component {
 
     prevPage = () => {
         if (this.state.getAnswerKeysParams.page) {
-           var stateCopy = this.state
+            var stateCopy = this.state
             var params = this.state.getAnswerKeysParams
-            var res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page-1, params.size, params.sort)
+            var res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page - 1, params.size, params.sort)
             if (res.isSuccess) {
                 stateCopy.questions = res.data
                 stateCopy.getAnswerKeysParams.page = this.state.getAnswerKeysParams.page - 1
@@ -173,7 +173,30 @@ class AssignmentDetail extends Component {
                     Swal.fire('Successfully deleted assignment', '', 'success');
                     this.goBack();
                 }
+            }
+        })
+    }
 
+    deleteQuestion = (questionId) => {
+        Swal.fire({
+            title: 'Are you sure you want to delete the question?',
+            showCancelButton: true,
+            confirmButtonColor: "#5d9cec",
+            confirmButtonText: 'Delete',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var res = deleteAnswerKey(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, questionId)
+                if (res.isSuccess) {
+                    Swal.fire('Successfully deleted question', '', 'success');
+                    var stateCopy = this.state
+                    var params = this.state.getAnswerKeysParams
+                    res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page, params.size, params.sort)
+                    if (res.isSuccess) {
+                        console.log("test")
+                        stateCopy.questions = res.data
+                        this.setState(stateCopy)
+                    }
+                }
             }
         })
     }
@@ -204,6 +227,7 @@ class AssignmentDetail extends Component {
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         var dueDate = new Date(moment.utc(this.state.assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
+        if (this.state.assignment.publishDateTime) var publishDate = new Date(moment.utc(this.state.assignment.publishDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
         return (
             <ContentWrapper>
                 <div className="content-heading">
@@ -238,7 +262,7 @@ class AssignmentDetail extends Component {
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
                     <i className="fas fa-arrow-left fa-fw btn-icon"></i>
-                    Go back
+                    Course Details
                 </Button>
                 <Row noGutters={true}>
                     <Col>
@@ -256,7 +280,16 @@ class AssignmentDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden', overflowWrap: 'anywhere' }}>
                                 <h4 className="mt-1 text-muted">Assignment Type</h4>
-                                <p className="text-primary font-weight-bold">{this.state.assignment.type}</p>
+                                <p className="text-primary font-weight-bold">
+                                    {
+                                        {
+                                            'ESSAY': 'General',
+                                            'FREE_FORM': 'Free Form',
+                                            'QUIZ': 'Quiz',
+                                            'TEST': 'Test',
+                                        }[this.state.assignment.type]
+                                    }
+                                </p>
                             </div>
                         </div>
                         {/* END card */}
@@ -298,7 +331,22 @@ class AssignmentDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Status</h4>
-                                <p className="text-primary font-weight-bold">{this.state.assignment.published ? "Published" : 'Unpublished'}</p>
+                                <span className="text-primary font-weight-bold">{this.state.assignment.published ? "Published on" : 'Unpublished'}</span>
+                                {this.state.assignment.publishDateTime ?
+                                    <div>
+                                        <span className="text-uppercase text-bold text-primary">
+                                            {days[publishDate.getDay()]}
+                                            {' '}
+                                            {months[publishDate.getMonth()]}
+                                            {' '}
+                                            {publishDate.getDate()}
+                                        </span>
+                                        <br />
+                                        <span className="text-primary h2 mt0 text-sm">
+                                            {moment(publishDate).format("h:mm A")}
+                                        </span>
+                                    </div>
+                                    : null}
                                 {isAdmin(this.state.rolePerms) ?
                                     !this.state.assignment.published ?
                                         <div className='button-container'>
@@ -382,6 +430,10 @@ class AssignmentDetail extends Component {
                                                                             <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
                                                                             Edit
                                                                         </button>
+                                                                        <button className="btn btn-secondary btn-sm bg-danger ml-1 mb-3"
+                                                                            onClick={() => this.deleteQuestion(question.id)}>
+                                                                            <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                                        </button>
                                                                     </div>
                                                                     : null
                                                                 }</CardTitle></CardHeader>
@@ -390,6 +442,7 @@ class AssignmentDetail extends Component {
                                                                 courseId={this.props.history.location.state?.course.id}
                                                                 assignmentId={this.state.assignment.id}
                                                                 questionId={question.id}
+                                                                assignmentType={this.state.assignment.type}
                                                                 modal={this.state.editQuestionModals["questionModal" + (i + 1)]}
                                                                 updateOnEdit={this.updateOnQuestionEdit}
                                                                 toggle={() => this.toggleEditQuestionModal(i)}
@@ -468,6 +521,7 @@ class AssignmentDetail extends Component {
                                                 podId={this.props.history.location.state?.podID}
                                                 courseId={this.props.history.location.state?.course.id}
                                                 assignmentId={this.state.assignment.id}
+                                                assignmentType={this.state.assignment.type}
                                                 modal={this.state.addQuestionModal}
                                                 updateOnAdd={this.updateOnQuestionAdd}
                                                 toggle={this.toggleAddQuestionModal}

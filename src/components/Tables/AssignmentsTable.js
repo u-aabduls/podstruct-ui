@@ -23,7 +23,7 @@ class AssignmentsTable extends Component {
     }
 
     nextPage = () => {
-        if (this.state.assignments.length >= this.state.getAssignmentsParams.size) {
+        if (this.state.assignments.length > this.state.getAssignmentsParams.size) {
             var stateCopy = this.state
             var params = this.state.getAssignmentsParams
             var res = getAssignments(this.state.course.podId, this.state.course.id, params.page + 1, params.size, params.sort)
@@ -37,7 +37,7 @@ class AssignmentsTable extends Component {
 
     prevPage = () => {
         if (this.state.getAssignmentsParams.page) {
-           var stateCopy = this.state
+            var stateCopy = this.state
             var params = this.state.getAssignmentsParams
             var res = getAssignments(this.state.course.podId, this.state.course.id, params.page - 1, params.size, params.sort)
             if (res.isSuccess) {
@@ -144,12 +144,24 @@ class AssignmentsTable extends Component {
                         this.state.assignments.map((assignment) => {
                             if (!assignment.published && isStudent(this.state.rolePerms)) return
                             var dueDate = new Date(moment.utc(assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
+                            if (assignment.publishDateTime) var publishDate = new Date(moment.utc(assignment.publishDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
                             return (
                                 <tbody onClick={(event) => this.assignmentDetailRedirect(event, assignment.id)}>
                                     <tr>
-                                        <td>
-
+                                        {assignment.publishDateTime ? <td>
+                                            <span className="text-uppercase text-bold">
+                                                {days[publishDate.getDay()]}
+                                                {' '}
+                                                {months[publishDate.getMonth()]}
+                                                {' '}
+                                                {publishDate.getDate()}
+                                            </span>
+                                            <br />
+                                            <span className="h2 mt0 text-sm">
+                                                {moment(publishDate).format("h:mm A")}
+                                            </span>
                                         </td>
+                                            : <td></td>}
                                         <td>
                                             {assignment.title}
                                         </td>
