@@ -211,7 +211,8 @@ class EditAssignmentForm extends Component {
             stateCopy.type = res.data.type;
             stateCopy.instructions = res.data.instructions
             stateCopy.dueDate = moment.utc(res.data.dueDateTime).local()
-            stateCopy.points = res.data.points
+            if (res.data.points) stateCopy.points = res.data.points
+            else stateCopy.ungraded = true
             this.setState(stateCopy)
         }
     }
@@ -314,7 +315,7 @@ class EditAssignmentForm extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted">Due Date</label>
+                                <label className="text-muted">Due Date/Time</label>
                                 <Datetime
                                     inputProps={this.state.formEditAssignment.selector.error.isNullDueDate ? { className: 'form-control time-error' } : { className: 'form-control' }}
                                     value={moment.utc(this.state.formEditAssignment.dueDate).local()}
@@ -329,7 +330,7 @@ class EditAssignmentForm extends Component {
                                 <label className="text-muted" htmlFor="id-points">Points Possible</label>
                                 <div className="input-group with-focus">
                                     <Input
-                                        type="number"
+                                        type="text"
                                         id="id-points"
                                         name="points"
                                         className="border-right-0"
@@ -350,7 +351,7 @@ class EditAssignmentForm extends Component {
                                     {!this.state.ungraded ? this.hasError('formEditAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span> : null}
                                     {!this.state.ungraded ? this.hasError('formEditAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span> : null}
                                     <div className="input-group">
-                                        <input className="mr-2" type="checkbox" onClick={this.toggleUngraded} />
+                                        <input className="mr-2" type="checkbox" checked={this.state.ungraded} onClick={this.toggleUngraded} />
                                         <label className="text-muted pt-2"> Ungraded</label>
                                     </div>
                                 </div>

@@ -48,6 +48,12 @@ class AddAssignmentForm extends Component {
         fontSize: '80%'
     }
 
+    warningMessageStyling = {
+        width: '100%',
+        marginTop: '0.25rem',
+        fontSize: '80%'
+    }
+
     toggleModal = () => {
         this.setState({
             formAddAssignment: {
@@ -280,6 +286,7 @@ class AddAssignmentForm extends Component {
                                     setType={(type) => this.setType(type)}
                                     validate={this.validateSelectorsOnChange}
                                 />
+                                {this.state.formAddAssignment.type == "FREE_FORM" && <span className='text-warning' style={this.errorMessageStyling}>Warning: Free Form assignment must be manually graded</span>}
                                 {this.state.formAddAssignment.selector.error.isNullType && <span style={this.errorMessageStyling}>Assignment type is required</span>}
                             </div>
                             <div className="form-group">

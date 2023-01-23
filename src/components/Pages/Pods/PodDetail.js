@@ -141,7 +141,7 @@ class PodDetail extends Component {
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={() => this.props.history.goBack()}>
                     <i className="fas fa-arrow-left fa-fw btn-icon"></i>
-                    Go back
+                    Pods
                 </Button>
                 <Row noGutters={true}>
                     <Col>

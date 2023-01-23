@@ -19,7 +19,7 @@ function getAnswerKeys(podID, courseID, assignmentID, page, size, sort) {
     if (page) params.page = page
     if (size) params.size = size
     if (sort) params.sort = sort
-    _initialize("GET", endpointPathEXT);
+    _initialize("GET", endpointPathEXT + formatParams(params));
     request.send();
     return result;
 }
@@ -45,6 +45,14 @@ function editAnswerKey(podID, courseID, assignmentID, questionID, requestBody) {
     var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID + "/question/" + questionID;
     _initialize("PUT", endpointPathEXT);
     request.send(requestBody);
+    return result;
+}
+
+function deleteAnswerKey(podID, courseID, assignmentID, questionID) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/assignment/" + assignmentID + "/question/" + questionID;
+    _initialize("DELETE", endpointPathEXT);
+    request.send();
     return result;
 }
 
@@ -106,4 +114,4 @@ function __execute() {
     }
 }
 
-export { getAnswerKeys, getAnswerKey, createAnswerKey, editAnswerKey};
+export { getAnswerKeys, getAnswerKey, createAnswerKey, editAnswerKey, deleteAnswerKey};

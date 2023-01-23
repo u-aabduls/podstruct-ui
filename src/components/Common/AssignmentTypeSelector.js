@@ -1,7 +1,8 @@
 import Select from 'react-select';
 
 const options = [
-    { value: 'ESSAY', label: 'General' },
+    { value: 'GENERAL', label: 'General' },
+    { value: 'MULTIPLE_CHOICE', label: 'Multiple Choice' },
     { value: 'FREE_FORM', label: 'Free Form' },
     { value: 'QUIZ', label: 'Quiz' },
     { value: 'TEST', label: 'Test' },
