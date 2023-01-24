@@ -78,7 +78,7 @@ class DocumentsTable extends Component {
 
         const create = () => {
             var requestBody = {
-                "fileInBase64String": reader.result.replace("data:application/pdf;base64,", ""),
+                "fileInBase64String": reader.result.replace(new RegExp('data:[a-z0-9/;]*base64,'), ""),
                 "fileType": loadedFile.type,
                 "fileName": loadedFile.name,
             };
