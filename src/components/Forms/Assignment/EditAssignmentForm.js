@@ -131,7 +131,6 @@ class EditAssignmentForm extends Component {
             "type": this.state.formEditAssignment.type,
             "dueDateTime": this.state.formEditAssignment.dueDate,
         };
-        console.log(this.state.formEditAssignment.dueDate)
         if (this.state.formEditAssignment.instructions) {
             payload.instructions = this.state.formEditAssignment.instructions
         }

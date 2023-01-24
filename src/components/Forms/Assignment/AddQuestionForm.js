@@ -33,11 +33,7 @@ class addQuestionForm extends Component {
         },
         numberOfChoices: 2,
         modal: false,
-        getAnswerKeysParams: {
-            page: 0,
-            size: 10,
-            sort: 'createDate,asc',
-        },
+        getAnswerKeysParams: this.props.answerKeyParams,
     }
 
     alphabet = ["A", "B", "C", "D", "E"];
@@ -147,7 +143,7 @@ class addQuestionForm extends Component {
         var isNullAnswer = true;
         var isNullChoice = true;
 
-        for (let i = 0; i <= this.state.numberOfChoices; i++) {
+        for (let i = 0; i < this.state.numberOfChoices; i++) {
             if (this.state.formAddQuestion['answer' + (i + 1)]) isNullAnswer = false;
             if (this.state.formAddQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
             if (numberOfChoices >= 2) {
@@ -274,14 +270,6 @@ class addQuestionForm extends Component {
 
         console.log((hasError || invalidQuestion) ? 'Form has errors. Check!' : 'Form Submitted!')
 
-        if(this.state.formAddQuestion.choices.error.isNullAnswer && this.state.formAddQuestion.questionType != 'TF'){
-            Swal.fire({
-                title: this.state.formAddQuestion.questionType + ": You must select at least 1 correct answer",
-                icon: "error",
-                confirmButtonColor: "#5d9cec",
-            })
-        }
-
         if (!hasError && !invalidQuestion) {
             var result = createAnswerKey(this.props.podId, this.props.courseId, this.props.assignmentId, this.constructRequestPayload());
             if (result.isSuccess) {
@@ -353,6 +341,8 @@ class addQuestionForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
+                                    {this.state.formAddQuestion.choices.error.isNullAnswer &&
+                                        this.state.formAddQuestion.questionType != "TF" && <span style={this.errorMessageStyling}>You must select at least 1 correct answer</span>}
                                     {this.hasError('formAddQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                 </div>
                             </div>

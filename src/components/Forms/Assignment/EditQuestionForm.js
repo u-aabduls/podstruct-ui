@@ -127,7 +127,6 @@ class editQuestionForm extends Component {
             if (this.state.formEditQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
             if (numberOfChoices >= 2) {
                 isNullChoice = false;
-                break
             }
         }
         var stateCopy = this.state.formEditQuestion;
@@ -146,7 +145,6 @@ class editQuestionForm extends Component {
             if (this.state.formEditQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
             if (numberOfChoices >= 2) {
                 isNullChoice = false;
-                break
             }
         }
         var stateCopy = this.state.formEditQuestion;
@@ -359,6 +357,8 @@ class editQuestionForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
+                                    {this.state.formEditQuestion.choices.error.isNullAnswer &&
+                                        this.state.formEditQuestion.questionType != "TF" && <span style={this.errorMessageStyling}>You must select at least 1 correct answer</span>}
                                     {this.hasError('formEditQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                 </div>
                             </div>
@@ -386,7 +386,6 @@ class editQuestionForm extends Component {
                                                         <em className="fa fa-book"></em>
                                                     </span>
                                                 </div>
-                                                {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
                                                 {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
                                                 {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
                                                 {this.state.formEditQuestion['answer1'] === e ?
@@ -433,7 +432,6 @@ class editQuestionForm extends Component {
                                                         <em className="fa fa-book"></em>
                                                     </span>
                                                 </div>
-                                                {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
                                                 {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
                                                 {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Answer for an empty choice won't be saved</span>}
                                                 {this.state.formEditQuestion['answer' + i] === e ?

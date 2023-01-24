@@ -112,7 +112,7 @@ class AssignmentDetail extends Component {
             var stateCopy = this.state
             var params = this.state.getAnswerKeysParams
             var res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page + 1, params.size, params.sort)
-            if (res.isSuccess) {
+            if (res.data.length > 0) {
                 stateCopy.questions = res.data
                 stateCopy.getAnswerKeysParams.page = this.state.getAnswerKeysParams.page + 1
                 this.setState(stateCopy)
@@ -192,7 +192,6 @@ class AssignmentDetail extends Component {
                     var params = this.state.getAnswerKeysParams
                     res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page, params.size, params.sort)
                     if (res.isSuccess) {
-                        console.log("test")
                         stateCopy.questions = res.data
                         this.setState(stateCopy)
                     }
@@ -423,7 +422,7 @@ class AssignmentDetail extends Component {
                                                     return (
                                                         <Card outline color="dark" className="mt-5 card-default" style={{ clear: 'both', width: '60%', margin: "auto" }}>
                                                             <CardHeader><CardTitle tag="h3">
-                                                                Question {i + 1}
+                                                                Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size }
                                                                 {!isStudent(this.state.rolePerms) ?
                                                                     <div className="float-right" style={{ clear: 'both' }}>
                                                                         <button className="btn btn-success btn-sm mb-3" onClick={() => this.toggleEditQuestionModal(i)}>
@@ -522,6 +521,7 @@ class AssignmentDetail extends Component {
                                                 courseId={this.props.history.location.state?.course.id}
                                                 assignmentId={this.state.assignment.id}
                                                 assignmentType={this.state.assignment.type}
+                                                answerKeyParams={this.state.getAnswerKeysParams}
                                                 modal={this.state.addQuestionModal}
                                                 updateOnAdd={this.updateOnQuestionAdd}
                                                 toggle={this.toggleAddQuestionModal}

@@ -23,11 +23,11 @@ class AssignmentsTable extends Component {
     }
 
     nextPage = () => {
-        if (this.state.assignments.length > this.state.getAssignmentsParams.size) {
+        if (this.state.assignments.length >= this.state.getAssignmentsParams.size) {
             var stateCopy = this.state
             var params = this.state.getAssignmentsParams
             var res = getAssignments(this.state.course.podId, this.state.course.id, params.page + 1, params.size, params.sort)
-            if (res.isSuccess) {
+            if (res.data.length > 0) {
                 stateCopy.assignments = res.data
                 stateCopy.getAssignmentsParams.page = this.state.getAssignmentsParams.page + 1
                 this.setState(stateCopy)
