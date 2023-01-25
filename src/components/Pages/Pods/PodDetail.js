@@ -294,7 +294,9 @@ class PodDetail extends Component {
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
                                         <TabPane tabId="4">
                                             <DocumentsTable
-                                                pod={this.state.pod}
+                                                role={this.state.rolePerms}
+                                                parent={this.state.pod}
+                                                parentType="pod"
                                                 documents={this.state.documents}
                                             />
                                         </TabPane>

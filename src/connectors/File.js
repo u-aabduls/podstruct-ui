@@ -1,6 +1,6 @@
 import handleError from '../utils/ErrorHandler.js'
 import formatParams from '../utils/ParamFormatter.js';
-import {devServer, prodServer} from './Paths.js';
+import { devServer, prodServer } from './Paths.js';
 
 // private members
 var request = new XMLHttpRequest();
@@ -20,9 +20,25 @@ function getPodDocuments(podId) {
     return result;
 }
 
+function getCourseDocuments(podId, courseId) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/document";
+    _initialize("GET", endpointPathEXT);
+    request.send();
+    return result;
+}
+
 function getPodDocument(podId, fileName) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podId + "/document/" + fileName;
+    _initialize("GET", endpointPathEXT);
+    request.send();
+    return result;
+}
+
+function getCourseDocument(podId, courseId, fileName) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/document/" + fileName;
     _initialize("GET", endpointPathEXT);
     request.send();
     return result;
@@ -36,9 +52,25 @@ function createPodDocument(podId, requestBody) {
     return result;
 }
 
+function createCourseDocument(podId, courseId, requestBody) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/document";
+    _initialize("POST", endpointPathEXT);
+    request.send(requestBody);
+    return result;
+}
+
 function deletePodDocument(podId, fileName) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podId + "/document/" + fileName;
+    _initialize("DELETE", endpointPathEXT);
+    request.send();
+    return result;
+}
+
+function deleteCourseDocument(podId, courseId, fileName) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/document/" + fileName;
     _initialize("DELETE", endpointPathEXT);
     request.send();
     return result;
@@ -96,4 +128,13 @@ function __execute() {
     }
 }
 
-export { getPodDocuments, getPodDocument, createPodDocument, deletePodDocument };
+export {
+    getPodDocuments,
+    getCourseDocuments,
+    getPodDocument,
+    getCourseDocument,
+    createPodDocument,
+    createCourseDocument,
+    deletePodDocument,
+    deleteCourseDocument
+};
