@@ -6,19 +6,80 @@ import {
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import FileUploadControl from '../Common/FileUploadControl';
-import { getPodDocuments, getPodDocument, createPodDocument, deletePodDocument } from '../../connectors/File';
+import {
+    getPodDocuments,
+    getCourseDocuments,
+    getPodDocument,
+    getCourseDocument,
+    createPodDocument,
+    createCourseDocument,
+    deletePodDocument,
+    deleteCourseDocument
+} from '../../connectors/File';
 import { isAdmin } from '../../utils/PermissionChecker';
 import '../../styles/app/common/pointer.css';
 
 class DocumentsTable extends Component {
 
     state = {
-        rolePerms: this.props.pod.roleInPod,
-        pod: this.props.pod,
+        role: this.props.role,
+        parent: this.props.parent,
+        parentType: this.props.parentType,
         documents: [],
     }
 
-    deleteDocument = (podId, fileName) => {
+    getPodId = () => {
+        if (this.state.parentType == "pod") {
+            return this.state.parent.id;
+        }
+        else if (this.state.parentType == "course") {
+            return this.state.parent.podId;
+        }
+        else if (this.state.parentType == "assignment") {
+            // TODO:
+        }
+    }
+
+    getCourseId = () => {
+        if (this.state.parentType == "course") {
+            return this.state.parent.id;
+        }
+        else if (this.state.parentType == "assignment") {
+            // TODO:
+        }
+    }
+
+    getAssignmentId = () => {
+        if (this.state.parentType == "assignment") {
+            // TODO:
+        }
+    }
+
+    getDocuments = () => {
+        if (this.state.parentType == "pod") {
+            return getPodDocuments(this.getPodId());
+        }
+        else if (this.state.parentType == "course") {
+            return getCourseDocuments(this.getPodId(), this.getCourseId());
+        }
+        else if (this.state.parentType == "assignment") {
+            // TODO:
+        }
+    }
+
+    getDocument = (fileName) => {
+        if (this.state.parentType == "pod") {
+            return getPodDocument(this.getPodId(), fileName);
+        }
+        else if (this.state.parentType == "course") {
+            return getCourseDocument(this.getPodId(), this.getCourseId(), fileName);
+        }
+        else if (this.state.parentType == "assignment") {
+            // TODO:
+        }
+    }
+
+    deleteDocument = (fileName) => {
         Swal.fire({
             title: 'Are you sure you want to delete the document?',
             showCancelButton: true,
@@ -27,10 +88,18 @@ class DocumentsTable extends Component {
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state;
-                var res = deletePodDocument(podId, fileName);
-                if (res.isSuccess) {
-                    res = getPodDocuments(podId)
-                    stateCopy.documents = res.data;
+                if (this.state.parentType == "pod") {
+                    var result = deletePodDocument(this.getPodId(), fileName);
+                }
+                else if (this.state.parentType == "course") {
+                    var result = deleteCourseDocument(this.getPodId(), this.getCourseId(), fileName);
+                }
+                else if (this.state.parentType == "assignment") {
+                    // TODO:
+                }
+                if (result.isSuccess) {
+                    result = this.getDocuments();
+                    stateCopy.documents = result.data;
                     this.setState(stateCopy);
                 }
                 Swal.fire({
@@ -44,7 +113,7 @@ class DocumentsTable extends Component {
 
     componentDidMount() {
         var stateCopy = this.state;
-        var result = getPodDocuments(this.state.pod.id)
+        var result = this.getDocuments();
         if (result.isSuccess) {
             stateCopy.documents = result.data;
             this.setState(stateCopy);
@@ -64,7 +133,7 @@ class DocumentsTable extends Component {
     updateOnDocumentAdd = (res) => {
         if (res.isSuccess) {
             var stateCopy = this.state;
-            var result = getPodDocuments(this.state.pod.id)
+            var result = this.getDocuments();
             if (result.isSuccess) {
                 stateCopy.documents = result.data;
                 this.setState(stateCopy);
@@ -83,11 +152,18 @@ class DocumentsTable extends Component {
                 "fileName": loadedFile.name,
             };
 
-            const podDetail = this;
-            var result = createPodDocument(podDetail.state.pod.id, JSON.stringify(requestBody));
-
+            const o = this;
+            if (this.state.parentType == "pod") {
+                var result = createPodDocument(o.getPodId(), JSON.stringify(requestBody));
+            }
+            else if (this.state.parentType == "course") {
+                var result = createCourseDocument(o.getPodId(), o.getCourseId(), JSON.stringify(requestBody));
+            }
+            else if (this.state.parentType == "assignment") {
+                // TODO:
+            }
             if (result.isSuccess) {
-                podDetail.updateOnDocumentAdd(result);
+                o.updateOnDocumentAdd(result);
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -135,7 +211,7 @@ class DocumentsTable extends Component {
     };
 
     downloadFile = (fileName, fileType) => {
-        var result = getPodDocument(this.state.pod.id, fileName);
+        var result = this.getDocument(fileName);
         if (result.isSuccess) {
             const fileContentsBase64Decoded = Buffer.from(result.data.base64String, 'base64');
             const link = document.createElement("a");
@@ -152,7 +228,7 @@ class DocumentsTable extends Component {
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <div>
-                {isAdmin(this.state.rolePerms) ?
+                {isAdmin(this.state.role) ?
                     <div className="float-right">
                         <FileUploadControl onChange={this.uploadFile}></FileUploadControl>
                     </div>
@@ -186,11 +262,11 @@ class DocumentsTable extends Component {
                                             {document.fileSize}
                                         </td>
                                         <td className="buttons">
-                                            {isAdmin(this.state.rolePerms) ?
+                                            {isAdmin(this.state.role) ?
                                                 <div className='button-container'>
                                                     <Button className="btn btn-secondary btn-sm bg-danger"
                                                         onMouseDown={e => e.preventDefault()}
-                                                        onClick={() => this.deleteDocument(this.state.pod.id, document.fileName)}>
+                                                        onClick={() => this.deleteDocument(document.fileName)}>
                                                         <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                                     </Button>
                                                 </div>
