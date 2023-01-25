@@ -308,7 +308,11 @@ class editQuestionForm extends Component {
         stateCopy.questionType = res.data.questionType;
         for (let i = 0; i < numberOfChoices; i++) {
             stateCopy["choice" + this.alphabet[i]] = res.data["choice" + this.alphabet[i]];
-            if (res.data["answer" + (i + 1)]) stateCopy["answer" + (i + 1)] = res.data["answer" + (i + 1)]
+            if (res.data["answer" + (i + 1)] == "A") stateCopy.answer1 = res.data["answer" + (i + 1)]
+            else if (res.data["answer" + (i + 1)] == "B") stateCopy.answer2 = res.data["answer" + (i + 1)]
+            else if (res.data["answer" + (i + 1)] == "C") stateCopy.answer3 = res.data["answer" + (i + 1)]
+            else if (res.data["answer" + (i + 1)] == "D") stateCopy.answer4 = res.data["answer" + (i + 1)]
+            else if (res.data["answer" + (i + 1)] == "E") stateCopy.answer5 = res.data["answer" + (i + 1)]
         }
     }
 
@@ -323,6 +327,12 @@ class editQuestionForm extends Component {
     }
 
     render() {
+        if (this.state.formEditQuestion.questionType == "MA"){
+            var answerList = [];
+            for (let i = 0; i < this.state.numberOfChoices; i++) {
+                if (this.state.formEditQuestion['answer' + (i+1)]) answerList.push(this.state.formEditQuestion['answer' + (i+1)])
+            }
+        }
         return (
             <div>
                 <Modal isOpen={this.state.modal}>
@@ -434,7 +444,7 @@ class editQuestionForm extends Component {
                                                 </div>
                                                 {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
                                                 {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Answer for an empty choice won't be saved</span>}
-                                                {this.state.formEditQuestion['answer' + i] === e ?
+                                                {answerList.includes(e) ?
                                                     <div className="input-group">
                                                         <input className="mr-2" type="checkbox" value={[e, i]} id={e} name="answer" defaultChecked onChange={this.setMAAnswer} />
                                                         <label className="text-muted pt-2">Correct Answer</label>
