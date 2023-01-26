@@ -23,8 +23,7 @@ const customStylesError = {
 
 function setAdditionalOptions(assignmentType) {
     // only add the extra option if it doesnt already exist as an option
-    if (assignmentType === 'FREE_FORM' && !options.find(o => o.value === 'FF')) options.push({value: 'FF', label: 'Fill in the Blank'});
-    if (assignmentType === 'FREE_FORM' && !options.find(o => o.value === 'FF2')) options.push({value: 'FF2', label: 'Discussion'});
+    if (assignmentType === 'FREE_FORM' && !options.find(o => o.value === 'FF')) options.push({value: 'FF', label: 'Free Form'});
     if (assignmentType === 'ESSAY') return;
 }
 
