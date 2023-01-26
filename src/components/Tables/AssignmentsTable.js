@@ -20,6 +20,7 @@ class AssignmentsTable extends Component {
             size: 10,
             sort: 'createDate,desc',
         },
+        nextPage: true
     }
 
     nextPage = () => {
@@ -30,8 +31,9 @@ class AssignmentsTable extends Component {
             if (res.data.length > 0) {
                 stateCopy.assignments = res.data
                 stateCopy.getAssignmentsParams.page = this.state.getAssignmentsParams.page + 1
-                this.setState(stateCopy)
             }
+            else stateCopy.nextPage = false;
+            this.setState(stateCopy)
         }
     }
 
@@ -220,12 +222,22 @@ class AssignmentsTable extends Component {
                         </tr>}
                 </Table>
                 <div>
-                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.nextPage}>
-                        <span><i className="fa fa-chevron-right"></i></span>
-                    </Button>
-                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.prevPage}>
-                        <span><i className="fa fa-chevron-left"></i></span>
-                    </Button>
+                    {this.state.nextPage && this.state.assignments.length >= this.state.getAssignmentsParams.size ?
+                        <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.nextPage}>
+                            <span><i className="fa fa-chevron-right"></i></span>
+                        </Button>
+                        :
+                        <Button color="secondary" className="btn float-right mt-3 mb-5 invisible" size="sm" onClick={this.nextPage}>
+                            <span><i className="fa fa-chevron-right"></i></span>
+                        </Button>}
+                    {this.state.getAssignmentsParams.page > 0 ?
+                        <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.prevPage}>
+                            <span><i className="fa fa-chevron-left"></i></span>
+                        </Button>
+                        :
+                        <Button color="secondary" className="btn float-right mt-3 mb-5 invisible" size="sm" onClick={this.prevPage}>
+                            <span><i className="fa fa-chevron-left"></i></span>
+                        </Button>}
                 </div>
             </div>
         )

@@ -48,6 +48,7 @@ class AssignmentDetail extends Component {
             size: 10,
             sort: 'createDate,asc',
         },
+        nextPage: true
     }
 
     toggleDD = () => this.setState({
@@ -115,8 +116,9 @@ class AssignmentDetail extends Component {
             if (res.data.length > 0) {
                 stateCopy.questions = res.data
                 stateCopy.getAnswerKeysParams.page = this.state.getAnswerKeysParams.page + 1
-                this.setState(stateCopy)
             }
+            else stateCopy.nextPage = false;
+            this.setState(stateCopy)
         }
     }
 
@@ -223,6 +225,7 @@ class AssignmentDetail extends Component {
     }
 
     render() {
+        console.log(this.state)
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         var dueDate = new Date(moment.utc(this.state.assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
@@ -422,7 +425,7 @@ class AssignmentDetail extends Component {
                                                     return (
                                                         <Card outline color="dark" className="mt-5 card-default" style={{ clear: 'both', width: '60%', margin: "auto" }}>
                                                             <CardHeader><CardTitle tag="h3">
-                                                                Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size }
+                                                                Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size}
                                                                 {!isStudent(this.state.rolePerms) ?
                                                                     <div className="float-right" style={{ clear: 'both' }}>
                                                                         <button className="btn btn-success btn-sm mb-3" onClick={() => this.toggleEditQuestionModal(i)}>
@@ -498,7 +501,7 @@ class AssignmentDetail extends Component {
                                                                             <strong>Answers: </strong>
                                                                         </td>
                                                                         <td>
-                                                                            {answerList}
+                                                                            {answerList ? answerList : <span className='text-warning' style={this.errorMessageStyling}>Must be manually graded</span>}
                                                                         </td>
                                                                     </tr>
                                                                 </Table>
@@ -511,12 +514,22 @@ class AssignmentDetail extends Component {
                                                 </div>
                                             }
                                             <div>
-                                                <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.nextPage}>
-                                                    <span><i className="fa fa-chevron-right"></i></span>
-                                                </Button>
-                                                <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.prevPage}>
-                                                    <span><i className="fa fa-chevron-left"></i></span>
-                                                </Button>
+                                                {this.state.nextPage && this.state.questions.length >= this.state.getAnswerKeysParams.size ?
+                                                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.nextPage}>
+                                                        <span><i className="fa fa-chevron-right"></i></span>
+                                                    </Button>
+                                                    :
+                                                    <Button color="secondary" className="btn float-right mt-3 mb-5 invisible" size="sm" onClick={this.nextPage}>
+                                                        <span><i className="fa fa-chevron-right"></i></span>
+                                                    </Button>}
+                                                {this.state.getAnswerKeysParams.page > 0 ?
+                                                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={this.prevPage}>
+                                                        <span><i className="fa fa-chevron-left"></i></span>
+                                                    </Button>
+                                                    :
+                                                    <Button color="secondary" className="btn float-right mt-3 mb-5 invisible" size="sm" onClick={this.prevPage}>
+                                                        <span><i className="fa fa-chevron-left"></i></span>
+                                                    </Button>}
                                             </div>
                                             <AddQuestionForm
                                                 podId={this.props.history.location.state?.podID}
