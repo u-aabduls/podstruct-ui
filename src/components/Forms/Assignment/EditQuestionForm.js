@@ -33,11 +33,7 @@ class editQuestionForm extends Component {
         },
         numberOfChoices: 2,
         modal: false,
-        getAnswerKeysParams: {
-            page: 0,
-            size: 10,
-            sort: 'createDate,asc',
-        },
+        getAnswerKeysParams: this.props.answerKeyParams
     }
 
     alphabet = ["A", "B", "C", "D", "E"];
@@ -306,14 +302,18 @@ class editQuestionForm extends Component {
         stateCopy = this.state.formEditQuestion;
         stateCopy.question = res.data.question;
         stateCopy.questionType = res.data.questionType;
-        for (let i = 0; i < numberOfChoices; i++) {
-            stateCopy["choice" + this.alphabet[i]] = res.data["choice" + this.alphabet[i]];
-            if (res.data["answer" + (i + 1)] == "A") stateCopy.answer1 = res.data["answer" + (i + 1)]
-            else if (res.data["answer" + (i + 1)] == "B") stateCopy.answer2 = res.data["answer" + (i + 1)]
-            else if (res.data["answer" + (i + 1)] == "C") stateCopy.answer3 = res.data["answer" + (i + 1)]
-            else if (res.data["answer" + (i + 1)] == "D") stateCopy.answer4 = res.data["answer" + (i + 1)]
-            else if (res.data["answer" + (i + 1)] == "E") stateCopy.answer5 = res.data["answer" + (i + 1)]
+        if (res.data.questionType === "MA") {
+            for (let i = 0; i < numberOfChoices; i++) {
+                stateCopy["choice" + this.alphabet[i]] = res.data["choice" + this.alphabet[i]];
+                if (res.data["answer" + (i + 1)] == "A") stateCopy.answer1 = res.data["answer" + (i + 1)]
+                else if (res.data["answer" + (i + 1)] == "B") stateCopy.answer2 = res.data["answer" + (i + 1)]
+                else if (res.data["answer" + (i + 1)] == "C") stateCopy.answer3 = res.data["answer" + (i + 1)]
+                else if (res.data["answer" + (i + 1)] == "D") stateCopy.answer4 = res.data["answer" + (i + 1)]
+                else if (res.data["answer" + (i + 1)] == "E") stateCopy.answer5 = res.data["answer" + (i + 1)]
+            }
         }
+        else stateCopy.answer1 = res.data.answer1
+        this.setState(stateCopy)
     }
 
     componentWillMount() {
@@ -337,7 +337,7 @@ class editQuestionForm extends Component {
             <div>
                 <Modal isOpen={this.state.modal}>
                     <form className="mb-3" name="formEditQuestion" onSubmit={this.onSubmit}>
-                        <ModalHeader toggle={this.toggleModal}>Edit Question</ModalHeader>
+                        <ModalHeader toggle={this.toggleModal}>Edit Question {this.props.questionNumber}</ModalHeader>
                         <ModalBody>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="addCourseSubject">Question Type</label>

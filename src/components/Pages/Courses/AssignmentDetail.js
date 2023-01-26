@@ -451,6 +451,8 @@ class AssignmentDetail extends Component {
                                                                 assignmentId={this.state.assignment.id}
                                                                 questionId={question.id}
                                                                 assignmentType={this.state.assignment.type}
+                                                                answerKeyParams={this.state.getAnswerKeysParams}
+                                                                questionNumber={(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size}
                                                                 modal={this.state.editQuestionModals["questionModal" + (i + 1)]}
                                                                 updateOnEdit={this.updateOnQuestionEdit}
                                                                 toggle={() => this.toggleEditQuestionModal(i)}
