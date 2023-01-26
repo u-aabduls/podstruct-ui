@@ -143,6 +143,7 @@ class DocumentsTable extends Component {
     }
 
     createDocument = (loadedFile) => {
+        document.body.style.cursor = 'progress';
         var reader = new FileReader();
         reader.readAsDataURL(loadedFile);
 
@@ -163,6 +164,7 @@ class DocumentsTable extends Component {
             else if (this.state.parentType == "assignment") {
                 var result = createAssignmentDocument(o.getPodId(), o.getCourseId(), o.getAssignmentId(), JSON.stringify(requestBody));
             }
+            document.body.style.cursor = 'default';
             if (result.isSuccess) {
                 o.updateOnDocumentAdd(result);
             } else {
