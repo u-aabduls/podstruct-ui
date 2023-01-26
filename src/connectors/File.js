@@ -28,6 +28,14 @@ function getCourseDocuments(podId, courseId) {
     return result;
 }
 
+function getAssignmentDocuments(podId, courseId, assignmentId) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/assignment/" + assignmentId + "/document";
+    _initialize("GET", endpointPathEXT);
+    request.send();
+    return result;
+}
+
 function getPodDocument(podId, fileName) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podId + "/document/" + fileName;
@@ -39,6 +47,14 @@ function getPodDocument(podId, fileName) {
 function getCourseDocument(podId, courseId, fileName) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/document/" + fileName;
+    _initialize("GET", endpointPathEXT);
+    request.send();
+    return result;
+}
+
+function getAssignmentDocument(podId, courseId, assignmentId, fileName) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/assignment/" + assignmentId + "/document/" + fileName;
     _initialize("GET", endpointPathEXT);
     request.send();
     return result;
@@ -60,6 +76,14 @@ function createCourseDocument(podId, courseId, requestBody) {
     return result;
 }
 
+function createAssignmentDocument(podId, courseId, assignmentId, requestBody) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/assignment/" + assignmentId + "/document";
+    _initialize("POST", endpointPathEXT);
+    request.send(requestBody);
+    return result;
+}
+
 function deletePodDocument(podId, fileName) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podId + "/document/" + fileName;
@@ -71,6 +95,14 @@ function deletePodDocument(podId, fileName) {
 function deleteCourseDocument(podId, courseId, fileName) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/document/" + fileName;
+    _initialize("DELETE", endpointPathEXT);
+    request.send();
+    return result;
+}
+
+function deleteAssignmentDocument(podId, courseId, assignmentId, fileName) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/assignment/" + assignmentId + "/document/" + fileName;
     _initialize("DELETE", endpointPathEXT);
     request.send();
     return result;
@@ -131,10 +163,14 @@ function __execute() {
 export {
     getPodDocuments,
     getCourseDocuments,
+    getAssignmentDocuments,
     getPodDocument,
     getCourseDocument,
+    getAssignmentDocument,
     createPodDocument,
     createCourseDocument,
+    createAssignmentDocument,
     deletePodDocument,
-    deleteCourseDocument
+    deleteCourseDocument,
+    deleteAssignmentDocument
 };

@@ -30,6 +30,7 @@ import AddQuestionForm from '../../Forms/Assignment/AddQuestionForm';
 import EditQuestionForm from '../../Forms/Assignment/EditQuestionForm';
 import EditAssignmentForm from '../../Forms/Assignment/EditAssignmentForm';
 import Swal from 'sweetalert2';
+import DocumentsTable from '../../Tables/DocumentsTable';
 
 class AssignmentDetail extends Component {
 
@@ -383,6 +384,14 @@ class AssignmentDetail extends Component {
                                                 href="#"
                                                 className={classnames({ active: this.state.activeTab === '2' })}
                                                 onClick={() => { this.toggleTab('2'); }}>
+                                                Documents
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                href="#"
+                                                className={classnames({ active: this.state.activeTab === '3' })}
+                                                onClick={() => { this.toggleTab('3'); }}>
                                                 Grades
                                             </NavLink>
                                         </NavItem>
@@ -422,7 +431,7 @@ class AssignmentDetail extends Component {
                                                     return (
                                                         <Card outline color="dark" className="mt-5 card-default" style={{ clear: 'both', width: '60%', margin: "auto" }}>
                                                             <CardHeader><CardTitle tag="h3">
-                                                                Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size }
+                                                                Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size}
                                                                 {!isStudent(this.state.rolePerms) ?
                                                                     <div className="float-right" style={{ clear: 'both' }}>
                                                                         <button className="btn btn-success btn-sm mb-3" onClick={() => this.toggleEditQuestionModal(i)}>
@@ -528,7 +537,15 @@ class AssignmentDetail extends Component {
                                             />
                                         </TabPane>
                                         <TabPane tabId="2">
-
+                                            <DocumentsTable
+                                                role={this.state.rolePerms}
+                                                parent={{
+                                                    ...this.state.assignment,
+                                                    podId: this.props.history.location.state?.podID,
+                                                    courseId: this.props.history.location.state?.course.id
+                                                }}
+                                                parentType="assignment"
+                                            />
                                         </TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
                                         <TabPane tabId="4">Sed commodo tellus ut mi tristique pharetra.</TabPane>

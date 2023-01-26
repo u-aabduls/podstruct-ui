@@ -297,7 +297,6 @@ class PodDetail extends Component {
                                                 role={this.state.rolePerms}
                                                 parent={this.state.pod}
                                                 parentType="pod"
-                                                documents={this.state.documents}
                                             />
                                         </TabPane>
                                     </TabContent>
