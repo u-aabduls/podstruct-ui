@@ -9,12 +9,16 @@ import FileUploadControl from '../Common/FileUploadControl';
 import {
     getPodDocuments,
     getCourseDocuments,
+    getAssignmentDocuments,
     getPodDocument,
     getCourseDocument,
+    getAssignmentDocument,
     createPodDocument,
     createCourseDocument,
+    createAssignmentDocument,
     deletePodDocument,
-    deleteCourseDocument
+    deleteCourseDocument,
+    deleteAssignmentDocument
 } from '../../connectors/File';
 import { isAdmin } from '../../utils/PermissionChecker';
 import '../../styles/app/common/pointer.css';
@@ -32,11 +36,8 @@ class DocumentsTable extends Component {
         if (this.state.parentType == "pod") {
             return this.state.parent.id;
         }
-        else if (this.state.parentType == "course") {
+        else if (this.state.parentType == "course" || this.state.parentType == "assignment") {
             return this.state.parent.podId;
-        }
-        else if (this.state.parentType == "assignment") {
-            // TODO:
         }
     }
 
@@ -45,13 +46,13 @@ class DocumentsTable extends Component {
             return this.state.parent.id;
         }
         else if (this.state.parentType == "assignment") {
-            // TODO:
+            return this.state.parent.courseId;
         }
     }
 
     getAssignmentId = () => {
         if (this.state.parentType == "assignment") {
-            // TODO:
+            return this.state.parent.id;
         }
     }
 
@@ -63,7 +64,7 @@ class DocumentsTable extends Component {
             return getCourseDocuments(this.getPodId(), this.getCourseId());
         }
         else if (this.state.parentType == "assignment") {
-            // TODO:
+            return getAssignmentDocuments(this.getPodId(), this.getCourseId(), this.getAssignmentId());
         }
     }
 
@@ -75,7 +76,7 @@ class DocumentsTable extends Component {
             return getCourseDocument(this.getPodId(), this.getCourseId(), fileName);
         }
         else if (this.state.parentType == "assignment") {
-            // TODO:
+            return getAssignmentDocument(this.getPodId(), this.getCourseId(), this.getAssignmentId(), fileName);
         }
     }
 
@@ -95,7 +96,7 @@ class DocumentsTable extends Component {
                     var result = deleteCourseDocument(this.getPodId(), this.getCourseId(), fileName);
                 }
                 else if (this.state.parentType == "assignment") {
-                    // TODO:
+                    var result = deleteAssignmentDocument(this.getPodId(), this.getCourseId(), this.getAssignmentId(), fileName);
                 }
                 if (result.isSuccess) {
                     result = this.getDocuments();
@@ -160,7 +161,7 @@ class DocumentsTable extends Component {
                 var result = createCourseDocument(o.getPodId(), o.getCourseId(), JSON.stringify(requestBody));
             }
             else if (this.state.parentType == "assignment") {
-                // TODO:
+                var result = createAssignmentDocument(o.getPodId(), o.getCourseId(), o.getAssignmentId(), JSON.stringify(requestBody));
             }
             if (result.isSuccess) {
                 o.updateOnDocumentAdd(result);

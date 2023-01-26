@@ -294,7 +294,6 @@ class CourseDetail extends Component {
                                                 role={this.state.rolePerms}
                                                 parent={this.state.course}
                                                 parentType="course"
-                                                documents={this.state.documents}
                                             />
                                         </TabPane>
                                     </TabContent>
