@@ -108,7 +108,7 @@ class Dashboard extends Component {
             <ContentWrapper>
                 <div className="content-heading">
                     <div> Dashboard
-                        <small>{localStorage.getItem('podName')}, welcome to your dashboard!</small>
+                        <small>{localStorage.getItem('name')}, welcome to your dashboard!</small>
                     </div>
                     { /* START Language list */ }
                     <div className="ml-auto">
