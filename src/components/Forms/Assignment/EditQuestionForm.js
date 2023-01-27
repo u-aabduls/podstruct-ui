@@ -46,8 +46,8 @@ class editQuestionForm extends Component {
     }
 
     toggleModal = () => {
-        this.populateForm()
         this.props.toggle()
+        this.populateForm()
     }
 
     addChoice = () => {
@@ -316,17 +316,18 @@ class editQuestionForm extends Component {
         this.setState(stateCopy)
     }
 
-    componentWillMount() {
-        this.populateForm();
-    }
-
     componentDidUpdate(prevProps, prevState) {
         if (this.props.modal !== prevProps.modal) {
+            if(this.props.modal) this.populateForm()
             this.setState({ modal: this.props.modal })
+        }
+        if(this.props.questionId !== prevProps.questionId) {
+            if(this.props.modal) this.populateForm()
         }
     }
 
     render() {
+        console.log(this.state.formEditQuestion)
         if (this.state.formEditQuestion.questionType == "MA"){
             var answerList = [];
             for (let i = 0; i < this.state.numberOfChoices; i++) {

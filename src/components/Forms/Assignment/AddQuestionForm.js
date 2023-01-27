@@ -426,7 +426,7 @@ class addQuestionForm extends Component {
                                     {this.state.formAddQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
                                 </div>
                                 : null}
-                            {this.state.numberOfChoices < 5 && this.state.formAddQuestion.questionType != "TF" ?
+                            {this.state.numberOfChoices < 5 && this.state.formAddQuestion.questionType != "TF" && this.state.formAddQuestion.questionType != "FF" ?
                                 <div>
                                     <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "40%" }} onClick={this.addChoice}>Add Choice</Button>
                                 </div>

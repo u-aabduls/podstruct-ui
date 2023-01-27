@@ -226,7 +226,7 @@ class AssignmentDetail extends Component {
     }
 
     render() {
-        console.log(this.state)
+        console.log(this.state.editQuestionModals)
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         var dueDate = new Date(moment.utc(this.state.assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
@@ -431,6 +431,7 @@ class AssignmentDetail extends Component {
                                                         if (question['answer' + (i + 1)])
                                                             answers.push(question['answer' + (i + 1)])
                                                     }
+                                                    answers.sort();
                                                     return (
                                                         <Card outline color="dark" className="mt-5 card-default" style={{ clear: 'both', width: '60%', margin: "auto" }}>
                                                             <CardHeader><CardTitle tag="h3">
