@@ -142,11 +142,23 @@ class DocumentsTable extends Component {
         }
     }
 
+    toggleFileUploadButton = () => {
+        var fileUploadButton = document.getElementById('fileUploadButton'),
+            dummyFileUploadButton = document.getElementById('dummyFileUploadButton');
+        if (dummyFileUploadButton.classList.contains("hidden")) {
+            fileUploadButton.classList.add("hidden");
+            dummyFileUploadButton.classList.remove("hidden");
+        } else {
+            dummyFileUploadButton.classList.add("hidden");
+            fileUploadButton.classList.remove("hidden");
+        }
+    }
+
     createDocument = (loadedFile) => {
-        document.body.style.cursor = 'progress';
+        this.toggleFileUploadButton();
+
         var reader = new FileReader();
         reader.readAsDataURL(loadedFile);
-
         const create = () => {
             var requestBody = {
                 "fileInBase64String": reader.result.replace(new RegExp('data:[a-z0-9/;]*base64,'), ""),
@@ -164,7 +176,7 @@ class DocumentsTable extends Component {
             else if (this.state.parentType == "assignment") {
                 var result = createAssignmentDocument(o.getPodId(), o.getCourseId(), o.getAssignmentId(), JSON.stringify(requestBody));
             }
-            document.body.style.cursor = 'default';
+            this.toggleFileUploadButton();
             if (result.isSuccess) {
                 o.updateOnDocumentAdd(result);
             } else {
