@@ -113,7 +113,7 @@ class PasswordReset extends Component {
                         <form name="formPasswordReset" onSubmit={this.onSubmit}>
                             <p className="text-left">Enter the verification code and your new password. If the verification code matches, your password will be reset.</p>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-email">Verification code</label>
+                                <label className="text-muted" htmlFor="id-email">Verification code <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         id="id-email"
@@ -143,7 +143,7 @@ class PasswordReset extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-password">New password</label>
+                                <label className="text-muted" htmlFor="id-password">New password <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="password"

@@ -197,7 +197,7 @@ class Register extends Component {
                         <p className="text-center py-2">CREATE YOUR PODSTRUCT ACCOUNT</p>
                         <form className="mb-3" name="formRegister" onSubmit={this.onSubmit}>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-email">Email address</label>
+                                <label className="text-muted" htmlFor="id-email">Email address <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="email"
@@ -219,7 +219,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-firstName">First name</label>
+                                <label className="text-muted" htmlFor="id-firstName">First name <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="text"
@@ -250,7 +250,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-lastName">Last name</label>
+                                <label className="text-muted" htmlFor="id-lastName">Last name <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="text"
@@ -281,7 +281,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted">Date of birth</label>
+                                <label className="text-muted">Date of birth <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <MonthSelector
                                         name="monthSelector"
@@ -303,7 +303,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-phone">Phone number</label>
+                                <label className="text-muted" htmlFor="id-phone">Phone number <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="text"
@@ -332,7 +332,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-password">Password</label>
+                                <label className="text-muted" htmlFor="id-password">Password <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="password"

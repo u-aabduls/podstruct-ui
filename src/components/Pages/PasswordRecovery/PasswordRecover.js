@@ -97,7 +97,7 @@ class Recover extends Component {
                         <form name="formPasswordRecover" onSubmit={this.onSubmit}>
                             <p className="text-left">Enter your email registered with Podstruct and request a verification code. The verification code will be sent momentarily.</p>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-email">Email address</label>
+                                <label className="text-muted" htmlFor="id-email">Email address <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="email"
