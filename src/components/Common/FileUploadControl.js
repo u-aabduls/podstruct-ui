@@ -3,7 +3,8 @@ import '../../styles/app/common/hidden.css'
 
 const acceptedFileTypes = ".pdf,.doc,.dot,.docx,.xls,"
   + ".xlsx,.ppt,.pptx,.txt,.jpeg,"
-  + ".jpg,.png,.gif,.tiff,.rar,.zip";
+  + ".jpg,.png,.gif,.tiff,.rar,.zip," 
+  + ".wav,.mp3,.mp4";
 
 const FileUploadControl = ({ children, value, onChange, disabled }) => {
   return (
