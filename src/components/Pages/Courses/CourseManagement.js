@@ -101,26 +101,6 @@ class CourseManagement extends Component {
         }
     }
 
-    // uploadFile = ({ target: { files } }) => {
-    //     const loadedFile = files[0];
-    //     var reader = new FileReader();
-    //     reader.readAsDataURL(loadedFile);
-
-    //     const create = () => {
-    //         var requestBody = {
-    //             "fileInBase64String": reader.result,
-    //             "fileType": loadedFile.type,
-    //             "fileName": loadedFile.name,
-    //         };
-    //         createPodDocument(this.state.pod.id, JSON.stringify(requestBody));
-    //     }
-    //     reader.addEventListener("load", create);
-
-    //     reader.onerror = function (error) {
-    //         console.log('Error: ', error);
-    //     };
-    // };
-
     render() {
         return (
             <ContentWrapper>

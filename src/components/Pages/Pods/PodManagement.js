@@ -100,6 +100,25 @@ class PodManagement extends Component {
 
     }
 
+    getLatestPods = () => {
+        var params = this.state.getPodParams.accepted;
+        var result = getPods(params.inviteStatus).data;
+        if (result) {
+            result.sort(function (a, b) {
+                return (a.podName).localeCompare(b.podName);
+            })
+            this.setState({ pods: result });
+        }
+        params = this.state.getPodParams.pending;
+        result = getPods(params.inviteStatus).data;
+        if (result) {
+            result.sort(function (a, b) {
+                return (a.podName).localeCompare(b.podName);
+            })
+            this.setState({ pendingPods: result });
+        }
+    }
+
     onSubmit = e => {
         e.preventDefault();
 
@@ -133,11 +152,8 @@ class PodManagement extends Component {
                     title: "Successfully created pod",
                     confirmButtonColor: "#5d9cec",
                     icon: "success",
-                }).then(
-                    (acknowledged) => {
-                        window.location.href = window.location.href;
-                    }
-                )
+                })
+                this.getLatestPods();
             } else {
                 this.toggleModal();
                 Swal.fire({
@@ -151,22 +167,7 @@ class PodManagement extends Component {
     }
 
     componentWillMount() {
-        var params = this.state.getPodParams.accepted
-        var result = getPods(params.inviteStatus).data;
-        if (result) {
-            result.sort(function (a, b) {
-                return (a.podName).localeCompare(b.podName);
-            })
-            this.setState({ pods: result });
-        }
-        params = this.state.getPodParams.pending
-        result = getPods(params.inviteStatus).data;
-        if (result) {
-            result.sort(function (a, b) {
-                return (a.podName).localeCompare(b.podName);
-            })
-            this.setState({ pendingPods: result });
-        }
+       this.getLatestPods();
     }
 
     render() {
@@ -180,8 +181,8 @@ class PodManagement extends Component {
                     <div>
                         <button className="btn btn-success"
                             onClick={this.toggleModal}
-                            onMouseDown={e => e.preventDefault()} 
-                            >
+                            onMouseDown={e => e.preventDefault()}
+                        >
                             <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Pod
                         </button>
                         <Modal isOpen={this.state.modal}>
@@ -325,7 +326,7 @@ class PodManagement extends Component {
                         );
                     })}
                 </Row>
-                {this.state.pendingPods.length > 0 ? <Divider className="mb-5"/> : null}
+                {this.state.pendingPods.length > 0 ? <Divider className="mb-5" /> : null}
                 {this.state.pods.length > 0 ? <h3>Pods</h3> : null}
                 <Row>
                     {this.state.pods.map(function (object, i) {
