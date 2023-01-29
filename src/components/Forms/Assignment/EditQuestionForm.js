@@ -495,7 +495,7 @@ class editQuestionForm extends Component {
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            <Button color="primary" type="submit">Edit</Button>{' '}
+                            <Button color="primary" type="submit">Save</Button>{' '}
                         </ModalFooter>
                     </form>
                 </Modal>

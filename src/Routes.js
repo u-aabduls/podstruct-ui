@@ -26,7 +26,7 @@ const PodManagement = lazy(() => import('./components/Pages/Pods/PodManagement')
 const PodDetail = lazy(() => import('./components/Pages/Pods/PodDetail'));
 const CourseManagement = lazy(() => import('./components/Pages/Courses/CourseManagement'));
 const CourseDetail = lazy(() => import('./components/Pages/Courses/CourseDetail'));
-const AssignmentDetail =  lazy(() => import('./components/Pages/Courses/AssignmentDetail'));
+const AssignmentDetail =  lazy(() => import('./components/Pages/Courses/Assignments/AssignmentDetail'));
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ContentWrapper from '../../Layout/ContentWrapper';
+import ContentWrapper from '../../../Layout/ContentWrapper';
 import classnames from 'classnames';
 import { withRouter } from 'react-router';
 import {
@@ -23,14 +23,14 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
-import { getAssignment, publishAssignment, deleteAssignment } from '../../../connectors/Assignments';
-import { getAnswerKeys, deleteAnswerKey } from '../../../connectors/AnswerKey';
-import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
-import AddQuestionForm from '../../Forms/Assignment/AddQuestionForm';
-import EditQuestionForm from '../../Forms/Assignment/EditQuestionForm';
-import EditAssignmentForm from '../../Forms/Assignment/EditAssignmentForm';
+import { getAssignment, publishAssignment, deleteAssignment } from '../../../../connectors/Assignments';
+import { getAnswerKeys, deleteAnswerKey } from '../../../../connectors/AnswerKey';
+import { isAdmin, isStudent } from '../../../../utils/PermissionChecker'
+import AddQuestionForm from '../../../Forms/Assignment/AddQuestionForm';
+import EditQuestionForm from '../../../Forms/Assignment/EditQuestionForm';
+import EditAssignmentForm from '../../../Forms/Assignment/EditAssignmentForm';
 import Swal from 'sweetalert2';
-import DocumentsTable from '../../Tables/DocumentsTable';
+import DocumentsTable from '../../../Tables/DocumentsTable';
 
 class AssignmentDetail extends Component {
 
