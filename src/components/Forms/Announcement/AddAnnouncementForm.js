@@ -147,7 +147,7 @@ class AddAnnouncementForm extends Component {
                     <ModalHeader toggle={this.toggleModal}>Add Announcement</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-announcementTitle">Title</label>
+                            <label className="text-muted" htmlFor="id-announcementTitle">Title <span style={{ color: '#f05050' }}>*</span></label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"

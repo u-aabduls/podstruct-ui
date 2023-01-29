@@ -190,7 +190,7 @@ class PodManagement extends Component {
                                 <ModalHeader toggle={this.toggleModal}>Create Pod</ModalHeader>
                                 <ModalBody>
                                     <div className="form-group">
-                                        <label className="text-muted" htmlFor="id-podName">Name</label>
+                                        <label className="text-muted" htmlFor="id-podName">Name <span style={{ color: '#f05050' }}>*</span></label>
                                         <div className="input-group with-focus">
                                             <Input
                                                 type="text"
@@ -245,7 +245,7 @@ class PodManagement extends Component {
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label className="text-muted" htmlFor="id-phone">Phone Number</label>
+                                        <label className="text-muted" htmlFor="id-phone">Phone Number <span style={{ color: '#f05050' }}>*</span></label>
                                         <div className="input-group with-focus">
                                             <Input
                                                 type="text"

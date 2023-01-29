@@ -303,7 +303,7 @@ class AddCourseForm extends Component {
                         <ModalHeader toggle={this.toggleModal}>Create Course</ModalHeader>
                         <ModalBody>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="addCourseSubject">Select Pod</label>
+                                <label className="text-muted" htmlFor="addCourseSubject">Select Pod <span style={{ color: '#f05050' }}>*</span></label>
                                 <PodSelector
                                     name="podSelector"
                                     pods={this.state.pods}
@@ -314,7 +314,7 @@ class AddCourseForm extends Component {
                                 {this.state.formAddCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-courseSubject">Subject</label>
+                                <label className="text-muted" htmlFor="id-courseSubject">Subject <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="text"
@@ -342,7 +342,7 @@ class AddCourseForm extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="addDaySchedule">Day Schedule</label>
+                                <label className="text-muted" htmlFor="addDaySchedule">Day Schedule <span style={{ color: '#f05050' }}>*</span></label>
                                 <DaysOfWeekSelector
                                     name="daysOfWeekSelector"
                                     hasError={this.state.formAddCourse.selector.error.isNullDay}
@@ -352,7 +352,7 @@ class AddCourseForm extends Component {
                                 {this.state.formAddCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule</label>
+                                <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule <span style={{ color: '#f05050' }}>*</span></label>
                                 <Row>
                                     <Col lg="6">
                                         <label className="text-muted">Start time: </label>
@@ -380,7 +380,7 @@ class AddCourseForm extends Component {
                                 {this.state.formAddCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Both start and end times are required and must be valid times</p>}
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-teacher">Teacher</label>
+                                <label className="text-muted" htmlFor="id-teacher">Teacher <span style={{ color: '#f05050' }}>*</span></label>
                                 <TeacherSelector
                                     name="teacherSelector"
                                     teachers={this.state.teachers}

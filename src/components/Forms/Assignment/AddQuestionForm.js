@@ -322,7 +322,7 @@ class addQuestionForm extends Component {
                                 />
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-question">Question</label>
+                                <label className="text-muted" htmlFor="id-question">Question <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="textarea"
@@ -351,7 +351,7 @@ class addQuestionForm extends Component {
                                     i = i + 1;
                                     return (
                                         <div className="form-group">
-                                            <label className="text-muted" htmlFor={"id-Choice" + i}>Choice {e}</label>
+                                            <label className="text-muted" htmlFor={"id-Choice" + i}>Choice {e} <span style={{ color: '#f05050' }}>*</span></label>
                                             <div className="input-group with-focus">
                                                 <Input
                                                     type="text"
