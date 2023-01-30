@@ -227,7 +227,7 @@ class AddUserForm extends Component {
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="id-email">
-                                Email
+                                Email <span style={{ color: '#f05050' }}>*</span>
                                 <br />
                                 <small>To add multiple users, separate email addresses by a comma</small>
                             </label>
@@ -255,7 +255,7 @@ class AddUserForm extends Component {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="AddUserMessage">Role</label>
+                            <label className="text-muted" htmlFor="AddUserMessage">Role <span style={{ color: '#f05050' }}>*</span></label>
                             <RoleSelector
                                 hasError={this.state.formAddUser.selector.error.isNullRole}
                                 setRole={(role) => this.setRole(role)}

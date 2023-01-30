@@ -87,19 +87,19 @@ function __execute() {
         result.data = data;
         switch (httpMethod) {
             case "GET":
-                result.message = "Successfully fetched courses."
+                result.message = "Successfully fetched course(s)"
                 break;
             case "POST":
-                result.message = "Successfully created course."
+                result.message = "Successfully created course"
                 break;
             case "PUT":
-                result.message = "Successfully edited course."
+                result.message = "Successfully edited course"
                 break;
             case "DELETE":
-                result.message = "Successfully deleted course."
+                result.message = "Successfully deleted course"
                 break;
             default:
-                result.message = "Successfully reached course endpoint.";
+                result.message = "Successfully reached course endpoint";
         }
     }
 }

@@ -251,7 +251,7 @@ class AddAssignmentForm extends Component {
                                     value={this.state.course.subject || ''} />
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-assignmentTitle">Title</label>
+                                <label className="text-muted" htmlFor="id-assignmentTitle">Title <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="text"
@@ -279,7 +279,7 @@ class AddAssignmentForm extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="addCourseSubject">Assignment Type</label>
+                                <label className="text-muted" htmlFor="addCourseSubject">Assignment Type <span style={{ color: '#f05050' }}>*</span></label>
                                 <AssignmentTypeSelector
                                     name="typeSelector"
                                     hasError={this.state.formAddAssignment.selector.error.isNullType}
@@ -290,7 +290,7 @@ class AddAssignmentForm extends Component {
                                 {this.state.formAddAssignment.selector.error.isNullType && <span style={this.errorMessageStyling}>Assignment type is required</span>}
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-assignmentInstructions">Instructions</label>
+                                <label className="text-muted" htmlFor="id-assignmentInstructions">Instructions <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="textarea"
@@ -318,7 +318,7 @@ class AddAssignmentForm extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted">Due Date/Time</label>
+                                <label className="text-muted">Due Date/Time <span style={{ color: '#f05050' }}>*</span></label>
                                 <Datetime
                                     inputProps={this.state.formAddAssignment.selector.error.isNullDueDate ? { className: 'form-control time-error' } : { className: 'form-control' }}
                                     isValidDate={current => {return current.isAfter(moment().subtract(1, 'day'))}}
@@ -330,7 +330,7 @@ class AddAssignmentForm extends Component {
                                 {this.state.formAddAssignment.selector.error.isNullDueDate && <span style={this.errorMessageStyling}>Due Date is required</span>}
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-points">Points Possible</label>
+                                <label className="text-muted" htmlFor="id-points">Points Possible <span style={{ color: '#f05050' }}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="text"

@@ -27,7 +27,8 @@ import CourseAnnouncementsTable from '../../Tables/CourseAnnouncementsTable';
 import AssignmentsTable from '../../Tables/AssignmentsTable';
 import { getCourse } from '../../../connectors/Course';
 import { getPod } from '../../../connectors/Pod';
-import { isAdmin, isStudent } from '../../../utils/PermissionChecker'
+import { isAdmin, isStudent } from '../../../utils/PermissionChecker';
+import DocumentsTable from '../../Tables/DocumentsTable';
 
 class CourseDetail extends Component {
 
@@ -59,7 +60,7 @@ class CourseDetail extends Component {
         });
     }
 
-    toggleAssignmentModal  = () => {
+    toggleAssignmentModal = () => {
         this.setState({
             assignmentsModal: !this.state.assignmentsModal
         });
@@ -231,16 +232,24 @@ class CourseDetail extends Component {
                                                 Upcoming Events
                                             </NavLink>
                                         </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                href="#"
+                                                className={classnames({ active: this.state.activeTab === '4' })}
+                                                onClick={() => { this.toggleTab('4'); }}>
+                                                Documents
+                                            </NavLink>
+                                        </NavItem>
                                     </Nav>
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
                                             {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right">
-                                                    <button className="btn btn-success btn-sm mb-3 mt-2" 
-                                                            onMouseDown={e => e.preventDefault()} 
-                                                            onClick={this.toggleAnnModal}>
-                                                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                    <button className="btn btn-success btn-sm mb-3 mt-2"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={this.toggleAnnModal}>
+                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
                                                         Add Announcement
                                                     </button>
                                                 </div>
@@ -280,7 +289,13 @@ class CourseDetail extends Component {
                                             />
                                         </TabPane>
                                         <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
-                                        <TabPane tabId="4">Sed commodo tellus ut mi tristique pharetra.</TabPane>
+                                        <TabPane tabId="4">
+                                            <DocumentsTable
+                                                role={this.state.rolePerms}
+                                                parent={this.state.course}
+                                                parentType="course"
+                                            />
+                                        </TabPane>
                                     </TabContent>
                                 </div>
                             </CardBody>
