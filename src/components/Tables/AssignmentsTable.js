@@ -18,7 +18,7 @@ class AssignmentsTable extends Component {
         getAssignmentsParams: {
             page: 0,
             size: 10,
-            sort: 'createDate,desc',
+            sort: 'publishDateTime,createDate,desc',
         },
         nextPage: true
     }

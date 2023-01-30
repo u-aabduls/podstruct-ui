@@ -152,14 +152,10 @@ class EditPodForm extends Component {
         }
     }
 
-    componentDidMount() {
-        this.populateForm()
-    }
-
     componentDidUpdate(prevProps) {
         if (this.props.modal !== prevProps.modal) {
+            if (this.props.modal) this.populateForm()
             this.setState({ modal: this.props.modal })
-            this.populateForm()
         }
     }
 

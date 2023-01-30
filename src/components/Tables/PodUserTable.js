@@ -57,6 +57,10 @@ class PodUserTable extends Component {
                 role: 'default',
             }
         },
+        nextPage: {
+            users: true,
+            pending: true
+        }
     }
 
     toggleDD = dd => {
@@ -144,11 +148,12 @@ class PodUserTable extends Component {
             var stateCopy = this.state
             var params = this.state.getUserParams[table]
             var res = getUsers(this.state.pod.id, params.name, params.page + 1, params.size, params.sort, params.role, params.inviteStatus)
-            if (res.isSuccess) {
+            if (res.data.users.length > 0) {
                 stateCopy[table] = res.data.users
                 stateCopy.getUserParams[table].page = this.state.getUserParams[table].page + 1
-                this.setState(stateCopy)
             }
+            else stateCopy.nextPage[table] = false;
+            this.setState(stateCopy)
         }
     }
 
@@ -298,6 +303,7 @@ class PodUserTable extends Component {
     }
 
     render() {
+        console.log(this.state.nextPage.pending)
         return (
             <div>
                 <Row>
@@ -394,12 +400,22 @@ class PodUserTable extends Component {
                         </tr>}
                 </Table>
                 <div>
-                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={() => this.nextUserPage('users')}>
-                        <span><i className="fa fa-chevron-right"></i></span>
-                    </Button>
-                    <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={() => this.prevUserPage('users')}>
-                        <span><i className="fa fa-chevron-left"></i></span>
-                    </Button>
+                    {this.state.nextPage.users && this.state.users.length >= this.state.getUserParams.users.size ?
+                        <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={() => this.nextUserPage('users')}>
+                            <span><i className="fa fa-chevron-right"></i></span>
+                        </Button>
+                        :
+                        <Button color="secondary" className="btn float-right mt-3 mb-5 invisible" size="sm" onClick={() => this.nextUserPage('users')}>
+                            <span><i className="fa fa-chevron-right"></i></span>
+                        </Button>}
+                    {this.state.getUserParams.users.page > 0 ?
+                        <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={() => this.prevUserPage('users')}>
+                            <span><i className="fa fa-chevron-left"></i></span>
+                        </Button>
+                        :
+                        <Button color="secondary" className="btn float-right mt-3 mb-5 invisible" size="sm" onClick={() => this.prevUserPage('users')}>
+                            <span><i className="fa fa-chevron-left"></i></span>
+                        </Button>}
                 </div>
                 <Row>
                     <h4 className="mt-5 pt-2">Pending Invites</h4>
@@ -463,9 +479,9 @@ class PodUserTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm" 
-                                                            onMouseDown={e => e.preventDefault()} 
-                                                            onClick={() => this.resendInvite(user.username)}>
+                                                    <Button className="btn btn-secondary btn-sm"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={() => this.resendInvite(user.username)}>
                                                         Resend Invite
                                                     </Button>
                                                 </div>
@@ -475,9 +491,9 @@ class PodUserTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" 
-                                                            onMouseDown={e => e.preventDefault()} 
-                                                            onClick={() => this.deleteUser(user)}>
+                                                    <Button className="btn btn-secondary btn-sm bg-danger"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={() => this.deleteUser(user)}>
                                                         Revoke Invite
                                                     </Button>
                                                 </div>
@@ -495,12 +511,24 @@ class PodUserTable extends Component {
                         </tr>
                     }
                 </Table >
-                <Button color="secondary" className="btn float-right mt-3" size="sm" onClick={() => this.nextUserPage('pending')}>
-                    <span><i className="fa fa-chevron-right"></i></span>
-                </Button>
-                <Button color="secondary" className="btn float-right mt-3" size="sm" onClick={() => this.prevUserPage('pending')}>
-                    <span><i className="fa fa-chevron-left"></i></span>
-                </Button>
+                <div>
+                    {this.state.nextPage.pending && this.state.pending.length >= this.state.getUserParams.pending.size ?
+                        <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={() => this.nextUserPage('pending')}>
+                            <span><i className="fa fa-chevron-right"></i></span>
+                        </Button>
+                        :
+                        <Button color="secondary" className="btn float-right mt-3 mb-5 invisible" size="sm" onClick={() => this.nextUserPage('pending')}>
+                            <span><i className="fa fa-chevron-right"></i></span>
+                        </Button>}
+                    {this.state.getUserParams.pending.page > 0 ?
+                        <Button color="secondary" className="btn float-right mt-3 mb-5" size="sm" onClick={() => this.prevUserPage('pending')}>
+                            <span><i className="fa fa-chevron-left"></i></span>
+                        </Button>
+                        :
+                        <Button color="secondary" className="btn float-right mt-3 mb-5 invisible" size="sm" onClick={() => this.prevUserPage('pending')}>
+                            <span><i className="fa fa-chevron-left"></i></span>
+                        </Button>}
+                </div>
             </div>
         )
     }

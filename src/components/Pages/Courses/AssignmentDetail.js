@@ -285,7 +285,8 @@ class AssignmentDetail extends Component {
                                 <p className="text-primary font-weight-bold">
                                     {
                                         {
-                                            'ESSAY': 'General',
+                                            'GENERAL': 'General',
+                                            'MULTIPLE_CHOICE': 'Multiple Choice',
                                             'FREE_FORM': 'Free Form',
                                             'QUIZ': 'Quiz',
                                             'TEST': 'Test',
