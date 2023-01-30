@@ -303,7 +303,6 @@ class PodUserTable extends Component {
     }
 
     render() {
-        console.log(this.state.nextPage.pending)
         return (
             <div>
                 <Row>

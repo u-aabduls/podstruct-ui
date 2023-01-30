@@ -35,6 +35,7 @@ class CourseDetail extends Component {
     state = {
         rolePerms: '',
         course: '',
+        pod: '',
         announcements: [],
         assignments: [],
         editModal: false,
@@ -100,16 +101,21 @@ class CourseDetail extends Component {
     }
 
     goBack = () => {
-        this.props.history.push('/courses', { pod: getPod(this.state.course.podId).data })
+        this.props.history.push('/courses', this.state.pod.podName);
     }
 
     componentWillMount() {
         var stateCopy = this.state;
-        var res = getCourse(this.state.course.podId, this.props.match.params.id)
+        var res = getCourse(this.state.course.podId, this.props.match.params.id);
         if (res.isSuccess) {
-            stateCopy.course = res.data
-            stateCopy.rolePerms = res.data.role
-            this.setState(stateCopy)
+            stateCopy.course = res.data;
+            stateCopy.rolePerms = res.data.role;
+            this.setState(stateCopy);
+        }
+        res = getPod(this.state.course.podId);
+        if (res.isSuccess) {
+            stateCopy.pod = res.data;
+            this.setState(stateCopy);
         }
     }
 
@@ -120,10 +126,10 @@ class CourseDetail extends Component {
         return (
             <ContentWrapper>
                 <div className="content-heading">
-                    <div>Course Details
-                        <small>Check out the details and edit a specific course</small>
+                    <div>
+                        {this.state.course.subject}
+                        <small>{this.state.pod.podName}</small>
                     </div>
-
                     <div className="ml-auto">
                         <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
                             <DropdownToggle>
