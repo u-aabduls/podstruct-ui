@@ -32,7 +32,7 @@ class CourseManagement extends Component {
             this.setState({
                 selectedPod: pod,
                 courses: res.data.courses
-            })
+            });
         }
     }
 
@@ -44,7 +44,7 @@ class CourseManagement extends Component {
                 courses: [...res.data.courses],
                 rolePerms: res.data.role,
                 defaultPod: ''
-            })
+            });
         }
     };
 
@@ -54,12 +54,12 @@ class CourseManagement extends Component {
             this.setState({
                 courses: [...res.data.courses],
                 rolePerms: res.data.role,
-            })
+            });
         }
     };
 
     handleSearchChange = event => {
-        this.setState({ subjectFilter: event.target.value })
+        this.setState({ subjectFilter: event.target.value });
     }
 
     debounce = (fn, delay) => {
@@ -75,20 +75,20 @@ class CourseManagement extends Component {
         if (res.isSuccess) {
             this.setState({
                 courses: [...res.data.courses]
-            })
+            });
         }
     }, 500);
 
     componentWillMount() {
         var res = getPods('ACCEPTED')
         if (res.isSuccess) {
-            this.setState({ pods: res.data })
+            this.setState({ pods: res.data });
         }
-        if (this.props.history.location.state?.pod){
-            this.setState({ defaultPod: this.props.history.location.state?.pod})
+        if (this.props.history.location.state?.pod) {
+            this.setState({ defaultPod: this.props.history.location.state?.pod });
         }
-        else if (res.isSuccess){
-            this.setState({ defaultPod: res.data[0] })
+        else if (res.isSuccess) {
+            this.setState({ defaultPod: res.data[0] });
         }
     }
 
@@ -105,28 +105,28 @@ class CourseManagement extends Component {
         return (
             <ContentWrapper>
                 <div className="content-heading">
-                    <div>Course Management
-                        <small>Click on a card to be redirected to a more detailed course page</small>
+                    <div>Courses
+                        <small>View courses by pod</small>
                     </div>
-
                     <div className="ml-auto">
                         {isAdmin(this.state.rolePerms) ?
-                            <button className="btn btn-success"
-                                    onMouseDown={e => e.preventDefault()} 
+                            <div>
+                                <button className="btn btn-success"
+                                    onMouseDown={e => e.preventDefault()}
                                     onClick={this.toggleAddCourseModal}>
                                     <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course
-                            </button>
+                                </button>
+                                <AddCourseForm
+                                    pods={this.state.pods}
+                                    modal={this.state.addCourseModal}
+                                    toggle={this.toggleAddCourseModal}
+                                    updateOnAdd={this.updateOnCourseAdd}
+                                />
+                            </div>
                             : null
                         }
-                        <AddCourseForm
-                            pods={this.state.pods}
-                            modal={this.state.addCourseModal}
-                            toggle={this.toggleAddCourseModal}
-                            updateOnAdd={this.updateOnCourseAdd}
-                        />
                     </div>
                 </div>
-
                 <Row>
                     <Col lg="2">
                         <div className="form-group mb-5">

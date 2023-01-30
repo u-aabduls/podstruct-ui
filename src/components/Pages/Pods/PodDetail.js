@@ -115,10 +115,10 @@ class PodDetail extends Component {
                     modal={this.state.pod.inviteStatus === 'INVITED'}
                 />
                 <div className="content-heading">
-                    <div>Pod Details
-                        <small>Check out the details and edit a specific Pod</small>
+                    <div>
+                        {this.state.pod.podName}
+                        <small>View and edit your pod</small>
                     </div>
-
                     <div className="ml-auto">
                         <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
                             <DropdownToggle>
