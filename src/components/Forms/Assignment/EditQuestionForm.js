@@ -80,7 +80,7 @@ class editQuestionForm extends Component {
         if (event.target.checked) {
             stateCopy['answer' + event.target.value[2]] = event.target.value[0];
             stateCopy.choices.error.IsNullAnswerChoice = false;
-        } 
+        }
         else stateCopy['answer' + event.target.value[2]] = ""
 
         this.setState(stateCopy);
@@ -137,7 +137,7 @@ class editQuestionForm extends Component {
         var isNullAnswer = true;
         var isNullChoice = true;
         for (let i = 0; i < this.state.numberOfChoices; i++) {
-            if (this.state.formEditQuestion['answer' + (i+1)]) isNullAnswer = false;
+            if (this.state.formEditQuestion['answer' + (i + 1)]) isNullAnswer = false;
             if (this.state.formEditQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
             if (numberOfChoices >= 2) {
                 isNullChoice = false;
@@ -302,42 +302,42 @@ class editQuestionForm extends Component {
         stateCopy = this.state.formEditQuestion;
         stateCopy.question = res.data.question;
         stateCopy.questionType = res.data.questionType;
-        if (res.data.questionType === "MA") {
-            for (let i = 0; i < numberOfChoices; i++) {
-                stateCopy["choice" + this.alphabet[i]] = res.data["choice" + this.alphabet[i]];
+        for (let i = 0; i < numberOfChoices; i++) {
+            stateCopy["choice" + this.alphabet[i]] = res.data["choice" + this.alphabet[i]];
+            if (res.data.questionType === "MA") {
                 if (res.data["answer" + (i + 1)] == "A") stateCopy.answer1 = res.data["answer" + (i + 1)]
                 else if (res.data["answer" + (i + 1)] == "B") stateCopy.answer2 = res.data["answer" + (i + 1)]
                 else if (res.data["answer" + (i + 1)] == "C") stateCopy.answer3 = res.data["answer" + (i + 1)]
                 else if (res.data["answer" + (i + 1)] == "D") stateCopy.answer4 = res.data["answer" + (i + 1)]
                 else if (res.data["answer" + (i + 1)] == "E") stateCopy.answer5 = res.data["answer" + (i + 1)]
             }
+            else stateCopy.answer1 = res.data.answer1
         }
-        else stateCopy.answer1 = res.data.answer1
         this.setState(stateCopy)
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.modal !== prevProps.modal) {
-            if(this.props.modal) this.populateForm()
+            if (this.props.modal) this.populateForm()
             this.setState({ modal: this.props.modal })
         }
-        if(this.props.questionId !== prevProps.questionId) {
-            if(this.props.modal) this.populateForm()
+        if (this.props.questionId !== prevProps.questionId) {
+            if (this.props.modal) this.populateForm()
         }
     }
 
     render() {
         console.log(this.state.formEditQuestion)
-        if (this.state.formEditQuestion.questionType == "MA"){
+        if (this.state.formEditQuestion.questionType == "MA") {
             var answerList = [];
             for (let i = 0; i < this.state.numberOfChoices; i++) {
-                if (this.state.formEditQuestion['answer' + (i+1)]) answerList.push(this.state.formEditQuestion['answer' + (i+1)])
+                if (this.state.formEditQuestion['answer' + (i + 1)]) answerList.push(this.state.formEditQuestion['answer' + (i + 1)])
             }
         }
         return (
             <div>
                 <Modal isOpen={this.state.modal}>
-                    <form className="mb-3" name="formEditQuestion" onSubmit={this.onSubmit}>
+                    <form className="mb-3" name="formEditQuestion" onSubmit={this.onSubmit}>z
                         <ModalHeader toggle={this.toggleModal}>Edit Question {this.props.questionNumber}</ModalHeader>
                         <ModalBody>
                             <div className="form-group">

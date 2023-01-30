@@ -30,8 +30,7 @@ export default function TeacherSelector(props) {
             placeholder="Select a Teacher..."
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
-            defaultValue={props.defaultV ? { label: props.defaultV.podName, value: props.defaultV.id } : null}
-            value={options.find(o => o.value === props.defaultv)}
+            value={options.find(o => o.label === props.defaultv)}
             onChange={(e) => { 
                 if (!props.validate) {
                     props.setTeacher(e.value) 

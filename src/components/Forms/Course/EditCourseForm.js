@@ -245,42 +245,33 @@ class EditCourseForm extends Component {
     }
 
     populateForm() {
-        var stateCopy = this.state.formEditCourse;
-        var res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)
-        if (res.isSuccess) {
-            this.setState({
-                course: res.data
-            })
-            stateCopy.subject = res.data.subject
-            stateCopy.daysOfWeekInterval = res.data.daysOfWeekInterval
-            stateCopy.startTime = res.data.startTime
-            stateCopy.endTime = res.data.endTime
-            stateCopy.teacher = res.data.teacher
-            stateCopy.description = res.data.description
-            this.setState(stateCopy)
-        }
-    }
-
-    componentDidMount() {
-        var stateCopy = this.state
+        var stateCopy = this.state;
         var res = getPod(this.props.course.podId)
         if (res.isSuccess) {
             stateCopy.formEditCourse.selectedPod = res.data
-            this.setState(stateCopy)
         }
         var params = this.state.getUserParams
         res = getUsers(this.state.formEditCourse.selectedPod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
         if (res.isSuccess) {
             stateCopy.teachers = res.data.users
-            this.setState(stateCopy)
         }
-        this.populateForm()
+        res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)
+        if (res.isSuccess) {
+            stateCopy.course = res.data
+            stateCopy.formEditCourse.subject = res.data.subject
+            stateCopy.formEditCourse.daysOfWeekInterval = res.data.daysOfWeekInterval
+            stateCopy.formEditCourse.startTime = res.data.startTime
+            stateCopy.formEditCourse.endTime = res.data.endTime
+            stateCopy.formEditCourse.teacher = res.data.teacherName
+            stateCopy.formEditCourse.description = res.data.description
+        }
+        this.setState(stateCopy)
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.modal !== prevProps.modal) {
+            if (this.props.modal) this.populateForm()
             this.setState({ modal: this.props.modal })
-            this.populateForm()
         }
     }
 
@@ -372,6 +363,7 @@ class EditCourseForm extends Component {
                                 <TeacherSelector
                                     name="teacherSelector"
                                     teachers={this.state.teachers}
+                                    defaultv={this.state.formEditCourse.teacher}
                                     hasError={this.state.formEditCourse.selector.error.isNullTeacher}
                                     validate={this.validateSelectorsOnChange}
                                     setTeacher={this.setTeacher}

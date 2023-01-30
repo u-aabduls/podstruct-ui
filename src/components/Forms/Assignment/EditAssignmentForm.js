@@ -216,12 +216,9 @@ class EditAssignmentForm extends Component {
         }
     }
 
-    componentWillMount() {
-        this.populateForm();
-    }
-
     componentDidUpdate(prevProps, prevState) {
         if (this.props.modal !== prevProps.modal) {
+            if (this.props.modal) this.populateForm()
             this.setState({ modal: this.props.modal })
         }
         // if (this.props.pods !== prevProps.pods) {
