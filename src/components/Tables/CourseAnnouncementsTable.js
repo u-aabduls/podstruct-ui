@@ -20,31 +20,31 @@ class CourseAnnouncementsTable extends Component {
 
     fetchMore = () => {
         if (this.state.lastEvaluatedKey) {
-            var stateCopy = this.state
-            var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0)
+            var stateCopy = this.state;
+            var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0);
             if (res.isSuccess) {
-                stateCopy.announcements = this.state.announcements.concat(res.data.announcements)
-                stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-                this.setState(stateCopy)
+                stateCopy.announcements = this.state.announcements.concat(res.data.announcements);
+                stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey;
+                this.setState(stateCopy);
             }
         }
     }
 
     deleteAnnouncement = (date) => {
         Swal.fire({
-            title: 'Are you sure you want to delete the annoucement?',
+            title: 'Are you sure you want to delete the announcement?',
             showCancelButton: true,
             confirmButtonColor: "#5d9cec",
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
-                var stateCopy = this.state
-                var res = deleteCourseAnnouncement(this.state.course.podId, this.state.course.id, date)
+                var stateCopy = this.state;
+                var res = deleteCourseAnnouncement(this.state.course.podId, this.state.course.id, date);
                 if (res.isSuccess) {
                     res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0)
-                    stateCopy.announcements = res.data.announcements
-                    stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-                    this.setState(stateCopy)
+                    stateCopy.announcements = res.data.announcements;
+                    stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey;
+                    this.setState(stateCopy);
                 }
                 Swal.fire({
                     title: 'Successfully deleted announcement',

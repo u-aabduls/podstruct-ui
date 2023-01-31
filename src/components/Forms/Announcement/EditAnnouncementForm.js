@@ -7,30 +7,36 @@ import {
     ModalBody,
     ModalFooter,
 } from 'reactstrap';
-import { getPodAnnouncements, createPodAnnouncement, getCourseAnnouncements, createCourseAnnouncement } from '../../../connectors/Announcement';
+import {
+    getPodAnnouncements,
+    updatePodAnnouncement,
+    getCourseAnnouncements,
+    createCourseAnnouncement
+} from '../../../connectors/Announcement';
 import Swal from 'sweetalert2';
 import FormValidator from '../FormValidator';
 
-class AddAnnouncementForm extends Component {
+class EditAnnouncementForm extends Component {
 
     state = {
-        formAddAnnouncement: {
-            title: '',
-            message: ''
+        formEditAnnouncement: {
+            title: this.props.announcement.title,
+            message: this.props.announcement.message
         },
         course: this.props.course,
         pod: this.props.pod,
         modal: false,
+        announcement: this.props.announcement
     }
 
     toggleModal = () => {
         this.setState({
-            formAddAnnouncement: {
+            formEditAnnouncement: {
                 title: '',
                 message: ''
-            },
+            }
         });
-        this.props.toggle()
+        this.props.toggle('');
     }
 
     /**
@@ -67,11 +73,11 @@ class AddAnnouncementForm extends Component {
 
     constructRequestPayload = () => {
         var payload = {
-            "title": this.state.formAddAnnouncement.title
+            "title": this.state.formEditAnnouncement.title
         };
 
-        if (this.state.formAddAnnouncement.message) {
-            payload.message = this.state.formAddAnnouncement.message
+        if (this.state.formEditAnnouncement.message) {
+            payload.message = this.state.formEditAnnouncement.message;
         }
         return JSON.stringify(payload);
     }
@@ -101,21 +107,21 @@ class AddAnnouncementForm extends Component {
 
         if (!hasError) {
             var res;
-            this.state.course ?
-                res = createCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload()) :
-                res = createPodAnnouncement(this.state.pod.id, this.constructRequestPayload());
-            
+            res = this.state.course ?
+                createCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload()) :
+                updatePodAnnouncement(this.state.pod.id, this.state.announcement.date, this.constructRequestPayload());
+
             this.toggleModal();
             if (res.isSuccess) {
                 Swal.fire({
-                    title: "Successfully added announcement",
+                    title: "Successfully edited announcement",
                     confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
-                this.state.course ?
-                    res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0) :
-                    res = getPodAnnouncements(this.state.pod.id, '', 0);
-                this.props.updateOnAdd(res)
+                res = this.state.course ?
+                    getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0) :
+                    getPodAnnouncements(this.state.pod.id, '', 0);
+                this.props.updateOnEdit(res);
             }
             else {
                 Swal.fire({
@@ -130,18 +136,29 @@ class AddAnnouncementForm extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.modal !== prevProps.modal) {
-            this.setState({ modal: this.props.modal })
+            this.setState({ modal: this.props.modal });
+        }
+        if (this.props.announcement && this.props.announcement !== prevProps.announcement) {
+            this.setState(
+                {
+                    announcement: this.props.announcement,
+                    formEditAnnouncement: {
+                        title: this.props.announcement.title,
+                        message: this.props.announcement.message
+                    }
+                }
+            );
         }
     }
 
     render() {
         return (
             <Modal isOpen={this.state.modal}>
-                <form className="mb-3" name="formAddAnnouncement" onSubmit={this.onSubmit}>
-                    <ModalHeader toggle={this.toggleModal}>Add Announcement</ModalHeader>
+                <form className="mb-3" name="formEditAnnouncement" onSubmit={this.onSubmit}>
+                    <ModalHeader toggle={this.toggleModal}>Edit Announcement</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-announcementTitle">Title <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="id-announcementTitle">Title</label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
@@ -150,22 +167,22 @@ class AddAnnouncementForm extends Component {
                                     className="border-right-0"
                                     placeholder="Announcement title"
                                     invalid={
-                                        this.hasError('formAddAnnouncement', 'title', 'required')
-                                        || this.hasError('formAddAnnouncement', 'title', 'len')
-                                        || this.hasError('formAddAnnouncement', 'title', 'contains-alpha')
+                                        this.hasError('formEditAnnouncement', 'title', 'required')
+                                        || this.hasError('formEditAnnouncement', 'title', 'len')
+                                        || this.hasError('formEditAnnouncement', 'title', 'contains-alpha')
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["required", "len", "contains-alpha"]'
                                     data-param='[3, 50]'
-                                    value={this.state.formAddAnnouncement.title} />
+                                    value={this.state.formEditAnnouncement.title || ''} />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-book"></em>
                                     </span>
                                 </div>
-                                {this.hasError('formAddAnnouncement', 'title', 'required') && <span className="invalid-feedback">Title is required</span>}
-                                {this.hasError('formAddAnnouncement', 'title', 'len') && <span className="invalid-feedback">Title must be between 3 and 50 characters in length</span>}
-                                {this.hasError('formAddAnnouncement', 'title', 'contains-alpha') && <span className="invalid-feedback">Title must contain at least one alpha character</span>}
+                                {this.hasError('formEditAnnouncement', 'title', 'required') && <span className="invalid-feedback">Title is required</span>}
+                                {this.hasError('formEditAnnouncement', 'title', 'len') && <span className="invalid-feedback">Title must be between 3 and 50 characters in length</span>}
+                                {this.hasError('formEditAnnouncement', 'title', 'contains-alpha') && <span className="invalid-feedback">Title must contain at least one alpha character</span>}
                             </div>
                         </div>
                         <div className="form-group">
@@ -178,24 +195,33 @@ class AddAnnouncementForm extends Component {
                                     className="border-right-0"
                                     placeholder="Announcement message"
                                     invalid={
-                                        this.hasError('formAddAnnouncement', 'message', 'maxlen')
+                                        this.hasError('formEditAnnouncement', 'message', 'maxlen')
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["maxlen"]'
                                     data-param='4500'
-                                    value={this.state.formAddAnnouncement.message} />
+                                    value={this.state.formEditAnnouncement.message || ''} />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-book"></em>
                                     </span>
                                 </div>
-                                {this.hasError('formAddAnnouncement', 'message', 'maxlen') && <span className="invalid-feedback">Message must not have more than 4500 characters</span>}
+                                {this.hasError('formEditAnnouncement', 'message', 'maxlen') && <span className="invalid-feedback">Message must not have more than 4500 characters</span>}
                             </div>
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Add Announcement</Button>{' '}
+                        <Button
+                            color="secondary"
+                            onClick={this.toggleModal}>
+                            Cancel
+                        </Button>
+                        <Button
+                            color="primary"
+                            type="submit"
+                            onMouseDown={e => e.preventDefault()}>
+                            Save
+                        </Button>{' '}
                     </ModalFooter>
                 </form>
             </Modal>
@@ -203,4 +229,4 @@ class AddAnnouncementForm extends Component {
     }
 }
 
-export default AddAnnouncementForm
+export default EditAnnouncementForm;

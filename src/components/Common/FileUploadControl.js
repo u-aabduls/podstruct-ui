@@ -26,7 +26,7 @@ const FileUploadControl = ({ children, value, onChange, disabled }) => {
       <button id="dummyFileUploadButton" className="hidden btn btn-success btn-sm mb-3 mt-2"
         onMouseDown={e => e.preventDefault()}
         disabled>
-        <i id="fileUploadSpinner" class="fa fa-circle-notch fa-sm fa-spin mr-1"></i>
+        <i id="fileUploadSpinner" className="fa fa-circle-notch fa-sm fa-spin mr-1"></i>
         Uploading
       </button>
     </div>

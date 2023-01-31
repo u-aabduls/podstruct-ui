@@ -1,6 +1,6 @@
 import handleError from '../utils/ErrorHandler.js'
 import formatParams from '../utils/ParamFormatter.js';
-import {devServer, prodServer} from './Paths.js';
+import { devServer, prodServer } from './Paths.js';
 
 // private members
 var request = new XMLHttpRequest();
@@ -12,54 +12,62 @@ var authorizationToken;
  * Public Methods
  ********************/
 
-function getPodAnnouncements(podID, lastEvaluatedKey, pageSize) {
+function getPodAnnouncements(podId, lastEvaluatedKey, pageSize) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/announcements"
+    var endpointPathEXT = endpointPath + podId + "/announcements";
     var params = {};
-    if (lastEvaluatedKey) params.lastEvaluatedKey = lastEvaluatedKey
-    if (pageSize) params.pageSize = pageSize
+    if (lastEvaluatedKey) params.lastEvaluatedKey = lastEvaluatedKey;
+    if (pageSize) params.pageSize = pageSize;
     _initialize("GET", endpointPathEXT + formatParams(params));
     request.send();
     return result;
 }
 
-function createPodAnnouncement(podID, requestBody) {
+function createPodAnnouncement(podId, requestBody) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/announcements"
+    var endpointPathEXT = endpointPath + podId + "/announcements";
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
     return result;
 }
 
-function deletePodAnnouncement(podID, announcementDate) {
+function updatePodAnnouncement(podId, announcementDate, requestBody) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/announcements/" + announcementDate
+    var endpointPathEXT = endpointPath + podId + "/announcements/" + announcementDate;
+    _initialize("PUT", endpointPathEXT);
+    request.send(requestBody);
+    return result;
+}
+
+function deletePodAnnouncement(podId, announcementDate) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/announcements/" + announcementDate;
     _initialize("DELETE", endpointPathEXT);
     request.send();
     return result;
 }
-function getCourseAnnouncements(podID, courseID, lastEvaluatedKey, pageSize) {
+function getCourseAnnouncements(podId, courseID, lastEvaluatedKey, pageSize) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements"
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseID + "/announcements";
     var params = {};
-    if (lastEvaluatedKey) params.lastEvaluatedKey = lastEvaluatedKey
-    if (pageSize) params.pageSize = pageSize
+    if (lastEvaluatedKey) params.lastEvaluatedKey = lastEvaluatedKey;
+    if (pageSize) params.pageSize = pageSize;
     _initialize("GET", endpointPathEXT + formatParams(params));
     request.send();
     return result;
 }
 
-function createCourseAnnouncement(podID, courseID, requestBody) {
+function createCourseAnnouncement(podId, courseID, requestBody) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements"
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseID + "/announcements";
     _initialize("POST", endpointPathEXT);
     request.send(requestBody);
     return result;
 }
 
-function deleteCourseAnnouncement(podID, courseID, announcementDate) {
+function deleteCourseAnnouncement(podId, courseID, announcementDate) {
     authorizationToken = localStorage.getItem('token');
-    var endpointPathEXT = endpointPath + podID + "/courses/" + courseID + "/announcements/" + announcementDate
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseID + "/announcements/" + announcementDate;
     _initialize("DELETE", endpointPathEXT);
     request.send();
     return result;
@@ -112,7 +120,7 @@ function __execute() {
                 result.message = "Successfully created announcement"
                 break;
             case "PUT":
-                result.message = "Successfully edited announcement"
+                result.message = "Successfully updated announcement"
                 break;
             case "DELETE":
                 result.message = "Successfully deleted announcement"
@@ -123,4 +131,12 @@ function __execute() {
     }
 }
 
-export { getPodAnnouncements, createPodAnnouncement, deletePodAnnouncement, getCourseAnnouncements, createCourseAnnouncement, deleteCourseAnnouncement };
+export {
+    getPodAnnouncements,
+    createPodAnnouncement,
+    updatePodAnnouncement,
+    deletePodAnnouncement,
+    getCourseAnnouncements,
+    createCourseAnnouncement,
+    deleteCourseAnnouncement
+};

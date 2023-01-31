@@ -38,6 +38,7 @@ class PodDetail extends Component {
         pending: [],
         editModal: false,
         annModal: false,
+        editAnnModal: false,
         userModal: false,
         ddOpen: false,
         activeTab: '1',
@@ -108,7 +109,7 @@ class PodDetail extends Component {
         Swal.fire({
             title: 'Are you sure you want to deactivate this pod?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: "#d9534f",
             confirmButtonText: 'Deactivate',
         }).then((result) => {
             if (result.isConfirmed) {
