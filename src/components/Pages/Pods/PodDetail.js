@@ -27,6 +27,8 @@ import PodUserTable from '../../Tables/PodUserTable';
 import PodAnnouncementsTable from '../../Tables/PodAnnouncementsTable';
 import { isAdmin } from '../../../utils/PermissionChecker';
 import DocumentsTable from '../../Tables/DocumentsTable';
+import { deactivatePod } from "../../../connectors/Pod";
+import Swal from 'sweetalert2';
 
 class PodDetail extends Component {
 
@@ -97,6 +99,22 @@ class PodDetail extends Component {
         }
     }
 
+    deactivate = (podId) => {
+        Swal.fire({
+            title: 'Are you sure you want to deactivate this pod?',
+            showCancelButton: true,
+            confirmButtonColor: "#5d9cec",
+            confirmButtonText: 'Deactivate',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var result = deactivatePod(podId);
+                if (result.isSuccess) {
+                    this.props.history.goBack();
+                }
+            }
+        })
+    }
+
     componentWillMount() {
         var stateCopy = this.state;
         var res = getPod(this.props.match.params.id)
@@ -127,6 +145,10 @@ class PodDetail extends Component {
                             <DropdownMenu>
                                 {isAdmin(this.state.rolePerms) ?
                                     <DropdownItem onClick={this.toggleEditModal}>Edit Pod</DropdownItem>
+                                    : null
+                                }
+                                {isAdmin(this.state.rolePerms) ?
+                                    <DropdownItem onClick={() => this.deactivate(this.state.pod.id)}>Deactivate Pod</DropdownItem>
                                     : null
                                 }
                                 <DropdownItem onClick={() => this.props.history.push('/courses', { pod: this.state.pod })}>Courses</DropdownItem>

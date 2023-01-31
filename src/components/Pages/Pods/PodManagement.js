@@ -53,7 +53,7 @@ class PodManagement extends Component {
     }
 
     componentWillMount() {
-       this.getLatestPods();
+        this.getLatestPods();
     }
 
     render() {
@@ -62,7 +62,7 @@ class PodManagement extends Component {
                 <div className="content-heading" style={this.contentHeadingStyle}>
                     <div>
                         Pods
-                        <small>View and create pods</small>
+                        <small>Create and view pods</small>
                     </div>
                     <div>
                         <button className="btn btn-success"
@@ -83,17 +83,6 @@ class PodManagement extends Component {
                         return (
                             object.active ?
                                 <Col key={i} xl="4" lg="6">
-                                    {/* <PodCard
-                                    name={object.podName}
-                                    description={object.podDescription}
-                                    role={object.roleInPod}
-                                    courseCount={0}
-                                    studentCount={0}
-                                    action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] :
-                                        object.roleInPod === "ROLE_TEACHER" ? ["Manage"] : ["View"]}
-                                    id={object.id}
-                                    key={i}
-                                /> */}
                                     <PodCard
                                         pod={object}
                                     />
@@ -109,17 +98,6 @@ class PodManagement extends Component {
                         return (
                             object.active ?
                                 <Col key={i} xl="4" lg="6">
-                                    {/* <PodCard
-                                    name={object.podName}
-                                    description={object.podDescription}
-                                    role={object.roleInPod}
-                                    courseCount={0}
-                                    studentCount={0}
-                                    action={object.roleInPod === "ROLE_ADMIN" ? ["Manage", "Deactivate"] :
-                                        object.roleInPod === "ROLE_TEACHER" ? ["Manage"] : ["View"]}
-                                    id={object.id}
-                                    key={i}
-                                /> */}
                                     <PodCard
                                         pod={object}
                                     />
