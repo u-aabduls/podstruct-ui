@@ -5,9 +5,12 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import Swal from 'sweetalert2';
-import { getPodAnnouncements, deletePodAnnouncement } from '../../connectors/Announcement';
+import {
+    getPodAnnouncements,
+    deletePodAnnouncement
+} from '../../connectors/Announcement';
 import { isAdmin } from '../../utils/PermissionChecker';
-
+import EditAnnouncementForm from '../Forms/Announcement/EditAnnouncementForm';
 
 class PodAnnouncementsTable extends Component {
 
@@ -16,35 +19,53 @@ class PodAnnouncementsTable extends Component {
         pod: this.props.pod,
         announcements: [],
         lastEvaluatedKey: '',
+        editAnnouncementModal: false,
+        announcementToEdit: ''
     }
 
     fetchMore = () => {
         if (this.state.lastEvaluatedKey) {
-            var stateCopy = this.state
-            var res = getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0)
+            var stateCopy = this.state;
+            var res = getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0);
             if (res.isSuccess) {
-                stateCopy.announcements = this.state.announcements.concat(res.data.announcements)
-                stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-                this.setState(stateCopy)
+                stateCopy.announcements = this.state.announcements.concat(res.data.announcements);
+                stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey;
+                this.setState(stateCopy);
             }
+        }
+    }
+
+    toggleEditAnnouncementModal = (announcement) => {
+        this.setState({
+            editAnnouncementModal: !this.state.editAnnouncementModal,
+            announcementToEdit: announcement
+        });
+    }
+
+    updateOnAnnouncementEdit = (res) => {
+        if (res.isSuccess) {
+            this.setState({
+                announcements: res.data.announcements,
+                lastEvaluatedKey: res.data.lastEvaluatedKey
+            });
         }
     }
 
     deleteAnnouncement = (date) => {
         Swal.fire({
-            title: 'Are you sure you want to delete the annoucement?',
+            title: 'Are you sure you want to delete the announcement?',
             showCancelButton: true,
             confirmButtonColor: "#5d9cec",
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
-                var stateCopy = this.state
-                var res = deletePodAnnouncement(this.state.pod.id, date)
+                var stateCopy = this.state;
+                var res = deletePodAnnouncement(this.state.pod.id, date);
                 if (res.isSuccess) {
-                    res = getPodAnnouncements(this.state.pod.id, '', 0)
-                    stateCopy.announcements = res.data.announcements
-                    stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-                    this.setState(stateCopy)
+                    res = getPodAnnouncements(this.state.pod.id, '', 0);
+                    stateCopy.announcements = res.data.announcements;
+                    stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey;
+                    this.setState(stateCopy);
                 }
                 Swal.fire({
                     title: 'Successfully deleted announcement',
@@ -56,21 +77,21 @@ class PodAnnouncementsTable extends Component {
     }
 
     componentDidMount() {
-        var stateCopy = this.state
-        var res = getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0)
+        var stateCopy = this.state;
+        var res = getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0);
         if (res.isSuccess) {
-            stateCopy.announcements = res.data.announcements
-            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-            this.setState(stateCopy)
+            stateCopy.announcements = res.data.announcements;
+            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey;
+            this.setState(stateCopy);
         }
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.announcements !== prevProps.announcements) {
-            this.setState({ announcements: this.props.announcements })
+            this.setState({ announcements: this.props.announcements });
         }
         if (this.props.lastEvaluatedKey !== prevProps.lastEvaluatedKey) {
-            this.setState({ lastEvaluatedKey: this.props.lastEvaluatedKey })
+            this.setState({ lastEvaluatedKey: this.props.lastEvaluatedKey });
         }
     }
 
@@ -106,17 +127,19 @@ class PodAnnouncementsTable extends Component {
                                         </td>
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
-                                                <Button className="btn btn-sm bg-primary mr-1"
+                                                <Button
+                                                    className="btn btn-sm bg-primary mr-1"
                                                     onMouseDown={e => e.preventDefault()}
-                                                    onClick={() => {}}>
+                                                    onClick={() => this.toggleEditAnnouncementModal(announcement)}>
                                                     <i className="fas icon-pencil fa-fw btn-icon"></i>
                                                 </Button>
                                                 : null
                                             }
                                             {isAdmin(this.state.rolePerms) ?
-                                                <Button className="btn btn-sm bg-danger"
+                                                <Button
+                                                    className="btn btn-sm bg-danger"
                                                     onMouseDown={e => e.preventDefault()}
-                                                    onClick={() => {this.deleteAnnouncement(announcement.date)}}>
+                                                    onClick={() => { this.deleteAnnouncement(announcement.date) }}>
                                                     <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                                 </Button>
                                                 : null
@@ -131,6 +154,13 @@ class PodAnnouncementsTable extends Component {
                             <h3 className='text-center pt-5 pb-4'>No Announcements</h3>
                         </tr>}
                 </Table>
+                <EditAnnouncementForm
+                    pod={this.state.pod}
+                    modal={this.state.editAnnouncementModal}
+                    announcement={this.state.announcementToEdit}
+                    toggle={this.toggleEditAnnouncementModal}
+                    updateOnEdit={this.updateOnAnnouncementEdit}
+                />
                 {this.state.lastEvaluatedKey ?
                     <div>
                         <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
