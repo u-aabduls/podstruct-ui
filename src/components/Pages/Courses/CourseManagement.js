@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../../Layout/ContentWrapper';
-import { Button, Input, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
+import { Row, Col } from 'reactstrap';
 import PodSelector from '../../Common/PodSelector';
 import CourseCard from './CourseCard';
 import { getPods } from '../../../connectors/Pod';
@@ -152,7 +151,6 @@ class CourseManagement extends Component {
                         </div>
                     </Col>
                 </Row>
-
                 <div className="row">
                     {this.state.courses.length ?
                         this.state.courses.map(function (course) {

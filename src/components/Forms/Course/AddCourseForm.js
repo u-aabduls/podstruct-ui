@@ -66,6 +66,7 @@ class AddCourseForm extends Component {
 
     toggleModal = () => {
         this.props.toggle()
+        console.log("course")
         this.setState({
             formAddCourse: {
                 subject: '',
@@ -204,7 +205,7 @@ class AddCourseForm extends Component {
     }
 
     setTime = (date, id) => {
-        if (date instanceof moment){
+        if (date instanceof moment) {
             var stateCopy = this.state.formAddCourse;
             if (id === "start") {
                 stateCopy.startTime = date.format("HH:mm:ss")
@@ -213,7 +214,7 @@ class AddCourseForm extends Component {
                 stateCopy.endTime = date.format("HH:mm:ss")
             }
             this.setState(stateCopy);
-        } 
+        }
     }
 
     setTeacher = (teacher) => {
@@ -276,153 +277,157 @@ class AddCourseForm extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.modal !== prevProps.modal) {
-            this.setState({ modal: this.props.modal })
+            this.setState({ modal: this.props.modal });
         }
         if (this.props.pods !== prevProps.pods) {
             const filteredPods = [];
             this.props.pods.forEach((pod) => {
-                if(isAdmin(pod.roleInPod)) filteredPods.push(pod)
+                if (isAdmin(pod.roleInPod)) filteredPods.push(pod);
             })
-            this.setState({ pods: filteredPods })
+            this.setState({ pods: filteredPods });
         }
         if (this.state.formAddCourse.selectedPod !== prevState.formAddCourse.selectedPod) {
             if (!this.state.formAddCourse.selectedPod) return
-            var params = this.state.getUserParams
-            var res = getUsers(this.state.formAddCourse.selectedPod, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
+            var params = this.state.getUserParams;
+            var res = getUsers(this.state.formAddCourse.selectedPod, 
+                                params.name, 
+                                params.page, 
+                                params.size, 
+                                params.sort, 
+                                params.role, 
+                                params.inviteStatus);
             if (res.isSuccess) {
-                this.setState({ teachers: res.data.users })
+                this.setState({ teachers: res.data.users });
             }
         }
     }
 
     render() {
         return (
-            <div>
-                <Modal isOpen={this.state.modal}>
-                    <form className="mb-3" name="formAddCourse" onSubmit={this.onSubmit}>
-                        <ModalHeader toggle={this.toggleModal}>Create Course</ModalHeader>
-                        <ModalBody>
-                            <div className="form-group">
-                                <label className="text-muted" htmlFor="addCourseSubject">Select Pod <span style={{ color: '#f05050' }}>*</span></label>
-                                <PodSelector
-                                    name="podSelector"
-                                    pods={this.state.pods}
-                                    hasError={this.state.formAddCourse.selector.error.isNullPod}
-                                    setPod={(pod) => this.setFormPod(pod)}
-                                    active="required"
-                                />
-                                {this.state.formAddCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
-                            </div>
-                            <div className="form-group">
-                                <label className="text-muted" htmlFor="id-courseSubject">Subject <span style={{ color: '#f05050' }}>*</span></label>
-                                <div className="input-group with-focus">
-                                    <Input
-                                        type="text"
-                                        id="id-courseSubject"
-                                        name="subject"
-                                        className="border-right-0"
-                                        placeholder="Enter course subject"
-                                        invalid={
-                                            this.hasError('formAddCourse', 'subject', 'required')
-                                            || this.hasError('formAddCourse', 'subject', 'maxlen')
-                                            || this.hasError('formAddCourse', 'subject', 'contains-alpha')
-                                        }
-                                        onChange={this.validateOnChange}
-                                        data-validate='["required", "maxlen", "contains-alpha"]'
-                                        data-param='50'
-                                        value={this.state.formAddCourse.subject || ''} />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text text-muted bg-transparent border-left-0">
-                                            <em className="fa fa-book"></em>
-                                        </span>
-                                    </div>
-                                    {this.hasError('formAddCourse', 'subject', 'required') && <span className="invalid-feedback">Subject is required</span>}
-                                    {this.hasError('formAddCourse', 'subject', 'maxlen') && <span className="invalid-feedback">Subject must not have more than 50 characters</span>}
-                                    {this.hasError('formAddCourse', 'subject', 'contains-alpha') && <span className="invalid-feedback">Subject must contain at least one alpha character</span>}
+            <Modal isOpen={this.state.modal}>
+                <form className="mb-3" name="formAddCourse" onSubmit={this.onSubmit}>
+                    <ModalHeader toggle={this.toggleModal}>Create Course</ModalHeader>
+                    <ModalBody>
+                        <div className="form-group">
+                            <label className="text-muted" htmlFor="addCourseSubject">Select Pod <span style={{ color: '#f05050' }}>*</span></label>
+                            <PodSelector
+                                name="podSelector"
+                                pods={this.state.pods}
+                                hasError={this.state.formAddCourse.selector.error.isNullPod}
+                                setPod={(pod) => this.setFormPod(pod)}
+                                active="required"
+                            />
+                            {this.state.formAddCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
+                        </div>
+                        <div className="form-group">
+                            <label className="text-muted" htmlFor="id-courseSubject">Subject <span style={{ color: '#f05050' }}>*</span></label>
+                            <div className="input-group with-focus">
+                                <Input
+                                    type="text"
+                                    id="id-courseSubject"
+                                    name="subject"
+                                    className="border-right-0"
+                                    placeholder="Enter course subject"
+                                    invalid={
+                                        this.hasError('formAddCourse', 'subject', 'required')
+                                        || this.hasError('formAddCourse', 'subject', 'maxlen')
+                                        || this.hasError('formAddCourse', 'subject', 'contains-alpha')
+                                    }
+                                    onChange={this.validateOnChange}
+                                    data-validate='["required", "maxlen", "contains-alpha"]'
+                                    data-param='50'
+                                    value={this.state.formAddCourse.subject || ''} />
+                                <div className="input-group-append">
+                                    <span className="input-group-text text-muted bg-transparent border-left-0">
+                                        <em className="fa fa-book"></em>
+                                    </span>
                                 </div>
+                                {this.hasError('formAddCourse', 'subject', 'required') && <span className="invalid-feedback">Subject is required</span>}
+                                {this.hasError('formAddCourse', 'subject', 'maxlen') && <span className="invalid-feedback">Subject must not have more than 50 characters</span>}
+                                {this.hasError('formAddCourse', 'subject', 'contains-alpha') && <span className="invalid-feedback">Subject must contain at least one alpha character</span>}
                             </div>
-                            <div className="form-group">
-                                <label className="text-muted" htmlFor="addDaySchedule">Day Schedule <span style={{ color: '#f05050' }}>*</span></label>
-                                <DaysOfWeekSelector
-                                    name="daysOfWeekSelector"
-                                    hasError={this.state.formAddCourse.selector.error.isNullDay}
-                                    setDays={(day) => this.setDays(day)}
-                                    validate={this.validateSelectorsOnChange}
-                                />
-                                {this.state.formAddCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
-                            </div>
-                            <div className="form-group">
-                                <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule <span style={{ color: '#f05050' }}>*</span></label>
-                                <Row>
-                                    <Col lg="6">
-                                        <label className="text-muted">Start time: </label>
-                                        <Datetime
-                                            inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error'  } : { className: 'form-control' }}
-                                            dateFormat={false}
-                                            onChange={(date) => {
-                                                this.setTime(date, "start")
-                                                this.validateSelectorsOnChange("time")
-                                            }}
-                                        />
-                                    </Col>
-                                    <Col lg="6">
-                                        <label className="text-muted">End time: </label>
-                                        <Datetime
-                                            inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error'} : { className: 'form-control'}}
-                                            dateFormat={false}
-                                            onChange={(date) => {
-                                                this.setTime(date, "end")
-                                                this.validateSelectorsOnChange("time")
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                                {this.state.formAddCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Both start and end times are required and must be valid times</p>}
-                            </div>
-                            <div className="form-group">
-                                <label className="text-muted" htmlFor="id-teacher">Teacher <span style={{ color: '#f05050' }}>*</span></label>
-                                <TeacherSelector
-                                    name="teacherSelector"
-                                    teachers={this.state.teachers}
-                                    hasError={this.state.formAddCourse.selector.error.isNullTeacher}
-                                    validate={this.validateSelectorsOnChange}
-                                    setTeacher={this.setTeacher}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label className="text-muted" htmlFor="id-courseDescription">Description</label>
-                                <div className="input-group with-focus">
-                                    <Input
-                                        type="textarea"
-                                        id="id-courseDescription"
-                                        name="description"
-                                        className="border-right-0 no-resize"
-                                        placeholder="Enter course description"
-                                        invalid={
-                                            this.hasError('formAddCourse', 'description', 'maxlen')
-                                            || this.hasError('formAddCourse', 'description', 'contains-alpha')
-                                        }
-                                        onChange={this.validateOnChange}
-                                        data-validate='["maxlen", "contains-alpha"]'
-                                        data-param='250'
-                                        value={this.state.formAddCourse.description || ''} />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text text-muted bg-transparent border-left-0">
-                                            <em className="fa fa-book"></em>
-                                        </span>
-                                    </div>
-                                    {this.hasError('formAddCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 250 characters</span>}
-                                    {this.hasError('formAddCourse', 'description', 'contains-alpha') && <span className="invalid-feedback">Course description must contain at least one alpha character</span>}
+                        </div>
+                        <div className="form-group">
+                            <label className="text-muted" htmlFor="addDaySchedule">Day Schedule <span style={{ color: '#f05050' }}>*</span></label>
+                            <DaysOfWeekSelector
+                                name="daysOfWeekSelector"
+                                hasError={this.state.formAddCourse.selector.error.isNullDay}
+                                setDays={(day) => this.setDays(day)}
+                                validate={this.validateSelectorsOnChange}
+                            />
+                            {this.state.formAddCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
+                        </div>
+                        <div className="form-group">
+                            <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule <span style={{ color: '#f05050' }}>*</span></label>
+                            <Row>
+                                <Col lg="6">
+                                    <label className="text-muted">Start time: </label>
+                                    <Datetime
+                                        inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error' } : { className: 'form-control' }}
+                                        dateFormat={false}
+                                        onChange={(date) => {
+                                            this.setTime(date, "start")
+                                            this.validateSelectorsOnChange("time")
+                                        }}
+                                    />
+                                </Col>
+                                <Col lg="6">
+                                    <label className="text-muted">End time: </label>
+                                    <Datetime
+                                        inputProps={this.state.formAddCourse.selector.error.isNullTime ? { className: 'form-control time-error' } : { className: 'form-control' }}
+                                        dateFormat={false}
+                                        onChange={(date) => {
+                                            this.setTime(date, "end")
+                                            this.validateSelectorsOnChange("time")
+                                        }}
+                                    />
+                                </Col>
+                            </Row>
+                            {this.state.formAddCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Both start and end times are required and must be valid times</p>}
+                        </div>
+                        <div className="form-group">
+                            <label className="text-muted" htmlFor="id-teacher">Teacher <span style={{ color: '#f05050' }}>*</span></label>
+                            <TeacherSelector
+                                name="teacherSelector"
+                                teachers={this.state.teachers}
+                                hasError={this.state.formAddCourse.selector.error.isNullTeacher}
+                                validate={this.validateSelectorsOnChange}
+                                setTeacher={this.setTeacher}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label className="text-muted" htmlFor="id-courseDescription">Description</label>
+                            <div className="input-group with-focus">
+                                <Input
+                                    type="textarea"
+                                    id="id-courseDescription"
+                                    name="description"
+                                    className="border-right-0 no-resize"
+                                    placeholder="Enter course description"
+                                    invalid={
+                                        this.hasError('formAddCourse', 'description', 'maxlen')
+                                        || this.hasError('formAddCourse', 'description', 'contains-alpha')
+                                    }
+                                    onChange={this.validateOnChange}
+                                    data-validate='["maxlen", "contains-alpha"]'
+                                    data-param='250'
+                                    value={this.state.formAddCourse.description || ''} />
+                                <div className="input-group-append">
+                                    <span className="input-group-text text-muted bg-transparent border-left-0">
+                                        <em className="fa fa-book"></em>
+                                    </span>
                                 </div>
+                                {this.hasError('formAddCourse', 'description', 'maxlen') && <span className="invalid-feedback">Course description must not have more than 250 characters</span>}
+                                {this.hasError('formAddCourse', 'description', 'contains-alpha') && <span className="invalid-feedback">Course description must contain at least one alpha character</span>}
                             </div>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            <Button color="primary" type="submit">Create</Button>{' '}
-                        </ModalFooter>
-                    </form>
-                </Modal>
-            </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                        <Button color="primary" type="submit">Create</Button>{' '}
+                    </ModalFooter>
+                </form>
+            </Modal>
         )
     }
 }
