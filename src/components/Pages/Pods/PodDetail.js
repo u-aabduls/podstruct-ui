@@ -43,6 +43,11 @@ class PodDetail extends Component {
         activeTab: '1',
     }
 
+    contentSubHeadingStyle = {
+        display: 'flex',
+        justifyContent: `space-between`
+    }
+
     toggleDD = () => this.setState({
         ddOpen: !this.state.ddOpen
     })
@@ -151,7 +156,6 @@ class PodDetail extends Component {
                                     <DropdownItem onClick={() => this.deactivate(this.state.pod.id)}>Deactivate Pod</DropdownItem>
                                     : null
                                 }
-                                <DropdownItem onClick={() => this.props.history.push('/courses', { pod: this.state.pod })}>Courses</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                         <EditPodForm
@@ -162,10 +166,17 @@ class PodDetail extends Component {
                         />
                     </div>
                 </div>
-                <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={() => this.props.history.goBack()}>
-                    <i className="fas fa-arrow-left fa-fw btn-icon"></i>
-                    Pods
-                </Button>
+                <div style={this.contentSubHeadingStyle}>
+                    <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
+                            onClick={() => this.props.history.goBack()}>
+                        <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
+                        Pods
+                    </Button>
+                    <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
+                            onClick={() => this.props.history.push('/courses', { pod: this.state.pod })}>
+                        Go to Courses
+                    </Button>
+                </div>
                 <Row noGutters={true}>
                     <Col>
                         {/* START card */}
@@ -252,14 +263,6 @@ class PodDetail extends Component {
                                                 href="#"
                                                 className={classnames({ active: this.state.activeTab === '3' })}
                                                 onClick={() => { this.toggleTab('3'); }}>
-                                                Courses
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                href="#"
-                                                className={classnames({ active: this.state.activeTab === '4' })}
-                                                onClick={() => { this.toggleTab('4'); }}>
                                                 Documents
                                             </NavLink>
                                         </NavItem>
@@ -313,8 +316,7 @@ class PodDetail extends Component {
                                                 pending={this.state.pending}
                                             />
                                         </TabPane>
-                                        <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
-                                        <TabPane tabId="4">
+                                        <TabPane tabId="3">
                                             <DocumentsTable
                                                 role={this.state.rolePerms}
                                                 parent={this.state.pod}
