@@ -2,33 +2,26 @@ import React, { Component } from 'react';
 import {
     Button,
     Input,
-    Row,
-    Col,
     Modal,
     ModalHeader,
     ModalBody,
     ModalFooter,
 } from 'reactstrap';
 import Swal from 'sweetalert2';
-import { getPod, editPod } from '../../../connectors/Pod';
-import FormValidator from '../../Forms/FormValidator';
+import { createPod } from "../../../connectors/Pod";
+import FormValidator from '../FormValidator';
 
-class EditPodForm extends Component {
+class AddPodForm extends Component {
 
     state = {
-        formEditPod: {
+        formAddPod: {
             podName: '',
             description: '',
             phone: '',
             address: ''
         },
         pod: this.props.pod,
-        modal: this.props.modal,
-    }
-
-    toggleModal = () => {
-        this.populateForm()
-        this.props.toggle()
+        modal: false,
     }
 
     errorMessageStyling = {
@@ -36,6 +29,18 @@ class EditPodForm extends Component {
         width: '100%',
         marginTop: '0.25rem',
         fontSize: '80%'
+    }
+
+    toggleModal = () => {
+        this.props.toggle();
+        this.setState({
+            formAddPod: {
+                name: '',
+                description: '',
+                phone: '',
+                address: ''
+            },
+        });
     }
 
     /**
@@ -58,7 +63,8 @@ class EditPodForm extends Component {
                     ...this.state[form.name].errors,
                     [input.name]: result
                 }
-            }
+            },
+            modal: this.state.modal
         });
     }
 
@@ -70,20 +76,20 @@ class EditPodForm extends Component {
             this.state[formName].errors[inputName][method]
     }
 
-     /* Clean phone input */
-     cleanPhoneNumber = (phoneNumber) => {
+    /* Clean phone input */
+    cleanPhoneNumber = (phoneNumber) => {
         return "+" + phoneNumber.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "");
     }
 
     constructRequestPayload = () => {
         var payload = {
-            "podName": this.state.formEditPod.podName,
-            "phone": this.cleanPhoneNumber(this.state.formEditPod.phone),
-            "address": this.state.formEditPod.address
+            "podName": this.state.formAddPod.podName,
+            "phone": this.cleanPhoneNumber(this.state.formAddPod.phone),
+            "address": this.state.formAddPod.address
         };
 
-        if (this.state.formEditPod.description) {
-            payload.podDescription = this.state.formEditPod.description
+        if (this.state.formAddPod.description) {
+            payload.podDescription = this.state.formAddPod.description
         }
 
         return JSON.stringify(payload);
@@ -115,58 +121,41 @@ class EditPodForm extends Component {
         console.log((hasError) ? 'Form has errors. Check!' : 'Form Submitted!')
 
         if (!hasError) {
-            var res = editPod(this.state.pod.id, this.constructRequestPayload());
-            if (res.isSuccess) {
+            var result = createPod(this.constructRequestPayload());
+            if (result.isSuccess) {
                 this.toggleModal()
                 Swal.fire({
-                    title: "Successfully edited pod",
+                    title: "Successfully created pod",
                     confirmButtonColor: "#5d9cec",
                     icon: "success",
                 })
-                var res = getPod(this.state.pod.id)
-                this.props.updateOnEdit(res)
-            }
-            else {
+                this.props.updateOnAdd();
+            } else {
+                this.toggleModal();
                 Swal.fire({
-                    title: "Error",
+                    title: "Error creating pod",
                     icon: "error",
                     confirmButtonColor: "#5d9cec",
-                    text: res.message
+                    text: result.message
                 })
             }
-        }
-    }
-
-    populateForm() {
-        var stateCopy = this.state.formEditPod;
-        var res = getPod(this.props.pod.id)
-        if (res.isSuccess) {
-            this.setState({
-                pod: res.data
-            })
-            stateCopy.podName = res.data.podName
-            stateCopy.description = res.data.podDescription
-            stateCopy.phone = res.data.phone.replace("+", "")
-            stateCopy.address = res.data.address
-            this.setState(stateCopy)
         }
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.modal !== prevProps.modal) {
-            if (this.props.modal) this.populateForm()
-            this.setState({ modal: this.props.modal })
+            this.setState({ modal: this.props.modal });
         }
     }
 
     render() {
         return (
             <Modal isOpen={this.state.modal}>
-                <form className="mb-3" name="formEditPod" onSubmit={this.onSubmit}>
-                    <ModalHeader toggle={this.toggleModal}>Edit Pod</ModalHeader>
+                <form className="mb-3" name="formAddPod" onSubmit={this.onSubmit}>
+                    <ModalHeader toggle={this.toggleModal}>Create Pod</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-podName">Name</label>
+                            <label className="text-muted" htmlFor="id-podName">Name <span style={{ color: '#f05050' }}>*</span></label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
@@ -175,23 +164,23 @@ class EditPodForm extends Component {
                                     className="border-right-0"
                                     placeholder="Name"
                                     invalid={
-                                        this.hasError('formEditPod', 'podName', 'required')
-                                        || this.hasError('formEditPod', 'podName', 'maxlen')
-                                        || this.hasError('formEditPod', 'podName', 'podname')
+                                        this.hasError('formAddPod', 'podName', 'required')
+                                        || this.hasError('formAddPod', 'podName', 'maxlen')
+                                        || this.hasError('formAddPod', 'podName', 'podname')
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["required", "maxlen", "podname"]'
                                     data-param='50'
-                                    value={this.state.formEditPod.podName || ''}
+                                    value={this.state.formAddPod.podName || ''}
                                 />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-book"></em>
                                     </span>
                                 </div>
-                                {this.hasError('formEditPod', 'podName', 'required') && <span className="invalid-feedback">Name is required</span>}
-                                {this.hasError('formEditPod', 'podName', 'maxlen') && <span className="invalid-feedback">Name must not have more than 50 characters</span>}
-                                {this.hasError('formEditPod', 'podName', 'podname') && <span className="invalid-feedback">Name must contain alpha, numeric, or hyphen characters only</span>}
+                                {this.hasError('formAddPod', 'podName', 'required') && <span className="invalid-feedback">Name is required</span>}
+                                {this.hasError('formAddPod', 'podName', 'maxlen') && <span className="invalid-feedback">Name must not have more than 50 characters</span>}
+                                {this.hasError('formAddPod', 'podName', 'podname') && <span className="invalid-feedback">Name must contain alpha, numeric, or hyphen characters only</span>}
                             </div>
                         </div>
                         <div className="form-group">
@@ -204,12 +193,12 @@ class EditPodForm extends Component {
                                     className="border-right-0 no-resize"
                                     placeholder="Description"
                                     invalid={
-                                        this.hasError('formEditPod', 'description', 'maxlen')
+                                        this.hasError('formAddPod', 'description', 'maxlen')
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["maxlen"]'
                                     data-param='100'
-                                    value={this.state.formEditPod.description || ''}
+                                    value={this.state.formAddPod.description || ''}
                                     rows={5}
                                 />
                                 <div className="input-group-append">
@@ -217,11 +206,11 @@ class EditPodForm extends Component {
                                         <em className="fa fa-book"></em>
                                     </span>
                                 </div>
-                                {this.hasError('formEditPod', 'description', 'maxlen') && <span className="invalid-feedback">Description must have not have more than 100 characters</span>}
+                                {this.hasError('formAddPod', 'description', 'maxlen') && <span className="invalid-feedback">Description must have not have more than 100 characters</span>}
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-phone">Phone Number</label>
+                            <label className="text-muted" htmlFor="id-phone">Phone Number <span style={{ color: '#f05050' }}>*</span></label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
@@ -230,23 +219,23 @@ class EditPodForm extends Component {
                                     className="border-right-0"
                                     placeholder="(XXX) XXX-XXXX"
                                     invalid={
-                                        this.hasError('formEditPod', 'phone', 'required')
-                                        || this.hasError('formEditPod', 'phone', 'phone-digits')
-                                        || this.hasError('formEditPod', 'phone', 'phone-chars')
+                                        this.hasError('formAddPod', 'phone', 'required')
+                                        || this.hasError('formAddPod', 'phone', 'phone-digits')
+                                        || this.hasError('formAddPod', 'phone', 'phone-chars')
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["required", "phone-digits", "phone-chars"]'
                                     data-param='10'
-                                    value={this.state.formEditPod.phone || ''}
+                                    value={this.state.formAddPod.phone || ''}
                                 />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-phone"></em>
                                     </span>
                                 </div>
-                                {this.hasError('formEditPod', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
-                                {this.hasError('formEditPod', 'phone', 'phone-digits') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
-                                {this.hasError('formEditPod', 'phone', 'phone-chars') && <span className="invalid-feedback">Phone number must only contain digits 0-9, () or -</span>}
+                                {this.hasError('formAddPod', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
+                                {this.hasError('formAddPod', 'phone', 'phone-digits') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
+                                {this.hasError('formAddPod', 'phone', 'phone-chars') && <span className="invalid-feedback">Phone number must only contain digits 0-9, () or -</span>}
                             </div>
                         </div>
                         <div className="form-group">
@@ -259,7 +248,7 @@ class EditPodForm extends Component {
                                     className="border-right-0"
                                     placeholder="Address"
                                     onChange={this.validateOnChange}
-                                    value={this.state.formEditPod.address || ''}
+                                    value={this.state.formAddPod.address || ''}
                                 />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
@@ -271,7 +260,7 @@ class EditPodForm extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Save</Button>
+                        <Button color="primary" type="submit">Create</Button>{' '}
                     </ModalFooter>
                 </form>
             </Modal>
@@ -279,4 +268,4 @@ class EditPodForm extends Component {
     }
 }
 
-export default EditPodForm;
+export default AddPodForm;
