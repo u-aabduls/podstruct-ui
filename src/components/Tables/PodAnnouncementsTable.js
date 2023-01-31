@@ -52,7 +52,7 @@ class PodAnnouncementsTable extends Component {
                     confirmButtonColor: "#5d9cec"
                 })
             }
-        })   
+        })
     }
 
     componentDidMount() {
@@ -106,13 +106,19 @@ class PodAnnouncementsTable extends Component {
                                         </td>
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
-                                                <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" 
-                                                            onMouseDown={e => e.preventDefault()} 
-                                                            onClick={() => this.deleteAnnouncement(announcement.date)}>
-                                                            <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                    </Button>
-                                                </div>
+                                                <Button className="btn btn-sm bg-primary mr-1"
+                                                    onMouseDown={e => e.preventDefault()}
+                                                    onClick={() => {}}>
+                                                    <i className="fas icon-pencil fa-fw btn-icon"></i>
+                                                </Button>
+                                                : null
+                                            }
+                                            {isAdmin(this.state.rolePerms) ?
+                                                <Button className="btn btn-sm bg-danger"
+                                                    onMouseDown={e => e.preventDefault()}
+                                                    onClick={() => {this.deleteAnnouncement(announcement.date)}}>
+                                                    <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                </Button>
                                                 : null
                                             }
                                         </td>
