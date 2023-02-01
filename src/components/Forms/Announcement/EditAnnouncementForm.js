@@ -11,7 +11,7 @@ import {
     getPodAnnouncements,
     updatePodAnnouncement,
     getCourseAnnouncements,
-    createCourseAnnouncement
+    updateCourseAnnouncement
 } from '../../../connectors/Announcement';
 import Swal from 'sweetalert2';
 import FormValidator from '../FormValidator';
@@ -108,7 +108,7 @@ class EditAnnouncementForm extends Component {
         if (!hasError) {
             var res;
             res = this.state.course ?
-                createCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload()) :
+                updateCourseAnnouncement(this.state.course.podId, this.state.course.id, this.state.announcement.date, this.constructRequestPayload()) :
                 updatePodAnnouncement(this.state.pod.id, this.state.announcement.date, this.constructRequestPayload());
 
             this.toggleModal();
@@ -117,7 +117,7 @@ class EditAnnouncementForm extends Component {
                     title: "Successfully edited announcement",
                     confirmButtonColor: "#5d9cec",
                     icon: "success",
-                })
+                });
                 res = this.state.course ?
                     getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0) :
                     getPodAnnouncements(this.state.pod.id, '', 0);
@@ -129,7 +129,7 @@ class EditAnnouncementForm extends Component {
                     icon: "error",
                     confirmButtonColor: "#5d9cec",
                     text: res.message
-                })
+                });
             }
         }
     }

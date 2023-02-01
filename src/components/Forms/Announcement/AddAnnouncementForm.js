@@ -195,7 +195,7 @@ class AddAnnouncementForm extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Add Announcement</Button>{' '}
+                        <Button color="primary" type="submit">Publish</Button>{' '}
                     </ModalFooter>
                 </form>
             </Modal>

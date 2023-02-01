@@ -24,7 +24,7 @@ import EditPodForm from '../../Forms/Pod/EditPodForm';
 import AddUserForm from '../../Forms/PodUser/AddUserForm';
 import InvitedPodForm from '../../Forms/PodUser/InvitedPodForm';
 import PodUserTable from '../../Tables/PodUserTable';
-import PodAnnouncementsTable from '../../Tables/PodAnnouncementsTable';
+import AnnouncementsTable from '../../Tables/AnnouncementsTable';
 import { isAdmin } from '../../../utils/PermissionChecker';
 import DocumentsTable from '../../Tables/DocumentsTable';
 import { deactivatePod } from "../../../connectors/Pod";
@@ -277,7 +277,7 @@ class PodDetail extends Component {
                                                         onMouseDown={e => e.preventDefault()}
                                                         onClick={this.toggleAnnModal}>
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                        Add Announcement
+                                                        Create Announcement
                                                     </button>
                                                 </div>
                                                 : null
@@ -288,7 +288,8 @@ class PodDetail extends Component {
                                                 updateOnAdd={this.updateOnAnnouncementAdd}
                                                 toggle={this.toggleAnnModal}
                                             />
-                                            <PodAnnouncementsTable
+                                            <AnnouncementsTable
+                                                role={this.state.rolePerms}
                                                 pod={this.state.pod}
                                                 announcements={this.state.announcements}
                                                 lastEvaluatedKey={this.state.lastEvaluatedKey}

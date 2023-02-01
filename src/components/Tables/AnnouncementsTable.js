@@ -5,28 +5,54 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import Swal from 'sweetalert2';
-import { getCourseAnnouncements, deleteCourseAnnouncement } from '../../connectors/Announcement';
+import {
+    getPodAnnouncements,
+    getCourseAnnouncements,
+    deletePodAnnouncement,
+    deleteCourseAnnouncement
+} from '../../connectors/Announcement';
 import { isAdmin } from '../../utils/PermissionChecker';
+import EditAnnouncementForm from '../Forms/Announcement/EditAnnouncementForm';
 
-
-class CourseAnnouncementsTable extends Component {
+class AnnouncementsTable extends Component {
 
     state = {
-        rolePerms: this.props.course.role,
+        rolePerms: this.props.role,
+        pod: this.props.pod,
         course: this.props.course,
         announcements: [],
         lastEvaluatedKey: '',
+        editAnnouncementModal: false,
+        announcementToEdit: ''
     }
 
     fetchMore = () => {
         if (this.state.lastEvaluatedKey) {
             var stateCopy = this.state;
-            var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0);
+            var res = this.state.course ?
+                getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0) :
+                getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0);
             if (res.isSuccess) {
                 stateCopy.announcements = this.state.announcements.concat(res.data.announcements);
                 stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey;
                 this.setState(stateCopy);
             }
+        }
+    }
+
+    toggleEditAnnouncementModal = (announcement) => {
+        this.setState({
+            editAnnouncementModal: !this.state.editAnnouncementModal,
+            announcementToEdit: announcement
+        });
+    }
+
+    updateOnAnnouncementEdit = (res) => {
+        if (res.isSuccess) {
+            this.setState({
+                announcements: res.data.announcements,
+                lastEvaluatedKey: res.data.lastEvaluatedKey
+            });
         }
     }
 
@@ -39,9 +65,13 @@ class CourseAnnouncementsTable extends Component {
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state;
-                var res = deleteCourseAnnouncement(this.state.course.podId, this.state.course.id, date);
+                var res = this.state.course ?
+                    deleteCourseAnnouncement(this.state.course.podId, this.state.course.id, date) :
+                    deletePodAnnouncement(this.state.pod.id, date);
                 if (res.isSuccess) {
-                    res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0)
+                    res = this.state.course ?
+                        getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0) :
+                        getPodAnnouncements(this.state.pod.id, '', 0);
                     stateCopy.announcements = res.data.announcements;
                     stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey;
                     this.setState(stateCopy);
@@ -52,25 +82,27 @@ class CourseAnnouncementsTable extends Component {
                     confirmButtonColor: "#5d9cec"
                 })
             }
-        })
+        });
     }
 
     componentDidMount() {
-        var stateCopy = this.state
-        var res = getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0)
+        var stateCopy = this.state;
+        var res = this.state.course ?
+            getCourseAnnouncements(this.state.course.podId, this.state.course.id, this.state.lastEvaluatedKey, 0) :
+            getPodAnnouncements(this.state.pod.id, this.state.lastEvaluatedKey, 0);
         if (res.isSuccess) {
-            stateCopy.announcements = res.data.announcements
-            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey
-            this.setState(stateCopy)
+            stateCopy.announcements = res.data.announcements;
+            stateCopy.lastEvaluatedKey = res.data.lastEvaluatedKey;
+            this.setState(stateCopy);
         }
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.announcements !== prevProps.announcements) {
-            this.setState({ announcements: this.props.announcements })
+            this.setState({ announcements: this.props.announcements });
         }
         if (this.props.lastEvaluatedKey !== prevProps.lastEvaluatedKey) {
-            this.setState({ lastEvaluatedKey: this.props.lastEvaluatedKey })
+            this.setState({ lastEvaluatedKey: this.props.lastEvaluatedKey });
         }
     }
 
@@ -106,13 +138,21 @@ class CourseAnnouncementsTable extends Component {
                                         </td>
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
-                                                <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" 
-                                                            onMouseDown={e => e.preventDefault()} 
-                                                            onClick={() => this.deleteAnnouncement(announcement.date)}>
-                                                            <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                    </Button>
-                                                </div>
+                                                <Button
+                                                    className="btn btn-sm bg-primary mr-1"
+                                                    onMouseDown={e => e.preventDefault()}
+                                                    onClick={() => this.toggleEditAnnouncementModal(announcement)}>
+                                                    <i className="fas icon-pencil fa-fw btn-icon"></i>
+                                                </Button>
+                                                : null
+                                            }
+                                            {isAdmin(this.state.rolePerms) ?
+                                                <Button
+                                                    className="btn btn-sm bg-danger"
+                                                    onMouseDown={e => e.preventDefault()}
+                                                    onClick={() => { this.deleteAnnouncement(announcement.date) }}>
+                                                    <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                </Button>
                                                 : null
                                             }
                                         </td>
@@ -125,6 +165,14 @@ class CourseAnnouncementsTable extends Component {
                             <h3 className='text-center pt-5 pb-4'>No Announcements</h3>
                         </tr>}
                 </Table>
+                <EditAnnouncementForm
+                    pod={this.state.pod}
+                    course={this.state.course}
+                    modal={this.state.editAnnouncementModal}
+                    announcement={this.state.announcementToEdit}
+                    toggle={this.toggleEditAnnouncementModal}
+                    updateOnEdit={this.updateOnAnnouncementEdit}
+                />
                 {this.state.lastEvaluatedKey ?
                     <div>
                         <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "50%" }} onClick={this.fetchMore}>See More</Button>
@@ -136,4 +184,4 @@ class CourseAnnouncementsTable extends Component {
     }
 }
 
-export default CourseAnnouncementsTable
+export default AnnouncementsTable;

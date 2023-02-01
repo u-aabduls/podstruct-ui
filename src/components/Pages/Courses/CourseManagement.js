@@ -79,7 +79,7 @@ class CourseManagement extends Component {
     }, 500);
 
     componentWillMount() {
-        var res = getPods('ACCEPTED')
+        var res = getPods('ACCEPTED');
         if (res.isSuccess) {
             this.setState({ pods: res.data });
         }
@@ -173,7 +173,5 @@ class CourseManagement extends Component {
     }
 
 }
-
-
 
 export default CourseManagement;
