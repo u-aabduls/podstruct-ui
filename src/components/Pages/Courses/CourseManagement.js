@@ -111,7 +111,7 @@ class CourseManagement extends Component {
                         {isAdmin(this.state.rolePerms) ?
                             <div>
                                 <button className="btn btn-success"
-                                    // onMouseDown={e => e.preventDefault()}
+                                    onMouseDown={e => e.preventDefault()}
                                     onClick={this.toggleAddCourseModal}>
                                     <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course
                                 </button>
