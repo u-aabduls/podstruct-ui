@@ -23,7 +23,7 @@ import 'react-datetime/css/react-datetime.css';
 import EditCourseForm from '../../Forms/Course/EditCourseForm';
 import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
 import AddAssignmentForm from '../../Forms/Assignment/AddAssignmentForm';
-import CourseAnnouncementsTable from '../../Tables/CourseAnnouncementsTable';
+import AnnouncementsTable from '../../Tables/AnnouncementsTable';
 import AssignmentsTable from '../../Tables/AssignmentsTable';
 import { getCourse } from '../../../connectors/Course';
 import { getPod } from '../../../connectors/Pod';
@@ -151,7 +151,7 @@ class CourseDetail extends Component {
                     </div>
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
-                    <i className="fas fa-arrow-left fa-fw btn-icon"></i>
+                    <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
                     Courses
                 </Button>
                 <Row noGutters={true}>
@@ -256,7 +256,7 @@ class CourseDetail extends Component {
                                                         onMouseDown={e => e.preventDefault()}
                                                         onClick={this.toggleAnnModal}>
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                        Add Announcement
+                                                        Create Announcement
                                                     </button>
                                                 </div>
                                                 : null
@@ -267,7 +267,8 @@ class CourseDetail extends Component {
                                                 updateOnAdd={this.updateOnAnnouncementAdd}
                                                 toggle={this.toggleAnnModal}
                                             />
-                                            <CourseAnnouncementsTable
+                                            <AnnouncementsTable
+                                                role={this.state.rolePerms}
                                                 course={this.state.course}
                                                 announcements={this.state.announcements}
                                                 lastEvaluatedKey={this.state.lastEvaluatedKey}
@@ -278,7 +279,7 @@ class CourseDetail extends Component {
                                                 <div className="float-right">
                                                     <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAssignmentModal}>
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                        Add Assignment
+                                                        Create Assignment
                                                     </button>
                                                 </div>
                                                 : null

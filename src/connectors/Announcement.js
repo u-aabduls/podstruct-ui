@@ -65,6 +65,14 @@ function createCourseAnnouncement(podId, courseID, requestBody) {
     return result;
 }
 
+function updateCourseAnnouncement(podId, courseId, announcementDate, requestBody) {
+    authorizationToken = localStorage.getItem('token');
+    var endpointPathEXT = endpointPath + podId + "/courses/" + courseId + "/announcements/" + announcementDate;
+    _initialize("PUT", endpointPathEXT);
+    request.send(requestBody);
+    return result;
+}
+
 function deleteCourseAnnouncement(podId, courseID, announcementDate) {
     authorizationToken = localStorage.getItem('token');
     var endpointPathEXT = endpointPath + podId + "/courses/" + courseID + "/announcements/" + announcementDate;
@@ -138,5 +146,6 @@ export {
     deletePodAnnouncement,
     getCourseAnnouncements,
     createCourseAnnouncement,
+    updateCourseAnnouncement,
     deleteCourseAnnouncement
 };

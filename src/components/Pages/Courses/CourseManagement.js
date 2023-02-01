@@ -79,7 +79,7 @@ class CourseManagement extends Component {
     }, 500);
 
     componentWillMount() {
-        var res = getPods('ACCEPTED')
+        var res = getPods('ACCEPTED');
         if (res.isSuccess) {
             this.setState({ pods: res.data });
         }
@@ -111,7 +111,7 @@ class CourseManagement extends Component {
                         {isAdmin(this.state.rolePerms) ?
                             <div>
                                 <button className="btn btn-success"
-                                    onMouseDown={e => e.preventDefault()}
+                                    // onMouseDown={e => e.preventDefault()}
                                     onClick={this.toggleAddCourseModal}>
                                     <em className="fa fa-plus-circle fa-sm button-create-icon"></em> Create Course
                                 </button>
@@ -173,7 +173,5 @@ class CourseManagement extends Component {
     }
 
 }
-
-
 
 export default CourseManagement;
