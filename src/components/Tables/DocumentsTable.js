@@ -58,15 +58,23 @@ class DocumentsTable extends Component {
     }
 
     getDocuments = () => {
+        var result = null;
+
         if (this.state.parentType == "pod") {
-            return getPodDocuments(this.getPodId());
+            result = getPodDocuments(this.getPodId());
         }
         else if (this.state.parentType == "course") {
-            return getCourseDocuments(this.getPodId(), this.getCourseId());
+            result = getCourseDocuments(this.getPodId(), this.getCourseId());
         }
         else if (this.state.parentType == "assignment") {
-            return getAssignmentDocuments(this.getPodId(), this.getCourseId(), this.getAssignmentId());
+            result = getAssignmentDocuments(this.getPodId(), this.getCourseId(), this.getAssignmentId());
         }
+        
+        result.data.sort(function (a, b) {
+            return (a.lastModified).localeCompare(b.lastModified);
+        }).reverse();
+
+        return result;
     }
 
     getDocument = (fileName) => {
@@ -240,7 +248,7 @@ class DocumentsTable extends Component {
     }
 
     render() {
-        var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
+        var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <div>
