@@ -2,12 +2,25 @@ function disabledText() {
     return { color: '#A9A9A9' };
 }
 
+function dangerText() {
+    return { color: '#F05050' };
+}
+
 function swalConfirm() {
     return '#5D9CEC';
 }
 
 function swalConfirmDanger() {
-    return '#D9534F';
+    return '#EC2121';
+}
+
+function changedMessageStyling() {
+    return {
+        color: '#f0ad4e',
+        width: '100%',
+        marginTop: '0.5rem',
+        fontSize: '80%'
+    }
 }
 
 function errorMessageStyling() {
@@ -19,9 +32,19 @@ function errorMessageStyling() {
     }
 }
 
+function disabledInputStyling() {
+    return {
+        color: '#B7BAC9',
+        backgroundColor: '#EDF1F2'
+    }
+}
+
 export {
     disabledText,
+    dangerText,
     swalConfirm,
     swalConfirmDanger,
-    errorMessageStyling
+    changedMessageStyling,
+    errorMessageStyling,
+    disabledInputStyling
 }

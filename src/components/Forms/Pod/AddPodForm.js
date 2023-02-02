@@ -10,6 +10,7 @@ import {
 import Swal from 'sweetalert2';
 import { createPod } from "../../../connectors/Pod";
 import FormValidator from '../FormValidator';
+import { swalConfirm, dangerText } from '../../../utils/Styles';
 
 class AddPodForm extends Component {
 
@@ -22,13 +23,6 @@ class AddPodForm extends Component {
         },
         pod: this.props.pod,
         modal: false,
-    }
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
     }
 
     toggleModal = () => {
@@ -126,7 +120,7 @@ class AddPodForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully created pod",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 this.props.updateOnAdd();
@@ -135,7 +129,7 @@ class AddPodForm extends Component {
                 Swal.fire({
                     title: "Error creating pod",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: result.message
                 })
             }
@@ -155,7 +149,7 @@ class AddPodForm extends Component {
                     <ModalHeader toggle={this.toggleModal}>Create Pod</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-podName">Name <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="id-podName">Name <span style={dangerText()}>*</span></label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
@@ -209,7 +203,7 @@ class AddPodForm extends Component {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-phone">Phone Number <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="id-phone">Phone Number <span style={dangerText()}>*</span></label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"

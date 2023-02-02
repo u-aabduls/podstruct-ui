@@ -7,10 +7,8 @@ import YearSelector from "../../Common/YearSelector";
 import { createUser } from "../../../connectors/User";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-// import { CustomInput } from 'reactstrap';
-
 import FormValidator from '../../Forms/FormValidator.js';
+import { dangerText, errorMessageStyling } from '../../../utils/Styles';
 
 class Register extends Component {
 
@@ -33,13 +31,6 @@ class Register extends Component {
             confirmedPassword: '',
             terms: false
         }
-    }
-
-    errorMessageStyling = {
-        color: '#f05050', 
-        width: '100%', 
-        marginTop: '0.25rem', 
-        fontSize: '80%'
     }
 
     setMonth = (month) => {
@@ -197,7 +188,7 @@ class Register extends Component {
                         <p className="text-center py-2">CREATE YOUR PODSTRUCT ACCOUNT</p>
                         <form className="mb-3" name="formRegister" onSubmit={this.onSubmit}>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-email">Email address <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-email">Email address <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="email"
@@ -219,7 +210,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-firstName">First name <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-firstName">First name <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="text"
@@ -250,7 +241,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-lastName">Last name <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-lastName">Last name <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="text"
@@ -281,7 +272,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted">Date of birth <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted">Date of birth <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <MonthSelector
                                         name="monthSelector"
@@ -298,12 +289,12 @@ class Register extends Component {
                                         hasError={this.state.formRegister.dob.error.isNull || this.state.formRegister.dob.error.isInFuture}
                                         setYear={(year) => this.setYear(year)}
                                     />
-                                    {this.state.formRegister.dob.error.isNull && <p style={this.errorMessageStyling}>Date of birth is required</p>}
-                                    {this.state.formRegister.dob.error.isInFuture && <p style={this.errorMessageStyling}>Date of birth must not be in the future</p>}
+                                    {this.state.formRegister.dob.error.isNull && <p style={errorMessageStyling()}>Date of birth is required</p>}
+                                    {this.state.formRegister.dob.error.isInFuture && <p style={errorMessageStyling()}>Date of birth must not be in the future</p>}
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-phone">Phone number <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-phone">Phone number <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="text"
@@ -332,7 +323,7 @@ class Register extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-password">Password <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-password">Password <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="password"
@@ -395,7 +386,13 @@ class Register extends Component {
                                 checked={this.state.formRegister.terms}>
                                     <span className="invalid-feedback">Field is required</span>
                             </CustomInput> */}
-                            <button className="btn btn-block btn-primary mt-3" type="submit">Create account</button>
+                            <button 
+                                className="btn btn-block btn-primary mt-3"
+                                onMouseDown={e => e.preventDefault()}
+                                type="submit"
+                            >
+                                Create account
+                            </button>
                             <ToastContainer />
                         </form>
                         <p className="pt-3 text-center">Already have an account?</p>

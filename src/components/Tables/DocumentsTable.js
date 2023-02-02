@@ -22,6 +22,7 @@ import {
 } from '../../connectors/File';
 import { isAdmin } from '../../utils/PermissionChecker';
 import '../../styles/app/common/pointer.css';
+import { swalConfirm } from '../../utils/Styles';
 
 class DocumentsTable extends Component {
 
@@ -84,7 +85,7 @@ class DocumentsTable extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the document?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -106,7 +107,7 @@ class DocumentsTable extends Component {
                 Swal.fire({
                     title: 'Successfully deleted document',
                     icon: 'success',
-                    confirmButtonColor: "#5d9cec"
+                    confirmButtonColor: swalConfirm()
                 })
             }
         })
@@ -184,7 +185,7 @@ class DocumentsTable extends Component {
                     icon: 'error',
                     title: 'Failed to upload document',
                     text: result.message,
-                    confirmButtonColor: "#5d9cec"
+                    confirmButtonColor: swalConfirm()
                 })
             }
         }
@@ -205,14 +206,14 @@ class DocumentsTable extends Component {
                 icon: 'error',
                 title: 'Failed to upload document',
                 text: 'File size exceeds limit (10MB)',
-                confirmButtonColor: "#5d9cec"
+                confirmButtonColor: swalConfirm()
             })
         } else {
             if (this.checkFileExists(loadedFile.name)) {
                 Swal.fire({
                     title: 'Are you sure you want to overwrite this file?',
                     showCancelButton: true,
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     confirmButtonText: 'Upload',
                 }).then((result) => {
                     if (result.isConfirmed) {

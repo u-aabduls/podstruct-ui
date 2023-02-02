@@ -15,7 +15,7 @@ import { editAssignment, getAssignment } from '../../../connectors/Assignments';
 import AssignmentTypeSelector from '../../Common/AssignmentTypeSelector';
 import FormValidator from '../FormValidator';
 import moment from 'moment';
-import { disabledText, errorMessageStyling } from '../../../utils/Styles';
+import { disabledText, errorMessageStyling, swalConfirm } from '../../../utils/Styles';
 
 class EditAssignmentForm extends Component {
 
@@ -174,7 +174,7 @@ class EditAssignmentForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully edited assignment",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 var res = getAssignment(this.state.course.podId, this.state.course.id, this.props.assignmentId)
@@ -186,7 +186,7 @@ class EditAssignmentForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: result.message
                 })
             }

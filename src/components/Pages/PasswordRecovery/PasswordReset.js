@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { resetPassword } from "../../../connectors/Password";
 import FormValidator from '../../Forms/FormValidator.js';
 import { ToastContainer, toast } from 'react-toastify';
+import { dangerText, errorMessageStyling } from '../../../utils/Styles';
 
 class PasswordReset extends Component {
 
@@ -14,13 +15,6 @@ class PasswordReset extends Component {
             confirmedPassword: ''
         },
         errorMessage: null
-    }
-
-    errorMessageStyling = {
-        color: '#f05050', 
-        width: '100%', 
-        marginTop: '1.5rem', 
-        fontSize: '80%'
     }
 
     validateOnChange = event => {
@@ -113,7 +107,7 @@ class PasswordReset extends Component {
                         <form name="formPasswordReset" onSubmit={this.onSubmit}>
                             <p className="text-left">Enter the verification code and your new password. If the verification code matches, your password will be reset.</p>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-email">Verification code <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-email">Verification code <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         id="id-email"
@@ -143,7 +137,7 @@ class PasswordReset extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-password">New password <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-password">New password <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input 
                                         type="password"
@@ -195,7 +189,7 @@ class PasswordReset extends Component {
                                         </span>
                                     </div>
                                     <span className="invalid-feedback">Password confirmation doesn't match password</span>
-                                    {this.state.errorMessage && <p style={this.errorMessageStyling}>{this.state.errorMessage}</p>}
+                                    {this.state.errorMessage && <p style={errorMessageStyling()}>{this.state.errorMessage}</p>}
                                 </div>
                             </div>                         
                             <button className="btn btn-success btn-block" type="submit">Update password</button>

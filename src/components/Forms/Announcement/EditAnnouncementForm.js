@@ -15,6 +15,7 @@ import {
 } from '../../../connectors/Announcement';
 import Swal from 'sweetalert2';
 import FormValidator from '../FormValidator';
+import { swalConfirm } from '../../../utils/Styles';
 
 class EditAnnouncementForm extends Component {
 
@@ -115,7 +116,7 @@ class EditAnnouncementForm extends Component {
             if (res.isSuccess) {
                 Swal.fire({
                     title: "Successfully edited announcement",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 });
                 res = this.state.course ?
@@ -127,7 +128,7 @@ class EditAnnouncementForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: res.message
                 });
             }
