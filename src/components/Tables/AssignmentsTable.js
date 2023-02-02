@@ -8,6 +8,7 @@ import moment from 'moment';
 import { getAssignments, deleteAssignment, publishAssignment } from '../../connectors/Assignments';
 import { isAdmin, isStudent } from '../../utils/PermissionChecker';
 import Swal from 'sweetalert2';
+import { swalConfirm } from '../../utils/Styles';
 
 class AssignmentsTable extends Component {
 
@@ -54,7 +55,7 @@ class AssignmentsTable extends Component {
         Swal.fire({
             title: assignmentTitle + 'will be published and available to all users in this course',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Ok',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -63,7 +64,7 @@ class AssignmentsTable extends Component {
                 if (res.isSuccess) {
                     Swal.fire({
                         title: "Successfully published assignment",
-                        confirmButtonColor: "#5d9cec",
+                        confirmButtonColor: swalConfirm(),
                         icon: "success",
                     })
                     var params = this.state.getAssignmentsParams
@@ -82,7 +83,7 @@ class AssignmentsTable extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the assignment?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {

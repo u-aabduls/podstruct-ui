@@ -5,6 +5,7 @@ import MonthSelector from "../Common/MonthSelector";
 import DaySelector from "../Common/DaySelector";
 import YearSelector from "../Common/YearSelector";
 import { getUser } from "../../connectors/User";
+import { disabledInputStyling } from '../../utils/Styles';
 
 class UnEditableProfile extends Component {
 
@@ -28,14 +29,6 @@ class UnEditableProfile extends Component {
             email: ''
         },
         errorMessage: null
-    }
-
-    disabledStyling = {
-        color: `#b7bac9`,
-        backgroundColor: `#EDF1F2`,
-        hover: {
-            backgroundColor: 'red'
-        }
     }
 
     setUserState() {
@@ -97,7 +90,7 @@ class UnEditableProfile extends Component {
                                 id="disabled-field"
                                 name="firstName"
                                 className="border-right-0"
-                                style={this.disabledStyling}
+                                style={disabledInputStyling()}
                                 placeholder="First name"
                                 data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
                                 data-param='50'
@@ -119,7 +112,7 @@ class UnEditableProfile extends Component {
                                 id="disabled-field"
                                 name="lastName"
                                 className="border-right-0"
-                                style={this.disabledStyling}
+                                style={disabledInputStyling()}
                                 placeholder="Last name"
                                 data-validate='["required", "maxlen", "contains-alpha", "name", "begin-end-spacing", "consecutive-spacing"]'
                                 data-param='50'
@@ -141,7 +134,7 @@ class UnEditableProfile extends Component {
                                 id="disabled-field"
                                 name="phone"
                                 className="border-right-0"
-                                style={this.disabledStyling}
+                                style={disabledInputStyling()}
                                 placeholder="Phone"
                                 data-validate='["required", "phone"]'
                                 data-param='10'
@@ -186,7 +179,7 @@ class UnEditableProfile extends Component {
                                 id="disabled-field"
                                 name="address"
                                 className="border-right-0"
-                                style={this.disabledStyling}
+                                style={disabledInputStyling()}
                                 placeholder="Address"
                                 disabled="disabled"
                             />
@@ -197,7 +190,6 @@ class UnEditableProfile extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className="btn btn-info" type="submit">Save Changes</button>
                 </form>
             </div>
         );

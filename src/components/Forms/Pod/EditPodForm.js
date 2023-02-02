@@ -12,6 +12,7 @@ import {
 import Swal from 'sweetalert2';
 import { getPod, editPod } from '../../../connectors/Pod';
 import FormValidator from '../../Forms/FormValidator';
+import { swalConfirm } from '../../../utils/Styles';
 
 class EditPodForm extends Component {
 
@@ -29,13 +30,6 @@ class EditPodForm extends Component {
     toggleModal = () => {
         this.populateForm()
         this.props.toggle()
-    }
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
     }
 
     /**
@@ -120,7 +114,7 @@ class EditPodForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully edited pod",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 var res = getPod(this.state.pod.id)
@@ -130,7 +124,7 @@ class EditPodForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: res.message
                 })
             }
@@ -202,7 +196,6 @@ class EditPodForm extends Component {
                                     id="id-description"
                                     name="description"
                                     className="border-right-0 no-resize"
-                                    placeholder="Description"
                                     invalid={
                                         this.hasError('formEditPod', 'description', 'maxlen')
                                     }

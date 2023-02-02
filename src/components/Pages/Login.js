@@ -4,8 +4,8 @@ import { Input, CustomInput } from 'reactstrap';
 import { loginUser } from "../../connectors/UserAuth";
 import 'react-toastify/dist/ReactToastify.css';
 import { webServer } from '../../connectors/Paths';
-
 import FormValidator from '../Forms/FormValidator.js';
+import { errorMessageStyling } from '../../utils/Styles';
 
 class Login extends Component {
 
@@ -15,13 +15,6 @@ class Login extends Component {
             password: ''
         },
         errorMessage: null
-    }
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.5rem',
-        fontSize: '80%'
     }
 
     /**
@@ -152,7 +145,7 @@ class Login extends Component {
                                     <span className="invalid-feedback">Password is required</span>
                                 </div>
                             </div>
-                            {this.state.errorMessage && <p style={this.errorMessageStyling}>{this.state.errorMessage}</p>}
+                            {this.state.errorMessage && <p style={errorMessageStyling()}>{this.state.errorMessage}</p>}
                             <div className="clearfix">
                                 <CustomInput type="checkbox" id="rememberme"
                                     className="float-left mt-0"

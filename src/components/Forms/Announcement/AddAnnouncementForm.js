@@ -10,6 +10,7 @@ import {
 import { getPodAnnouncements, createPodAnnouncement, getCourseAnnouncements, createCourseAnnouncement } from '../../../connectors/Announcement';
 import Swal from 'sweetalert2';
 import FormValidator from '../FormValidator';
+import { swalConfirm, dangerText } from '../../../utils/Styles';
 
 class AddAnnouncementForm extends Component {
 
@@ -104,12 +105,12 @@ class AddAnnouncementForm extends Component {
             this.state.course ?
                 res = createCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload()) :
                 res = createPodAnnouncement(this.state.pod.id, this.constructRequestPayload());
-            
+
             this.toggleModal();
             if (res.isSuccess) {
                 Swal.fire({
                     title: "Successfully added announcement",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 this.state.course ?
@@ -121,7 +122,7 @@ class AddAnnouncementForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: res.message
                 })
             }
@@ -138,17 +139,16 @@ class AddAnnouncementForm extends Component {
         return (
             <Modal isOpen={this.state.modal}>
                 <form className="mb-3" name="formAddAnnouncement" onSubmit={this.onSubmit}>
-                    <ModalHeader toggle={this.toggleModal}>Add Announcement</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Create Announcement</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-announcementTitle">Title <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="id-announcementTitle">Title <span style={dangerText()}>*</span></label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
                                     id="id-announcementTitle"
                                     name="title"
                                     className="border-right-0"
-                                    placeholder="Announcement title"
                                     invalid={
                                         this.hasError('formAddAnnouncement', 'title', 'required')
                                         || this.hasError('formAddAnnouncement', 'title', 'len')
@@ -172,18 +172,19 @@ class AddAnnouncementForm extends Component {
                             <label className="text-muted" htmlFor="id-announcementMessage">Message</label>
                             <div className="input-group with-focus">
                                 <Input
-                                    type="text"
+                                    type="textarea"
                                     id="id-announcementMessage"
                                     name="message"
-                                    className="border-right-0"
-                                    placeholder="Announcement message"
+                                    className="border-right-0 no-resize"
                                     invalid={
                                         this.hasError('formAddAnnouncement', 'message', 'maxlen')
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["maxlen"]'
                                     data-param='4500'
-                                    value={this.state.formAddAnnouncement.message} />
+                                    value={this.state.formAddAnnouncement.message}
+                                    rows={10}
+                                />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-book"></em>

@@ -15,7 +15,7 @@ import 'react-datetime/css/react-datetime.css';
 import { createAnswerKey, getAnswerKeys } from '../../../connectors/AnswerKey';
 import QuestionTypeSelector from '../../Common/QuestionTypeSelector';
 import FormValidator from '../FormValidator';
-
+import { swalConfirm, dangerText, errorMessageStyling } from '../../../utils/Styles';
 
 class addQuestionForm extends Component {
 
@@ -37,13 +37,6 @@ class addQuestionForm extends Component {
     }
 
     alphabet = ["A", "B", "C", "D", "E"];
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
-    }
 
     toggleModal = () => {
         this.setState({
@@ -276,7 +269,7 @@ class addQuestionForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully created question",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 var params = this.state.getAnswerKeysParams
@@ -289,7 +282,7 @@ class addQuestionForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: result.message
                 })
             }
@@ -322,27 +315,28 @@ class addQuestionForm extends Component {
                                 />
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-question">Question <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-question">Question <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="textarea"
                                         id="id-question"
                                         name="question"
-                                        className="border-right-0"
-                                        placeholder="Enter question"
+                                        className="border-right-0 no-resize"
                                         invalid={
                                             this.hasError('formAddQuestion', 'question', 'required')
                                         }
                                         onChange={this.validateOnChange}
                                         data-validate='["required"]'
-                                        value={this.state.formAddQuestion.question || ''} />
+                                        value={this.state.formAddQuestion.question || ''} 
+                                        rows={5}
+                                    />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
                                     {this.state.formAddQuestion.choices.error.isNullAnswer &&
-                                        this.state.formAddQuestion.questionType != "TF" && <span style={this.errorMessageStyling}>You must select at least 1 correct answer</span>}
+                                        this.state.formAddQuestion.questionType != "TF" && <span style={errorMessageStyling()}>You must select at least 1 correct answer</span>}
                                     {this.hasError('formAddQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                 </div>
                             </div>
@@ -351,7 +345,7 @@ class addQuestionForm extends Component {
                                     i = i + 1;
                                     return (
                                         <div className="form-group">
-                                            <label className="text-muted" htmlFor={"id-Choice" + i}>Choice {e} <span style={{ color: '#f05050' }}>*</span></label>
+                                            <label className="text-muted" htmlFor={"id-Choice" + i}>Choice {e} <span style={dangerText()}>*</span></label>
                                             <div className="input-group with-focus">
                                                 <Input
                                                     type="text"
@@ -370,8 +364,8 @@ class addQuestionForm extends Component {
                                                         <em className="fa fa-book"></em>
                                                     </span>
                                                 </div>
-                                                {this.state.formAddQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Minimum two choices are required</span>}
-                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
+                                                {this.state.formAddQuestion.choices.error.isNullChoice && <span style={errorMessageStyling()}>Minimum two choices are required</span>}
+                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={errorMessageStyling()}>Can't set answer for an empty choice</span>}
                                                 <div className="input-group">
                                                     <input className="mr-2" type="radio" value={e} name="answer" onChange={(event) => {
                                                         this.setMCAnswer(event)
@@ -407,8 +401,8 @@ class addQuestionForm extends Component {
                                                         <em className="fa fa-book"></em>
                                                     </span>
                                                 </div>
-                                                {this.state.formAddQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
-                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Answer for an empty choice won't be saved</span>}
+                                                {this.state.formAddQuestion.choices.error.isNullChoice && <span style={errorMessageStyling()}>Two choices are required</span>}
+                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={errorMessageStyling()}>Answer for an empty choice won't be saved</span>}
                                                 <div className="input-group">
                                                     <input className="mr-2" type="checkbox" value={[e, i]} name="answer" onChange={this.setMAAnswer} />
                                                     <label className="text-muted pt-2">Correct Answer</label>
@@ -423,7 +417,7 @@ class addQuestionForm extends Component {
                                     <label className="text-muted pt-2">True</label>
                                     <input className="mr-2 ml-2" type="radio" value="b" name="answer" onChange={this.setTFAnswer} />
                                     <label className="text-muted pt-2">False</label>
-                                    {this.state.formAddQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
+                                    {this.state.formAddQuestion.choices.error.isNullAnswer && <span style={errorMessageStyling()}>Answer is required</span>}
                                 </div>
                                 : null}
                             {this.state.numberOfChoices < 5 && this.state.formAddQuestion.questionType != "TF" && this.state.formAddQuestion.questionType != "FF" ?

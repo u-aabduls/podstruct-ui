@@ -29,6 +29,7 @@ import { isAdmin } from '../../../utils/PermissionChecker';
 import DocumentsTable from '../../Tables/DocumentsTable';
 import { deactivatePod } from "../../../connectors/Pod";
 import Swal from 'sweetalert2';
+import { swalConfirmDanger } from '../../../utils/Styles';
 
 class PodDetail extends Component {
 
@@ -109,7 +110,7 @@ class PodDetail extends Component {
         Swal.fire({
             title: 'Are you sure you want to deactivate this pod?',
             showCancelButton: true,
-            confirmButtonColor: "#d9534f",
+            confirmButtonColor: swalConfirmDanger(),
             confirmButtonText: 'Deactivate',
         }).then((result) => {
             if (result.isConfirmed) {

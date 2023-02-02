@@ -31,6 +31,7 @@ import EditQuestionForm from '../../../Forms/Assignment/EditQuestionForm';
 import EditAssignmentForm from '../../../Forms/Assignment/EditAssignmentForm';
 import Swal from 'sweetalert2';
 import DocumentsTable from '../../../Tables/DocumentsTable';
+import { swalConfirm, errorMessageStyling } from '../../../../utils/Styles';
 
 class AssignmentDetail extends Component {
 
@@ -38,8 +39,7 @@ class AssignmentDetail extends Component {
         rolePerms: this.props.history.location.state?.rolePerms,
         assignment: '',
         questions: [],
-        editQuestionModals: {
-        },
+        editQuestionModals: {},
         addQuestionModal: false,
         editAssignmentModal: false,
         ddOpen: false,
@@ -140,7 +140,7 @@ class AssignmentDetail extends Component {
         Swal.fire({
             title: this.state.assignment.title + ' will be published and available to all users in this course',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Ok',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -149,7 +149,7 @@ class AssignmentDetail extends Component {
                 if (res.isSuccess) {
                     Swal.fire({
                         title: "Successfully published assignment",
-                        confirmButtonColor: "#5d9cec",
+                        confirmButtonColor: swalConfirm(),
                         icon: "success",
                     })
                     res = getAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
@@ -167,7 +167,7 @@ class AssignmentDetail extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the assignment?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -184,7 +184,7 @@ class AssignmentDetail extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the question?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -264,7 +264,7 @@ class AssignmentDetail extends Component {
                     </div>
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
-                    <i className="fas fa-arrow-left fa-fw btn-icon"></i>
+                    <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
                     Course Details
                 </Button>
                 <Row noGutters={true}>
@@ -405,7 +405,11 @@ class AssignmentDetail extends Component {
                                         <TabPane tabId="1">
                                             {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right" style={{ clear: 'both' }}>
-                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAddQuestionModal}>
+                                                    <button
+                                                        className="btn btn-success btn-sm mb-3 mt-2"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={this.toggleAddQuestionModal}
+                                                    >
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
                                                         Add Question
                                                     </button>
@@ -439,7 +443,11 @@ class AssignmentDetail extends Component {
                                                                 Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size}
                                                                 {!isStudent(this.state.rolePerms) ?
                                                                     <div className="float-right" style={{ clear: 'both' }}>
-                                                                        <button className="btn btn-success btn-sm mb-3" onClick={() => this.toggleEditQuestionModal(i)}>
+                                                                        <button 
+                                                                            className="btn btn-success btn-sm mb-3" 
+                                                                            onMouseDown={e => e.preventDefault()}
+                                                                            onClick={() => this.toggleEditQuestionModal(i)}
+                                                                        >
                                                                             <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
                                                                             Edit
                                                                         </button>
@@ -512,7 +520,7 @@ class AssignmentDetail extends Component {
                                                                             <strong>Answers: </strong>
                                                                         </td>
                                                                         <td>
-                                                                            {answerList ? answerList : <span className='text-warning' style={this.errorMessageStyling}>Must be manually graded</span>}
+                                                                            {answerList ? answerList : <span className='text-warning' style={errorMessageStyling()}>Must be manually graded</span>}
                                                                         </td>
                                                                     </tr>
                                                                 </Table>

@@ -13,6 +13,7 @@ import {
 } from '../../connectors/Announcement';
 import { isAdmin } from '../../utils/PermissionChecker';
 import EditAnnouncementForm from '../Forms/Announcement/EditAnnouncementForm';
+import { swalConfirm } from '../../utils/Styles';
 
 class AnnouncementsTable extends Component {
 
@@ -60,7 +61,7 @@ class AnnouncementsTable extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the announcement?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -79,7 +80,7 @@ class AnnouncementsTable extends Component {
                 Swal.fire({
                     title: 'Successfully deleted announcement',
                     icon: 'success',
-                    confirmButtonColor: "#5d9cec"
+                    confirmButtonColor: swalConfirm()
                 })
             }
         });

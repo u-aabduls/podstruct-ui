@@ -15,7 +15,7 @@ import 'react-datetime/css/react-datetime.css';
 import { getAnswerKey, getAnswerKeys, editAnswerKey } from '../../../connectors/AnswerKey';
 import QuestionTypeSelector from '../../Common/QuestionTypeSelector';
 import FormValidator from '../FormValidator';
-
+import { swalConfirm, errorMessageStyling } from '../../../utils/Styles';
 
 class editQuestionForm extends Component {
 
@@ -37,13 +37,6 @@ class editQuestionForm extends Component {
     }
 
     alphabet = ["A", "B", "C", "D", "E"];
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
-    }
 
     toggleModal = () => {
         this.props.toggle()
@@ -268,7 +261,7 @@ class editQuestionForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully edited question",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 var params = this.state.getAnswerKeysParams
@@ -281,7 +274,7 @@ class editQuestionForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: result.message
                 })
             }
@@ -337,7 +330,7 @@ class editQuestionForm extends Component {
         return (
             <div>
                 <Modal isOpen={this.state.modal}>
-                    <form className="mb-3" name="formEditQuestion" onSubmit={this.onSubmit}>z
+                    <form className="mb-3" name="formEditQuestion" onSubmit={this.onSubmit}>
                         <ModalHeader toggle={this.toggleModal}>Edit Question {this.props.questionNumber}</ModalHeader>
                         <ModalBody>
                             <div className="form-group">
@@ -355,21 +348,23 @@ class editQuestionForm extends Component {
                                         type="textarea"
                                         id="id-question"
                                         name="question"
-                                        className="border-right-0"
+                                        className="border-right-0 no-resize"
                                         placeholder="Enter question"
                                         invalid={
                                             this.hasError('formEditQuestion', 'question', 'required')
                                         }
                                         onChange={this.validateOnChange}
                                         data-validate='["required"]'
-                                        value={this.state.formEditQuestion.question || ''} />
+                                        value={this.state.formEditQuestion.question || ''} 
+                                        rows={5}
+                                    />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
                                     {this.state.formEditQuestion.choices.error.isNullAnswer &&
-                                        this.state.formEditQuestion.questionType != "TF" && <span style={this.errorMessageStyling}>You must select at least 1 correct answer</span>}
+                                        this.state.formEditQuestion.questionType != "TF" && <span style={errorMessageStyling()}>You must select at least 1 correct answer</span>}
                                     {this.hasError('formEditQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                 </div>
                             </div>
@@ -397,8 +392,8 @@ class editQuestionForm extends Component {
                                                         <em className="fa fa-book"></em>
                                                     </span>
                                                 </div>
-                                                {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
-                                                {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
+                                                {this.state.formEditQuestion.choices.error.isNullChoice && <span style={errorMessageStyling()}>Two choices are required</span>}
+                                                {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={errorMessageStyling()}>Can't set answer for an empty choice</span>}
                                                 {this.state.formEditQuestion['answer1'] === e ?
                                                     <div className="input-group">
                                                         <input className="mr-2" type="radio" value={e} name="answer" id={e} defaultChecked onChange={(event) => {
@@ -443,8 +438,8 @@ class editQuestionForm extends Component {
                                                         <em className="fa fa-book"></em>
                                                     </span>
                                                 </div>
-                                                {this.state.formEditQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
-                                                {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Answer for an empty choice won't be saved</span>}
+                                                {this.state.formEditQuestion.choices.error.isNullChoice && <span style={errorMessageStyling()}>Two choices are required</span>}
+                                                {this.state.formEditQuestion.choices.error.IsNullAnswerChoice && <span style={errorMessageStyling()}>Answer for an empty choice won't be saved</span>}
                                                 {answerList.includes(e) ?
                                                     <div className="input-group">
                                                         <input className="mr-2" type="checkbox" value={[e, i]} id={e} name="answer" defaultChecked onChange={this.setMAAnswer} />
@@ -480,13 +475,13 @@ class editQuestionForm extends Component {
                                         <div>
                                             <input className="mr-2 ml-2" type="radio" value="B" name="answer" defaultChecked onChange={this.setTFAnswer} />
                                             <label className="text-muted pt-2">False</label>
-                                            {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
+                                            {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={errorMessageStyling()}>Answer is required</span>}
                                         </div>
                                         :
                                         <div>
                                             <input className="mr-2 ml-2" type="radio" value="B" name="answer" onChange={this.setTFAnswer} />
                                             <label className="text-muted pt-2">False</label>
-                                            {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
+                                            {this.state.formEditQuestion.choices.error.isNullAnswer && <span style={errorMessageStyling()}>Answer is required</span>}
                                         </div>
                                     }
                                 </div>
