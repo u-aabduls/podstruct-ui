@@ -403,7 +403,6 @@ class AddCourseForm extends Component {
                                     id="id-courseDescription"
                                     name="description"
                                     className="border-right-0 no-resize"
-                                    placeholder="Enter course description"
                                     invalid={
                                         this.hasError('formAddCourse', 'description', 'maxlen')
                                         || this.hasError('formAddCourse', 'description', 'contains-alpha')

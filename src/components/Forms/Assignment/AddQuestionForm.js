@@ -328,14 +328,15 @@ class addQuestionForm extends Component {
                                         type="textarea"
                                         id="id-question"
                                         name="question"
-                                        className="border-right-0"
-                                        placeholder="Enter question"
+                                        className="border-right-0 no-resize"
                                         invalid={
                                             this.hasError('formAddQuestion', 'question', 'required')
                                         }
                                         onChange={this.validateOnChange}
                                         data-validate='["required"]'
-                                        value={this.state.formAddQuestion.question || ''} />
+                                        value={this.state.formAddQuestion.question || ''} 
+                                        rows={5}
+                                    />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-book"></em>

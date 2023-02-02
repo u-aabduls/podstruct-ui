@@ -264,7 +264,7 @@ class AssignmentDetail extends Component {
                     </div>
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
-                    <i className="fas fa-arrow-left fa-fw btn-icon"></i>
+                    <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
                     Course Details
                 </Button>
                 <Row noGutters={true}>
@@ -405,7 +405,11 @@ class AssignmentDetail extends Component {
                                         <TabPane tabId="1">
                                             {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right" style={{ clear: 'both' }}>
-                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAddQuestionModal}>
+                                                    <button
+                                                        className="btn btn-success btn-sm mb-3 mt-2"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={this.toggleAddQuestionModal}
+                                                    >
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
                                                         Add Question
                                                     </button>
@@ -439,7 +443,11 @@ class AssignmentDetail extends Component {
                                                                 Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size}
                                                                 {!isStudent(this.state.rolePerms) ?
                                                                     <div className="float-right" style={{ clear: 'both' }}>
-                                                                        <button className="btn btn-success btn-sm mb-3" onClick={() => this.toggleEditQuestionModal(i)}>
+                                                                        <button 
+                                                                            className="btn btn-success btn-sm mb-3" 
+                                                                            onMouseDown={e => e.preventDefault()}
+                                                                            onClick={() => this.toggleEditQuestionModal(i)}
+                                                                        >
                                                                             <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
                                                                             Edit
                                                                         </button>

@@ -202,7 +202,6 @@ class EditPodForm extends Component {
                                     id="id-description"
                                     name="description"
                                     className="border-right-0 no-resize"
-                                    placeholder="Description"
                                     invalid={
                                         this.hasError('formEditPod', 'description', 'maxlen')
                                     }

@@ -337,7 +337,7 @@ class editQuestionForm extends Component {
         return (
             <div>
                 <Modal isOpen={this.state.modal}>
-                    <form className="mb-3" name="formEditQuestion" onSubmit={this.onSubmit}>z
+                    <form className="mb-3" name="formEditQuestion" onSubmit={this.onSubmit}>
                         <ModalHeader toggle={this.toggleModal}>Edit Question {this.props.questionNumber}</ModalHeader>
                         <ModalBody>
                             <div className="form-group">
@@ -355,14 +355,16 @@ class editQuestionForm extends Component {
                                         type="textarea"
                                         id="id-question"
                                         name="question"
-                                        className="border-right-0"
+                                        className="border-right-0 no-resize"
                                         placeholder="Enter question"
                                         invalid={
                                             this.hasError('formEditQuestion', 'question', 'required')
                                         }
                                         onChange={this.validateOnChange}
                                         data-validate='["required"]'
-                                        value={this.state.formEditQuestion.question || ''} />
+                                        value={this.state.formEditQuestion.question || ''} 
+                                        rows={5}
+                                    />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-book"></em>

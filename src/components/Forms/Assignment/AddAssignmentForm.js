@@ -17,7 +17,7 @@ import { createAssignment, getAssignment } from '../../../connectors/Assignments
 import AssignmentTypeSelector from '../../Common/AssignmentTypeSelector';
 import FormValidator from '../FormValidator';
 import moment from 'moment';
-
+import { disabledText } from '../../../utils/Styles';
 
 class AddAssignmentForm extends Component {
 
@@ -43,12 +43,6 @@ class AddAssignmentForm extends Component {
 
     errorMessageStyling = {
         color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
-    }
-
-    warningMessageStyling = {
         width: '100%',
         marginTop: '0.25rem',
         fontSize: '80%'
@@ -246,6 +240,7 @@ class AddAssignmentForm extends Component {
                                     type="text"
                                     id="id-course"
                                     name="course"
+                                    style={disabledText()}
                                     className="border-right-0"
                                     disabled={true}
                                     value={this.state.course.subject || ''} />
@@ -296,8 +291,7 @@ class AddAssignmentForm extends Component {
                                         type="textarea"
                                         id="id-assignmentInstructions"
                                         name="instructions"
-                                        className="border-right-0"
-                                        placeholder="Enter assignment instructions"
+                                        className="border-right-0 no-resize"
                                         invalid={
                                             this.hasError('formAddAssignment', 'instructions', 'required')
                                             || this.hasError('formAddAssignment', 'instructions', 'maxlen')
@@ -306,7 +300,9 @@ class AddAssignmentForm extends Component {
                                         onChange={this.validateOnChange}
                                         data-validate='["required", "maxlen", "contains-alpha"]'
                                         data-param='250'
-                                        value={this.state.formAddAssignment.instructions || ''} />
+                                        value={this.state.formAddAssignment.instructions || ''} 
+                                        rows={10}
+                                    />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-book"></em>
@@ -353,7 +349,7 @@ class AddAssignmentForm extends Component {
                                     </div>
                                     {!this.state.ungraded ? this.hasError('formAddAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span> : null}
                                     {!this.state.ungraded ? this.hasError('formAddAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span> : null}
-                                    <div className="input-group">
+                                    <div className="input-group mt-2">
                                         <input className="mr-2" type="checkbox" onClick={this.toggleUngraded} />
                                         <label className="text-muted pt-2"> Ungraded</label>
                                     </div>
