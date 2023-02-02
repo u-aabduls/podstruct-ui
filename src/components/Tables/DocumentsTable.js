@@ -69,7 +69,7 @@ class DocumentsTable extends Component {
         else if (this.state.parentType == "assignment") {
             result = getAssignmentDocuments(this.getPodId(), this.getCourseId(), this.getAssignmentId());
         }
-        
+
         result.data.sort(function (a, b) {
             return (a.lastModified).localeCompare(b.lastModified);
         }).reverse();
@@ -263,42 +263,40 @@ class DocumentsTable extends Component {
                         this.state.documents.map((document) => {
                             var date = new Date(document.lastModified);
                             return (
-                                <tbody>
-                                    <tr>
-                                        <td className='date'>
-                                            <span className="text-uppercase text-bold">
-                                                {days[date.getDay()]}
-                                                {' '}
-                                                {months[date.getMonth()]}
-                                                {' '}
-                                                {date.getDate()}
-                                            </span>
-                                            <br />
-                                            <span className="h2 mt0 text-sm">
-                                                {moment(date).format("h:mm A")}
-                                            </span>
-                                        </td>
-                                        <td className="announcement">
-                                            <a className="h4 text-bold pointer" onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}>
-                                                {document.fileName}
-                                            </a>
-                                            <br />
-                                            {document.fileSize}
-                                        </td>
-                                        <td className="buttons">
-                                            {isAdmin(this.state.role) ?
-                                                <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger"
-                                                        onMouseDown={e => e.preventDefault()}
-                                                        onClick={() => this.deleteDocument(document.fileName)}>
-                                                        <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                    </Button>
-                                                </div>
-                                                : null
-                                            }
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <td className='date'>
+                                        <span className="text-uppercase text-bold">
+                                            {days[date.getDay()]}
+                                            {' '}
+                                            {months[date.getMonth()]}
+                                            {' '}
+                                            {date.getDate()}
+                                        </span>
+                                        <br />
+                                        <span className="h2 mt0 text-sm">
+                                            {moment(date).format("h:mm A")}
+                                        </span>
+                                    </td>
+                                    <td className="announcement">
+                                        <a className="h4 text-bold pointer" onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}>
+                                            {document.fileName}
+                                        </a>
+                                        <br />
+                                        {document.fileSize}
+                                    </td>
+                                    <td className="buttons">
+                                        {isAdmin(this.state.role) ?
+                                            <div className='button-container'>
+                                                <Button className="btn btn-secondary btn-sm bg-danger"
+                                                    onMouseDown={e => e.preventDefault()}
+                                                    onClick={() => this.deleteDocument(document.fileName)}>
+                                                    <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                </Button>
+                                            </div>
+                                            : null
+                                        }
+                                    </td>
+                                </tr>
                             )
                         }
                         )

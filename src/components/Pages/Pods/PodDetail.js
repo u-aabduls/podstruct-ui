@@ -109,6 +109,7 @@ class PodDetail extends Component {
     deactivate = (podId) => {
         Swal.fire({
             title: 'Are you sure you want to deactivate this pod?',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: swalConfirmDanger(),
             confirmButtonText: 'Deactivate',
@@ -145,7 +146,11 @@ class PodDetail extends Component {
                         <small>View and edit your pod</small>
                     </div>
                     <div className="ml-auto">
-                        <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
+                        <Dropdown 
+                            isOpen={this.state.ddOpen} 
+                            toggle={this.toggleDD}
+                            onMouseDown={e => e.preventDefault()}
+                        >
                             <DropdownToggle>
                                 <em className="fas fa-ellipsis-v fa-lg"></em>
                             </DropdownToggle>

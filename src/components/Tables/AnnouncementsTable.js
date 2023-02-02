@@ -117,48 +117,46 @@ class AnnouncementsTable extends Component {
                         this.state.announcements.map((announcement) => {
                             var date = new Date(announcement.date * 1000);
                             return (
-                                <tbody>
-                                    <tr>
-                                        <td className='date'>
-                                            <span className="text-uppercase text-bold">
-                                                {days[date.getDay()]}
-                                                {' '}
-                                                {months[date.getMonth()]}
-                                                {' '}
-                                                {date.getDate()}
-                                            </span>
-                                            <br />
-                                            <span className="h2 mt0 text-sm">
-                                                {moment(date).format("h:mm A")}
-                                            </span>
-                                        </td>
-                                        <td className="announcement">
-                                            <span className="h4 text-bold">{announcement.title}</span>
-                                            <br />
-                                            <span>{announcement.message}</span>
-                                        </td>
-                                        <td className="buttons">
-                                            {isAdmin(this.state.rolePerms) ?
-                                                <Button
-                                                    className="btn btn-sm bg-primary mr-1"
-                                                    onMouseDown={e => e.preventDefault()}
-                                                    onClick={() => this.toggleEditAnnouncementModal(announcement)}>
-                                                    <i className="fas icon-pencil fa-fw btn-icon"></i>
-                                                </Button>
-                                                : null
-                                            }
-                                            {isAdmin(this.state.rolePerms) ?
-                                                <Button
-                                                    className="btn btn-sm bg-danger"
-                                                    onMouseDown={e => e.preventDefault()}
-                                                    onClick={() => { this.deleteAnnouncement(announcement.date) }}>
-                                                    <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                </Button>
-                                                : null
-                                            }
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <td className='date'>
+                                        <span className="text-uppercase text-bold">
+                                            {days[date.getDay()]}
+                                            {' '}
+                                            {months[date.getMonth()]}
+                                            {' '}
+                                            {date.getDate()}
+                                        </span>
+                                        <br />
+                                        <span className="h2 mt0 text-sm">
+                                            {moment(date).format("h:mm A")}
+                                        </span>
+                                    </td>
+                                    <td className="announcement">
+                                        <span className="h4 text-bold">{announcement.title}</span>
+                                        <br />
+                                        <span>{announcement.message}</span>
+                                    </td>
+                                    <td className="buttons">
+                                        {isAdmin(this.state.rolePerms) ?
+                                            <Button
+                                                className="btn btn-sm bg-primary mr-1"
+                                                onMouseDown={e => e.preventDefault()}
+                                                onClick={() => this.toggleEditAnnouncementModal(announcement)}>
+                                                <i className="fas icon-pencil fa-fw btn-icon"></i>
+                                            </Button>
+                                            : null
+                                        }
+                                        {isAdmin(this.state.rolePerms) ?
+                                            <Button
+                                                className="btn btn-sm bg-danger"
+                                                onMouseDown={e => e.preventDefault()}
+                                                onClick={() => { this.deleteAnnouncement(announcement.date) }}>
+                                                <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                            </Button>
+                                            : null
+                                        }
+                                    </td>
+                                </tr>
                             )
                         }
                         )
