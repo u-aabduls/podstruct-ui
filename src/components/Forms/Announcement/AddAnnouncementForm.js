@@ -194,9 +194,15 @@ class AddAnnouncementForm extends Component {
                             </div>
                         </div>
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter style={{paddingBottom: '0'}}>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Publish</Button>{' '}
+                        <Button 
+                            color="primary" 
+                            type="submit"
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Publish
+                        </Button>
                     </ModalFooter>
                 </form>
             </Modal>

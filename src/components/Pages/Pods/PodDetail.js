@@ -45,11 +45,6 @@ class PodDetail extends Component {
         activeTab: '1',
     }
 
-    contentSubHeadingStyle = {
-        display: 'flex',
-        justifyContent: `space-between`
-    }
-
     toggleDD = () => this.setState({
         ddOpen: !this.state.ddOpen
     })
@@ -173,7 +168,7 @@ class PodDetail extends Component {
                         />
                     </div>
                 </div>
-                <div style={this.contentSubHeadingStyle}>
+                <div style={{ display: 'flex', justifyContent: `space-between` }}>
                     <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
                             onClick={() => this.props.history.goBack()}>
                         <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>

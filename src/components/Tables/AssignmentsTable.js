@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import {
-    Button,
-    Table
-} from 'reactstrap';
+import { Button, Table } from 'reactstrap';
 import moment from 'moment';
 import { getAssignments, deleteAssignment, publishAssignment } from '../../connectors/Assignments';
 import { isAdmin, isStudent } from '../../utils/PermissionChecker';
@@ -56,7 +53,6 @@ class AssignmentsTable extends Component {
             title: assignmentTitle + 'will be published and available to all users in this course',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
-            confirmButtonText: 'Ok',
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state
@@ -101,8 +97,16 @@ class AssignmentsTable extends Component {
     }
 
     assignmentDetailRedirect = (event, assignmentId) => {
-        if (event.target.id === 'button') return;
-        this.props.history.push(`/course/assignment/details/${assignmentId}`, { podID: this.state.course.podId, course: this.state.course, rolePerms: this.state.rolePerms })
+        if (event.target.id === 'buttonPublish' 
+            || event.target.id === 'buttonPublishIcon'
+            || event.target.id === 'buttonDelete' 
+            || event.target.id === 'buttonDeleteIcon'){ 
+                return; 
+        }
+        this.props.history.push(
+            `/course/assignment/details/${assignmentId}`, 
+            { podID: this.state.course.podId, course: this.state.course, rolePerms: this.state.rolePerms }
+        )
     }
 
     componentDidMount() {
@@ -186,29 +190,39 @@ class AssignmentsTable extends Component {
                                         </td>
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
-                                                !assignment.published ?
-                                                    <div className='button-container'>
-                                                        <button className="btn btn-success btn-sm" id='button' onClick={() => this.publish(assignment.id, assignment.title)}>
-                                                            <i className="fa fa-cloud fa-sm button-create-icon"></i>
-                                                            Publish
-                                                        </button>
-                                                    </div>
-                                                    : <div className='button-container'>
-                                                        <button disabled className="btn btn-success btn-sm" id='button'>
-                                                            <i className="fa fa-cloud fa-sm button-create-icon"></i>
-                                                            Publish
-                                                        </button>
-                                                    </div>
+                                                <Button
+                                                    id='buttonDelete'
+                                                    className="btn btn-secondary btn-sm bg-danger"
+                                                    style={{float: 'right'}}
+                                                    onMouseDown={e => e.preventDefault()}
+                                                    onClick={() => this.deleteAssignments(assignment.id)}
+                                                >
+                                                    <i id='buttonDeleteIcon' className="fas fa-trash-alt fa-fw btn-icon" ></i>
+                                                </Button>
                                                 : null
                                             }
-                                        </td>
-                                        <td className="buttons">
                                             {isAdmin(this.state.rolePerms) ?
-                                                <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAssignments(assignment.id)}>
-                                                        <i className="fas fa-trash-alt fa-fw btn-icon" id='button'></i>
-                                                    </Button>
-                                                </div>
+                                                !assignment.published ?
+                                                    <button
+                                                        id='buttonPublish'
+                                                        className="btn btn-primary btn-sm btn-success mr-1"
+                                                        style={{float: 'right'}}
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={() => this.publish(assignment.id, assignment.title)}
+                                                    >
+                                                        <i id='buttonPublishIcon' className="fas fa-cloud fa-sm button-create-icon"></i>
+                                                        Publish
+                                                    </button>
+                                                    :
+                                                    <button
+                                                        id='buttonPublish'
+                                                        className="btn btn-primary btn-success btn-sm mr-1"
+                                                        style={{float: 'right'}}
+                                                        disabled
+                                                    >
+                                                        <i id='buttonPublishIcon' className="fas fa-cloud fa-sm button-create-icon"></i>
+                                                        Publish
+                                                    </button>
                                                 : null
                                             }
                                         </td>

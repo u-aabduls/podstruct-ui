@@ -3,8 +3,6 @@ import { withRouter } from 'react-router';
 import {
     Button,
     Input,
-    Row,
-    Col,
     Modal,
     ModalHeader,
     ModalBody,
@@ -17,7 +15,7 @@ import QuestionTypeSelector from '../../Common/QuestionTypeSelector';
 import FormValidator from '../FormValidator';
 import { swalConfirm, dangerText, errorMessageStyling } from '../../../utils/Styles';
 
-class addQuestionForm extends Component {
+class AddQuestionForm extends Component {
 
     state = {
         formAddQuestion: {
@@ -422,14 +420,27 @@ class addQuestionForm extends Component {
                                 : null}
                             {this.state.numberOfChoices < 5 && this.state.formAddQuestion.questionType != "TF" && this.state.formAddQuestion.questionType != "FF" ?
                                 <div>
-                                    <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "40%" }} onClick={this.addChoice}>Add Choice</Button>
+                                    <Button 
+                                        className="btn btn-secondary btn-sm" 
+                                        style={{ marginLeft: "40%" }} 
+                                        onClick={this.addChoice}
+                                        onMouseDown={e => e.preventDefault()}
+                                    >
+                                        Add Choice
+                                    </Button>
                                 </div>
                                 : null}
 
                         </ModalBody>
-                        <ModalFooter>
+                        <ModalFooter style={{paddingBottom: '0'}}>
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            <Button color="primary" type="submit">Add</Button>{' '}
+                            <Button 
+                                color="primary" 
+                                type="submit"
+                                onMouseDown={e => e.preventDefault()}
+                            >
+                                Add
+                            </Button>
                         </ModalFooter>
                     </form>
                 </Modal>
@@ -438,4 +449,4 @@ class addQuestionForm extends Component {
     }
 }
 
-export default withRouter(addQuestionForm)
+export default withRouter(AddQuestionForm)

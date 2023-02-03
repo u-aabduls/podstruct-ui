@@ -139,19 +139,23 @@ class AnnouncementsTable extends Component {
                                     <td className="buttons">
                                         {isAdmin(this.state.rolePerms) ?
                                             <Button
-                                                className="btn btn-sm bg-primary mr-1"
+                                                className="btn btn-sm bg-danger"
+                                                style={{float: 'right'}}
                                                 onMouseDown={e => e.preventDefault()}
-                                                onClick={() => this.toggleEditAnnouncementModal(announcement)}>
-                                                <i className="fas icon-pencil fa-fw btn-icon"></i>
+                                                onClick={() => { this.deleteAnnouncement(announcement.date) }}
+                                            >
+                                                <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                             </Button>
                                             : null
                                         }
                                         {isAdmin(this.state.rolePerms) ?
                                             <Button
-                                                className="btn btn-sm bg-danger"
+                                                className="btn btn-sm bg-primary mr-1"
+                                                style={{float: 'right'}}
                                                 onMouseDown={e => e.preventDefault()}
-                                                onClick={() => { this.deleteAnnouncement(announcement.date) }}>
-                                                <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                onClick={() => this.toggleEditAnnouncementModal(announcement)}
+                                            >
+                                                <i className="fas icon-pencil fa-fw btn-icon"></i>
                                             </Button>
                                             : null
                                         }

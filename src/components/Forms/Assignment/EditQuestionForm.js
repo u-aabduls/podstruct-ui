@@ -488,9 +488,15 @@ class editQuestionForm extends Component {
                                 : null}
 
                         </ModalBody>
-                        <ModalFooter>
+                        <ModalFooter style={{paddingBottom: '0'}}>
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            <Button color="primary" type="submit">Save</Button>{' '}
+                            <Button 
+                                color="primary" 
+                                type="submit"
+                                onMouseDown={e => e.preventDefault()}
+                            >
+                                Save
+                            </Button>
                         </ModalFooter>
                     </form>
                 </Modal>

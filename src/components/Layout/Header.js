@@ -24,7 +24,6 @@ class Header extends Component {
     toggleOffsidebar = e => {
         e.preventDefault()
         this.props.actions.toggleSetting('offsidebarOpen');
-        
     }
 
     toggleCollapsed = e => {
