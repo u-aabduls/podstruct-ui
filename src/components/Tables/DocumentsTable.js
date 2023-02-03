@@ -277,7 +277,7 @@ class DocumentsTable extends Component {
                                             {moment(date).format("h:mm A")}
                                         </span>
                                     </td>
-                                    <td className="announcement">
+                                    <td className="document">
                                         <a className="h4 text-bold pointer" onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}>
                                             {document.fileName}
                                         </a>
@@ -287,9 +287,12 @@ class DocumentsTable extends Component {
                                     <td className="buttons">
                                         {isAdmin(this.state.role) ?
                                             <div className='button-container'>
-                                                <Button className="btn btn-secondary btn-sm bg-danger"
+                                                <Button 
+                                                    className="btn btn-secondary btn-sm bg-danger"
+                                                    style={{float: 'right'}}
                                                     onMouseDown={e => e.preventDefault()}
-                                                    onClick={() => this.deleteDocument(document.fileName)}>
+                                                    onClick={() => this.deleteDocument(document.fileName)}
+                                                >
                                                     <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                                 </Button>
                                             </div>

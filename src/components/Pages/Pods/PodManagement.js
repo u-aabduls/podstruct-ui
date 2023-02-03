@@ -59,7 +59,7 @@ class PodManagement extends Component {
     render() {
         return (
             <ContentWrapper>
-                <div className="content-heading" style={this.contentHeadingStyle}>
+                <div className="content-heading" style={{ marginBottom: `1rem`, justifyContent: `space-between` }}>
                     <div>
                         Pods
                         <small>Create and view pods</small>

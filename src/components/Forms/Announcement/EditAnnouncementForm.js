@@ -212,17 +212,13 @@ class EditAnnouncementForm extends Component {
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button
-                            color="secondary"
-                            onClick={this.toggleModal}>
-                            Cancel
-                        </Button>
+                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                         <Button
                             color="primary"
                             type="submit"
                             onMouseDown={e => e.preventDefault()}>
                             Save
-                        </Button>{' '}
+                        </Button>
                     </ModalFooter>
                 </form>
             </Modal>

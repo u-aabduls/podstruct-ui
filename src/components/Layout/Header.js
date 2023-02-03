@@ -24,7 +24,6 @@ class Header extends Component {
     toggleOffsidebar = e => {
         e.preventDefault()
         this.props.actions.toggleSetting('offsidebarOpen');
-        
     }
 
     toggleCollapsed = e => {
@@ -87,7 +86,7 @@ class Header extends Component {
                         { /* START Offsidebar button */ }
                         <li className="nav-item">
                             <a className="nav-link" href="" onClick={this.toggleOffsidebar}>
-                                <em className="icon-user"></em>
+                                <em id="settingsToggle" className="icon-user"></em>
                             </a>
                         </li>
                         { /* END Offsidebar menu */ }

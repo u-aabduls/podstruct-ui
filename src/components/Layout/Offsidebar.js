@@ -20,10 +20,14 @@ class Offsidebar extends Component {
     }
 
     handleClickOutside = event => {
+        if (event.target.id === "settingsToggle") return;
+        
         const domNode = ReactDOM.findDOMNode(this);
     
         if (!domNode || !domNode.contains(event.target)) {
-            if (this.props.settings.offsidebarOpen) this.toggleOffsidebar();
+            if (this.props.settings.offsidebarOpen) {
+                this.toggleOffsidebar();   
+            }
         }
     }
 
@@ -42,7 +46,6 @@ class Offsidebar extends Component {
     settingsRedirect = e => {
         this.toggleOffsidebar();
         this.props.history.push('/settings')
-
     }
 
     logout = e => {

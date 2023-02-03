@@ -258,9 +258,15 @@ class AddUserForm extends Component {
                             {this.state.formAddUser.selector.error.isNullRole && <p style={errorMessageStyling()}>Role is required</p>}
                         </div>
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter style={{paddingBottom: '0'}}>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Add User</Button>{' '}
+                        <Button 
+                            color="primary" 
+                            type="submit"
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Add User
+                        </Button>
                     </ModalFooter>
                 </form>
             </Modal>
