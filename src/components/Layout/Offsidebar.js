@@ -20,6 +20,8 @@ class Offsidebar extends Component {
     }
 
     handleClickOutside = event => {
+        if (event.target.id === "settingsToggle") return;
+        
         const domNode = ReactDOM.findDOMNode(this);
     
         if (!domNode || !domNode.contains(event.target)) {
