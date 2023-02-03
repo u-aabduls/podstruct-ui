@@ -219,7 +219,9 @@ class DocumentsTable extends Component {
         } else {
             if (this.checkFileExists(loadedFile.name)) {
                 Swal.fire({
-                    title: 'Are you sure you want to overwrite this file?',
+                    title: 'A file with the same name already exists',
+                    icon: 'warning',
+                    text: '\'' + loadedFile.name + '\' will be overwritten',
                     showCancelButton: true,
                     confirmButtonColor: swalConfirm(),
                     confirmButtonText: 'Upload',
