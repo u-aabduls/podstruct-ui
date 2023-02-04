@@ -5,7 +5,7 @@ import moment from 'moment';
 import { getAssignments, deleteAssignment, publishAssignment } from '../../connectors/Assignments';
 import { isAdmin, isStudent } from '../../utils/PermissionChecker';
 import Swal from 'sweetalert2';
-import { swalConfirm } from '../../utils/Styles';
+import { buttonLightGreyBorder, swalConfirm } from '../../utils/Styles';
 
 class AssignmentsTable extends Component {
 
@@ -50,9 +50,10 @@ class AssignmentsTable extends Component {
 
     publish = (assignmentId, assignmentTitle) => {
         Swal.fire({
-            title: assignmentTitle + 'will be published and available to all users in this course',
-            showCancelButton: true,
+            title: assignmentTitle + ' will be published and available to all users in this course',
             confirmButtonColor: swalConfirm(),
+            confirmButtonText: 'Publish',
+            showCancelButton: true
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state
@@ -189,11 +190,11 @@ class AssignmentsTable extends Component {
                                             {assignment.published ? <span>Published</span> : <span>Unpublished</span>}
                                         </td>
                                         <td className="buttons">
+                                            <div>
                                             {isAdmin(this.state.rolePerms) ?
                                                 <Button
                                                     id='buttonDelete'
-                                                    className="btn btn-secondary btn-sm bg-danger"
-                                                    style={{float: 'right'}}
+                                                    className="btn btn-secondary btn-sm bg-danger float-right"
                                                     onMouseDown={e => e.preventDefault()}
                                                     onClick={() => this.deleteAssignments(assignment.id)}
                                                 >
@@ -205,26 +206,26 @@ class AssignmentsTable extends Component {
                                                 !assignment.published ?
                                                     <button
                                                         id='buttonPublish'
-                                                        className="btn btn-primary btn-sm btn-success mr-1"
-                                                        style={{float: 'right'}}
+                                                        className="btn btn-primary btn-sm btn-info mr-1 float-right"
+                                                        title="Publish"
+                                                        style={buttonLightGreyBorder()}
                                                         onMouseDown={e => e.preventDefault()}
                                                         onClick={() => this.publish(assignment.id, assignment.title)}
                                                     >
-                                                        <i id='buttonPublishIcon' className="fas fa-cloud fa-sm button-create-icon"></i>
-                                                        Publish
+                                                        <i id='buttonPublishIcon' className="fas fa-upload fa-fw btn-icon"></i>
                                                     </button>
                                                     :
                                                     <button
                                                         id='buttonPublish'
-                                                        className="btn btn-primary btn-success btn-sm mr-1"
-                                                        style={{float: 'right'}}
+                                                        className="btn btn-primary btn-info btn-sm mr-1 float-right"
+                                                        style={buttonLightGreyBorder()}
                                                         disabled
                                                     >
-                                                        <i id='buttonPublishIcon' className="fas fa-cloud fa-sm button-create-icon"></i>
-                                                        Publish
+                                                        <i id='buttonPublishIcon' className="fas fa-upload fa-fw btn-icon"></i>
                                                     </button>
                                                 : null
                                             }
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>

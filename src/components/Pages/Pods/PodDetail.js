@@ -303,7 +303,7 @@ class PodDetail extends Component {
                                                         onMouseDown={e => e.preventDefault()}
                                                         onClick={this.toggleUserModal}>
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                        Add User
+                                                        Invite User
                                                     </button>
                                                 </div>
                                                 : null

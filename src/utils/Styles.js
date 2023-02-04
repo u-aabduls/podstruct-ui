@@ -39,6 +39,12 @@ function disabledInputStyling() {
     }
 }
 
+function buttonLightGreyBorder() {
+    return {
+        borderColor: '#eaeaea'
+    }
+}
+
 export {
     disabledText,
     dangerText,
@@ -46,5 +52,6 @@ export {
     swalConfirmDanger,
     changedMessageStyling,
     errorMessageStyling,
-    disabledInputStyling
+    disabledInputStyling,
+    buttonLightGreyBorder
 }

@@ -31,7 +31,7 @@ import EditQuestionForm from '../../../Forms/Assignment/EditQuestionForm';
 import EditAssignmentForm from '../../../Forms/Assignment/EditAssignmentForm';
 import Swal from 'sweetalert2';
 import DocumentsTable from '../../../Tables/DocumentsTable';
-import { swalConfirm, errorMessageStyling } from '../../../../utils/Styles';
+import { swalConfirm, errorMessageStyling, buttonLightGreyBorder } from '../../../../utils/Styles';
 
 class AssignmentDetail extends Component {
 
@@ -141,7 +141,6 @@ class AssignmentDetail extends Component {
             title: this.state.assignment.title + ' will be published and available to all users in this course',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
-            confirmButtonText: 'Ok',
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state
@@ -351,17 +350,6 @@ class AssignmentDetail extends Component {
                                         </span>
                                     </div>
                                     : null}
-                                {isAdmin(this.state.rolePerms) ?
-                                    !this.state.assignment.published ?
-                                        <div className='button-container'>
-                                            <button className="btn btn-success btn-sm" id='button' onClick={this.publish}>
-                                                <i className="fa fa-cloud fa-sm button-create-icon"></i>
-                                                Publish
-                                            </button>
-                                        </div>
-                                        : null
-                                    : null
-                                }
                             </div>
                         </div>
                         {/* END card */}
@@ -404,15 +392,27 @@ class AssignmentDetail extends Component {
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
                                             {!isStudent(this.state.rolePerms) ?
-                                                <div className="float-right" style={{ clear: 'both' }}>
+                                                <div className="float-right">
                                                     <button
-                                                        className="btn btn-success btn-sm mb-3 mt-2"
+                                                        className="btn btn-primary btn-sm mb-3 mt-2 mr-1"
                                                         onMouseDown={e => e.preventDefault()}
                                                         onClick={this.toggleAddQuestionModal}
                                                     >
-                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                        <i className="fa fa-plus-circle fa-sm button-create-icon"></i>
                                                         Add Question
                                                     </button>
+                                                    {
+                                                        !this.state.assignment.published ?
+                                                            <button
+                                                                className="btn btn-info btn-sm mb-3 mt-2"
+                                                                onMouseDown={e => e.preventDefault()}
+                                                                onClick={this.publish}
+                                                            >
+                                                                <i className="fas fa-upload fa-fw button-create-icon mr-1"></i>
+                                                                Publish
+                                                            </button>
+                                                            : null
+                                                    }
                                                 </div>
                                                 : null
                                             }
@@ -439,25 +439,30 @@ class AssignmentDetail extends Component {
                                                     answers.sort();
                                                     return (
                                                         <Card outline color="dark" className="mt-5 card-default" style={{ clear: 'both', width: '60%', margin: "auto" }}>
-                                                            <CardHeader><CardTitle tag="h3">
-                                                                Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size}
-                                                                {!isStudent(this.state.rolePerms) ?
-                                                                    <div className="float-right" style={{ clear: 'both' }}>
-                                                                        <button 
-                                                                            className="btn btn-success btn-sm mb-3" 
-                                                                            onMouseDown={e => e.preventDefault()}
-                                                                            onClick={() => this.toggleEditQuestionModal(i)}
-                                                                        >
-                                                                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                                            Edit
-                                                                        </button>
-                                                                        <button className="btn btn-secondary btn-sm bg-danger ml-1 mb-3"
-                                                                            onClick={() => this.deleteQuestion(question.id)}>
-                                                                            <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                    : null
-                                                                }</CardTitle></CardHeader>
+                                                            <CardHeader>
+                                                                <CardTitle tag="h3">
+                                                                    Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size}
+                                                                    {!isStudent(this.state.rolePerms) ?
+                                                                        <div className="float-right">
+                                                                            <Button
+                                                                                className="btn bg-info btn-sm mr-1 mb-3"
+                                                                                onMouseDown={e => e.preventDefault()}
+                                                                                onClick={() => this.toggleEditQuestionModal(i)}
+                                                                            >
+                                                                                <i className="fas fa-edit fa-fw btn-icon"></i>
+                                                                            </Button>
+                                                                            <Button 
+                                                                                className="btn btn-sm bg-danger mb-3"
+                                                                                onMouseDown={e => e.preventDefault()}
+                                                                                onClick={() => this.deleteQuestion(question.id)}
+                                                                            >
+                                                                                <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                                            </Button>
+                                                                        </div>
+                                                                        : null
+                                                                    }
+                                                                </CardTitle>
+                                                            </CardHeader>
                                                             <EditQuestionForm
                                                                 podId={this.props.history.location.state?.podID}
                                                                 courseId={this.props.history.location.state?.course.id}

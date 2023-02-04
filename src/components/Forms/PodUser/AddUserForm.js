@@ -209,7 +209,7 @@ class AddUserForm extends Component {
         return (
             <Modal isOpen={this.state.modal}>
                 <form className="mb-3" name="formAddUser" onSubmit={this.onSubmit}>
-                    <ModalHeader toggle={this.toggleModal}>Add User</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Invite User</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="pod">Pod</label>
@@ -265,7 +265,7 @@ class AddUserForm extends Component {
                             type="submit"
                             onMouseDown={e => e.preventDefault()}
                         >
-                            Add User
+                            Invite
                         </Button>
                     </ModalFooter>
                 </form>

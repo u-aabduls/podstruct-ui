@@ -139,8 +139,7 @@ class AnnouncementsTable extends Component {
                                     <td className="buttons">
                                         {isAdmin(this.state.rolePerms) ?
                                             <Button
-                                                className="btn btn-sm bg-danger"
-                                                style={{float: 'right'}}
+                                                className="btn btn-sm bg-danger float-right"
                                                 onMouseDown={e => e.preventDefault()}
                                                 onClick={() => { this.deleteAnnouncement(announcement.date) }}
                                             >
@@ -150,12 +149,11 @@ class AnnouncementsTable extends Component {
                                         }
                                         {isAdmin(this.state.rolePerms) ?
                                             <Button
-                                                className="btn btn-sm bg-primary mr-1"
-                                                style={{float: 'right'}}
+                                                className="btn btn-sm bg-info mr-1 float-right"
                                                 onMouseDown={e => e.preventDefault()}
                                                 onClick={() => this.toggleEditAnnouncementModal(announcement)}
                                             >
-                                                <i className="fas icon-pencil fa-fw btn-icon"></i>
+                                                <i className="fas fa-edit fa-fw btn-icon"></i>
                                             </Button>
                                             : null
                                         }

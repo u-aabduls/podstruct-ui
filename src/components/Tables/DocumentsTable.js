@@ -290,8 +290,7 @@ class DocumentsTable extends Component {
                                         {isAdmin(this.state.role) ?
                                             <div className='button-container'>
                                                 <Button 
-                                                    className="btn btn-secondary btn-sm bg-danger"
-                                                    style={{float: 'right'}}
+                                                    className="btn btn-secondary btn-sm bg-danger float-right"
                                                     onMouseDown={e => e.preventDefault()}
                                                     onClick={() => this.deleteDocument(document.fileName)}
                                                 >
