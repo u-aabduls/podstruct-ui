@@ -139,8 +139,9 @@ class AssignmentDetail extends Component {
     publish = () => {
         Swal.fire({
             title: this.state.assignment.title + ' will be published and available to all users in this course',
-            showCancelButton: true,
             confirmButtonColor: swalConfirm(),
+            confirmButtonText: 'Publish',
+            showCancelButton: true
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state
