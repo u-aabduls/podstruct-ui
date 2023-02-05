@@ -15,6 +15,8 @@ import 'react-datetime/css/react-datetime.css';
 import { createAnswerKey, getAnswerKeys } from '../../../connectors/AnswerKey';
 import QuestionTypeSelector from '../../Common/QuestionTypeSelector';
 import FormValidator from '../FormValidator';
+import { isObject } from 'core-js/library/core/object';
+import { join } from 'core-js/fn/array';
 
 
 class addQuestionForm extends Component {
@@ -26,7 +28,7 @@ class addQuestionForm extends Component {
             choices: {
                 error: {
                     isNullAnswer: false,
-                    IsNullAnswerChoice: false,
+                    isNullAnswerChoice: false,
                     isNullChoice: false,
                 }
             }
@@ -53,7 +55,7 @@ class addQuestionForm extends Component {
                 choices: {
                     error: {
                         isNullAnswer: false,
-                        IsNullAnswerChoice: false,
+                        isNullAnswerChoice: false,
                         isNullChoice: false,
                     }
                 }
@@ -72,28 +74,23 @@ class addQuestionForm extends Component {
         var stateCopy = this.state.formAddQuestion;
         // don't allow assigning answer if empty choice
         if (!this.state.formAddQuestion['choice' + event.target.value]) {
-            stateCopy.choices.error.IsNullAnswerChoice = true;
-            this.setState(stateCopy);
             return;
         }
         stateCopy['answer1'] = event.target.value;
-        stateCopy.choices.error.IsNullAnswerChoice = false;
         this.setState(stateCopy);
+        this.validateMCQuestion();
     }
 
     setMAAnswer = (event) => {
         var stateCopy = this.state.formAddQuestion;
         // don't allow assigning answer if empty choice
-        if (!this.state.formAddQuestion['choice' + event.target.value[0]]) {
-            stateCopy.choices.error.IsNullAnswerChoice = true;
-            this.setState(stateCopy);
+        if (!this.state.formAddQuestion['choice' + event.target.attributes.element.value]) {
             return;
         }
         if (event.target.checked) {
-            stateCopy['answer' + event.target.value[2]] = event.target.value[0];
-            stateCopy.choices.error.IsNullAnswerChoice = false;
+            stateCopy['answer' + event.target.attributes.index.value] = event.target.value;
         }
-        else stateCopy['answer' + event.target.value[2]] = ""
+        else stateCopy['answer' + event.target.attributes.index.value] = ""
 
         this.setState(stateCopy);
     }
@@ -102,6 +99,7 @@ class addQuestionForm extends Component {
         var stateCopy = this.state.formAddQuestion
         stateCopy['answer1'] = event.target.value
         this.setState(stateCopy)
+        this.validateTFQuestion();
     }
 
     setType = (type) => {
@@ -112,7 +110,7 @@ class addQuestionForm extends Component {
                 choices: {
                     error: {
                         isNullAnswer: false,
-                        IsNullAnswerChoice: false,
+                        isNullAnswerChoice: false,
                         isNullChoice: false,
                     }
                 }
@@ -120,13 +118,28 @@ class addQuestionForm extends Component {
         })
     }
 
+    updateAnswer = (event, element, index, callback) => {
+        this.setState({
+            ...this.state,
+            ['choice' + element]: event.target.value,
+            formAddQuestion: {
+                ...this.state.formAddQuestion,
+                ['choice' + element]: event.target.value,
+                ['answer' + index]: event.target.value
+            },
+        }, callback);
+    }
+
     validateMCQuestion = () => {
         var numberOfChoices = 0;
         var isNullAnswer = false;
         var isNullChoice = true;
+        var isNullAnswerChoice = false;
+
         if (!this.state.formAddQuestion.answer1) isNullAnswer = true;
         for (let i = 0; i < this.state.numberOfChoices; i++) {
             if (this.state.formAddQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
+            if (document.getElementById('answer' + (i + 1))?.checked && !this.state.formAddQuestion['choice' + this.alphabet[i]]) isNullAnswerChoice = true;
             if (numberOfChoices >= 2) {
                 isNullChoice = false;
             }
@@ -134,18 +147,21 @@ class addQuestionForm extends Component {
         var stateCopy = this.state.formAddQuestion;
         stateCopy.choices.error.isNullAnswer = isNullAnswer ? true : false;
         stateCopy.choices.error.isNullChoice = isNullChoice ? true : false;
+        stateCopy.choices.error.isNullAnswerChoice = isNullAnswerChoice ? true : false;
         this.setState(stateCopy);
-        return isNullAnswer || isNullChoice;
+        return isNullAnswer || isNullChoice || isNullAnswerChoice;
     }
 
     validateMAQuestion = () => {
         var numberOfChoices = 0;
         var isNullAnswer = true;
         var isNullChoice = true;
+        var isNullAnswerChoice = false;
 
         for (let i = 0; i < this.state.numberOfChoices; i++) {
             if (this.state.formAddQuestion['answer' + (i + 1)]) isNullAnswer = false;
             if (this.state.formAddQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
+            if (document.getElementById('answer' + (i + 1))?.checked && !this.state.formAddQuestion['choice' + this.alphabet[i]]) isNullAnswerChoice = true;
             if (numberOfChoices >= 2) {
                 isNullChoice = false;
             }
@@ -153,8 +169,9 @@ class addQuestionForm extends Component {
         var stateCopy = this.state.formAddQuestion;
         stateCopy.choices.error.isNullAnswer = isNullAnswer ? true : false;
         stateCopy.choices.error.isNullChoice = isNullChoice ? true : false;
+        stateCopy.choices.error.isNullAnswerChoice = isNullAnswerChoice ? true : false;
         this.setState(stateCopy);
-        return isNullAnswer || isNullChoice;
+        return isNullAnswer || isNullChoice || isNullAnswerChoice;
     }
 
     validateTFQuestion = () => {
@@ -171,7 +188,7 @@ class addQuestionForm extends Component {
      * @param  {String} formName The name of the form in the state object
      * @return {Function} a function used for the event
      */
-    validateOnChange = event => {
+    validateOnChange = (event, callback) => {
         const input = event.target;
         const form = input.form
         const value = input.type === 'checkbox' ? input.checked : input.value;
@@ -186,9 +203,7 @@ class addQuestionForm extends Component {
                     [input.name]: result
                 }
             }
-        });
-        // if (input.name.includes("choice") && this.state.formAddQuestion.questionType == "MC") this.validateMCQuestion()
-        // else if (input.name.includes("choice") && this.state.formAddQuestion.questionType == "MA") this.validateMAQuestion()
+        }, callback);
     }
 
     /* Simplify error check */
@@ -227,14 +242,18 @@ class addQuestionForm extends Component {
                         payload['choice' + this.alphabet[numOfEnteredChoices]] = this.state.formAddQuestion['choice' + this.alphabet[i]];
                         numOfEnteredChoices += 1;
                     }
-                    if (this.state.formAddQuestion['answer' + (i + 1)]) {
-                        numOfEnteredAnswers += 1;
-                        payload['answer' + numOfEnteredAnswers] = this.state.formAddQuestion['answer' + (i + 1)];
+                }
+                for (let i = 0; i < numOfEnteredChoices; i++) {
+                    for (let j = 0; j < this.state.numberOfChoices; j++) {
+                        if (this.state.formAddQuestion['answer' + (j+1)] && this.state.formAddQuestion['answer' + (j+1)] == payload['choice' + this.alphabet[i]]) {
+                            numOfEnteredAnswers += 1;
+                            payload['answer' + numOfEnteredAnswers] = this.alphabet[i];
+                        }
                     }
                 }
                 break;
             case "TF":
-                payload.answer1 = this.state.formAddQuestion.answer1.toUpperCase()
+                payload.answer1 = this.state.formAddQuestion.answer1
                 payload.choiceA = "True"
                 payload.choiceB = "False"
                 break;
@@ -266,7 +285,6 @@ class addQuestionForm extends Component {
         if (this.state.formAddQuestion.questionType == "MC") invalidQuestion = this.validateMCQuestion();
         else if (this.state.formAddQuestion.questionType == "MA") invalidQuestion = this.validateMAQuestion();
         else if (this.state.formAddQuestion.questionType == "TF") invalidQuestion = this.validateTFQuestion();
-        if (this.state.formAddQuestion.choices.error.IsNullAnswerChoice) invalidQuestion = true;
 
         console.log((hasError || invalidQuestion) ? 'Form has errors. Check!' : 'Form Submitted!')
 
@@ -306,6 +324,7 @@ class addQuestionForm extends Component {
     }
 
     render() {
+        console.log(this.state.formAddQuestion)
         return (
             <div>
                 <Modal isOpen={this.state.modal}>
@@ -361,8 +380,12 @@ class addQuestionForm extends Component {
                                                     placeholder="Enter a possible answer for the question"
                                                     invalid={this.state.formAddQuestion.choices.error.isNullChoice}
                                                     onChange={(event) => {
-                                                        this.validateOnChange(event)
-                                                        if (this.state.formAddQuestion.choices.error.isNullChoice) this.validateMCQuestion()
+                                                        this.validateOnChange(event, () => {
+                                                            if (Object.values(this.state.formAddQuestion.choices.error).includes(true)) this.validateMCQuestion()
+                                                        })
+                                                        if (document.getElementById('answer' + i).checked) this.updateAnswer(event, e, 1, () => {
+                                                            if (Object.values(this.state.formAddQuestion.choices.error).includes(true)) this.validateMCQuestion()
+                                                        })
                                                     }}
                                                     value={this.state.formAddQuestion['choice' + e] || ''} />
                                                 <div className="input-group-append">
@@ -371,9 +394,9 @@ class addQuestionForm extends Component {
                                                     </span>
                                                 </div>
                                                 {this.state.formAddQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Minimum two choices are required</span>}
-                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
+                                                {this.state.formAddQuestion.choices.error.isNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
                                                 <div className="input-group">
-                                                    <input className="mr-2" type="radio" value={e} name="answer" onChange={(event) => {
+                                                    <input className="mr-2" type="radio" value={e} id={'answer' + i} name="answer" onChange={(event) => {
                                                         this.setMCAnswer(event)
                                                         this.validateMCQuestion()
                                                     }} />
@@ -398,8 +421,12 @@ class addQuestionForm extends Component {
                                                     placeholder="Enter a possible answer for the question"
                                                     invalid={this.state.formAddQuestion.choices.error.isNullChoice}
                                                     onChange={(event) => {
-                                                        this.validateOnChange(event)
-                                                        if (this.state.formAddQuestion.choices.error.isNullChoice) this.validateMAQuestion()
+                                                        this.validateOnChange(event, () => {
+                                                            if (Object.values(this.state.formAddQuestion.choices.error).includes(true)) this.validateMAQuestion()
+                                                        })
+                                                        if (document.getElementById('answer' + i).checked) this.updateAnswer(event, e, i, () => {
+                                                            if (Object.values(this.state.formAddQuestion.choices.error).includes(true)) this.validateMAQuestion()
+                                                        })
                                                     }}
                                                     value={this.state.formAddQuestion['choice' + e] || ''} />
                                                 <div className="input-group-append">
@@ -408,9 +435,12 @@ class addQuestionForm extends Component {
                                                     </span>
                                                 </div>
                                                 {this.state.formAddQuestion.choices.error.isNullChoice && <span style={this.errorMessageStyling}>Two choices are required</span>}
-                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={this.errorMessageStyling}>Answer for an empty choice won't be saved</span>}
+                                                {this.state.formAddQuestion.choices.error.isNullAnswerChoice && <span style={this.errorMessageStyling}>Can't set answer for an empty choice</span>}
                                                 <div className="input-group">
-                                                    <input className="mr-2" type="checkbox" value={[e, i]} name="answer" onChange={this.setMAAnswer} />
+                                                    <input className="mr-2" type="checkbox" element={e} index={i} value={this.state.formAddQuestion["choice" + e]} id={'answer' + i} name={'answer' + i} onChange={(event) => {
+                                                        this.setMAAnswer(event)
+                                                        this.validateMAQuestion()
+                                                    }} />
                                                     <label className="text-muted pt-2">Correct Answer</label>
                                                 </div>
                                             </div>
@@ -419,9 +449,9 @@ class addQuestionForm extends Component {
                                 : null}
                             {this.state.formAddQuestion.questionType === "TF" ?
                                 <div className="input-group">
-                                    <input className="mr-2" type="radio" value="a" name="answer" onChange={this.setTFAnswer} />
+                                    <input className="mr-2" type="radio" value="A" name="answer" onChange={this.setTFAnswer} />
                                     <label className="text-muted pt-2">True</label>
-                                    <input className="mr-2 ml-2" type="radio" value="b" name="answer" onChange={this.setTFAnswer} />
+                                    <input className="mr-2 ml-2" type="radio" value="B" name="answer" onChange={this.setTFAnswer} />
                                     <label className="text-muted pt-2">False</label>
                                     {this.state.formAddQuestion.choices.error.isNullAnswer && <span style={this.errorMessageStyling}>Answer is required</span>}
                                 </div>

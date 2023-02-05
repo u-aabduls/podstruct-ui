@@ -11,7 +11,7 @@ class CourseCard extends Component {
         var output = ""
         return (
             <div className='course-preview'>
-                <Link to={{ pathname: `/course/details/${this.props.course.id}`, state: this.props.course }}>
+                <Link to={{ pathname: `/course/details/${this.props.course.id}`, state: {course: this.props.course, from: 'Courses'}}}>
                     <Card outline color="dark" className="b">
                         <CardHeader className="theme-card-header">
                             <h4 className="m-0 text-center">{this.props.course.subject}</h4>

@@ -66,6 +66,7 @@ function __execute() {
         if (!authorizationToken) {
             localStorage.setItem('token', data.authorizationToken);
             localStorage.setItem('name', data.firstName);
+            localStorage.setItem('username', data.username);
             return;
         }
         localStorage.clear();

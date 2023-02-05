@@ -22,7 +22,7 @@ class PodCard extends Component {
     render() {
         return (
             <div className='course-preview'>
-                <Link to={{ pathname: `/pod/details/${this.state.pod.id}`, state: this.state.pod }}>
+                <Link to={{ pathname: `/pod/details/${this.state.pod.id}`, state: {pod: this.state.pod, from: 'Pod Management'}}}>
                     <Card outline color="dark" className="b">
                         <CardHeader className="theme-card-header">
                             <h4 className="m-0 text-center">{this.state.pod.podName}</h4>

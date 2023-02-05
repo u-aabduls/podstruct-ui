@@ -171,7 +171,7 @@ class PodDetail extends Component {
                     <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
                             onClick={() => this.props.history.goBack()}>
                         <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
-                        Pods
+                        {this.props.location.state?.from}
                     </Button>
                     <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
                             onClick={() => this.props.history.push('/courses', { pod: this.state.pod })}>

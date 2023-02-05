@@ -52,7 +52,7 @@ class AssignmentsTable extends Component {
 
     publish = (assignmentId, assignmentTitle) => {
         Swal.fire({
-            title: assignmentTitle + 'will be published and available to all users in this course',
+            title: assignmentTitle + ' will be published and available to all users in this course',
             showCancelButton: true,
             confirmButtonColor: "#5d9cec",
             confirmButtonText: 'Ok',
@@ -101,7 +101,8 @@ class AssignmentsTable extends Component {
 
     assignmentDetailRedirect = (event, assignmentId) => {
         if (event.target.id === 'button') return;
-        this.props.history.push(`/course/assignment/details/${assignmentId}`, { podID: this.state.course.podId, course: this.state.course, rolePerms: this.state.rolePerms })
+        this.props.history.push(`/course/assignment/details/${assignmentId}`, { podID: this.state.course.podId, course: this.state.course, 
+            rolePerms: this.state.rolePerms, from: this.state.course.subject })
     }
 
     componentDidMount() {
