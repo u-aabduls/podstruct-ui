@@ -234,7 +234,7 @@ class AddQuestionForm extends Component {
                 }
                 for (let i = 0; i < numOfEnteredChoices; i++) {
                     for (let j = 0; j < this.state.numberOfChoices; j++) {
-                        if (this.state.formAddQuestion['answer' + (j+1)] && this.state.formAddQuestion['answer' + (j+1)] == payload['choice' + this.alphabet[i]]) {
+                        if (this.state.formAddQuestion['answer' + (j + 1)] && this.state.formAddQuestion['answer' + (j + 1)] == payload['choice' + this.alphabet[i]]) {
                             numOfEnteredAnswers += 1;
                             payload['answer' + numOfEnteredAnswers] = this.alphabet[i];
                         }
@@ -313,7 +313,6 @@ class AddQuestionForm extends Component {
     }
 
     render() {
-        console.log(this.state.formAddQuestion)
         return (
             <div>
                 <Modal isOpen={this.state.modal}>
@@ -342,7 +341,7 @@ class AddQuestionForm extends Component {
                                         }
                                         onChange={this.validateOnChange}
                                         data-validate='["required"]'
-                                        value={this.state.formAddQuestion.question || ''} 
+                                        value={this.state.formAddQuestion.question || ''}
                                         rows={5}
                                     />
                                     <div className="input-group-append">
@@ -385,13 +384,23 @@ class AddQuestionForm extends Component {
                                                 </div>
                                                 {this.state.formAddQuestion.choices.error.isNullChoice && <span style={errorMessageStyling()}>Minimum two choices are required</span>}
                                                 {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={errorMessageStyling()}>Can't set answer for an empty choice</span>}
-                                                <div className="input-group">
-                                                    <input className="mr-2" type="radio" value={e} id={'answer' + i} name="answer" onChange={(event) => {
-                                                        this.setMCAnswer(event)
-                                                        this.validateMCQuestion()
-                                                    }} />
-                                                    <label className="text-muted pt-2">Correct Answer</label>
-                                                </div>
+                                                {this.state.formAddQuestion['choice' + e] ?
+                                                    <div className="input-group">
+                                                        <input className="mr-2" type="radio" value={e} id={'answer' + i} name="answer" onChange={(event) => {
+                                                            this.setMCAnswer(event)
+                                                            this.validateMCQuestion()
+                                                        }} />
+                                                        <label className="text-muted pt-2">Correct Answer</label>
+                                                    </div>
+                                                    :
+                                                    <div className="input-group">
+                                                        <input disabled checked={false} className="mr-2" type="radio" value={e} id={'answer' + i} name="answer" onChange={(event) => {
+                                                            this.setMCAnswer(event)
+                                                            this.validateMCQuestion()
+                                                        }} />
+                                                        <label className="text-muted pt-2">Correct Answer</label>
+                                                    </div>}
+
                                             </div>
                                         </div>)
                                 })
@@ -425,14 +434,24 @@ class AddQuestionForm extends Component {
                                                     </span>
                                                 </div>
                                                 {this.state.formAddQuestion.choices.error.isNullChoice && <span style={errorMessageStyling()}>Two choices are required</span>}
-                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={errorMessageStyling()}>Answer for an empty choice won't be saved</span>}                                    
-                                                <div className="input-group">
-                                                    <input className="mr-2" type="checkbox" element={e} index={i} value={this.state.formAddQuestion["choice" + e]} id={'answer' + i} name={'answer' + i} onChange={(event) => {
-                                                        this.setMAAnswer(event)
-                                                        this.validateMAQuestion()
-                                                    }} />
-                                                    <label className="text-muted pt-2">Correct Answer</label>
-                                                </div>
+                                                {this.state.formAddQuestion.choices.error.IsNullAnswerChoice && <span style={errorMessageStyling()}>Answer for an empty choice won't be saved</span>}
+                                                {this.state.formAddQuestion['choice' + e] ?
+                                                    <div className="input-group">
+                                                        <input className="mr-2" type="checkbox" element={e} index={i} value={this.state.formAddQuestion["choice" + e]} id={'answer' + i} name={'answer' + i} onChange={(event) => {
+                                                            this.setMAAnswer(event)
+                                                            this.validateMAQuestion()
+                                                        }} />
+                                                        <label className="text-muted pt-2">Correct Answer</label>
+                                                    </div>
+                                                    :
+                                                    <div className="input-group">
+                                                        <input disabled checked={false} className="mr-2" type="checkbox" element={e} index={i} value={this.state.formAddQuestion["choice" + e]} id={'answer' + i} name={'answer' + i} onChange={(event) => {
+                                                            this.setMAAnswer(event)
+                                                            this.validateMAQuestion()
+                                                        }} />
+                                                        <label className="text-muted pt-2">Correct Answer</label>
+                                                    </div>
+                                                }
                                             </div>
                                         </div>)
                                 })
@@ -448,9 +467,9 @@ class AddQuestionForm extends Component {
                                 : null}
                             {this.state.numberOfChoices < 5 && this.state.formAddQuestion.questionType != "TF" && this.state.formAddQuestion.questionType != "FF" ?
                                 <div>
-                                    <Button 
-                                        className="btn btn-secondary btn-sm" 
-                                        style={{ marginLeft: "40%" }} 
+                                    <Button
+                                        className="btn btn-secondary btn-sm"
+                                        style={{ marginLeft: "40%" }}
                                         onClick={this.addChoice}
                                         onMouseDown={e => e.preventDefault()}
                                     >
@@ -460,10 +479,10 @@ class AddQuestionForm extends Component {
                                 : null}
 
                         </ModalBody>
-                        <ModalFooter style={{paddingBottom: '0'}}>
+                        <ModalFooter style={{ paddingBottom: '0' }}>
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            <Button 
-                                color="primary" 
+                            <Button
+                                color="primary"
                                 type="submit"
                                 onMouseDown={e => e.preventDefault()}
                             >
