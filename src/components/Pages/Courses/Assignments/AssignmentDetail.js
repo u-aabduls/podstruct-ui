@@ -204,7 +204,7 @@ class AssignmentDetail extends Component {
     }
 
     goBack = () => {
-        this.props.history.push(`/course/details/${this.props.history.location.state?.course.id}`)
+        this.props.history.goBack()
     }
 
     componentWillMount() {
@@ -226,16 +226,15 @@ class AssignmentDetail extends Component {
     }
 
     render() {
-        console.log(this.state.editQuestionModals)
-        var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
+        var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         var dueDate = new Date(moment.utc(this.state.assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
         if (this.state.assignment.publishDateTime) var publishDate = new Date(moment.utc(this.state.assignment.publishDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
         return (
             <ContentWrapper>
                 <div className="content-heading">
-                    <div>Assignment Details
-                        <small>Check out the details and edit a specific assignment</small>
+                    <div>{this.state.assignment.title}
+                        <small>{this.props.history.location.state?.course.subject}</small>
                     </div>
                     <div className="ml-auto">
                         <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
@@ -265,7 +264,7 @@ class AssignmentDetail extends Component {
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
                     <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
-                    Course Details
+                    {this.props.history.location.state?.from}
                 </Button>
                 <Row noGutters={true}>
                     <Col>

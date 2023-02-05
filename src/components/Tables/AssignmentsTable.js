@@ -106,7 +106,7 @@ class AssignmentsTable extends Component {
         }
         this.props.history.push(
             `/course/assignment/details/${assignmentId}`, 
-            { podID: this.state.course.podId, course: this.state.course, rolePerms: this.state.rolePerms }
+            { podID: this.state.course.podId, course: this.state.course, rolePerms: this.state.rolePerms, from: this.state.course.subject }
         )
     }
 

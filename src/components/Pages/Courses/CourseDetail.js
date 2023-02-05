@@ -101,12 +101,12 @@ class CourseDetail extends Component {
     }
 
     goBack = () => {
-        this.props.history.push('/courses', this.state.pod.podName);
+         this.props.history.push('/courses', { pod: this.state.pod })
     }
 
     componentWillMount() {
         var stateCopy = this.state;
-        var res = getCourse(this.state.course.podId, this.props.match.params.id);
+        var res = getCourse(this.props.location.state?.course.podId, this.props.match.params.id);
         if (res.isSuccess) {
             stateCopy.course = res.data;
             stateCopy.rolePerms = res.data.role;
@@ -152,7 +152,7 @@ class CourseDetail extends Component {
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
                     <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
-                    Courses
+                    {this.props.location.state?.from}
                 </Button>
                 <Row noGutters={true}>
                     <Col>

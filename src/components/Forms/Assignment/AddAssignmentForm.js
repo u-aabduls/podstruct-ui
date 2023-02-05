@@ -197,7 +197,7 @@ class AddAssignmentForm extends Component {
                 })
                 var res = getAssignment(this.state.course.podId, this.state.course.id, result.data.id)
                 if (res.isSuccess) {
-                    this.props.history.push(`/course/assignment/details/${result.data.id}`, { podID:  this.state.course.podId, course: this.state.course})
+                    this.props.history.push(`/course/assignment/details/${result.data.id}`, { podID:  this.state.course.podId, course: this.state.course, from: this.state.course.subject})
                 }
             }
             else {
