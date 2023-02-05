@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import {
-    Button,
-    Table
-} from 'reactstrap';
+import { Button, Table } from 'reactstrap';
 import moment from 'moment';
 import { getAssignments, deleteAssignment, publishAssignment } from '../../connectors/Assignments';
 import { isAdmin, isStudent } from '../../utils/PermissionChecker';
 import Swal from 'sweetalert2';
+import { buttonLightGreyBorder, swalConfirm } from '../../utils/Styles';
 
 class AssignmentsTable extends Component {
 
@@ -53,9 +51,9 @@ class AssignmentsTable extends Component {
     publish = (assignmentId, assignmentTitle) => {
         Swal.fire({
             title: assignmentTitle + ' will be published and available to all users in this course',
-            showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
-            confirmButtonText: 'Ok',
+            confirmButtonColor: swalConfirm(),
+            confirmButtonText: 'Publish',
+            showCancelButton: true
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state
@@ -63,7 +61,7 @@ class AssignmentsTable extends Component {
                 if (res.isSuccess) {
                     Swal.fire({
                         title: "Successfully published assignment",
-                        confirmButtonColor: "#5d9cec",
+                        confirmButtonColor: swalConfirm(),
                         icon: "success",
                     })
                     var params = this.state.getAssignmentsParams
@@ -82,7 +80,7 @@ class AssignmentsTable extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the assignment?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -100,9 +98,16 @@ class AssignmentsTable extends Component {
     }
 
     assignmentDetailRedirect = (event, assignmentId) => {
-        if (event.target.id === 'button') return;
-        this.props.history.push(`/course/assignment/details/${assignmentId}`, { podID: this.state.course.podId, course: this.state.course, 
-            rolePerms: this.state.rolePerms, from: this.state.course.subject })
+        if (event.target.id === 'buttonPublish' 
+            || event.target.id === 'buttonPublishIcon'
+            || event.target.id === 'buttonDelete' 
+            || event.target.id === 'buttonDeleteIcon'){ 
+                return; 
+        }
+        this.props.history.push(
+            `/course/assignment/details/${assignmentId}`, 
+            { podID: this.state.course.podId, course: this.state.course, rolePerms: this.state.rolePerms, from: this.state.course.subject }
+        )
     }
 
     componentDidMount() {
@@ -122,7 +127,7 @@ class AssignmentsTable extends Component {
     }
 
     render() {
-        var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
+        var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <div>
@@ -185,32 +190,42 @@ class AssignmentsTable extends Component {
                                             {assignment.published ? <span>Published</span> : <span>Unpublished</span>}
                                         </td>
                                         <td className="buttons">
+                                            <div>
+                                            {isAdmin(this.state.rolePerms) ?
+                                                <Button
+                                                    id='buttonDelete'
+                                                    className="btn btn-secondary btn-sm bg-danger float-right"
+                                                    onMouseDown={e => e.preventDefault()}
+                                                    onClick={() => this.deleteAssignments(assignment.id)}
+                                                >
+                                                    <i id='buttonDeleteIcon' className="fas fa-trash-alt fa-fw btn-icon" ></i>
+                                                </Button>
+                                                : null
+                                            }
                                             {isAdmin(this.state.rolePerms) ?
                                                 !assignment.published ?
-                                                    <div className='button-container'>
-                                                        <button className="btn btn-success btn-sm" id='button' onClick={() => this.publish(assignment.id, assignment.title)}>
-                                                            <i className="fa fa-cloud fa-sm button-create-icon"></i>
-                                                            Publish
-                                                        </button>
-                                                    </div>
-                                                    : <div className='button-container'>
-                                                        <button disabled className="btn btn-success btn-sm" id='button'>
-                                                            <i className="fa fa-cloud fa-sm button-create-icon"></i>
-                                                            Publish
-                                                        </button>
-                                                    </div>
+                                                    <button
+                                                        id='buttonPublish'
+                                                        className="btn btn-primary btn-sm btn-info mr-1 float-right"
+                                                        title="Publish"
+                                                        style={buttonLightGreyBorder()}
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={() => this.publish(assignment.id, assignment.title)}
+                                                    >
+                                                        <i id='buttonPublishIcon' className="fas fa-upload fa-fw btn-icon"></i>
+                                                    </button>
+                                                    :
+                                                    <button
+                                                        id='buttonPublish'
+                                                        className="btn btn-primary btn-info btn-sm mr-1 float-right"
+                                                        style={buttonLightGreyBorder()}
+                                                        disabled
+                                                    >
+                                                        <i id='buttonPublishIcon' className="fas fa-upload fa-fw btn-icon"></i>
+                                                    </button>
                                                 : null
                                             }
-                                        </td>
-                                        <td className="buttons">
-                                            {isAdmin(this.state.rolePerms) ?
-                                                <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteAssignments(assignment.id)}>
-                                                        <i className="fas fa-trash-alt fa-fw btn-icon" id='button'></i>
-                                                    </Button>
-                                                </div>
-                                                : null
-                                            }
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>

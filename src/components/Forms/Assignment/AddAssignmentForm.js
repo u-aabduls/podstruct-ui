@@ -17,7 +17,7 @@ import { createAssignment, getAssignment } from '../../../connectors/Assignments
 import AssignmentTypeSelector from '../../Common/AssignmentTypeSelector';
 import FormValidator from '../FormValidator';
 import moment from 'moment';
-
+import { disabledText, swalConfirm, dangerText, errorMessageStyling } from '../../../utils/Styles';
 
 class AddAssignmentForm extends Component {
 
@@ -39,19 +39,6 @@ class AddAssignmentForm extends Component {
         ungraded: false,
         course: this.props.course,
         modal: false,
-    }
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
-    }
-
-    warningMessageStyling = {
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
     }
 
     toggleModal = () => {
@@ -205,7 +192,7 @@ class AddAssignmentForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully created assignment",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 var res = getAssignment(this.state.course.podId, this.state.course.id, result.data.id)
@@ -217,7 +204,7 @@ class AddAssignmentForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: result.message
                 })
             }
@@ -246,12 +233,13 @@ class AddAssignmentForm extends Component {
                                     type="text"
                                     id="id-course"
                                     name="course"
+                                    style={disabledText()}
                                     className="border-right-0"
                                     disabled={true}
                                     value={this.state.course.subject || ''} />
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-assignmentTitle">Title <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-assignmentTitle">Title <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="text"
@@ -279,25 +267,24 @@ class AddAssignmentForm extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="addCourseSubject">Assignment Type <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="addCourseSubject">Assignment Type <span style={dangerText()}>*</span></label>
                                 <AssignmentTypeSelector
                                     name="typeSelector"
                                     hasError={this.state.formAddAssignment.selector.error.isNullType}
                                     setType={(type) => this.setType(type)}
                                     validate={this.validateSelectorsOnChange}
                                 />
-                                {this.state.formAddAssignment.type == "FREE_FORM" && <span className='text-warning' style={this.errorMessageStyling}>Warning: Free Form assignment must be manually graded</span>}
-                                {this.state.formAddAssignment.selector.error.isNullType && <span style={this.errorMessageStyling}>Assignment type is required</span>}
+                                {this.state.formAddAssignment.type == "FREE_FORM" && <span className='text-warning' style={errorMessageStyling()}>Warning: Free Form assignment must be manually graded</span>}
+                                {this.state.formAddAssignment.selector.error.isNullType && <span style={errorMessageStyling()}>Assignment type is required</span>}
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-assignmentInstructions">Instructions <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-assignmentInstructions">Instructions <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="textarea"
                                         id="id-assignmentInstructions"
                                         name="instructions"
-                                        className="border-right-0"
-                                        placeholder="Enter assignment instructions"
+                                        className="border-right-0 no-resize"
                                         invalid={
                                             this.hasError('formAddAssignment', 'instructions', 'required')
                                             || this.hasError('formAddAssignment', 'instructions', 'maxlen')
@@ -306,7 +293,9 @@ class AddAssignmentForm extends Component {
                                         onChange={this.validateOnChange}
                                         data-validate='["required", "maxlen", "contains-alpha"]'
                                         data-param='250'
-                                        value={this.state.formAddAssignment.instructions || ''} />
+                                        value={this.state.formAddAssignment.instructions || ''} 
+                                        rows={10}
+                                    />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-book"></em>
@@ -318,7 +307,7 @@ class AddAssignmentForm extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="text-muted">Due Date/Time <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted">Due Date/Time <span style={dangerText()}>*</span></label>
                                 <Datetime
                                     inputProps={this.state.formAddAssignment.selector.error.isNullDueDate ? { className: 'form-control time-error' } : { className: 'form-control' }}
                                     isValidDate={current => {return current.isAfter(moment().subtract(1, 'day'))}}
@@ -327,10 +316,10 @@ class AddAssignmentForm extends Component {
                                         this.validateSelectorsOnChange("time")
                                     }}
                                 />
-                                {this.state.formAddAssignment.selector.error.isNullDueDate && <span style={this.errorMessageStyling}>Due Date is required</span>}
+                                {this.state.formAddAssignment.selector.error.isNullDueDate && <span style={errorMessageStyling()}>Due Date is required</span>}
                             </div>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-points">Points Possible <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-points">Points Possible <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="text"
@@ -353,16 +342,22 @@ class AddAssignmentForm extends Component {
                                     </div>
                                     {!this.state.ungraded ? this.hasError('formAddAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span> : null}
                                     {!this.state.ungraded ? this.hasError('formAddAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span> : null}
-                                    <div className="input-group">
+                                    <div className="input-group mt-2">
                                         <input className="mr-2" type="checkbox" onClick={this.toggleUngraded} />
                                         <label className="text-muted pt-2"> Ungraded</label>
                                     </div>
                                 </div>
                             </div>
                         </ModalBody>
-                        <ModalFooter>
+                        <ModalFooter style={{paddingBottom: '0'}}>
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            <Button color="primary" type="submit">Create</Button>{' '}
+                            <Button 
+                                color="primary" 
+                                type="submit"
+                                onMouseDown={e => e.preventDefault()}
+                            >
+                                Create
+                            </Button>
                         </ModalFooter>
                     </form>
                 </Modal>

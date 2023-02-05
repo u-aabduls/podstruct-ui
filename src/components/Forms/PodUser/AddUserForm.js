@@ -11,6 +11,7 @@ import { createUser, getUsers } from '../../../connectors/PodUser';
 import RoleSelector from '../../Common/RoleSelector';
 import Swal from 'sweetalert2';
 import FormValidator from '../FormValidator';
+import { swalConfirm, dangerText, errorMessageStyling } from '../../../utils/Styles';
 
 class AddUserForm extends Component {
 
@@ -59,13 +60,6 @@ class AddUserForm extends Component {
             },
         });
         this.props.toggle()
-    }
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
     }
 
     /**
@@ -186,7 +180,7 @@ class AddUserForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully added " + successCount + " user(s)",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 let params = this.state.getUserParams.pending
@@ -196,7 +190,7 @@ class AddUserForm extends Component {
                 Swal.fire({
                     title: "Warning, the following emails could not be added ",
                     icon: "warning",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     html: errorEmails.join(', ') + "<br><br>" + errorMessage
                 })
                 let params = this.state.getUserParams.pending
@@ -215,7 +209,7 @@ class AddUserForm extends Component {
         return (
             <Modal isOpen={this.state.modal}>
                 <form className="mb-3" name="formAddUser" onSubmit={this.onSubmit}>
-                    <ModalHeader toggle={this.toggleModal}>Add User</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Invite User</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="pod">Pod</label>
@@ -227,7 +221,7 @@ class AddUserForm extends Component {
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="id-email">
-                                Email <span style={{ color: '#f05050' }}>*</span>
+                                Email <span style={dangerText()}>*</span>
                                 <br />
                                 <small>To add multiple users, separate email addresses by a comma</small>
                             </label>
@@ -255,18 +249,24 @@ class AddUserForm extends Component {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="AddUserMessage">Role <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="AddUserMessage">Role <span style={dangerText()}>*</span></label>
                             <RoleSelector
                                 hasError={this.state.formAddUser.selector.error.isNullRole}
                                 setRole={(role) => this.setRole(role)}
                                 validate={this.validateSelectorsOnChange}
                             />
-                            {this.state.formAddUser.selector.error.isNullRole && <p style={this.errorMessageStyling}>Role is required</p>}
+                            {this.state.formAddUser.selector.error.isNullRole && <p style={errorMessageStyling()}>Role is required</p>}
                         </div>
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter style={{paddingBottom: '0'}}>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Add User</Button>{' '}
+                        <Button 
+                            color="primary" 
+                            type="submit"
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Invite
+                        </Button>
                     </ModalFooter>
                 </form>
             </Modal>

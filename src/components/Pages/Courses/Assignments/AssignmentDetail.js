@@ -31,6 +31,7 @@ import EditQuestionForm from '../../../Forms/Assignment/EditQuestionForm';
 import EditAssignmentForm from '../../../Forms/Assignment/EditAssignmentForm';
 import Swal from 'sweetalert2';
 import DocumentsTable from '../../../Tables/DocumentsTable';
+import { swalConfirm, errorMessageStyling, buttonLightGreyBorder } from '../../../../utils/Styles';
 
 class AssignmentDetail extends Component {
 
@@ -38,8 +39,7 @@ class AssignmentDetail extends Component {
         rolePerms: this.props.history.location.state?.rolePerms,
         assignment: '',
         questions: [],
-        editQuestionModals: {
-        },
+        editQuestionModals: {},
         addQuestionModal: false,
         editAssignmentModal: false,
         ddOpen: false,
@@ -139,9 +139,9 @@ class AssignmentDetail extends Component {
     publish = () => {
         Swal.fire({
             title: this.state.assignment.title + ' will be published and available to all users in this course',
-            showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
-            confirmButtonText: 'Ok',
+            confirmButtonColor: swalConfirm(),
+            confirmButtonText: 'Publish',
+            showCancelButton: true
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state
@@ -149,7 +149,7 @@ class AssignmentDetail extends Component {
                 if (res.isSuccess) {
                     Swal.fire({
                         title: "Successfully published assignment",
-                        confirmButtonColor: "#5d9cec",
+                        confirmButtonColor: swalConfirm(),
                         icon: "success",
                     })
                     res = getAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
@@ -167,7 +167,7 @@ class AssignmentDetail extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the assignment?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -184,7 +184,7 @@ class AssignmentDetail extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the question?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -263,7 +263,7 @@ class AssignmentDetail extends Component {
                     </div>
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
-                    <i className="fas fa-arrow-left fa-fw btn-icon"></i>
+                    <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
                     {this.props.history.location.state?.from}
                 </Button>
                 <Row noGutters={true}>
@@ -350,17 +350,6 @@ class AssignmentDetail extends Component {
                                         </span>
                                     </div>
                                     : null}
-                                {isAdmin(this.state.rolePerms) ?
-                                    !this.state.assignment.published ?
-                                        <div className='button-container'>
-                                            <button className="btn btn-success btn-sm" id='button' onClick={this.publish}>
-                                                <i className="fa fa-cloud fa-sm button-create-icon"></i>
-                                                Publish
-                                            </button>
-                                        </div>
-                                        : null
-                                    : null
-                                }
                             </div>
                         </div>
                         {/* END card */}
@@ -403,11 +392,27 @@ class AssignmentDetail extends Component {
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
                                             {!isStudent(this.state.rolePerms) ?
-                                                <div className="float-right" style={{ clear: 'both' }}>
-                                                    <button className="btn btn-success btn-sm mb-3 mt-2" onClick={this.toggleAddQuestionModal}>
-                                                        <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
+                                                <div className="float-right">
+                                                    <button
+                                                        className="btn btn-primary btn-sm mb-3 mt-2 mr-1"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={this.toggleAddQuestionModal}
+                                                    >
+                                                        <i className="fa fa-plus-circle fa-sm button-create-icon"></i>
                                                         Add Question
                                                     </button>
+                                                    {
+                                                        !this.state.assignment.published ?
+                                                            <button
+                                                                className="btn btn-info btn-sm mb-3 mt-2"
+                                                                onMouseDown={e => e.preventDefault()}
+                                                                onClick={this.publish}
+                                                            >
+                                                                <i className="fas fa-upload fa-fw button-create-icon mr-1"></i>
+                                                                Publish
+                                                            </button>
+                                                            : null
+                                                    }
                                                 </div>
                                                 : null
                                             }
@@ -434,21 +439,30 @@ class AssignmentDetail extends Component {
                                                     answers.sort();
                                                     return (
                                                         <Card outline color="dark" className="mt-5 card-default" style={{ clear: 'both', width: '60%', margin: "auto" }}>
-                                                            <CardHeader><CardTitle tag="h3">
-                                                                Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size}
-                                                                {!isStudent(this.state.rolePerms) ?
-                                                                    <div className="float-right" style={{ clear: 'both' }}>
-                                                                        <button className="btn btn-success btn-sm mb-3" onClick={() => this.toggleEditQuestionModal(i)}>
-                                                                            <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                                            Edit
-                                                                        </button>
-                                                                        <button className="btn btn-secondary btn-sm bg-danger ml-1 mb-3"
-                                                                            onClick={() => this.deleteQuestion(question.id)}>
-                                                                            <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                    : null
-                                                                }</CardTitle></CardHeader>
+                                                            <CardHeader>
+                                                                <CardTitle tag="h3">
+                                                                    Question {(i + 1) + this.state.getAnswerKeysParams.page * this.state.getAnswerKeysParams.size}
+                                                                    {!isStudent(this.state.rolePerms) ?
+                                                                        <div className="float-right">
+                                                                            <Button
+                                                                                className="btn bg-info btn-sm mr-1 mb-3"
+                                                                                onMouseDown={e => e.preventDefault()}
+                                                                                onClick={() => this.toggleEditQuestionModal(i)}
+                                                                            >
+                                                                                <i className="fas fa-edit fa-fw btn-icon"></i>
+                                                                            </Button>
+                                                                            <Button 
+                                                                                className="btn btn-sm bg-danger mb-3"
+                                                                                onMouseDown={e => e.preventDefault()}
+                                                                                onClick={() => this.deleteQuestion(question.id)}
+                                                                            >
+                                                                                <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                                            </Button>
+                                                                        </div>
+                                                                        : null
+                                                                    }
+                                                                </CardTitle>
+                                                            </CardHeader>
                                                             <EditQuestionForm
                                                                 podId={this.props.history.location.state?.podID}
                                                                 courseId={this.props.history.location.state?.course.id}
@@ -511,7 +525,7 @@ class AssignmentDetail extends Component {
                                                                             <strong>Answers: </strong>
                                                                         </td>
                                                                         <td>
-                                                                            {answerList ? answerList : <span className='text-warning' style={this.errorMessageStyling}>Must be manually graded</span>}
+                                                                            {answerList ? answerList : <span className='text-warning' style={errorMessageStyling()}>Must be manually graded</span>}
                                                                         </td>
                                                                     </tr>
                                                                 </Table>

@@ -3,8 +3,6 @@ import { withRouter } from 'react-router';
 import {
     Button,
     Input,
-    Row,
-    Col,
     Modal,
     ModalHeader,
     ModalBody,
@@ -17,7 +15,7 @@ import { editAssignment, getAssignment } from '../../../connectors/Assignments';
 import AssignmentTypeSelector from '../../Common/AssignmentTypeSelector';
 import FormValidator from '../FormValidator';
 import moment from 'moment';
-
+import { disabledText, errorMessageStyling, swalConfirm } from '../../../utils/Styles';
 
 class EditAssignmentForm extends Component {
 
@@ -39,13 +37,6 @@ class EditAssignmentForm extends Component {
         ungraded: false,
         course: this.props.course,
         modal: false,
-    }
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
     }
 
     toggleModal = () => {
@@ -183,7 +174,7 @@ class EditAssignmentForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully edited assignment",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 var res = getAssignment(this.state.course.podId, this.state.course.id, this.props.assignmentId)
@@ -195,7 +186,7 @@ class EditAssignmentForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: result.message
                 })
             }
@@ -239,6 +230,7 @@ class EditAssignmentForm extends Component {
                                     type="text"
                                     id="id-course"
                                     name="course"
+                                    style={disabledText()}
                                     className="border-right-0"
                                     disabled={true}
                                     value={this.state.course.subject || ''} />
@@ -280,7 +272,7 @@ class EditAssignmentForm extends Component {
                                     setType={(type) => this.setType(type)}
                                     validate={this.validateSelectorsOnChange}
                                 />
-                                {this.state.formEditAssignment.selector.error.isNullType && <span style={this.errorMessageStyling}>Assignment type is required</span>}
+                                {this.state.formEditAssignment.selector.error.isNullType && <span style={errorMessageStyling()}>Assignment type is required</span>}
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="id-assignmentInstructions">Instructions</label>
@@ -289,8 +281,7 @@ class EditAssignmentForm extends Component {
                                         type="textarea"
                                         id="id-assignmentInstructions"
                                         name="instructions"
-                                        className="border-right-0"
-                                        placeholder="Enter assignment instructions"
+                                        className="border-right-0 no-resize"
                                         invalid={
                                             this.hasError('formEditAssignment', 'instructions', 'required')
                                             || this.hasError('formEditAssignment', 'instructions', 'maxlen')
@@ -299,7 +290,9 @@ class EditAssignmentForm extends Component {
                                         onChange={this.validateOnChange}
                                         data-validate='["required", "maxlen", "contains-alpha"]'
                                         data-param='250'
-                                        value={this.state.formEditAssignment.instructions || ''} />
+                                        value={this.state.formEditAssignment.instructions || ''} 
+                                        rows={10}
+                                    />
                                     <div className="input-group-append">
                                         <span className="input-group-text text-muted bg-transparent border-left-0">
                                             <em className="fa fa-book"></em>
@@ -320,7 +313,7 @@ class EditAssignmentForm extends Component {
                                         this.validateSelectorsOnChange("time")
                                     }}
                                 />
-                                {this.state.formEditAssignment.selector.error.isNullDueDate && <span style={this.errorMessageStyling}>Due Date is required</span>}
+                                {this.state.formEditAssignment.selector.error.isNullDueDate && <span style={errorMessageStyling()}>Due Date is required</span>}
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="id-points">Points Possible</label>
@@ -346,16 +339,22 @@ class EditAssignmentForm extends Component {
                                     </div>
                                     {!this.state.ungraded ? this.hasError('formEditAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span> : null}
                                     {!this.state.ungraded ? this.hasError('formEditAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span> : null}
-                                    <div className="input-group">
+                                    <div className="input-group mt-2">
                                         <input className="mr-2" type="checkbox" checked={this.state.ungraded} onClick={this.toggleUngraded} />
                                         <label className="text-muted pt-2"> Ungraded</label>
                                     </div>
                                 </div>
                             </div>
                         </ModalBody>
-                        <ModalFooter>
+                        <ModalFooter style={{paddingBottom: '0'}}>
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            <Button color="primary" type="submit">Save</Button>{' '}
+                            <Button 
+                                color="primary" 
+                                type="submit"
+                                onMouseDown={e => e.preventDefault()}
+                            >
+                                Save
+                            </Button>
                         </ModalFooter>
                     </form>
                 </Modal>

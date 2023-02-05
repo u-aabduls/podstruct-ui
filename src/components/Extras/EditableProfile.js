@@ -7,9 +7,9 @@ import MonthSelector from "../Common/MonthSelector";
 import DaySelector from "../Common/DaySelector";
 import YearSelector from "../Common/YearSelector";
 import { updateUser, getUser } from "../../connectors/User";
-import { ToastContainer, toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import FormValidator from '../Forms/FormValidator';
+import { swalConfirm, changedMessageStyling, errorMessageStyling } from '../../utils/Styles';
 
 class EditableProfile extends Component {
 
@@ -44,13 +44,6 @@ class EditableProfile extends Component {
             year: '',
         },
     };
-
-    changedInputStyling = {
-        color: '#f0ad4e',
-        width: '100%',
-        marginTop: '0.5rem',
-        fontSize: '80%'
-    }
 
     setMonth = (month) => {
         var stateCopy = this.state.personalInformation;
@@ -172,13 +165,15 @@ class EditableProfile extends Component {
                 this.props.toggleEdit()
                 Swal.fire({
                     title: "Successfully edited profile",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
             } else {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    text: res.message
+                    text: res.message,
+                    confirmButtonColor: swalConfirm()
                 })
             }
 
@@ -268,7 +263,7 @@ class EditableProfile extends Component {
                                     <em className="fa fa-book"></em>
                                 </span>
                             </div>
-                            {(this.backendInfo.firstName !== this.state.personalInformation.firstName) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
+                            {(this.backendInfo.firstName !== this.state.personalInformation.firstName) && <span style={changedMessageStyling()}>This field's current value differs from our records.</span>}
                             {this.hasError('personalInformation', 'firstName', 'required') && <span className="invalid-feedback">First name is required</span>}
                             {this.hasError('personalInformation', 'firstName', 'maxlen') && <span className="invalid-feedback">First name must not have more than 50 characters</span>}
                             {this.hasError('personalInformation', 'firstName', 'contains-alpha') && <span className="invalid-feedback">First name must contain at least one alpha character</span>}
@@ -304,7 +299,7 @@ class EditableProfile extends Component {
                                     <em className="fa fa-book"></em>
                                 </span>
                             </div>
-                            {(this.backendInfo.lastName !== this.state.personalInformation.lastName) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
+                            {(this.backendInfo.lastName !== this.state.personalInformation.lastName) && <span style={changedMessageStyling()}>This field's current value differs from our records.</span>}
                             {this.hasError('personalInformation', 'lastName', 'required') && <span className="invalid-feedback">Last name is required</span>}
                             {this.hasError('personalInformation', 'lastName', 'maxlen') && <span className="invalid-feedback">Last name must have not have more than 50 characters</span>}
                             {this.hasError('personalInformation', 'lastName', 'contains-alpha') && <span className="invalid-feedback">Last name must contain at least one alpha character</span>}
@@ -336,7 +331,7 @@ class EditableProfile extends Component {
                                     <i className="fa fa-phone"></i>
                                 </span>
                             </div>
-                            {(this.backendInfo.phone !== this.state.personalInformation.phone) && <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
+                            {(this.backendInfo.phone !== this.state.personalInformation.phone) && <span style={changedMessageStyling()}>This field's current value differs from our records.</span>}
                             {this.hasError('personalInformation', 'phone', 'required') && <span className="invalid-feedback">Phone number is required</span>}
                             {this.hasError('personalInformation', 'phone', 'phone-digits') && <span className="invalid-feedback">Phone number must contain exactly 10 digits</span>}
                         </div>
@@ -365,9 +360,9 @@ class EditableProfile extends Component {
                             {(this.backendInfo.dob.month !== this.state.personalInformation.dob.month ||
                                 this.backendInfo.dob.day !== this.state.personalInformation.dob.day ||
                                 this.backendInfo.dob.year !== this.state.personalInformation.dob.year) &&
-                                <span style={this.changedInputStyling}>This field's current value differs from our records.</span>}
-                            {this.state.personalInformation.dob.error.isNull && <p style={this.errorMessageStyling}>Date of birth is required</p>}
-                            {this.state.personalInformation.dob.error.isInFuture && <p style={this.errorMessageStyling}>Date of birth must not be in the future</p>}
+                                <span style={changedMessageStyling()}>This field's current value differs from our records.</span>}
+                            {this.state.personalInformation.dob.error.isNull && <p style={errorMessageStyling()}>Date of birth is required</p>}
+                            {this.state.personalInformation.dob.error.isInFuture && <p style={errorMessageStyling()}>Date of birth must not be in the future</p>}
                         </div>
                     </div>
                     <div className="form-group">
@@ -387,7 +382,7 @@ class EditableProfile extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className="btn btn-info" type="submit">Save Changes</button>
+                    <button className="btn btn-primary mt-2" type="submit">Save</button>
                 </form>
             </div>
         );

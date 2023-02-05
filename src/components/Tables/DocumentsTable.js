@@ -22,6 +22,7 @@ import {
 } from '../../connectors/File';
 import { isAdmin } from '../../utils/PermissionChecker';
 import '../../styles/app/common/pointer.css';
+import { swalConfirm } from '../../utils/Styles';
 
 class DocumentsTable extends Component {
 
@@ -57,15 +58,23 @@ class DocumentsTable extends Component {
     }
 
     getDocuments = () => {
+        var result = null;
+
         if (this.state.parentType == "pod") {
-            return getPodDocuments(this.getPodId());
+            result = getPodDocuments(this.getPodId());
         }
         else if (this.state.parentType == "course") {
-            return getCourseDocuments(this.getPodId(), this.getCourseId());
+            result = getCourseDocuments(this.getPodId(), this.getCourseId());
         }
         else if (this.state.parentType == "assignment") {
-            return getAssignmentDocuments(this.getPodId(), this.getCourseId(), this.getAssignmentId());
+            result = getAssignmentDocuments(this.getPodId(), this.getCourseId(), this.getAssignmentId());
         }
+
+        result.data.sort(function (a, b) {
+            return (a.lastModified).localeCompare(b.lastModified);
+        }).reverse();
+
+        return result;
     }
 
     getDocument = (fileName) => {
@@ -84,7 +93,7 @@ class DocumentsTable extends Component {
         Swal.fire({
             title: 'Are you sure you want to delete the document?',
             showCancelButton: true,
-            confirmButtonColor: "#5d9cec",
+            confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -106,7 +115,7 @@ class DocumentsTable extends Component {
                 Swal.fire({
                     title: 'Successfully deleted document',
                     icon: 'success',
-                    confirmButtonColor: "#5d9cec"
+                    confirmButtonColor: swalConfirm()
                 })
             }
         })
@@ -184,7 +193,7 @@ class DocumentsTable extends Component {
                     icon: 'error',
                     title: 'Failed to upload document',
                     text: result.message,
-                    confirmButtonColor: "#5d9cec"
+                    confirmButtonColor: swalConfirm()
                 })
             }
         }
@@ -205,14 +214,16 @@ class DocumentsTable extends Component {
                 icon: 'error',
                 title: 'Failed to upload document',
                 text: 'File size exceeds limit (10MB)',
-                confirmButtonColor: "#5d9cec"
+                confirmButtonColor: swalConfirm()
             })
         } else {
             if (this.checkFileExists(loadedFile.name)) {
                 Swal.fire({
-                    title: 'Are you sure you want to overwrite this file?',
+                    title: 'A file with the same name already exists',
+                    icon: 'warning',
+                    text: '\'' + loadedFile.name + '\' will be overwritten',
                     showCancelButton: true,
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     confirmButtonText: 'Upload',
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -239,7 +250,7 @@ class DocumentsTable extends Component {
     }
 
     render() {
-        var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
+        var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <div>
@@ -254,42 +265,42 @@ class DocumentsTable extends Component {
                         this.state.documents.map((document) => {
                             var date = new Date(document.lastModified);
                             return (
-                                <tbody>
-                                    <tr>
-                                        <td className='date'>
-                                            <span className="text-uppercase text-bold">
-                                                {days[date.getDay()]}
-                                                {' '}
-                                                {months[date.getMonth()]}
-                                                {' '}
-                                                {date.getDate()}
-                                            </span>
-                                            <br />
-                                            <span className="h2 mt0 text-sm">
-                                                {moment(date).format("h:mm A")}
-                                            </span>
-                                        </td>
-                                        <td className="announcement">
-                                            <a className="h4 text-bold pointer" onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}>
-                                                {document.fileName}
-                                            </a>
-                                            <br />
-                                            {document.fileSize}
-                                        </td>
-                                        <td className="buttons">
-                                            {isAdmin(this.state.role) ?
-                                                <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger"
-                                                        onMouseDown={e => e.preventDefault()}
-                                                        onClick={() => this.deleteDocument(document.fileName)}>
-                                                        <i className="fas fa-trash-alt fa-fw btn-icon"></i>
-                                                    </Button>
-                                                </div>
-                                                : null
-                                            }
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <td className='date'>
+                                        <span className="text-uppercase text-bold">
+                                            {days[date.getDay()]}
+                                            {' '}
+                                            {months[date.getMonth()]}
+                                            {' '}
+                                            {date.getDate()}
+                                        </span>
+                                        <br />
+                                        <span className="h2 mt0 text-sm">
+                                            {moment(date).format("h:mm A")}
+                                        </span>
+                                    </td>
+                                    <td className="document">
+                                        <a className="h4 text-bold pointer" onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}>
+                                            {document.fileName}
+                                        </a>
+                                        <br />
+                                        {document.fileSize}
+                                    </td>
+                                    <td className="buttons">
+                                        {isAdmin(this.state.role) ?
+                                            <div className='button-container'>
+                                                <Button 
+                                                    className="btn btn-secondary btn-sm bg-danger float-right"
+                                                    onMouseDown={e => e.preventDefault()}
+                                                    onClick={() => this.deleteDocument(document.fileName)}
+                                                >
+                                                    <i className="fas fa-trash-alt fa-fw btn-icon"></i>
+                                                </Button>
+                                            </div>
+                                            : null
+                                        }
+                                    </td>
+                                </tr>
                             )
                         }
                         )

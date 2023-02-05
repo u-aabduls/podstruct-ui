@@ -3,6 +3,7 @@ import { Input } from 'reactstrap';
 import { recoverPassword } from "../../../connectors/Password";
 import FormValidator from '../../Forms/FormValidator.js';
 import { Link } from 'react-router-dom';
+import { dangerText, errorMessageStyling } from '../../../utils/Styles';
 
 class Recover extends Component {
 
@@ -11,13 +12,6 @@ class Recover extends Component {
             email: '',
         },
         errorMessage: null
-    }
-
-    errorMessageStyling = {
-        color: '#f05050', 
-        width: '100%', 
-        marginTop: '1.5rem', 
-        fontSize: '80%'
     }
 
     validateOnChange = event => {
@@ -97,7 +91,7 @@ class Recover extends Component {
                         <form name="formPasswordRecover" onSubmit={this.onSubmit}>
                             <p className="text-left">Enter your email registered with Podstruct and request a verification code. The verification code will be sent momentarily.</p>
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-email">Email address <span style={{ color: '#f05050' }}>*</span></label>
+                                <label className="text-muted" htmlFor="id-email">Email address <span style={dangerText()}>*</span></label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="email"
@@ -121,7 +115,7 @@ class Recover extends Component {
                                     </div>
                                     {this.hasError('formPasswordRecover', 'email', 'required') && <span className="invalid-feedback">Email is required</span>}
                                     {this.hasError('formPasswordRecover', 'email', 'email') && <span className="invalid-feedback">Email must be a valid email</span>}
-                                    {this.state.errorMessage && <p style={this.errorMessageStyling}>{this.state.errorMessage}</p>}
+                                    {this.state.errorMessage && <p style={errorMessageStyling()}>{this.state.errorMessage}</p>}
                                 </div>
                             </div>                          
                             <button className="btn btn-primary btn-block" type="submit">Request verification code</button>

@@ -19,6 +19,7 @@ import { getPod } from '../../../connectors/Pod';
 import { getCourse, editCourse } from '../../../connectors/Course';
 import { getUsers } from '../../../connectors/PodUser';
 import FormValidator from '../FormValidator';
+import { swalConfirm, errorMessageStyling } from '../../../utils/Styles';
 
 class EditCourseForm extends Component {
 
@@ -56,13 +57,6 @@ class EditCourseForm extends Component {
     toggleModal = () => {
         this.populateForm()
         this.props.toggle()
-    }
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
     }
 
     /**
@@ -227,7 +221,7 @@ class EditCourseForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully edited course",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 var res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)
@@ -237,7 +231,7 @@ class EditCourseForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: res.message
                 })
             }
@@ -326,7 +320,7 @@ class EditCourseForm extends Component {
                                 validate={this.validateSelectorsOnChange}
                                 setDays={(day) => this.setDays(day)}
                             />
-                            {this.state.formEditCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
+                            {this.state.formEditCourse.selector.error.isNullDay && <p style={errorMessageStyling()}>Day schedule is required</p>}
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule</label>
@@ -356,7 +350,7 @@ class EditCourseForm extends Component {
                                     />
                                 </Col>
                             </Row>
-                            {this.state.formEditCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Both start and end times are required and must be valid times</p>}
+                            {this.state.formEditCourse.selector.error.isNullTime && <p style={errorMessageStyling()}>Both start and end times are required and must be valid times</p>}
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="id-teacher">Teacher</label>
@@ -377,7 +371,6 @@ class EditCourseForm extends Component {
                                     id="id-courseDescription"
                                     name="description"
                                     className="border-right-0 no-resize"
-                                    placeholder="Description"
                                     invalid={
                                         this.hasError('formEditCourse', 'description', 'maxlen')
                                         || this.hasError('formEditCourse', 'description', 'contains-alpha')
@@ -397,9 +390,15 @@ class EditCourseForm extends Component {
                             </div>
                         </div>
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter style={{paddingBottom: '0'}}>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Save</Button>{' '}
+                        <Button 
+                            color="primary" 
+                            type="submit"
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Save
+                        </Button>
                     </ModalFooter>
                 </form>
             </Modal>

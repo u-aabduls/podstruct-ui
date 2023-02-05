@@ -75,10 +75,12 @@ class Settings extends Component {
                                     <div className="card b">
                                         <div className="card-header bg-gray-lighter text-bold">Profile
                                             <Col md={13}>
-                                                <Button color="info" 
+                                                <Button color="primary" 
                                                         className="btn float-right"
                                                         onMouseDown={e => e.preventDefault()} 
-                                                        onClick={this.onEditChange}>{this.state.editButtonText}</Button>
+                                                        onClick={this.onEditChange}
+                                                >           {this.state.editButtonText}
+                                                </Button>
                                             </Col>
                                         </div>
                                         {this.state.editMode ?

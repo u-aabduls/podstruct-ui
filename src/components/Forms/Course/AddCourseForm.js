@@ -19,9 +19,8 @@ import { getCourses, createCourse } from '../../../connectors/Course';
 import { getUsers } from '../../../connectors/PodUser';
 import { isAdmin } from '../../../utils/PermissionChecker';
 import FormValidator from '../FormValidator';
-import { TimePicker } from 'antd';
 import moment from 'moment';
-
+import { swalConfirm, dangerText, errorMessageStyling } from '../../../utils/Styles';
 
 class AddCourseForm extends Component {
 
@@ -55,13 +54,6 @@ class AddCourseForm extends Component {
         pods: this.props.pods,
         teachers: [],
         modal: false,
-    }
-
-    errorMessageStyling = {
-        color: '#f05050',
-        width: '100%',
-        marginTop: '0.25rem',
-        fontSize: '80%'
     }
 
     toggleModal = () => {
@@ -256,7 +248,7 @@ class AddCourseForm extends Component {
                 this.toggleModal()
                 Swal.fire({
                     title: "Successfully created course",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
                 var res = getCourses(this.state.formAddCourse.selectedPod, "")
@@ -268,7 +260,7 @@ class AddCourseForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: result.message
                 })
             }
@@ -309,7 +301,7 @@ class AddCourseForm extends Component {
                     <ModalHeader toggle={this.toggleModal}>Create Course</ModalHeader>
                     <ModalBody>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addCourseSubject">Select Pod <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="addCourseSubject">Select Pod <span style={dangerText()}>*</span></label>
                             <PodSelector
                                 name="podSelector"
                                 pods={this.state.pods}
@@ -317,10 +309,10 @@ class AddCourseForm extends Component {
                                 setPod={(pod) => this.setFormPod(pod)}
                                 active="required"
                             />
-                            {this.state.formAddCourse.selector.error.isNullPod && <p style={this.errorMessageStyling}>Pod is required</p>}
+                            {this.state.formAddCourse.selector.error.isNullPod && <p style={errorMessageStyling()}>Pod is required</p>}
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-courseSubject">Subject <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="id-courseSubject">Subject <span style={dangerText()}>*</span></label>
                             <div className="input-group with-focus">
                                 <Input
                                     type="text"
@@ -348,17 +340,17 @@ class AddCourseForm extends Component {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addDaySchedule">Day Schedule <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="addDaySchedule">Day Schedule <span style={dangerText()}>*</span></label>
                             <DaysOfWeekSelector
                                 name="daysOfWeekSelector"
                                 hasError={this.state.formAddCourse.selector.error.isNullDay}
                                 setDays={(day) => this.setDays(day)}
                                 validate={this.validateSelectorsOnChange}
                             />
-                            {this.state.formAddCourse.selector.error.isNullDay && <p style={this.errorMessageStyling}>Day schedule is required</p>}
+                            {this.state.formAddCourse.selector.error.isNullDay && <p style={errorMessageStyling()}>Day schedule is required</p>}
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="addTimeSchedule">Time Schedule <span style={dangerText()}>*</span></label>
                             <Row>
                                 <Col lg="6">
                                     <label className="text-muted">Start time: </label>
@@ -383,10 +375,10 @@ class AddCourseForm extends Component {
                                     />
                                 </Col>
                             </Row>
-                            {this.state.formAddCourse.selector.error.isNullTime && <p style={this.errorMessageStyling}>Both start and end times are required and must be valid times</p>}
+                            {this.state.formAddCourse.selector.error.isNullTime && <p style={errorMessageStyling()}>Both start and end times are required and must be valid times</p>}
                         </div>
                         <div className="form-group">
-                            <label className="text-muted" htmlFor="id-teacher">Teacher <span style={{ color: '#f05050' }}>*</span></label>
+                            <label className="text-muted" htmlFor="id-teacher">Teacher <span style={dangerText()}>*</span></label>
                             <TeacherSelector
                                 name="teacherSelector"
                                 teachers={this.state.teachers}
@@ -403,7 +395,6 @@ class AddCourseForm extends Component {
                                     id="id-courseDescription"
                                     name="description"
                                     className="border-right-0 no-resize"
-                                    placeholder="Enter course description"
                                     invalid={
                                         this.hasError('formAddCourse', 'description', 'maxlen')
                                         || this.hasError('formAddCourse', 'description', 'contains-alpha')
@@ -422,9 +413,15 @@ class AddCourseForm extends Component {
                             </div>
                         </div>
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter style={{paddingBottom: '0'}}>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button color="primary" type="submit">Create</Button>{' '}
+                        <Button 
+                            color="primary" 
+                            type="submit"
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Create
+                        </Button>
                     </ModalFooter>
                 </form>
             </Modal>

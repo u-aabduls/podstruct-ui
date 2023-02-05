@@ -11,10 +11,11 @@ import {
     getPodAnnouncements,
     updatePodAnnouncement,
     getCourseAnnouncements,
-    createCourseAnnouncement
+    updateCourseAnnouncement
 } from '../../../connectors/Announcement';
 import Swal from 'sweetalert2';
 import FormValidator from '../FormValidator';
+import { swalConfirm } from '../../../utils/Styles';
 
 class EditAnnouncementForm extends Component {
 
@@ -108,16 +109,16 @@ class EditAnnouncementForm extends Component {
         if (!hasError) {
             var res;
             res = this.state.course ?
-                createCourseAnnouncement(this.state.course.podId, this.state.course.id, this.constructRequestPayload()) :
+                updateCourseAnnouncement(this.state.course.podId, this.state.course.id, this.state.announcement.date, this.constructRequestPayload()) :
                 updatePodAnnouncement(this.state.pod.id, this.state.announcement.date, this.constructRequestPayload());
 
             this.toggleModal();
             if (res.isSuccess) {
                 Swal.fire({
                     title: "Successfully edited announcement",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     icon: "success",
-                })
+                });
                 res = this.state.course ?
                     getCourseAnnouncements(this.state.course.podId, this.state.course.id, '', 0) :
                     getPodAnnouncements(this.state.pod.id, '', 0);
@@ -127,9 +128,9 @@ class EditAnnouncementForm extends Component {
                 Swal.fire({
                     title: "Error",
                     icon: "error",
-                    confirmButtonColor: "#5d9cec",
+                    confirmButtonColor: swalConfirm(),
                     text: res.message
-                })
+                });
             }
         }
     }
@@ -165,7 +166,6 @@ class EditAnnouncementForm extends Component {
                                     id="id-announcementTitle"
                                     name="title"
                                     className="border-right-0"
-                                    placeholder="Announcement title"
                                     invalid={
                                         this.hasError('formEditAnnouncement', 'title', 'required')
                                         || this.hasError('formEditAnnouncement', 'title', 'len')
@@ -189,18 +189,19 @@ class EditAnnouncementForm extends Component {
                             <label className="text-muted" htmlFor="id-announcementMessage">Message</label>
                             <div className="input-group with-focus">
                                 <Input
-                                    type="text"
+                                    type="textarea"
                                     id="id-announcementMessage"
                                     name="message"
-                                    className="border-right-0"
-                                    placeholder="Announcement message"
+                                    className="border-right-0 no-resize"
                                     invalid={
                                         this.hasError('formEditAnnouncement', 'message', 'maxlen')
                                     }
                                     onChange={this.validateOnChange}
                                     data-validate='["maxlen"]'
                                     data-param='4500'
-                                    value={this.state.formEditAnnouncement.message || ''} />
+                                    value={this.state.formEditAnnouncement.message || ''}
+                                    rows={10}
+                                />
                                 <div className="input-group-append">
                                     <span className="input-group-text text-muted bg-transparent border-left-0">
                                         <em className="fa fa-book"></em>
@@ -211,17 +212,13 @@ class EditAnnouncementForm extends Component {
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button
-                            color="secondary"
-                            onClick={this.toggleModal}>
-                            Cancel
-                        </Button>
+                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                         <Button
                             color="primary"
                             type="submit"
                             onMouseDown={e => e.preventDefault()}>
                             Save
-                        </Button>{' '}
+                        </Button>
                     </ModalFooter>
                 </form>
             </Modal>

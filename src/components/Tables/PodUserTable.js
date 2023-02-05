@@ -13,7 +13,7 @@ import { getUsers, deleteUser } from '../../connectors/PodUser';
 import { resendInvite } from '../../connectors/PodUserInvite';
 import { isAdmin, isTeacher, isStudent } from '../../utils/PermissionChecker'
 import Swal from 'sweetalert2';
-
+import { swalConfirm } from '../../utils/Styles';
 
 class PodUserTable extends Component {
 
@@ -75,14 +75,14 @@ class PodUserTable extends Component {
             Swal.fire({
                 title: "Resent Invitation",
                 icon: "success",
-                confirmButtonColor: "#5d9cec"
+                confirmButtonColor: swalConfirm()
             })
         }
         else {
             Swal.fire({
                 title: "Error",
                 icon: "error",
-                confirmButtonColor: "#5d9cec",
+                confirmButtonColor: swalConfirm(),
                 text: res.message
             })
         }
@@ -93,7 +93,7 @@ class PodUserTable extends Component {
             Swal.fire({
                 title: 'Are you sure you want to delete ' + user.firstName + ' ' + user.lastName + ' from the pod',
                 showCancelButton: true,
-                confirmButtonColor: "#5d9cec",
+                confirmButtonColor: swalConfirm(),
                 confirmButtonText: 'Delete',
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -110,7 +110,7 @@ class PodUserTable extends Component {
                     Swal.fire({
                         title: 'Successfully deleted user from the pod',
                         icon: 'success',
-                        confirmButtonColor: "#5d9cec"
+                        confirmButtonColor: swalConfirm()
                     })
                 }
             })
@@ -119,7 +119,7 @@ class PodUserTable extends Component {
             Swal.fire({
                 title: 'Are you sure you want to revoke the invitation?',
                 showCancelButton: true,
-                confirmButtonColor: "#5d9cec",
+                confirmButtonColor: swalConfirm(),
                 confirmButtonText: 'Revoke',
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -136,7 +136,7 @@ class PodUserTable extends Component {
                     Swal.fire({
                         title: 'Successfully revoked invitation',
                         icon: 'success',
-                        confirmButtonColor: "#5d9cec"
+                        confirmButtonColor: swalConfirm()
                     })
                 }
             })

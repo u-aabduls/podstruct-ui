@@ -19,9 +19,10 @@ const customStylesError = {
 
 function setOptions(pods, active) {
     if (!Array.isArray(pods)) return;
-    options = pods.map(function (pod) {
+    options = [];
+    pods.forEach(function (pod) {
         if (active === "required" && pod.active) {
-            return { value: pod.id, label: pod.podName }
+            options.push({ value: pod.id, label: pod.podName });
         }
     })
 }
@@ -38,7 +39,7 @@ export default function PodSelector(props) {
             placeholder="Select a Pod..."
             styles={!props.hasError ? customStylesDefault : customStylesError}
             options={options}
-            value={props.defaultV ? {value: props.defaultV.id, label: props.defaultV.podName} : options.find(o => o.value === props.defaultV)}
+            value={props.defaultV ? { value: props.defaultV.id, label: props.defaultV.podName } : options.find(o => o.value === props.defaultV)}
             onChange={(e) => {
                 if (!props.validate) {
                     props.setPod(e.value)

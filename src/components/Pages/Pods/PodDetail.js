@@ -24,11 +24,12 @@ import EditPodForm from '../../Forms/Pod/EditPodForm';
 import AddUserForm from '../../Forms/PodUser/AddUserForm';
 import InvitedPodForm from '../../Forms/PodUser/InvitedPodForm';
 import PodUserTable from '../../Tables/PodUserTable';
-import PodAnnouncementsTable from '../../Tables/PodAnnouncementsTable';
+import AnnouncementsTable from '../../Tables/AnnouncementsTable';
 import { isAdmin } from '../../../utils/PermissionChecker';
 import DocumentsTable from '../../Tables/DocumentsTable';
 import { deactivatePod } from "../../../connectors/Pod";
 import Swal from 'sweetalert2';
+import { swalConfirmDanger } from '../../../utils/Styles';
 
 class PodDetail extends Component {
 
@@ -42,11 +43,6 @@ class PodDetail extends Component {
         userModal: false,
         ddOpen: false,
         activeTab: '1',
-    }
-
-    contentSubHeadingStyle = {
-        display: 'flex',
-        justifyContent: `space-between`
     }
 
     toggleDD = () => this.setState({
@@ -108,8 +104,9 @@ class PodDetail extends Component {
     deactivate = (podId) => {
         Swal.fire({
             title: 'Are you sure you want to deactivate this pod?',
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: "#d9534f",
+            confirmButtonColor: swalConfirmDanger(),
             confirmButtonText: 'Deactivate',
         }).then((result) => {
             if (result.isConfirmed) {
@@ -144,7 +141,11 @@ class PodDetail extends Component {
                         <small>View and edit your pod</small>
                     </div>
                     <div className="ml-auto">
-                        <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
+                        <Dropdown 
+                            isOpen={this.state.ddOpen} 
+                            toggle={this.toggleDD}
+                            onMouseDown={e => e.preventDefault()}
+                        >
                             <DropdownToggle>
                                 <em className="fas fa-ellipsis-v fa-lg"></em>
                             </DropdownToggle>
@@ -167,7 +168,7 @@ class PodDetail extends Component {
                         />
                     </div>
                 </div>
-                <div style={this.contentSubHeadingStyle}>
+                <div style={{ display: 'flex', justifyContent: `space-between` }}>
                     <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
                             onClick={() => this.props.history.goBack()}>
                         <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
@@ -277,7 +278,7 @@ class PodDetail extends Component {
                                                         onMouseDown={e => e.preventDefault()}
                                                         onClick={this.toggleAnnModal}>
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                        Add Announcement
+                                                        Create Announcement
                                                     </button>
                                                 </div>
                                                 : null
@@ -288,7 +289,8 @@ class PodDetail extends Component {
                                                 updateOnAdd={this.updateOnAnnouncementAdd}
                                                 toggle={this.toggleAnnModal}
                                             />
-                                            <PodAnnouncementsTable
+                                            <AnnouncementsTable
+                                                role={this.state.rolePerms}
                                                 pod={this.state.pod}
                                                 announcements={this.state.announcements}
                                                 lastEvaluatedKey={this.state.lastEvaluatedKey}
@@ -301,7 +303,7 @@ class PodDetail extends Component {
                                                         onMouseDown={e => e.preventDefault()}
                                                         onClick={this.toggleUserModal}>
                                                         <em className="fa fa-plus-circle fa-sm button-create-icon"></em>
-                                                        Add User
+                                                        Invite User
                                                     </button>
                                                 </div>
                                                 : null

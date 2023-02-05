@@ -7,7 +7,7 @@ import moment from 'moment';
 class CourseCard extends Component {
 
     render() {
-        var daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"]
+        var daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"]
         var output = ""
         return (
             <div className='course-preview'>

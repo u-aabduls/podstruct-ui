@@ -9,6 +9,7 @@ import {
 import { withRouter } from "react-router-dom";
 import { denyInvite, acceptInvite } from '../../../connectors/PodUserInvite';
 import Swal from 'sweetalert2';
+import { swalConfirm } from '../../../utils/Styles';
 
 class InvitedPodForm extends Component {
 
@@ -29,7 +30,7 @@ class InvitedPodForm extends Component {
             this.toggleModal()
             Swal.fire({
                 title: "Denied pod invite",
-                confirmButtonColor: "#5d9cec",
+                confirmButtonColor: swalConfirm(),
                 icon: "success",
             })
             this.props.history.push('/pods')
@@ -38,7 +39,7 @@ class InvitedPodForm extends Component {
             Swal.fire({
                 title: "Error",
                 icon: "error",
-                confirmButtonColor: "#5d9cec",
+                confirmButtonColor: swalConfirm(),
                 text: res.message
             })
         }
@@ -50,7 +51,7 @@ class InvitedPodForm extends Component {
             this.toggleModal()
             Swal.fire({
                 title: "Accepted pod invite",
-                confirmButtonColor: "#5d9cec",
+                confirmButtonColor: swalConfirm(),
                 icon: "success",
             })
             window.location.reload(false);
@@ -59,7 +60,7 @@ class InvitedPodForm extends Component {
             Swal.fire({
                 title: "Error",
                 icon: "error",
-                confirmButtonColor: "#5d9cec",
+                confirmButtonColor: swalConfirm(),
                 text: res.message
             })
         }
@@ -80,9 +81,15 @@ class InvitedPodForm extends Component {
                             <h4>You have been invited to join <u>{this.state.pod.podName}</u>. Do you want to accept the invite?</h4>
                         </div>
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter style={{paddingBottom: '0'}}>
                         <Button color="secondary" onClick={this.deny}>Deny</Button>
-                        <Button color="primary" onClick={this.accept}>Accept</Button>
+                        <Button 
+                            color="primary" 
+                            onClick={this.accept}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Accept
+                        </Button>
                     </ModalFooter>
             </Modal>
         )
