@@ -165,6 +165,16 @@ class DocumentsTable extends Component {
         }
     }
 
+    getFileType = (fileType, fileName) => {
+        if (fileType !== '') {
+            return fileType;
+        } else {
+            if (fileName.includes(".rar")) {
+                return "application/vnd.rar";
+            }
+        }
+    }
+
     createDocument = (loadedFile) => {
         this.toggleFileUploadButton();
 
@@ -173,7 +183,7 @@ class DocumentsTable extends Component {
         const create = () => {
             var requestBody = {
                 "fileInBase64String": reader.result.replace(new RegExp('data:[a-z0-9/.;-]*base64,'), ""),
-                "fileType": loadedFile.type,
+                "fileType": this.getFileType(loadedFile.type, loadedFile.name),
                 "fileName": loadedFile.name,
             };
 
