@@ -85,7 +85,7 @@ class Header extends Component {
                     <ul className="navbar-nav flex-row">
                         { /* START Offsidebar button */ }
                         <li className="nav-item">
-                            <a className="nav-link" href="" onClick={this.toggleOffsidebar}>
+                            <a id="settingsToggleAnchor" className="nav-link" href="" onClick={this.toggleOffsidebar}>
                                 <em id="settingsToggle" className="icon-user"></em>
                             </a>
                         </li>
