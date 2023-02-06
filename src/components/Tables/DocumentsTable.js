@@ -34,25 +34,25 @@ class DocumentsTable extends Component {
     }
 
     getPodId = () => {
-        if (this.state.parentType == "pod") {
+        if (this.state.parentType === "pod") {
             return this.state.parent.id;
         }
-        else if (this.state.parentType == "course" || this.state.parentType == "assignment") {
+        else if (this.state.parentType === "course" || this.state.parentType === "assignment") {
             return this.state.parent.podId;
         }
     }
 
     getCourseId = () => {
-        if (this.state.parentType == "course") {
+        if (this.state.parentType === "course") {
             return this.state.parent.id;
         }
-        else if (this.state.parentType == "assignment") {
+        else if (this.state.parentType === "assignment") {
             return this.state.parent.courseId;
         }
     }
 
     getAssignmentId = () => {
-        if (this.state.parentType == "assignment") {
+        if (this.state.parentType === "assignment") {
             return this.state.parent.id;
         }
     }
@@ -60,13 +60,13 @@ class DocumentsTable extends Component {
     getDocuments = () => {
         var result = null;
 
-        if (this.state.parentType == "pod") {
+        if (this.state.parentType === "pod") {
             result = getPodDocuments(this.getPodId());
         }
-        else if (this.state.parentType == "course") {
+        else if (this.state.parentType === "course") {
             result = getCourseDocuments(this.getPodId(), this.getCourseId());
         }
-        else if (this.state.parentType == "assignment") {
+        else if (this.state.parentType === "assignment") {
             result = getAssignmentDocuments(this.getPodId(), this.getCourseId(), this.getAssignmentId());
         }
 
@@ -78,33 +78,35 @@ class DocumentsTable extends Component {
     }
 
     getDocument = (fileName) => {
-        if (this.state.parentType == "pod") {
+        if (this.state.parentType === "pod") {
             return getPodDocument(this.getPodId(), fileName);
         }
-        else if (this.state.parentType == "course") {
+        else if (this.state.parentType === "course") {
             return getCourseDocument(this.getPodId(), this.getCourseId(), fileName);
         }
-        else if (this.state.parentType == "assignment") {
+        else if (this.state.parentType === "assignment") {
             return getAssignmentDocument(this.getPodId(), this.getCourseId(), this.getAssignmentId(), fileName);
         }
     }
 
     deleteDocument = (fileName) => {
         Swal.fire({
+            icon: 'warning',
             title: 'Are you sure you want to delete the document?',
+            text: '\'' + fileName + '\' will be removed',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state;
-                if (this.state.parentType == "pod") {
+                if (this.state.parentType === "pod") {
                     var result = deletePodDocument(this.getPodId(), fileName);
                 }
-                else if (this.state.parentType == "course") {
+                else if (this.state.parentType === "course") {
                     var result = deleteCourseDocument(this.getPodId(), this.getCourseId(), fileName);
                 }
-                else if (this.state.parentType == "assignment") {
+                else if (this.state.parentType === "assignment") {
                     var result = deleteAssignmentDocument(this.getPodId(), this.getCourseId(), this.getAssignmentId(), fileName);
                 }
                 if (result.isSuccess) {
@@ -137,7 +139,7 @@ class DocumentsTable extends Component {
     }
 
     checkFileExists(fileName) {
-        return this.state.documents.some(document => document['fileName'] == fileName);
+        return this.state.documents.some(document => document['fileName'] === fileName);
     }
 
     updateOnDocumentAdd = (res) => {
