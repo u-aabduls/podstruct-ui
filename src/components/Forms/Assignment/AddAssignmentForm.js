@@ -3,8 +3,6 @@ import { withRouter } from 'react-router';
 import {
     Button,
     Input,
-    Row,
-    Col,
     Modal,
     ModalHeader,
     ModalBody,
@@ -120,6 +118,8 @@ class AddAssignmentForm extends Component {
                 break;
             case "day":
                 stateCopy.selector.error.isNullDueDate = isNullDueDate ? true : false;
+                break;
+            default:
                 break;
         }
         this.setState(stateCopy);
@@ -274,7 +274,7 @@ class AddAssignmentForm extends Component {
                                     setType={(type) => this.setType(type)}
                                     validate={this.validateSelectorsOnChange}
                                 />
-                                {this.state.formAddAssignment.type == "FREE_FORM" && <span className='text-warning' style={errorMessageStyling()}>Warning: Free Form assignment must be manually graded</span>}
+                                {this.state.formAddAssignment.type === "FREE_FORM" && <span className='text-warning' style={errorMessageStyling()}>Warning: Free Form assignment must be manually graded</span>}
                                 {this.state.formAddAssignment.selector.error.isNullType && <span style={errorMessageStyling()}>Assignment type is required</span>}
                             </div>
                             <div className="form-group">

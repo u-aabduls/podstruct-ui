@@ -1,4 +1,3 @@
-import { _ } from 'core-js';
 import Select from 'react-select';
 
 const options = [
@@ -24,7 +23,7 @@ const customStylesError = {
 function setAdditionalOptions(assignmentType) {
     // only add the extra option if it doesnt already exist as an option
     if (assignmentType === 'FREE_FORM' && !options.find(o => o.value === 'FF')) options.push({ value: 'FF', label: 'Free Form' });
-    else if (assignmentType != 'FREE_FORM' && options.find(o => o.value === 'FF')) {
+    else if (assignmentType !== 'FREE_FORM' && options.find(o => o.value === 'FF')) {
         options.splice(options.findIndex(o => o.value === 'FF'), 1)
     }
     if (assignmentType === 'ESSAY') return;

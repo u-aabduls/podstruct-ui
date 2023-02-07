@@ -37,7 +37,7 @@ const FormValidator = {
 
         var i = input.length;
 
-        if (i == 0) {
+        if (i === 0) {
             return true;
         }
         input = input.toUpperCase();

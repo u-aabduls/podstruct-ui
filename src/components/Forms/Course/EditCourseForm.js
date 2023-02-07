@@ -117,6 +117,8 @@ class EditCourseForm extends Component {
             case "teacher":
                 stateCopy.selector.error.isNullTeacher = isNullTeacher ? true : false;
                 break;
+            default:
+                break;
         }
         this.setState(stateCopy);
     }
@@ -170,7 +172,7 @@ class EditCourseForm extends Component {
     }
 
     setTime = (date, id) => {
-        if (date instanceof moment){
+        if (date instanceof moment) {
             var stateCopy = this.state.formEditCourse;
             if (id === "start") {
                 stateCopy.startTime = date.format("HH:mm:ss")
@@ -179,7 +181,7 @@ class EditCourseForm extends Component {
                 stateCopy.endTime = date.format("HH:mm:ss")
             }
             this.setState(stateCopy);
-        } 
+        }
     }
 
     setTeacher = (teacher) => {
@@ -224,7 +226,7 @@ class EditCourseForm extends Component {
                     confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
-                var res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)
+                res = getCourse(this.state.formEditCourse.selectedPod.id, this.state.course.id)
                 this.props.updateOnEdit(res)
             }
             else {
@@ -328,7 +330,7 @@ class EditCourseForm extends Component {
                                 <Col lg="6">
                                     <label className="text-muted">Start time: </label>
                                     <Datetime
-                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error'} : { className: 'form-control'}}
+                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error' } : { className: 'form-control' }}
                                         dateFormat={false}
                                         onChange={(date) => {
                                             this.setTime(date, "start")
@@ -340,7 +342,7 @@ class EditCourseForm extends Component {
                                 <Col lg="6">
                                     <label className="text-muted">End time: </label>
                                     <Datetime
-                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error'} : { className: 'form-control'}}
+                                        inputProps={this.state.formEditCourse.selector.error.isNullTime ? { className: 'form-control time-error' } : { className: 'form-control' }}
                                         dateFormat={false}
                                         onChange={(date) => {
                                             this.setTime(date, "end")
@@ -354,14 +356,14 @@ class EditCourseForm extends Component {
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="id-teacher">Teacher</label>
-                                <TeacherSelector
-                                    name="teacherSelector"
-                                    teachers={this.state.teachers}
-                                    defaultv={this.state.formEditCourse.teacher}
-                                    hasError={this.state.formEditCourse.selector.error.isNullTeacher}
-                                    validate={this.validateSelectorsOnChange}
-                                    setTeacher={this.setTeacher}
-                                />
+                            <TeacherSelector
+                                name="teacherSelector"
+                                teachers={this.state.teachers}
+                                defaultv={this.state.formEditCourse.teacher}
+                                hasError={this.state.formEditCourse.selector.error.isNullTeacher}
+                                validate={this.validateSelectorsOnChange}
+                                setTeacher={this.setTeacher}
+                            />
                         </div>
                         <div className="form-group">
                             <label className="text-muted" htmlFor="id-courseDescription">Description</label>
@@ -390,10 +392,10 @@ class EditCourseForm extends Component {
                             </div>
                         </div>
                     </ModalBody>
-                    <ModalFooter style={{paddingBottom: '0'}}>
+                    <ModalFooter style={{ paddingBottom: '0' }}>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button 
-                            color="primary" 
+                        <Button
+                            color="primary"
                             type="submit"
                             onMouseDown={e => e.preventDefault()}
                         >

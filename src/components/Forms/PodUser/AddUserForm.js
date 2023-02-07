@@ -102,6 +102,8 @@ class AddUserForm extends Component {
             case "role":
                 stateCopy.selector.error.isNullRole = isNullRole ? true : false;
                 break;
+            default:
+                break;
         }
         this.setState(stateCopy);
     }
@@ -258,10 +260,10 @@ class AddUserForm extends Component {
                             {this.state.formAddUser.selector.error.isNullRole && <p style={errorMessageStyling()}>Role is required</p>}
                         </div>
                     </ModalBody>
-                    <ModalFooter style={{paddingBottom: '0'}}>
+                    <ModalFooter style={{ paddingBottom: '0' }}>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button 
-                            color="primary" 
+                        <Button
+                            color="primary"
                             type="submit"
                             onMouseDown={e => e.preventDefault()}
                         >

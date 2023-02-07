@@ -100,7 +100,7 @@ class Dashboard extends Component {
 
     render() {
   
-        if (localStorage.getItem('status') == 401 || !localStorage.getItem('token'))  {
+        if (localStorage.getItem('status') === 401 || !localStorage.getItem('token'))  {
             return <Redirect to='/login'/>;
         }
 

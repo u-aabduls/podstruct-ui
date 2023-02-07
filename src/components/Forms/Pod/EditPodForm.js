@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import {
     Button,
     Input,
-    Row,
-    Col,
     Modal,
     ModalHeader,
     ModalBody,
@@ -64,8 +62,8 @@ class EditPodForm extends Component {
             this.state[formName].errors[inputName][method]
     }
 
-     /* Clean phone input */
-     cleanPhoneNumber = (phoneNumber) => {
+    /* Clean phone input */
+    cleanPhoneNumber = (phoneNumber) => {
         return "+" + phoneNumber.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "");
     }
 
@@ -117,7 +115,7 @@ class EditPodForm extends Component {
                     confirmButtonColor: swalConfirm(),
                     icon: "success",
                 })
-                var res = getPod(this.state.pod.id)
+                res = getPod(this.state.pod.id)
                 this.props.updateOnEdit(res)
             }
             else {
@@ -262,10 +260,10 @@ class EditPodForm extends Component {
                             </div>
                         </div>
                     </ModalBody>
-                    <ModalFooter style={{paddingBottom: '0'}}>
+                    <ModalFooter style={{ paddingBottom: '0' }}>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button 
-                            color="primary" 
+                        <Button
+                            color="primary"
                             type="submit"
                             onMouseDown={e => e.preventDefault()}
                         >

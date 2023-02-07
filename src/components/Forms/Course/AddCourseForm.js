@@ -139,6 +139,8 @@ class AddCourseForm extends Component {
             case "teacher":
                 stateCopy.selector.error.isNullTeacher = isNullTeacher ? true : false;
                 break;
+            default:
+                break;
         }
         this.setState(stateCopy);
     }
@@ -281,13 +283,13 @@ class AddCourseForm extends Component {
         if (this.state.formAddCourse.selectedPod !== prevState.formAddCourse.selectedPod) {
             if (!this.state.formAddCourse.selectedPod) return
             var params = this.state.getUserParams;
-            var res = getUsers(this.state.formAddCourse.selectedPod, 
-                                params.name, 
-                                params.page, 
-                                params.size, 
-                                params.sort, 
-                                params.role, 
-                                params.inviteStatus);
+            var res = getUsers(this.state.formAddCourse.selectedPod,
+                params.name,
+                params.page,
+                params.size,
+                params.sort,
+                params.role,
+                params.inviteStatus);
             if (res.isSuccess) {
                 this.setState({ teachers: res.data.users });
             }
@@ -413,10 +415,10 @@ class AddCourseForm extends Component {
                             </div>
                         </div>
                     </ModalBody>
-                    <ModalFooter style={{paddingBottom: '0'}}>
+                    <ModalFooter style={{ paddingBottom: '0' }}>
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        <Button 
-                            color="primary" 
+                        <Button
+                            color="primary"
                             type="submit"
                             onMouseDown={e => e.preventDefault()}
                         >

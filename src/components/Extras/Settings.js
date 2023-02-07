@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, CustomInput, Button } from 'reactstrap';
+import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, Button } from 'reactstrap';
 import EditableProfile from "./EditableProfile"
 import UnEditableProfile from './UnEditableProfile';
 import 'react-toastify/dist/ReactToastify.css';
