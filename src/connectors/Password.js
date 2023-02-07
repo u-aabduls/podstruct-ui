@@ -1,5 +1,5 @@
 import handleError from '../utils/ErrorHandler.js'
-import {devServer, prodServer} from './Paths.js';
+import { endpointServer } from './Paths.js';
 
 // private members
 var request = new XMLHttpRequest();
@@ -34,16 +34,18 @@ function _initialize(method) {
     httpMethod = method;
     switch (method) {
         case "GET":
-            request.open("GET", devServer + endpointPath, false);
+            request.open("GET", endpointServer + endpointPath, false);
             break;
         case "POST":
-            request.open("POST", devServer + endpointPath, false);
+            request.open("POST", endpointServer + endpointPath, false);
             break;
         case "PUT":
-            request.open("PUT", devServer + endpointPath, false);
+            request.open("PUT", endpointServer + endpointPath, false);
             break;
         case "DELETE":
-            request.open("DELETE", devServer + endpointPath, false);
+            request.open("DELETE", endpointServer + endpointPath, false);
+            break;
+        default:
             break;
     }
     // request.open("POST", prodServer + endpointPath, false);
@@ -64,7 +66,7 @@ function __execute() {
         result.message = handleError(request.status, data);
     } else {
         if (!localStorage.getItem('username')) localStorage.setItem('username', username);
-        else  localStorage.removeItem('username');
+        else localStorage.removeItem('username');
         result.isSuccess = true;
         switch (httpMethod) {
             case "POST":
@@ -79,4 +81,4 @@ function __execute() {
     }
 }
 
-export {recoverPassword, resetPassword};
+export { recoverPassword, resetPassword };

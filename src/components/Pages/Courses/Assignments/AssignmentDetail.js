@@ -31,7 +31,7 @@ import EditQuestionForm from '../../../Forms/Assignment/EditQuestionForm';
 import EditAssignmentForm from '../../../Forms/Assignment/EditAssignmentForm';
 import Swal from 'sweetalert2';
 import DocumentsTable from '../../../Tables/DocumentsTable';
-import { swalConfirm, errorMessageStyling, buttonLightGreyBorder } from '../../../../utils/Styles';
+import { swalConfirm, errorMessageStyling } from '../../../../utils/Styles';
 
 class AssignmentDetail extends Component {
 

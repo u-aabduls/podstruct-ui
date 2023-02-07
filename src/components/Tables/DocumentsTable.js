@@ -99,19 +99,22 @@ class DocumentsTable extends Component {
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
+
                 var stateCopy = this.state;
+                var res = null;
+
                 if (this.state.parentType === "pod") {
-                    var result = deletePodDocument(this.getPodId(), fileName);
+                    res = deletePodDocument(this.getPodId(), fileName);
                 }
                 else if (this.state.parentType === "course") {
-                    var result = deleteCourseDocument(this.getPodId(), this.getCourseId(), fileName);
+                    res = deleteCourseDocument(this.getPodId(), this.getCourseId(), fileName);
                 }
                 else if (this.state.parentType === "assignment") {
-                    var result = deleteAssignmentDocument(this.getPodId(), this.getCourseId(), this.getAssignmentId(), fileName);
+                    res = deleteAssignmentDocument(this.getPodId(), this.getCourseId(), this.getAssignmentId(), fileName);
                 }
-                if (result.isSuccess) {
-                    result = this.getDocuments();
-                    stateCopy.documents = result.data;
+                if (res.isSuccess) {
+                    res = this.getDocuments();
+                    stateCopy.documents = res.data;
                     this.setState(stateCopy);
                 }
                 Swal.fire({
@@ -188,14 +191,16 @@ class DocumentsTable extends Component {
             };
 
             const o = this;
-            if (this.state.parentType == "pod") {
-                var result = createPodDocument(o.getPodId(), JSON.stringify(requestBody));
+            var result = null;
+
+            if (this.state.parentType === "pod") {
+                result = createPodDocument(o.getPodId(), JSON.stringify(requestBody));
             }
-            else if (this.state.parentType == "course") {
-                var result = createCourseDocument(o.getPodId(), o.getCourseId(), JSON.stringify(requestBody));
+            else if (this.state.parentType === "course") {
+                result = createCourseDocument(o.getPodId(), o.getCourseId(), JSON.stringify(requestBody));
             }
-            else if (this.state.parentType == "assignment") {
-                var result = createAssignmentDocument(o.getPodId(), o.getCourseId(), o.getAssignmentId(), JSON.stringify(requestBody));
+            else if (this.state.parentType === "assignment") {
+                result = createAssignmentDocument(o.getPodId(), o.getCourseId(), o.getAssignmentId(), JSON.stringify(requestBody));
             }
             this.toggleFileUploadButton();
             if (result.isSuccess) {

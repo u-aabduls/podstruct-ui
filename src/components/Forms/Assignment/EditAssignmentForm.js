@@ -104,6 +104,8 @@ class EditAssignmentForm extends Component {
             case "day":
                 stateCopy.selector.error.isNullDueDate = isNullDueDate ? true : false;
                 break;
+            default:
+                break;
         }
         this.setState(stateCopy);
     }
@@ -290,7 +292,7 @@ class EditAssignmentForm extends Component {
                                         onChange={this.validateOnChange}
                                         data-validate='["required", "maxlen", "contains-alpha"]'
                                         data-param='250'
-                                        value={this.state.formEditAssignment.instructions || ''} 
+                                        value={this.state.formEditAssignment.instructions || ''}
                                         rows={10}
                                     />
                                     <div className="input-group-append">
@@ -346,10 +348,10 @@ class EditAssignmentForm extends Component {
                                 </div>
                             </div>
                         </ModalBody>
-                        <ModalFooter style={{paddingBottom: '0'}}>
+                        <ModalFooter style={{ paddingBottom: '0' }}>
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            <Button 
-                                color="primary" 
+                            <Button
+                                color="primary"
                                 type="submit"
                                 onMouseDown={e => e.preventDefault()}
                             >
