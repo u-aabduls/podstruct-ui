@@ -266,6 +266,10 @@ class DocumentsTable extends Component {
         }
     }
 
+    shouldHideBorderTop = (row) => {
+        return !isAdmin(this.state.role) && row === 0 ? { borderTop: 'none' } : null;
+    }
+
     render() {
         var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -279,11 +283,11 @@ class DocumentsTable extends Component {
                 }
                 <Table hover responsive>
                     {this.state.documents.length > 0 ?
-                        this.state.documents.map((document) => {
+                        this.state.documents.map((document, i) => {
                             var date = new Date(document.lastModified);
                             return (
                                 <tr>
-                                    <td className='date'>
+                                    <td className="date" style={this.shouldHideBorderTop(i)}>
                                         <span className="text-uppercase text-bold">
                                             {days[date.getDay()]}
                                             {' '}
@@ -296,14 +300,14 @@ class DocumentsTable extends Component {
                                             {moment(date).format("h:mm A")}
                                         </span>
                                     </td>
-                                    <td className="document">
+                                    <td className="document" style={this.shouldHideBorderTop(i)}>
                                         <a className="h4 text-bold pointer" onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}>
                                             {document.fileName}
                                         </a>
                                         <br />
                                         {document.fileSize}
                                     </td>
-                                    <td className="buttons">
+                                    <td className="buttons" style={this.shouldHideBorderTop(i)}>
                                         {isAdmin(this.state.role) ?
                                             <div className='button-container'>
                                                 <Button 
