@@ -79,7 +79,7 @@ class Offsidebar extends Component {
                             <TabContent activeTab={this.state.activeTab}>
                                 <TabPane tabId="settings">
                                     <h3 className="text-center text-thin mt-4">Settings</h3>
-                                    <h5 className="text-center">{localStorage.getItem('username')}</h5>
+                                    <h5 className="text-center">{localStorage.getItem('name')}</h5>
                                     <div className="clearfix">
                                         <button className="btn btn-block btn-secondary" onClick={this.settingsRedirect}>
                                             <i className="icon-settings fa-pull-left btn-icon"></i>
