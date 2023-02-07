@@ -368,7 +368,7 @@ class AssignmentDetail extends Component {
                                                 href="#"
                                                 className={classnames({ active: this.state.activeTab === '1' })}
                                                 onClick={() => { this.toggleTab('1'); }}>
-                                                Assignment Details
+                                                Assignment
                                             </NavLink>
                                         </NavItem>
                                         <NavItem>
