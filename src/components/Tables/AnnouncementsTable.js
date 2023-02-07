@@ -86,6 +86,10 @@ class AnnouncementsTable extends Component {
         });
     }
 
+    shouldHideBorderTop = (row) => {
+        return !isAdmin(this.state.rolePerms) && row === 0 ? { borderTop: 'none' } : null;
+    }
+
     componentDidMount() {
         var stateCopy = this.state;
         var res = this.state.course ?
@@ -114,11 +118,11 @@ class AnnouncementsTable extends Component {
             <div>
                 <Table hover responsive>
                     {this.state.announcements.length > 0 ?
-                        this.state.announcements.map((announcement) => {
+                        this.state.announcements.map((announcement, i) => {
                             var date = new Date(announcement.date * 1000);
                             return (
                                 <tr>
-                                    <td className='date'>
+                                    <td className="date" style={this.shouldHideBorderTop(i)}>
                                         <span className="text-uppercase text-bold">
                                             {days[date.getDay()]}
                                             {' '}
@@ -131,12 +135,12 @@ class AnnouncementsTable extends Component {
                                             {moment(date).format("h:mm A")}
                                         </span>
                                     </td>
-                                    <td className="announcement">
+                                    <td className="announcement" style={this.shouldHideBorderTop(i)}>
                                         <span className="h4 text-bold">{announcement.title}</span>
                                         <br />
                                         <span>{announcement.message}</span>
                                     </td>
-                                    <td className="buttons">
+                                    <td className="buttons" style={this.shouldHideBorderTop(i)}>
                                         {isAdmin(this.state.rolePerms) ?
                                             <Button
                                                 className="btn btn-sm bg-danger float-right"

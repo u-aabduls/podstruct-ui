@@ -81,7 +81,7 @@ class InvitedPodForm extends Component {
                             <h4>You have been invited to join <u>{this.state.pod.podName}</u>. Do you want to accept the invite?</h4>
                         </div>
                     </ModalBody>
-                    <ModalFooter style={{paddingBottom: '0'}}>
+                    <ModalFooter>
                         <Button color="secondary" onClick={this.deny}>Deny</Button>
                         <Button 
                             color="primary" 
