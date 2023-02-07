@@ -206,10 +206,12 @@ class AddQuestionForm extends Component {
             "question": this.state.formAddQuestion.question,
             "questionType": this.state.formAddQuestion.questionType,
         };
+        var numOfEnteredChoices = 0;
+        var numOfEnteredAnswers = 0;
         switch (this.state.formAddQuestion.questionType) {
             case "MC":
-                var numOfEnteredChoices = 0;
-                var numOfEnteredAnswers = 0;
+                numOfEnteredChoices = 0;
+                numOfEnteredAnswers = 0;
                 for (let i = 0; i < this.state.numberOfChoices; i++) {
                     if (this.state.formAddQuestion['choice' + this.alphabet[i]]) {
                         payload['choice' + this.alphabet[numOfEnteredChoices]] = this.state.formAddQuestion['choice' + this.alphabet[i]];
@@ -222,8 +224,8 @@ class AddQuestionForm extends Component {
                 }
                 break;
             case "MA":
-                var numOfEnteredChoices = 0;
-                var numOfEnteredAnswers = 0;
+                numOfEnteredChoices = 0;
+                numOfEnteredAnswers = 0;
                 for (let i = 0; i < this.state.numberOfChoices; i++) {
                     if (this.state.formAddQuestion['choice' + this.alphabet[i]]) {
                         payload['choice' + this.alphabet[numOfEnteredChoices]] = this.state.formAddQuestion['choice' + this.alphabet[i]];
@@ -232,7 +234,8 @@ class AddQuestionForm extends Component {
                 }
                 for (let i = 0; i < numOfEnteredChoices; i++) {
                     for (let j = 0; j < this.state.numberOfChoices; j++) {
-                        if (this.state.formAddQuestion['answer' + (j + 1)] && this.state.formAddQuestion['answer' + (j + 1)] == payload['choice' + this.alphabet[i]]) {
+                        if (this.state.formAddQuestion['answer' + (j + 1)]
+                            && this.state.formAddQuestion['answer' + (j + 1)] === payload['choice' + this.alphabet[i]]) {
                             numOfEnteredAnswers += 1;
                             payload['answer' + numOfEnteredAnswers] = this.alphabet[i];
                         }
@@ -243,6 +246,8 @@ class AddQuestionForm extends Component {
                 payload.answer1 = this.state.formAddQuestion.answer1
                 payload.choiceA = "True"
                 payload.choiceB = "False"
+                break;
+            default:
                 break;
         }
         return JSON.stringify(payload);
@@ -269,9 +274,9 @@ class AddQuestionForm extends Component {
         });
 
         var invalidQuestion = false;
-        if (this.state.formAddQuestion.questionType == "MC") invalidQuestion = this.validateMCQuestion();
-        else if (this.state.formAddQuestion.questionType == "MA") invalidQuestion = this.validateMAQuestion();
-        else if (this.state.formAddQuestion.questionType == "TF") invalidQuestion = this.validateTFQuestion();
+        if (this.state.formAddQuestion.questionType === "MC") invalidQuestion = this.validateMCQuestion();
+        else if (this.state.formAddQuestion.questionType === "MA") invalidQuestion = this.validateMAQuestion();
+        else if (this.state.formAddQuestion.questionType === "TF") invalidQuestion = this.validateTFQuestion();
 
         console.log((hasError || invalidQuestion) ? 'Form has errors. Check!' : 'Form Submitted!')
 
@@ -348,7 +353,7 @@ class AddQuestionForm extends Component {
                                         </span>
                                     </div>
                                     {this.state.formAddQuestion.choices.error.isNullAnswer &&
-                                        this.state.formAddQuestion.questionType != "TF" && <span style={errorMessageStyling()}>You must select at least 1 correct answer</span>}
+                                        this.state.formAddQuestion.questionType !== "TF" && <span style={errorMessageStyling()}>You must select at least 1 correct answer</span>}
                                     {this.hasError('formAddQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                 </div>
                             </div>
@@ -461,7 +466,7 @@ class AddQuestionForm extends Component {
                                     {this.state.formAddQuestion.choices.error.isNullAnswer && <span style={errorMessageStyling()}>Answer is required</span>}
                                 </div>
                                 : null}
-                            {this.state.numberOfChoices < 5 && this.state.formAddQuestion.questionType != "TF" && this.state.formAddQuestion.questionType != "FF" ?
+                            {this.state.numberOfChoices < 5 && this.state.formAddQuestion.questionType !== "TF" && this.state.formAddQuestion.questionType !== "FF" ?
                                 <div>
                                     <Button
                                         className="btn btn-secondary btn-sm"

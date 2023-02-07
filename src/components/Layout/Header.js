@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, ListGroup, ListGroupItem } from 'reactstrap';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../../store/actions/actions';
 
-import ToggleFullscreen from '../Common/ToggleFullscreen';
 import HeaderRun from './Header.run'
 
 class Header extends Component {
@@ -71,11 +69,11 @@ class Header extends Component {
                     <ul className="navbar-nav mr-auto flex-row">
                         <li className="nav-item">
                             { /* Button used to collapse the left sidebar. Only visible on tablet and desktops */ }
-                            <a href="" className="nav-link d-none d-md-block d-lg-block d-xl-block" onClick={ this.toggleCollapsed }>
+                            <a href="#" className="nav-link d-none d-md-block d-lg-block d-xl-block" onClick={ this.toggleCollapsed }>
                                 <em className="fas fa-bars"></em>
                             </a>
                             { /* Button to show/hide the sidebar on mobile. Visible on mobile only. */ }
-                            <a href=""  className="nav-link sidebar-toggle d-md-none" onClick={ this.toggleAside }>
+                            <a href="#"  className="nav-link sidebar-toggle d-md-none" onClick={ this.toggleAside }>
                                 <em className="fas fa-bars"></em>
                             </a>
                         </li>
@@ -85,7 +83,7 @@ class Header extends Component {
                     <ul className="navbar-nav flex-row">
                         { /* START Offsidebar button */ }
                         <li className="nav-item">
-                            <a className="nav-link" href="" onClick={this.toggleOffsidebar}>
+                            <a id="settingsToggleAnchor" className="nav-link" href="#" onClick={this.toggleOffsidebar}>
                                 <em id="settingsToggle" className="icon-user"></em>
                             </a>
                         </li>

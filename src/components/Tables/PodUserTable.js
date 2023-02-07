@@ -101,7 +101,7 @@ class PodUserTable extends Component {
                     var res = deleteUser(this.state.pod.id, user.username)
                     if (res.isSuccess) {
                         var params = this.state.getUserParams.users
-                        var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                        res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
                         if (res.isSuccess) {
                             stateCopy.users = res.data.users
                             this.setState(stateCopy)
@@ -127,7 +127,7 @@ class PodUserTable extends Component {
                     var res = deleteUser(this.state.pod.id, user.username)
                     if (res.isSuccess) {
                         var params = this.state.getUserParams.pending
-                        var res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
+                        res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
                         if (res.isSuccess) {
                             stateCopy.pending = res.data.users
                             this.setState(stateCopy)
@@ -205,7 +205,7 @@ class PodUserTable extends Component {
             case "role":
                 if (nextSort === 'default') getUserParams.sort = '';
                 else getUserParams.sort = "role," + nextSort;
-                var params = getUserParams
+                params = getUserParams
                 res = getUsers(this.state.pod.id, params.name, params.page, params.size, params.sort, params.role, params.inviteStatus)
                 this.setState({
                     [table]: res.data.users,
@@ -225,6 +225,8 @@ class PodUserTable extends Component {
 
                     }
                 });
+                break;
+            default:
                 break;
         }
     }

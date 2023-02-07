@@ -98,16 +98,20 @@ class AssignmentsTable extends Component {
     }
 
     assignmentDetailRedirect = (event, assignmentId) => {
-        if (event.target.id === 'buttonPublish' 
+        if (event.target.id === 'buttonPublish'
             || event.target.id === 'buttonPublishIcon'
-            || event.target.id === 'buttonDelete' 
-            || event.target.id === 'buttonDeleteIcon'){ 
-                return; 
+            || event.target.id === 'buttonDelete'
+            || event.target.id === 'buttonDeleteIcon') {
+            return;
         }
         this.props.history.push(
-            `/course/assignment/details/${assignmentId}`, 
+            `/course/assignment/details/${assignmentId}`,
             { podID: this.state.course.podId, course: this.state.course, rolePerms: this.state.rolePerms, from: this.state.course.subject }
         )
+    }
+
+    shouldHideBorderTop = (row) => {
+        return !isAdmin(this.state.rolePerms) && row === 0 ? { borderTop: 'none' } : null;
     }
 
     componentDidMount() {
@@ -149,31 +153,31 @@ class AssignmentsTable extends Component {
                         </tr>
                     </thead>
                     {this.state.assignments.length > 0 ?
-                        this.state.assignments.map((assignment) => {
+                        this.state.assignments.map((assignment, i) => {
                             if (!assignment.published && isStudent(this.state.rolePerms)) return
                             var dueDate = new Date(moment.utc(assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
                             if (assignment.publishDateTime) var publishDate = new Date(moment.utc(assignment.publishDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
                             return (
-                                <tbody onClick={(event) => this.assignmentDetailRedirect(event, assignment.id)}>
-                                    <tr>
-                                        {assignment.publishDateTime ? <td>
-                                            <span className="text-uppercase text-bold">
-                                                {days[publishDate.getDay()]}
-                                                {' '}
-                                                {months[publishDate.getMonth()]}
-                                                {' '}
-                                                {publishDate.getDate()}
-                                            </span>
-                                            <br />
-                                            <span className="h2 mt0 text-sm">
-                                                {moment(publishDate).format("h:mm A")}
-                                            </span>
-                                        </td>
+                                    <tr onClick={(event) => this.assignmentDetailRedirect(event, assignment.id)}>
+                                        {assignment.publishDateTime ?
+                                            <td style={this.shouldHideBorderTop(i)}>
+                                                <span className="text-uppercase text-bold">
+                                                    {days[publishDate.getDay()]}
+                                                    {' '}
+                                                    {months[publishDate.getMonth()]}
+                                                    {' '}
+                                                    {publishDate.getDate()}
+                                                </span>
+                                                <br />
+                                                <span className="h2 mt0 text-sm">
+                                                    {moment(publishDate).format("h:mm A")}
+                                                </span>
+                                            </td>
                                             : <td></td>}
-                                        <td>
+                                        <td style={this.shouldHideBorderTop(i)}>
                                             {assignment.title}
                                         </td>
-                                        <td>
+                                        <td style={this.shouldHideBorderTop(i)}>
                                             <span className="text-uppercase text-bold">
                                                 {days[dueDate.getDay()]}
                                                 {' '}
@@ -186,49 +190,48 @@ class AssignmentsTable extends Component {
                                                 {moment(dueDate).format("h:mm A")}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td style={this.shouldHideBorderTop(i)}>
                                             {assignment.published ? <span>Published</span> : <span>Unpublished</span>}
                                         </td>
-                                        <td className="buttons">
+                                        <td className="buttons" style={this.shouldHideBorderTop(i)}>
                                             <div>
-                                            {isAdmin(this.state.rolePerms) ?
-                                                <Button
-                                                    id='buttonDelete'
-                                                    className="btn btn-secondary btn-sm bg-danger float-right"
-                                                    onMouseDown={e => e.preventDefault()}
-                                                    onClick={() => this.deleteAssignments(assignment.id)}
-                                                >
-                                                    <i id='buttonDeleteIcon' className="fas fa-trash-alt fa-fw btn-icon" ></i>
-                                                </Button>
-                                                : null
-                                            }
-                                            {isAdmin(this.state.rolePerms) ?
-                                                !assignment.published ?
-                                                    <button
-                                                        id='buttonPublish'
-                                                        className="btn btn-primary btn-sm btn-info mr-1 float-right"
-                                                        title="Publish"
-                                                        style={buttonLightGreyBorder()}
+                                                {isAdmin(this.state.rolePerms) ?
+                                                    <Button
+                                                        id='buttonDelete'
+                                                        className="btn btn-secondary btn-sm bg-danger float-right"
                                                         onMouseDown={e => e.preventDefault()}
-                                                        onClick={() => this.publish(assignment.id, assignment.title)}
+                                                        onClick={() => this.deleteAssignments(assignment.id)}
                                                     >
-                                                        <i id='buttonPublishIcon' className="fas fa-upload fa-fw btn-icon"></i>
-                                                    </button>
-                                                    :
-                                                    <button
-                                                        id='buttonPublish'
-                                                        className="btn btn-primary btn-info btn-sm mr-1 float-right"
-                                                        style={buttonLightGreyBorder()}
-                                                        disabled
-                                                    >
-                                                        <i id='buttonPublishIcon' className="fas fa-upload fa-fw btn-icon"></i>
-                                                    </button>
-                                                : null
-                                            }
+                                                        <i id='buttonDeleteIcon' className="fas fa-trash-alt fa-fw btn-icon" ></i>
+                                                    </Button>
+                                                    : null
+                                                }
+                                                {isAdmin(this.state.rolePerms) ?
+                                                    !assignment.published ?
+                                                        <button
+                                                            id='buttonPublish'
+                                                            className="btn btn-primary btn-sm btn-info mr-1 float-right"
+                                                            title="Publish"
+                                                            style={buttonLightGreyBorder()}
+                                                            onMouseDown={e => e.preventDefault()}
+                                                            onClick={() => this.publish(assignment.id, assignment.title)}
+                                                        >
+                                                            <i id='buttonPublishIcon' className="fas fa-upload fa-fw btn-icon"></i>
+                                                        </button>
+                                                        :
+                                                        <button
+                                                            id='buttonPublish'
+                                                            className="btn btn-primary btn-info btn-sm mr-1 float-right"
+                                                            style={buttonLightGreyBorder()}
+                                                            disabled
+                                                        >
+                                                            <i id='buttonPublishIcon' className="fas fa-upload fa-fw btn-icon"></i>
+                                                        </button>
+                                                    : null
+                                                }
                                             </div>
                                         </td>
                                     </tr>
-                                </tbody>
                             )
                         })
                         : <tr>

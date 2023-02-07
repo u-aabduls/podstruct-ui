@@ -34,25 +34,25 @@ class DocumentsTable extends Component {
     }
 
     getPodId = () => {
-        if (this.state.parentType == "pod") {
+        if (this.state.parentType === "pod") {
             return this.state.parent.id;
         }
-        else if (this.state.parentType == "course" || this.state.parentType == "assignment") {
+        else if (this.state.parentType === "course" || this.state.parentType === "assignment") {
             return this.state.parent.podId;
         }
     }
 
     getCourseId = () => {
-        if (this.state.parentType == "course") {
+        if (this.state.parentType === "course") {
             return this.state.parent.id;
         }
-        else if (this.state.parentType == "assignment") {
+        else if (this.state.parentType === "assignment") {
             return this.state.parent.courseId;
         }
     }
 
     getAssignmentId = () => {
-        if (this.state.parentType == "assignment") {
+        if (this.state.parentType === "assignment") {
             return this.state.parent.id;
         }
     }
@@ -60,13 +60,13 @@ class DocumentsTable extends Component {
     getDocuments = () => {
         var result = null;
 
-        if (this.state.parentType == "pod") {
+        if (this.state.parentType === "pod") {
             result = getPodDocuments(this.getPodId());
         }
-        else if (this.state.parentType == "course") {
+        else if (this.state.parentType === "course") {
             result = getCourseDocuments(this.getPodId(), this.getCourseId());
         }
-        else if (this.state.parentType == "assignment") {
+        else if (this.state.parentType === "assignment") {
             result = getAssignmentDocuments(this.getPodId(), this.getCourseId(), this.getAssignmentId());
         }
 
@@ -78,38 +78,43 @@ class DocumentsTable extends Component {
     }
 
     getDocument = (fileName) => {
-        if (this.state.parentType == "pod") {
+        if (this.state.parentType === "pod") {
             return getPodDocument(this.getPodId(), fileName);
         }
-        else if (this.state.parentType == "course") {
+        else if (this.state.parentType === "course") {
             return getCourseDocument(this.getPodId(), this.getCourseId(), fileName);
         }
-        else if (this.state.parentType == "assignment") {
+        else if (this.state.parentType === "assignment") {
             return getAssignmentDocument(this.getPodId(), this.getCourseId(), this.getAssignmentId(), fileName);
         }
     }
 
     deleteDocument = (fileName) => {
         Swal.fire({
+            icon: 'warning',
             title: 'Are you sure you want to delete the document?',
+            text: '\'' + fileName + '\' will be removed',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
+
                 var stateCopy = this.state;
-                if (this.state.parentType == "pod") {
-                    var result = deletePodDocument(this.getPodId(), fileName);
+                var res = null;
+
+                if (this.state.parentType === "pod") {
+                    res = deletePodDocument(this.getPodId(), fileName);
                 }
-                else if (this.state.parentType == "course") {
-                    var result = deleteCourseDocument(this.getPodId(), this.getCourseId(), fileName);
+                else if (this.state.parentType === "course") {
+                    res = deleteCourseDocument(this.getPodId(), this.getCourseId(), fileName);
                 }
-                else if (this.state.parentType == "assignment") {
-                    var result = deleteAssignmentDocument(this.getPodId(), this.getCourseId(), this.getAssignmentId(), fileName);
+                else if (this.state.parentType === "assignment") {
+                    res = deleteAssignmentDocument(this.getPodId(), this.getCourseId(), this.getAssignmentId(), fileName);
                 }
-                if (result.isSuccess) {
-                    result = this.getDocuments();
-                    stateCopy.documents = result.data;
+                if (res.isSuccess) {
+                    res = this.getDocuments();
+                    stateCopy.documents = res.data;
                     this.setState(stateCopy);
                 }
                 Swal.fire({
@@ -137,7 +142,7 @@ class DocumentsTable extends Component {
     }
 
     checkFileExists(fileName) {
-        return this.state.documents.some(document => document['fileName'] == fileName);
+        return this.state.documents.some(document => document['fileName'] === fileName);
     }
 
     updateOnDocumentAdd = (res) => {
@@ -163,6 +168,16 @@ class DocumentsTable extends Component {
         }
     }
 
+    getFileType = (fileType, fileName) => {
+        if (fileType !== '') {
+            return fileType;
+        } else {
+            if (fileName.includes(".rar")) {
+                return "application/vnd.rar";
+            }
+        }
+    }
+
     createDocument = (loadedFile) => {
         this.toggleFileUploadButton();
 
@@ -171,19 +186,21 @@ class DocumentsTable extends Component {
         const create = () => {
             var requestBody = {
                 "fileInBase64String": reader.result.replace(new RegExp('data:[a-z0-9/.;-]*base64,'), ""),
-                "fileType": loadedFile.type,
+                "fileType": this.getFileType(loadedFile.type, loadedFile.name),
                 "fileName": loadedFile.name,
             };
 
             const o = this;
-            if (this.state.parentType == "pod") {
-                var result = createPodDocument(o.getPodId(), JSON.stringify(requestBody));
+            var result = null;
+
+            if (this.state.parentType === "pod") {
+                result = createPodDocument(o.getPodId(), JSON.stringify(requestBody));
             }
-            else if (this.state.parentType == "course") {
-                var result = createCourseDocument(o.getPodId(), o.getCourseId(), JSON.stringify(requestBody));
+            else if (this.state.parentType === "course") {
+                result = createCourseDocument(o.getPodId(), o.getCourseId(), JSON.stringify(requestBody));
             }
-            else if (this.state.parentType == "assignment") {
-                var result = createAssignmentDocument(o.getPodId(), o.getCourseId(), o.getAssignmentId(), JSON.stringify(requestBody));
+            else if (this.state.parentType === "assignment") {
+                result = createAssignmentDocument(o.getPodId(), o.getCourseId(), o.getAssignmentId(), JSON.stringify(requestBody));
             }
             this.toggleFileUploadButton();
             if (result.isSuccess) {
@@ -219,12 +236,12 @@ class DocumentsTable extends Component {
         } else {
             if (this.checkFileExists(loadedFile.name)) {
                 Swal.fire({
-                    title: 'A file with the same name already exists',
+                    title: '\'' + loadedFile.name + '\' already exists. Do you want to replace it?',
                     icon: 'warning',
-                    text: '\'' + loadedFile.name + '\' will be overwritten',
+                    text: 'Replacing it will overwrite its current contents',
                     showCancelButton: true,
                     confirmButtonColor: swalConfirm(),
-                    confirmButtonText: 'Upload',
+                    confirmButtonText: 'Replace',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         this.createDocument(loadedFile);
@@ -249,6 +266,10 @@ class DocumentsTable extends Component {
         }
     }
 
+    shouldHideBorderTop = (row) => {
+        return !isAdmin(this.state.role) && row === 0 ? { borderTop: 'none' } : null;
+    }
+
     render() {
         var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -262,11 +283,11 @@ class DocumentsTable extends Component {
                 }
                 <Table hover responsive>
                     {this.state.documents.length > 0 ?
-                        this.state.documents.map((document) => {
+                        this.state.documents.map((document, i) => {
                             var date = new Date(document.lastModified);
                             return (
                                 <tr>
-                                    <td className='date'>
+                                    <td className="date" style={this.shouldHideBorderTop(i)}>
                                         <span className="text-uppercase text-bold">
                                             {days[date.getDay()]}
                                             {' '}
@@ -279,14 +300,14 @@ class DocumentsTable extends Component {
                                             {moment(date).format("h:mm A")}
                                         </span>
                                     </td>
-                                    <td className="document">
+                                    <td className="document" style={this.shouldHideBorderTop(i)}>
                                         <a className="h4 text-bold pointer" onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}>
                                             {document.fileName}
                                         </a>
                                         <br />
                                         {document.fileSize}
                                     </td>
-                                    <td className="buttons">
+                                    <td className="buttons" style={this.shouldHideBorderTop(i)}>
                                         {isAdmin(this.state.role) ?
                                             <div className='button-container'>
                                                 <Button 

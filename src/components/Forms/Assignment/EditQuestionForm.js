@@ -3,8 +3,6 @@ import { withRouter } from 'react-router';
 import {
     Button,
     Input,
-    Row,
-    Col,
     Modal,
     ModalHeader,
     ModalBody,
@@ -100,7 +98,7 @@ class editQuestionForm extends Component {
     }
 
     updateAnswer = (event, element, index, callback) => {
-        if (event.target.value){
+        if (event.target.value) {
             this.setState({
                 ...this.state,
                 ['choice' + element]: event.target.value,
@@ -216,10 +214,12 @@ class editQuestionForm extends Component {
             "question": this.state.formEditQuestion.question,
             "questionType": this.state.formEditQuestion.questionType,
         };
+        var numOfEnteredChoices = 0;
+        var numOfEnteredAnswers = 0;
         switch (this.state.formEditQuestion.questionType) {
             case "MC":
-                var numOfEnteredChoices = 0;
-                var numOfEnteredAnswers = 0;
+                numOfEnteredChoices = 0;
+                numOfEnteredAnswers = 0;
                 for (let i = 0; i < this.state.numberOfChoices; i++) {
                     if (this.state.formEditQuestion['choice' + this.alphabet[i]]) {
                         payload['choice' + this.alphabet[numOfEnteredChoices]] = this.state.formEditQuestion['choice' + this.alphabet[i]];
@@ -232,8 +232,8 @@ class editQuestionForm extends Component {
                 }
                 break;
             case "MA":
-                var numOfEnteredChoices = 0;
-                var numOfEnteredAnswers = 0;
+                numOfEnteredChoices = 0;
+                numOfEnteredAnswers = 0;
                 for (let i = 0; i < this.state.numberOfChoices; i++) {
                     if (this.state.formEditQuestion['choice' + this.alphabet[i]]) {
                         payload['choice' + this.alphabet[numOfEnteredChoices]] = this.state.formEditQuestion['choice' + this.alphabet[i]];
@@ -242,7 +242,7 @@ class editQuestionForm extends Component {
                 }
                 for (let i = 0; i < numOfEnteredChoices; i++) {
                     for (let j = 0; j < this.state.numberOfChoices; j++) {
-                        if (this.state.formEditQuestion['answer' + (j + 1)] && this.state.formEditQuestion['answer' + (j + 1)] == payload['choice' + this.alphabet[i]]) {
+                        if (this.state.formEditQuestion['answer' + (j + 1)] && this.state.formEditQuestion['answer' + (j + 1)] === payload['choice' + this.alphabet[i]]) {
                             numOfEnteredAnswers += 1;
                             payload['answer' + numOfEnteredAnswers] = this.alphabet[i];
                         }
@@ -253,6 +253,8 @@ class editQuestionForm extends Component {
                 payload.answer1 = this.state.formEditQuestion.answer1
                 payload.choiceA = "True"
                 payload.choiceB = "False"
+                break;
+            default:
                 break;
         }
         return JSON.stringify(payload);
@@ -279,9 +281,9 @@ class editQuestionForm extends Component {
         });
 
         var invalidQuestion = false;
-        if (this.state.formEditQuestion.questionType == "MC") invalidQuestion = this.validateMCQuestion();
-        else if (this.state.formEditQuestion.questionType == "MA") invalidQuestion = this.validateMAQuestion();
-        else if (this.state.formEditQuestion.questionType == "TF") invalidQuestion = this.validateTFQuestion();
+        if (this.state.formEditQuestion.questionType === "MC") invalidQuestion = this.validateMCQuestion();
+        else if (this.state.formEditQuestion.questionType === "MA") invalidQuestion = this.validateMAQuestion();
+        else if (this.state.formEditQuestion.questionType === "TF") invalidQuestion = this.validateTFQuestion();
 
         console.log((hasError || invalidQuestion) ? 'Form has errors. Check!' : 'Form Submitted!')
 
@@ -415,7 +417,7 @@ class editQuestionForm extends Component {
                                         </span>
                                     </div>
                                     {this.state.formEditQuestion.choices.error.isNullAnswer &&
-                                        this.state.formEditQuestion.questionType != "TF" && <span style={errorMessageStyling()}>You must select at least 1 correct answer</span>}
+                                        this.state.formEditQuestion.questionType !== "TF" && <span style={errorMessageStyling()}>You must select at least 1 correct answer</span>}
                                     {this.hasError('formEditQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                 </div>
                             </div>
@@ -541,7 +543,7 @@ class editQuestionForm extends Component {
                                         </div>)
                                 })
                                 : null}
-                            {this.state.numberOfChoices < 5 && this.state.formEditQuestion.questionType != "TF" && this.state.formEditQuestion.questionType != "FF" ?
+                            {this.state.numberOfChoices < 5 && this.state.formEditQuestion.questionType !== "TF" && this.state.formEditQuestion.questionType !== "FF" ?
                                 <div>
                                     <Button className="btn btn-secondary btn-sm" style={{ marginLeft: "40%" }} onClick={this.addChoice}>Add Choice</Button>
                                 </div>

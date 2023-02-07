@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -20,7 +19,7 @@ class Offsidebar extends Component {
     }
 
     handleClickOutside = event => {
-        if (event.target.id === "settingsToggle") return;
+        if (event.target.id.includes("settingsToggle")) return;
         
         const domNode = ReactDOM.findDOMNode(this);
     

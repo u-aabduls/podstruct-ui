@@ -1,6 +1,6 @@
 import handleError from '../utils/ErrorHandler.js'
 import formatParams from '../utils/ParamFormatter.js';
-import {devServer, prodServer} from './Paths.js';
+import { endpointServer } from './Paths.js';
 
 // private members
 var request = new XMLHttpRequest();
@@ -54,16 +54,18 @@ function _initialize(method, endpointPathEXT) {
     httpMethod = method;
     switch (method) {
         case "GET":
-            request.open("GET", devServer + endpointPathEXT, false);
+            request.open("GET", endpointServer + endpointPathEXT, false);
             break;
         case "POST":
-            request.open("POST", devServer + endpointPathEXT, false);
+            request.open("POST", endpointServer + endpointPathEXT, false);
             break;
         case "PUT":
-            request.open("PUT", devServer + endpointPathEXT, false);
+            request.open("PUT", endpointServer + endpointPathEXT, false);
             break;
         case "DELETE":
-            request.open("DELETE", devServer + endpointPathEXT, false);
+            request.open("DELETE", endpointServer + endpointPathEXT, false);
+            break;
+        default:
             break;
     }
     // request.open("POST", prodServer + endpointPath, false);

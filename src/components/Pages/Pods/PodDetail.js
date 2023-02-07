@@ -110,8 +110,8 @@ class PodDetail extends Component {
             confirmButtonText: 'Deactivate',
         }).then((result) => {
             if (result.isConfirmed) {
-                var result = deactivatePod(podId);
-                if (result.isSuccess) {
+                var res = deactivatePod(podId);
+                if (res.isSuccess) {
                     this.props.history.goBack();
                 }
             }

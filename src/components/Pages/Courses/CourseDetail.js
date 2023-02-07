@@ -121,7 +121,6 @@ class CourseDetail extends Component {
 
     render() {
         var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
-        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         var output = "";
         return (
             <ContentWrapper>
@@ -235,14 +234,6 @@ class CourseDetail extends Component {
                                                 href="#"
                                                 className={classnames({ active: this.state.activeTab === '3' })}
                                                 onClick={() => { this.toggleTab('3'); }}>
-                                                Upcoming Events
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                href="#"
-                                                className={classnames({ active: this.state.activeTab === '4' })}
-                                                onClick={() => { this.toggleTab('4'); }}>
                                                 Documents
                                             </NavLink>
                                         </NavItem>
@@ -299,8 +290,7 @@ class CourseDetail extends Component {
                                                 assignments={this.state.assignments}
                                             />
                                         </TabPane>
-                                        <TabPane tabId="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</TabPane>
-                                        <TabPane tabId="4">
+                                        <TabPane tabId="3">
                                             <DocumentsTable
                                                 role={this.state.rolePerms}
                                                 parent={this.state.course}
