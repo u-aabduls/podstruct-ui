@@ -235,7 +235,7 @@ class PodUserTable extends Component {
         this.setState({
             getUserParams: {
                 ...this.state.getUserParams,
-                ["users"]: {
+                "users": {
                     ...this.state.getUserParams["users"],
                     name: event.target.value
                 }
@@ -247,7 +247,7 @@ class PodUserTable extends Component {
         this.setState({
             getUserParams: {
                 ...this.state.getUserParams,
-                ["pending"]: {
+                "pending": {
                     ...this.state.getUserParams["pending"],
                     name: event.target.value
                 }

@@ -159,7 +159,7 @@ class AddUserForm extends Component {
         var errorEmails = [];
         var all = [];
         if (!hasError && !invalidSelector) {
-            this.state.formAddUser.email.replace(/\s/g, "").split(",").map((email) => {
+            this.state.formAddUser.email.replace(/\s/g, "").split(",").forEach((email) => {
                 // only submit emails that are not empty strings from trailing commas
                 if (email) {
                     var p = new Promise((resolve, reject) => {

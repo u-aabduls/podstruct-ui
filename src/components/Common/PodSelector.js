@@ -1,7 +1,8 @@
 import React from 'react';
 import Select from 'react-select';
 
-var options = [];
+var options = [],
+    modifiers = null;
 
 const customStylesDefault = {
     placeholder: (provided) => ({
@@ -30,8 +31,10 @@ function setOptions(pods, active) {
 export default function PodSelector(props) {
     if (props.pods) setOptions(props.pods, props.active);
 
+    modifiers = props;
+
     React.useEffect(() => {
-        if (props.defaultV && props.defaultCall) props.defaultCall(props.defaultV)
+        modifiers.defaultCall(modifiers.defaultV)
     }, [props.defaultV]);
 
     return (

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withTranslation, Trans } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
@@ -72,20 +72,7 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        // Easy pie
-        let pieOptions1 = {
-            animate: {
-                duration: 800,
-                enabled: true
-            },
-            barColor: '#23b7e5',
-            trackColor: 'rgba(200,200,200,0.4)',
-            scaleColor: false,
-            lineWidth: 10,
-            lineCap: 'round',
-            size: 145
-        };
-       // new EasyPieChart(this.refs.easypie, pieOptions1);
+        
     }
 
     changeLanguage = lng => {
@@ -427,7 +414,7 @@ class Dashboard extends Component {
                         { /* START loader widget */ }
                         <div className="card card-default">
                             <div className="card-body">
-                                <a className="text-muted float-right" href="">
+                                <a className="text-muted float-right" href="/#">
                                     <em className="fa fa-arrow-right"></em>
                                 </a>
                                 <div className="text-info">Average Monthly Uploads</div>
@@ -471,10 +458,10 @@ class Dashboard extends Component {
                                          </span>
                                       </div>
                                       <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-purple m-0" href="">NEW FILE</a>
+                                         <p className="mb-1"><a className="text-purple m-0" href="/#">NEW FILE</a>
                                          </p>
                                          <p className="m-0">
-                                            <small><a href="">Bootstrap.xls</a>
+                                            <small><a href="/#">Bootstrap.xls</a>
                                             </small>
                                          </p>
                                       </div>
@@ -494,10 +481,10 @@ class Dashboard extends Component {
                                          </span>
                                       </div>
                                       <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-info m-0" href="">NEW DOCUMENT</a>
+                                         <p className="mb-1"><a className="text-info m-0" href="/#">NEW DOCUMENT</a>
                                          </p>
                                          <p className="m-0">
-                                            <small><a href="">Bootstrap.doc</a>
+                                            <small><a href="/#">Bootstrap.doc</a>
                                             </small>
                                          </p>
                                       </div>
@@ -517,9 +504,9 @@ class Dashboard extends Component {
                                          </span>
                                       </div>
                                       <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-danger m-0" href="">BROADCAST</a>
+                                         <p className="mb-1"><a className="text-danger m-0" href="/#">BROADCAST</a>
                                          </p>
-                                         <p className="m-0"><a href="">Read</a>
+                                         <p className="m-0"><a href="/#">Read</a>
                                          </p>
                                       </div>
                                       <div className="ml-auto">
@@ -538,7 +525,7 @@ class Dashboard extends Component {
                                          </span>
                                       </div>
                                       <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-success m-0" href="">NEW MEETING</a>
+                                         <p className="mb-1"><a className="text-success m-0" href="/#">NEW MEETING</a>
                                          </p>
                                          <p className="m-0">
                                             <small>On
@@ -562,7 +549,7 @@ class Dashboard extends Component {
                                          </span>
                                       </div>
                                       <div className="media-body text-truncate">
-                                         <p className="mb-1"><a className="text-warning m-0" href="">TASKS COMPLETION</a>
+                                         <p className="mb-1"><a className="text-warning m-0" href="/#">TASKS COMPLETION</a>
                                          </p>
                                          <div className="progress progress-xs m-0">
                                             <div className="progress-bar bg-warning progress-bar-striped" role="progressbar" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100" style={{width: '22%'}}>
@@ -579,7 +566,7 @@ class Dashboard extends Component {
                              </div>
                              {/* END list group */}
                             {/* START card footer */}
-                            <div className="card-footer"><a className="text-sm" href="">Load more</a></div>
+                            <div className="card-footer"><a className="text-sm" href="/#">Load more</a></div>
                             {/* END card-footer */}
                         </div>
                         { /* END messages and activity */ }

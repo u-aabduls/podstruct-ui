@@ -27,11 +27,9 @@ const Error500 = props => (
         </ul>
         <div className="p-3 text-center">
             <span className="mr-2">&copy;</span>
-            <span>2020</span>
+            <span>{new Date().getFullYear()}</span>
             <span className="mx-2">-</span>
-            <span>Angle</span>
-            <br/>
-            <span>Bootstrap Admin Template</span>
+            <span>Podstruct</span>
         </div>
     </div>
 )

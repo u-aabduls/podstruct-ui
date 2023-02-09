@@ -9,7 +9,7 @@ const NotFound = props => (
             <p>The page you are looking for does not exists.</p>
         </div>
         <div className="input-group mb-4">
-            <input className="form-control" type="text" placeholder="Try with a search"/>
+            <input className="form-control" type="text" placeholder="Try with a search" />
             <span className="input-group-btn">
                 <button className="btn btn-secondary" type="button">
                     <em className="fa fa-search"></em>
@@ -31,11 +31,9 @@ const NotFound = props => (
         </ul>
         <div className="p-3 text-center">
             <span className="mr-2">&copy;</span>
-            <span>2020</span>
+            <span>{new Date().getFullYear()}</span>
             <span className="mx-2">-</span>
-            <span>Angle</span>
-            <br/>
-            <span>Bootstrap Admin Template</span>
+            <span>Podstruct</span>
         </div>
     </div>
 )
