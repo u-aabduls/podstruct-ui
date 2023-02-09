@@ -154,9 +154,9 @@ class AssignmentsTable extends Component {
                     </thead>
                     {this.state.assignments.length > 0 ?
                         this.state.assignments.forEach((assignment, i) => {
-                            if (!assignment.published && isStudent(this.state.rolePerms)) return
+                            if (!assignment.published && isStudent(this.state.rolePerms)) return;
                             var dueDate = new Date(moment.utc(assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
-                            if (assignment.publishDateTime) var publishDate = new Date(moment.utc(assignment.publishDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
+                            var publishDate = new Date(moment.utc(assignment.publishDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
                             return (
                                     <tr onClick={(event) => this.assignmentDetailRedirect(event, assignment.id)}>
                                         {assignment.publishDateTime ?
