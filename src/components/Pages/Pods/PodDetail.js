@@ -159,7 +159,7 @@ class PodDetail extends Component {
                                         <DropdownItem onClick={() => this.deactivate(this.state.pod.id)}>Deactivate Pod</DropdownItem>
                                         : null
                                     }
-                                </DropdownMenu> : null
+                                </DropdownMenu>
                             </Dropdown>
                             <EditPodForm
                                 pod={this.state.pod}

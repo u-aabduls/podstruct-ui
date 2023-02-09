@@ -1,11 +1,8 @@
 /*!
  *
- * Angle - Bootstrap Admin Template
+ * Podstruct
  *
- * Version: 4.8.1
- * Author: @themicon_co
- * Website: http://themicon.co
- * License: https://wrapbootstrap.com/help/licenses
+ * Version: 1.0.0
  *
  */
 

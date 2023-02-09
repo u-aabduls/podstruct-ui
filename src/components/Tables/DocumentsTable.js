@@ -301,7 +301,11 @@ class DocumentsTable extends Component {
                                         </span>
                                     </td>
                                     <td className="document" style={this.shouldHideBorderTop(i)}>
-                                        <a className="h4 text-bold pointer" onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}>
+                                        <a 
+                                            href="/#"
+                                            className="h4 text-bold pointer" 
+                                            onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}
+                                        >
                                             {document.fileName}
                                         </a>
                                         <br />
