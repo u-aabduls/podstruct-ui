@@ -1,6 +1,6 @@
 import $ from '../Common/wrapper.js';
 
-export default () => {
+const f = () => {
 
     // NAVBAR SEARCH
     // -----------------------------------
@@ -65,3 +65,5 @@ export default () => {
 
     }
 }
+
+export default f;

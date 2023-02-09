@@ -1,6 +1,6 @@
 import $ from '../Common/wrapper.js';
 
-export default (navigator, closeSidebar) => {
+const f = (navigator, closeSidebar) => {
 
     var $html = $('html');
     var $body = $('body');
@@ -163,3 +163,5 @@ export default (navigator, closeSidebar) => {
     }
 
 } // rendered
+
+export default f;

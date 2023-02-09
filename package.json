@@ -1,7 +1,7 @@
 {
-  "name": "angle",
+  "name": "podstruct",
   "version": "0.0.0",
-  "description": "Angle - Bootstrap Admin Template",
+  "description": "Podstruct - enabling teachers and students",
   "author": "@themicon_co",
   "license": "https://wrapbootstrap.com/help/licenses",
   "private": true,

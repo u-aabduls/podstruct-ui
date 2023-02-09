@@ -98,7 +98,7 @@ class Login extends Component {
             <div className="block-center mt-4 wd-xl">
                 <div className="card card-flat">
                     <div className="card-header text-center bg-primary">
-                        <a href="">
+                        <a href="/#">
                             <img className="block-center" src="img/logos/favicon.png" alt="Logo" />
                             <img className="block-center" style={{ marginLeft: '0.25rem' }} src="img/logos/podstruct_text.svg" alt="Logo" />
                         </a>
@@ -156,7 +156,13 @@ class Login extends Component {
                                     <Link to="password/recover" className="text-muted">Forgot your password?</Link>
                                 </div>
                             </div>
-                            <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
+                            <button 
+                                className="btn btn-block btn-primary mt-3" 
+                                type="submit"
+                                onMouseDown={e => e.preventDefault()}
+                            >
+                                Login
+                            </button>
                         </form>
                         <p className="pt-3 text-center">Don't have an account?</p>
                         <Link to="/register/account" className="btn btn-block btn-secondary">Register now</Link>
