@@ -140,42 +140,44 @@ class PodDetail extends Component {
                         {this.state.pod.podName}
                         <small>View and edit your pod</small>
                     </div>
-                    <div className="ml-auto">
-                        <Dropdown 
-                            isOpen={this.state.ddOpen} 
-                            toggle={this.toggleDD}
-                            onMouseDown={e => e.preventDefault()}
-                        >
-                            <DropdownToggle>
-                                <em className="fas fa-ellipsis-v fa-lg"></em>
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                {isAdmin(this.state.rolePerms) ?
-                                    <DropdownItem onClick={this.toggleEditModal}>Edit Pod</DropdownItem>
-                                    : null
-                                }
-                                {isAdmin(this.state.rolePerms) ?
-                                    <DropdownItem onClick={() => this.deactivate(this.state.pod.id)}>Deactivate Pod</DropdownItem>
-                                    : null
-                                }
-                            </DropdownMenu>
-                        </Dropdown>
-                        <EditPodForm
-                            pod={this.state.pod}
-                            modal={this.state.editModal}
-                            toggle={this.toggleEditModal}
-                            updateOnEdit={this.updateOnPodEdit}
-                        />
-                    </div>
+                    {isAdmin(this.state.rolePerms) ?
+                        <div className="ml-auto">
+                            <Dropdown
+                                isOpen={this.state.ddOpen}
+                                toggle={this.toggleDD}
+                                onMouseDown={e => e.preventDefault()}
+                            >
+                                <DropdownToggle>
+                                    <em className="fas fa-ellipsis-v fa-lg"></em>
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    {isAdmin(this.state.rolePerms) ?
+                                        <DropdownItem onClick={this.toggleEditModal}>Edit Pod</DropdownItem>
+                                        : null
+                                    }
+                                    {isAdmin(this.state.rolePerms) ?
+                                        <DropdownItem onClick={() => this.deactivate(this.state.pod.id)}>Deactivate Pod</DropdownItem>
+                                        : null
+                                    }
+                                </DropdownMenu> : null
+                            </Dropdown>
+                            <EditPodForm
+                                pod={this.state.pod}
+                                modal={this.state.editModal}
+                                toggle={this.toggleEditModal}
+                                updateOnEdit={this.updateOnPodEdit}
+                            />
+                        </div> : null
+                    }
                 </div>
                 <div style={{ display: 'flex', justifyContent: `space-between` }}>
                     <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
-                            onClick={() => this.props.history.goBack()}>
+                        onClick={() => this.props.history.goBack()}>
                         <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
                         {this.props.location.state?.from}
                     </Button>
                     <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
-                            onClick={() => this.props.history.push('/courses', { pod: this.state.pod })}>
+                        onClick={() => this.props.history.push('/courses', { pod: this.state.pod })}>
                         Go to Courses
                     </Button>
                 </div>

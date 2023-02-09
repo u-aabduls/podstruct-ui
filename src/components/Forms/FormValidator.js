@@ -223,7 +223,7 @@ const FormValidator = {
                         result[m] = !validator.isEmail(value)
                         break;
                     case 'emails':
-                        value.replace(/\s/g, "").split(",").map((email) => {
+                        value.replace(/\s/g, "").split(",").forEach((email) => {
                             //allow trailing commas
                             if (!email){
                                 return

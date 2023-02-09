@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withTranslation, Trans } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
@@ -72,20 +72,7 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        // Easy pie
-        let pieOptions1 = {
-            animate: {
-                duration: 800,
-                enabled: true
-            },
-            barColor: '#23b7e5',
-            trackColor: 'rgba(200,200,200,0.4)',
-            scaleColor: false,
-            lineWidth: 10,
-            lineCap: 'round',
-            size: 145
-        };
-       // new EasyPieChart(this.refs.easypie, pieOptions1);
+        
     }
 
     changeLanguage = lng => {

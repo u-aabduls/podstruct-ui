@@ -218,7 +218,7 @@ class AssignmentDetail extends Component {
         res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page, params.size, params.sort)
         if (res.isSuccess) {
             stateCopy.questions = res.data
-            res.data.map((question, i) => {
+            res.data.forEach((question, i) => {
                 stateCopy.editQuestionModals["questionModal" + (i + 1)] = false;
             })
             this.setState(stateCopy)
@@ -507,7 +507,7 @@ class AssignmentDetail extends Component {
                                                                             </tr>
                                                                         )
                                                                     })}
-                                                                    {answers.map(function (answer, i) {
+                                                                    {answers.forEach(function (answer, i) {
                                                                         answerList += answer + ' '
                                                                         // return (
                                                                         //     <tr>

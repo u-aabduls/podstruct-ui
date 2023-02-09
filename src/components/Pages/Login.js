@@ -156,7 +156,13 @@ class Login extends Component {
                                     <Link to="password/recover" className="text-muted">Forgot your password?</Link>
                                 </div>
                             </div>
-                            <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
+                            <button 
+                                className="btn btn-block btn-primary mt-3" 
+                                type="submit"
+                                onMouseDown={e => e.preventDefault()}
+                            >
+                                Login
+                            </button>
                         </form>
                         <p className="pt-3 text-center">Don't have an account?</p>
                         <Link to="/register/account" className="btn btn-block btn-secondary">Register now</Link>
