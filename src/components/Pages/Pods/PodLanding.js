@@ -6,7 +6,7 @@ import PodCard from './PodCard';
 import { Divider } from '@material-ui/core';
 import AddPodForm from '../../Forms/Pod/AddPodForm';
 
-class PodManagement extends Component {
+class PodLanding extends Component {
 
     state = {
         pods: [],
@@ -111,4 +111,4 @@ class PodManagement extends Component {
     }
 }
 
-export default PodManagement;
+export default PodLanding;

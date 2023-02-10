@@ -22,9 +22,9 @@ const PasswordReset = lazy(() => import('./components/Pages/PasswordRecovery/Pas
 const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
 const Settings = lazy(() => import('./components/Extras/Settings'));
 
-const PodManagement = lazy(() => import('./components/Pages/Pods/PodManagement'));
+const PodLanding = lazy(() => import('./components/Pages/Pods/PodLanding'));
 const PodDetail = lazy(() => import('./components/Pages/Pods/PodDetail'));
-const CourseManagement = lazy(() => import('./components/Pages/Courses/CourseManagement'));
+const CourseLanding = lazy(() => import('./components/Pages/Courses/CourseLanding'));
 const CourseDetail = lazy(() => import('./components/Pages/Courses/CourseDetail'));
 const AssignmentDetail =  lazy(() => import('./components/Pages/Courses/Assignments/AssignmentDetail'));
 
@@ -85,9 +85,9 @@ const Routes = ({ location }) => {
                                     {/*Extras*/}
                                     <Route path="/settings" component={waitFor(Settings)} />
                                     
-                                    <Route path="/pods" component={waitFor(PodManagement)} />
+                                    <Route path="/pods" component={waitFor(PodLanding)} />
                                     <Route path="/pod/details/:id" component={waitFor(PodDetail)} />
-                                    <Route path="/courses" component={waitFor(CourseManagement)} />
+                                    <Route path="/courses" component={waitFor(CourseLanding)} />
                                     <Route path="/course/details/:id" component={waitFor(CourseDetail)} />
                                     <Route path="/course/assignment/details/:id" component={waitFor(AssignmentDetail)} />
 

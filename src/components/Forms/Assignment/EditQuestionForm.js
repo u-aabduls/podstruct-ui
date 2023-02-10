@@ -373,7 +373,7 @@ class editQuestionForm extends Component {
     }
 
     render() {
-        if (this.state.formEditQuestion.questionType == "MA") {
+        if (this.state.formEditQuestion.questionType === "MA") {
             var answerList = [];
             for (let i = 0; i < this.state.numberOfChoices; i++) {
                 if (this.state.formEditQuestion['answerAlpha' + (i + 1)]) answerList.push(this.state.formEditQuestion['answerAlpha' + (i + 1)])

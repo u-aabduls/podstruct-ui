@@ -8,7 +8,7 @@ import { getCourses } from '../../../connectors/Course';
 import AddCourseForm from '../../Forms/Course/AddCourseForm';
 import { isAdmin } from '../../../utils/PermissionChecker';
 
-class CourseManagement extends Component {
+class CourseLanding extends Component {
 
     state = {
         selectedPod: '',
@@ -174,4 +174,4 @@ class CourseManagement extends Component {
 
 }
 
-export default CourseManagement;
+export default CourseLanding;
