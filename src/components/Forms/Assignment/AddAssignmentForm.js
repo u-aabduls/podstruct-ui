@@ -25,6 +25,7 @@ class AddAssignmentForm extends Component {
             type: '',
             instructions: '',
             dueDate: '',
+            timeLimit: 0,
             points: 0,
             referenceRubric: '',
             selector: {
@@ -34,6 +35,7 @@ class AddAssignmentForm extends Component {
                 }
             }
         },
+        timeLimitCheck: false,
         ungraded: false,
         course: this.props.course,
         modal: false,
@@ -138,7 +140,7 @@ class AddAssignmentForm extends Component {
             "title": this.state.formAddAssignment.title,
             "type": this.state.formAddAssignment.type,
             "dueDateTime": this.state.formAddAssignment.dueDate,
-            
+
         };
         if (this.state.formAddAssignment.instructions) {
             payload.instructions = this.state.formAddAssignment.instructions
@@ -197,7 +199,7 @@ class AddAssignmentForm extends Component {
                 })
                 var res = getAssignment(this.state.course.podId, this.state.course.id, result.data.id)
                 if (res.isSuccess) {
-                    this.props.history.push(`/course/assignment/details/${result.data.id}`, { podID:  this.state.course.podId, course: this.state.course, from: this.state.course.subject})
+                    this.props.history.push(`/course/assignment/details/${result.data.id}`, { podID: this.state.course.podId, course: this.state.course, from: this.state.course.subject })
                 }
             }
             else {
@@ -285,6 +287,7 @@ class AddAssignmentForm extends Component {
                                         id="id-assignmentInstructions"
                                         name="instructions"
                                         className="border-right-0 no-resize"
+                                        placeholder="Enter assignment instructions"
                                         invalid={
                                             this.hasError('formAddAssignment', 'instructions', 'required')
                                             || this.hasError('formAddAssignment', 'instructions', 'maxlen')
@@ -293,7 +296,7 @@ class AddAssignmentForm extends Component {
                                         onChange={this.validateOnChange}
                                         data-validate='["required", "maxlen", "contains-alpha"]'
                                         data-param='250'
-                                        value={this.state.formAddAssignment.instructions || ''} 
+                                        value={this.state.formAddAssignment.instructions || ''}
                                         rows={10}
                                     />
                                     <div className="input-group-append">
@@ -309,14 +312,43 @@ class AddAssignmentForm extends Component {
                             <div className="form-group">
                                 <label className="text-muted">Due Date/Time <span style={dangerText()}>*</span></label>
                                 <Datetime
-                                    inputProps={this.state.formAddAssignment.selector.error.isNullDueDate ? { className: 'form-control time-error' } : { className: 'form-control' }}
-                                    isValidDate={current => {return current.isAfter(moment().subtract(1, 'day'))}}
+                                    inputProps={this.state.formAddAssignment.selector.error.isNullDueDate ? { className: 'form-control time-error' } : { className: 'form-control', placeholder: 'Enter Due Date and Time' }}
+                                    isValidDate={current => { return current.isAfter(moment().subtract(1, 'day')) }}
                                     onChange={(date) => {
                                         this.setTime(date)
                                         this.validateSelectorsOnChange("time")
                                     }}
                                 />
                                 {this.state.formAddAssignment.selector.error.isNullDueDate && <span style={errorMessageStyling()}>Due Date is required</span>}
+                            </div>
+                            <div className="form-group">
+                                <label className="text-muted">Time Limit</label>
+                                <div className="input-group with-focus">
+                                    <label className="text-muted mt-3"> 
+                                        <input className="mr-2" type="checkbox" onClick={this.toggleUngraded} />
+                                        Time Limit
+                                    </label>
+
+                                    <Input
+                                        type="textarea"
+                                        id="id-assignmentInstructions"
+                                        name="time limit"
+                                        className="border-right-0 no-resize"
+                                        invalid={
+                                            this.hasError('formAddAssignment', 'time limit', 'integer')
+                                        }
+                                        onChange={this.validateOnChange}
+                                        data-validate='["integer"]'
+                                        disabled={this.state.timeLimitCheck}
+                                        value={this.state.formAddAssignment.timeLimit || ''}
+                                    />
+                                    <div className="input-group-append">
+                                        <span className="input-group-text text-muted bg-transparent border-left-0">
+                                            <em className="fa fa-book"></em>
+                                        </span>
+                                    </div>
+                                    {this.hasError('formAddAssignment', 'time limit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="id-points">Points Possible <span style={dangerText()}>*</span></label>
@@ -332,7 +364,7 @@ class AddAssignmentForm extends Component {
                                             || this.hasError('formAddAssignment', 'points', 'number')
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate={!this.state.ungraded ? '["required", "number"]': null}
+                                        data-validate={!this.state.ungraded ? '["required", "number"]' : null}
                                         disabled={this.state.ungraded}
                                         value={this.state.formAddAssignment.points || ''} />
                                     <div className="input-group-append">
@@ -349,10 +381,10 @@ class AddAssignmentForm extends Component {
                                 </div>
                             </div>
                         </ModalBody>
-                        <ModalFooter style={{paddingBottom: '0'}}>
+                        <ModalFooter style={{ paddingBottom: '0' }}>
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            <Button 
-                                color="primary" 
+                            <Button
+                                color="primary"
                                 type="submit"
                                 onMouseDown={e => e.preventDefault()}
                             >

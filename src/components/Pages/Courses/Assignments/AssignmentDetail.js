@@ -391,7 +391,7 @@ class AssignmentDetail extends Component {
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
-                                            {!isStudent(this.state.rolePerms) ?
+                                            {!isStudent(this.state.rolePerms) && this.state.assignment.type !== 'GENERAL' ?
                                                 <div className="float-right">
                                                     <button
                                                         className="btn btn-primary btn-sm mb-3 mt-2 mr-1"
