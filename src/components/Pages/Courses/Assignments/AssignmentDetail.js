@@ -509,16 +509,6 @@ class AssignmentDetail extends Component {
                                                                     })}
                                                                     {answers.forEach(function (answer, i) {
                                                                         answerList += answer + ' '
-                                                                        // return (
-                                                                        //     <tr>
-                                                                        //         <td>
-                                                                        //             <strong>Answers: </strong>
-                                                                        //         </td>
-                                                                        //         <td>
-                                                                        //             {answer}
-                                                                        //         </td>
-                                                                        //     </tr>
-                                                                        // )
                                                                     })}
                                                                     <tr>
                                                                         <td>
