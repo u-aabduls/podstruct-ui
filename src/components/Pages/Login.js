@@ -65,7 +65,7 @@ class Login extends Component {
             var result = loginUser(this.constructRequestPayload());
             if (localStorage.getItem('token') && result.isSuccess) {
                 this.setState({ errorMessage: null });
-                if (document.referrer.includes(webServer) && !document.referrer.includes("login")) {
+                if (document.referrer.includes(webServer) && !document.referrer.includes("/pod/details")) {
                     window.location.href = document.referrer
                 }
                 else this.props.history.push('/dashboard');
