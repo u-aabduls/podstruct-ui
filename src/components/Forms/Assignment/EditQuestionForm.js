@@ -152,11 +152,13 @@ class editQuestionForm extends Component {
         var isNullChoice = true;
 
         for (let i = 0; i < this.state.numberOfChoices; i++) {
-            if (this.state.formEditQuestion['answer' + (i + 1)]) isNullAnswer = false;
+            // if valide was triggerd by checkbox, both answer and choice are no longer null
             if (event?.target.checked){
+                isNullAnswer = false;
                 isNullChoice = false;
                 break;
             }
+            if (this.state.formEditQuestion['answer' + (i + 1)]) isNullAnswer = false;
             if (this.state.formEditQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
             if (numberOfChoices >= 2) {
                 isNullChoice = false;
