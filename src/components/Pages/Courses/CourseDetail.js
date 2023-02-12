@@ -106,7 +106,7 @@ class CourseDetail extends Component {
 
     componentWillMount() {
         var stateCopy = this.state;
-        var res = getCourse(this.props.location.state?.course.podId, this.props.match.params.id);
+        var res = getCourse(this.props.match.params.podId, this.props.match.params.courseId);
         if (res.isSuccess) {
             stateCopy.course = res.data;
             stateCopy.rolePerms = res.data.role;
@@ -151,7 +151,7 @@ class CourseDetail extends Component {
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
                     <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
-                    {this.props.location.state?.from}
+                    Courses
                 </Button>
                 <Row noGutters={true}>
                     <Col>

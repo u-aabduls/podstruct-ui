@@ -70,7 +70,7 @@ class DocumentsTable extends Component {
             result = getAssignmentDocuments(this.getPodId(), this.getCourseId(), this.getAssignmentId());
         }
 
-        result.data.sort(function (a, b) {
+        result.data?.sort(function (a, b) {
             return (a.lastModified).localeCompare(b.lastModified);
         }).reverse();
 

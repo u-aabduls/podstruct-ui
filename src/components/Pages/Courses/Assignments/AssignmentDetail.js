@@ -23,6 +23,7 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
+import { getCourse } from '../../../../connectors/Course';
 import { getAssignment, publishAssignment, deleteAssignment } from '../../../../connectors/Assignments';
 import { getAnswerKeys, deleteAnswerKey } from '../../../../connectors/AnswerKey';
 import { isAdmin, isStudent } from '../../../../utils/PermissionChecker'
@@ -36,7 +37,8 @@ import { swalConfirm, errorMessageStyling } from '../../../../utils/Styles';
 class AssignmentDetail extends Component {
 
     state = {
-        rolePerms: this.props.history.location.state?.rolePerms,
+        rolePerms: '',
+        course: '',
         assignment: '',
         questions: [],
         editQuestionModals: {},
@@ -113,7 +115,7 @@ class AssignmentDetail extends Component {
         if (this.state.questions.length >= this.state.getAnswerKeysParams.size) {
             var stateCopy = this.state
             var params = this.state.getAnswerKeysParams
-            var res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page + 1, params.size, params.sort)
+            var res = getAnswerKeys(this.props.match.params.podId, this.props.match.params.courseId, this.props.match.params.assignmentId, params.page + 1, params.size, params.sort)
             if (res.data.length > 0) {
                 stateCopy.questions = res.data
                 stateCopy.getAnswerKeysParams.page = this.state.getAnswerKeysParams.page + 1
@@ -127,7 +129,7 @@ class AssignmentDetail extends Component {
         if (this.state.getAnswerKeysParams.page) {
             var stateCopy = this.state
             var params = this.state.getAnswerKeysParams
-            var res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page - 1, params.size, params.sort)
+            var res = getAnswerKeys(this.props.match.params.podId, this.props.match.params.courseId, this.props.match.params.assignmentId, params.page - 1, params.size, params.sort)
             if (res.isSuccess) {
                 stateCopy.questions = res.data
                 stateCopy.getAnswerKeysParams.page = this.state.getAnswerKeysParams.page - 1
@@ -145,14 +147,14 @@ class AssignmentDetail extends Component {
         }).then((result) => {
             if (result.isConfirmed) {
                 var stateCopy = this.state
-                var res = publishAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
+                var res = publishAssignment(this.props.match.params.podId, this.props.match.params.courseId, this.props.match.params.assignmentId)
                 if (res.isSuccess) {
                     Swal.fire({
                         title: "Successfully published assignment",
                         confirmButtonColor: swalConfirm(),
                         icon: "success",
                     })
-                    res = getAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
+                    res = getAssignment(this.props.match.params.podId, this.props.match.params.courseId, this.props.match.params.assignmentId)
                     if (res.isSuccess) {
                         stateCopy.assignment = res.data
                         this.setState(stateCopy)
@@ -171,7 +173,7 @@ class AssignmentDetail extends Component {
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
-                var res = deleteAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
+                var res = deleteAssignment(this.props.match.params.podId, this.props.match.params.courseId, this.props.match.params.assignmentId)
                 if (res.isSuccess) {
                     Swal.fire('Successfully deleted assignment', '', 'success');
                     this.goBack();
@@ -188,12 +190,12 @@ class AssignmentDetail extends Component {
             confirmButtonText: 'Delete',
         }).then((result) => {
             if (result.isConfirmed) {
-                var res = deleteAnswerKey(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, questionId)
+                var res = deleteAnswerKey(this.props.match.params.podId, this.props.match.params.courseId, this.props.match.params.assignmentId, questionId)
                 if (res.isSuccess) {
                     Swal.fire('Successfully deleted question', '', 'success');
                     var stateCopy = this.state
                     var params = this.state.getAnswerKeysParams
-                    res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page, params.size, params.sort)
+                    res = getAnswerKeys(this.props.match.params.podId, this.props.match.params.courseId, this.props.match.params.assignmentId, params.page, params.size, params.sort)
                     if (res.isSuccess) {
                         stateCopy.questions = res.data
                         this.setState(stateCopy)
@@ -209,13 +211,22 @@ class AssignmentDetail extends Component {
 
     componentWillMount() {
         var stateCopy = this.state;
-        var res = getAssignment(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id)
+        var res = getCourse(this.props.match.params.podId, this.props.match.params.courseId);
+        console.log(res)
+        if (res.isSuccess) {
+            stateCopy.course = res.data;
+            stateCopy.rolePerms = res.data.role;
+            this.setState(stateCopy);
+        }
+
+        res = getAssignment(this.props.match.params.podId, this.props.match.params.courseId, this.props.match.params.assignmentId)
         if (res.isSuccess) {
             stateCopy.assignment = res.data
             this.setState(stateCopy)
         }
+
         var params = this.state.getAnswerKeysParams
-        res = getAnswerKeys(this.props.history.location.state?.podID, this.props.history.location.state?.course.id, this.props.match.params?.id, params.page, params.size, params.sort)
+        res = getAnswerKeys(this.props.match.params.podId, this.props.match.params.courseId, this.props.match.params.assignmentId, params.page, params.size, params.sort)
         if (res.isSuccess) {
             stateCopy.questions = res.data
             res.data.forEach((question, i) => {
@@ -226,16 +237,15 @@ class AssignmentDetail extends Component {
     }
 
     render() {
-        console.log(this.props.history.location.state?.rolePerms)
         var days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-        var dueDate = new Date(moment.utc(this.state.assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
+        if (this.state.assignment.dueDateTime) var dueDate = new Date(moment.utc(this.state.assignment.dueDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
         if (this.state.assignment.publishDateTime) var publishDate = new Date(moment.utc(this.state.assignment.publishDateTime).local().format('YYYY-MM-DD HH:mm:ss'));
         return (
             <ContentWrapper>
                 <div className="content-heading">
                     <div>{this.state.assignment.title}
-                        <small>{this.props.history.location.state?.course.subject}</small>
+                        <small>{this.state.course.subject}</small>
                     </div>
                     <div className="ml-auto">
                         <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
@@ -254,8 +264,8 @@ class AssignmentDetail extends Component {
                             </DropdownMenu>
                         </Dropdown>
                         <EditAssignmentForm
-                            podId={this.props.history.location.state?.podID}
-                            course={this.props.history.location.state?.course}
+                            podId={this.props.match.params.podId}
+                            course={this.state.course}
                             assignmentId={this.state.assignment.id}
                             toggle={this.toggleEditAssignmentModal}
                             updateOnEdit={this.updateOnAssignmentEdit}
@@ -265,7 +275,7 @@ class AssignmentDetail extends Component {
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
                     <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
-                    {this.props.history.location.state?.from}
+                    {this.state.course.subject}
                 </Button>
                 <Row noGutters={true}>
                     <Col>
@@ -303,19 +313,21 @@ class AssignmentDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Due Date/Time</h4>
-                                <p className="text-primary font-weight-bold">
-                                    <span className="text-uppercase text-bold">
-                                        {days[dueDate.getDay()]}
-                                        {' '}
-                                        {months[dueDate.getMonth()]}
-                                        {' '}
-                                        {dueDate.getDate()}
-                                    </span>
-                                    <br />
-                                    <span className="h2 mt0 text-sm">
-                                        {moment(dueDate).format("h:mm A")}
-                                    </span>
-                                </p>
+                                {dueDate ?
+                                    <p className="text-primary font-weight-bold">
+                                        <span className="text-uppercase text-bold">
+                                            {days[dueDate.getDay()]}
+                                            {' '}
+                                            {months[dueDate.getMonth()]}
+                                            {' '}
+                                            {dueDate.getDate()}
+                                        </span>
+                                        <br />
+                                        <span className="h2 mt0 text-sm">
+                                            {moment(dueDate).format("h:mm A")}
+                                        </span>
+                                    </p>
+                                    : null}
                             </div>
                         </div>
                         {/* END card */}
@@ -392,6 +404,19 @@ class AssignmentDetail extends Component {
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
+                                            {!isStudent(this.state.rolePerms) && !this.state.assignment.published ?
+                                                <div className="float-right">
+                                                    <button
+                                                        className="btn btn-info btn-sm mb-3 mt-2"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={this.publish}
+                                                    >
+                                                        <i className="fas fa-upload fa-fw button-create-icon mr-1"></i>
+                                                        Publish
+                                                    </button>
+                                                </div>
+                                                : null
+                                            }
                                             {!isStudent(this.state.rolePerms) && this.state.assignment.type !== 'GENERAL' ?
                                                 <div className="float-right">
                                                     <button
@@ -402,18 +427,6 @@ class AssignmentDetail extends Component {
                                                         <i className="fa fa-plus-circle fa-sm button-create-icon"></i>
                                                         Add Question
                                                     </button>
-                                                    {
-                                                        !this.state.assignment.published ?
-                                                            <button
-                                                                className="btn btn-info btn-sm mb-3 mt-2"
-                                                                onMouseDown={e => e.preventDefault()}
-                                                                onClick={this.publish}
-                                                            >
-                                                                <i className="fas fa-upload fa-fw button-create-icon mr-1"></i>
-                                                                Publish
-                                                            </button>
-                                                            : null
-                                                    }
                                                 </div>
                                                 : null
                                             }
@@ -452,7 +465,7 @@ class AssignmentDetail extends Component {
                                                                             >
                                                                                 <i className="fas fa-edit fa-fw btn-icon"></i>
                                                                             </Button>
-                                                                            <Button 
+                                                                            <Button
                                                                                 className="btn btn-sm bg-danger mb-3"
                                                                                 onMouseDown={e => e.preventDefault()}
                                                                                 onClick={() => this.deleteQuestion(question.id)}
@@ -465,8 +478,8 @@ class AssignmentDetail extends Component {
                                                                 </CardTitle>
                                                             </CardHeader>
                                                             <EditQuestionForm
-                                                                podId={this.props.history.location.state?.podID}
-                                                                courseId={this.props.history.location.state?.course.id}
+                                                                podId={this.props.match.params.podId}
+                                                                courseId={this.props.match.params.courseId}
                                                                 assignmentId={this.state.assignment.id}
                                                                 questionId={question.id}
                                                                 assignmentType={this.state.assignment.type}
@@ -547,8 +560,8 @@ class AssignmentDetail extends Component {
                                                     </Button>}
                                             </div>
                                             <AddQuestionForm
-                                                podId={this.props.history.location.state?.podID}
-                                                courseId={this.props.history.location.state?.course.id}
+                                                podId={this.props.match.params.podId}
+                                                courseId={this.props.match.params.courseId}
                                                 assignmentId={this.state.assignment.id}
                                                 assignmentType={this.state.assignment.type}
                                                 answerKeyParams={this.state.getAnswerKeysParams}
@@ -562,8 +575,8 @@ class AssignmentDetail extends Component {
                                                 role={this.state.rolePerms}
                                                 parent={{
                                                     ...this.state.assignment,
-                                                    podId: this.props.history.location.state?.podID,
-                                                    courseId: this.props.history.location.state?.course.id
+                                                    podId: this.props.match.params.podId,
+                                                    courseId: this.props.match.params.courseId
                                                 }}
                                                 parentType="assignment"
                                             />
