@@ -88,8 +88,8 @@ const Routes = ({ location }) => {
                                     <Route path="/pods" component={waitFor(PodLanding)} />
                                     <Route path="/pod/details/:id" component={waitFor(PodDetail)} />
                                     <Route path="/courses" component={waitFor(CourseLanding)} />
-                                    <Route path="/course/details/:id" component={waitFor(CourseDetail)} />
-                                    <Route path="/course/assignment/details/:id" component={waitFor(AssignmentDetail)} />
+                                    <Route path="/course/details/:podId/:courseId" component={waitFor(CourseDetail)} />
+                                    <Route path="/course/assignment/details/:podId/:courseId/:assignmentId" component={waitFor(AssignmentDetail)} />
 
                                     {/*Default*/}
                                     <Redirect to="/login" />
