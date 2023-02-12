@@ -140,15 +140,17 @@ class AddQuestionForm extends Component {
 
     validateMAQuestion = (event) => {
         var numberOfChoices = 0;
-        var isNullAnswer = false;
+        var isNullAnswer = true;
         var isNullChoice = true;
 
         for (let i = 0; i < this.state.numberOfChoices; i++) {
-            if (this.state.formAddQuestion['answer' + (i + 1)]) isNullAnswer = false;
+            // if valide was triggerd by checkbox, both answer and choice are no longer null
             if (event?.target.checked){
+                isNullAnswer = false;
                 isNullChoice = false;
                 break;
             }
+            if (this.state.formAddQuestion['answer' + (i + 1)]) isNullAnswer = false;
             if (this.state.formAddQuestion['choice' + this.alphabet[i]]) numberOfChoices += 1;
             if (numberOfChoices >= 2) {
                 isNullChoice = false;
