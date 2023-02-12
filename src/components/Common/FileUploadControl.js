@@ -2,7 +2,7 @@ import React from 'react'
 import '../../styles/app/common/hidden.css'
 
 const acceptedFileTypes = ".pdf,.doc,.dot,.docx,.xls,"
-  + ".xlsx,.ppt,.pptx,.txt,.jpeg,"
+  + ".xlsx,.ppt,.pptx,.txt,.jpeg,.svg,"
   + ".jpg,.png,.gif,.tiff,.rar,.zip," 
   + ".wav,.mp3,.mp4";
 

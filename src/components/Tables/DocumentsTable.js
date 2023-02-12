@@ -92,8 +92,8 @@ class DocumentsTable extends Component {
     deleteDocument = (fileName) => {
         Swal.fire({
             icon: 'warning',
-            title: 'Are you sure you want to delete the document?',
-            text: '\'' + fileName + '\' will be removed',
+            title: 'Delete \'' + fileName + '\'?',
+            text: 'The file will be removed',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
@@ -174,6 +174,8 @@ class DocumentsTable extends Component {
         } else {
             if (fileName.includes(".rar")) {
                 return "application/vnd.rar";
+            } else {
+                return '';
             }
         }
     }
@@ -185,7 +187,7 @@ class DocumentsTable extends Component {
         reader.readAsDataURL(loadedFile);
         const create = () => {
             var requestBody = {
-                "fileInBase64String": reader.result.replace(new RegExp('data:[a-z0-9/.;-]*base64,'), ""),
+                "fileInBase64String": reader.result.replace(new RegExp('data:[a-z0-9/.;+-]*base64,'), ""),
                 "fileType": this.getFileType(loadedFile.type, loadedFile.name),
                 "fileName": loadedFile.name,
             };
@@ -236,9 +238,9 @@ class DocumentsTable extends Component {
         } else {
             if (this.checkFileExists(loadedFile.name)) {
                 Swal.fire({
-                    title: '\'' + loadedFile.name + '\' already exists. Do you want to replace it?',
+                    title: 'Replace \'' + loadedFile.name + '\'?',
                     icon: 'warning',
-                    text: 'Replacing it will overwrite its current contents',
+                    text: 'Replacing it will overwrite the existing file',
                     showCancelButton: true,
                     confirmButtonColor: swalConfirm(),
                     confirmButtonText: 'Replace',
