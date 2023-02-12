@@ -68,6 +68,13 @@ class AddAssignmentForm extends Component {
         this.setState(stateCopy)
     }
 
+    toggleTimeLimit = () => {
+        var stateCopy = this.state;
+        stateCopy.timeLimitCheck = !this.state.timeLimitCheck
+        stateCopy.formAddAssignment.timeLimit = 0
+        this.setState(stateCopy)
+    }
+
     setType = (type) => {
         var stateCopy = this.state.formAddAssignment;
         stateCopy.type = type;
@@ -145,6 +152,9 @@ class AddAssignmentForm extends Component {
         if (this.state.formAddAssignment.instructions) {
             payload.instructions = this.state.formAddAssignment.instructions
         }
+        if (this.state.formAddAssignment.timeLimit && !this.state.timeLimitCheck && this.state.formAddAssignment.type !== "GENERAL") {
+            payload.minutesToDoAssignment = this.state.formAddAssignment.timeLimit
+        }
         if (this.state.formAddAssignment.points && !this.state.ungraded) {
             payload.points = this.state.formAddAssignment.points
         }
@@ -199,7 +209,7 @@ class AddAssignmentForm extends Component {
                 })
                 var res = getAssignment(this.state.course.podId, this.state.course.id, result.data.id)
                 if (res.isSuccess) {
-                    this.props.history.push(`/course/assignment/details/${result.data.id}`, { podID: this.state.course.podId, course: this.state.course, from: this.state.course.subject })
+                    this.props.history.push(`/course/assignment/details/${result.data.id}`, { podID: this.state.course.podId, course: this.state.course, rolePerms: this.state.rolePerms, from: this.state.course.subject })
                 }
             }
             else {
@@ -321,37 +331,43 @@ class AddAssignmentForm extends Component {
                                 />
                                 {this.state.formAddAssignment.selector.error.isNullDueDate && <span style={errorMessageStyling()}>Due Date is required</span>}
                             </div>
-                            <div className="form-group">
-                                <label className="text-muted">Time Limit</label>
-                                <div className="input-group with-focus">
-                                    <label className="text-muted mt-3"> 
-                                        <input className="mr-2" type="checkbox" onClick={this.toggleUngraded} />
-                                        Time Limit
-                                    </label>
-
-                                    <Input
-                                        type="textarea"
-                                        id="id-assignmentInstructions"
-                                        name="time limit"
-                                        className="border-right-0 no-resize"
-                                        invalid={
-                                            this.hasError('formAddAssignment', 'time limit', 'integer')
-                                        }
-                                        onChange={this.validateOnChange}
-                                        data-validate='["integer"]'
-                                        disabled={this.state.timeLimitCheck}
-                                        value={this.state.formAddAssignment.timeLimit || ''}
-                                    />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text text-muted bg-transparent border-left-0">
-                                            <em className="fa fa-book"></em>
-                                        </span>
+                            {this.state.formAddAssignment.type !== 'GENERAL' ?
+                                < div className="form-group">
+                                    <label className="text-muted">Time Limit</label>
+                                    <div className="input-group with-focus">
+                                        <Input
+                                            type="text"
+                                            id="id-assignmentTimeLimit"
+                                            name="timeLimit"
+                                            className="border-right-0 no-resize"
+                                            placeholder="Enter the time limit in minutes"
+                                            invalid={!this.state.timeLimitCheck &&
+                                                (this.hasError('formAddAssignment', 'timeLimit', 'required')
+                                                    || this.hasError('formAddAssignment', 'timeLimit', 'integer'))
+                                            }
+                                            onChange={this.validateOnChange}
+                                            data-validate={!this.state.timeLimitCheck ? '["required", "integer"]' : null}
+                                            disabled={this.state.timeLimitCheck}
+                                            value={this.state.formAddAssignment.timeLimit || ''}
+                                        />
+                                        <div className="input-group-append">
+                                            <span className="input-group-text text-muted bg-transparent border-left-0">
+                                                <em className="fa fa-book"></em>
+                                            </span>
+                                        </div>
+                                        {!this.state.timeLimitCheck && this.hasError('formAddAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
+                                        <div className="input-group pt-1">
+                                            <label className="text-muted">
+                                                <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleTimeLimit} />
+                                                <span className="align-middle">Time Limit</span>
+                                            </label>
+                                        </div>
                                     </div>
-                                    {this.hasError('formAddAssignment', 'time limit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
                                 </div>
-                            </div>
+                                : null
+                            }
                             <div className="form-group">
-                                <label className="text-muted" htmlFor="id-points">Points Possible <span style={dangerText()}>*</span></label>
+                                <label className="text-muted" htmlFor="id-points">Points Possible</label>
                                 <div className="input-group with-focus">
                                     <Input
                                         type="text"
@@ -359,12 +375,12 @@ class AddAssignmentForm extends Component {
                                         name="points"
                                         className="border-right-0"
                                         placeholder="Enter the possible point value"
-                                        invalid={
-                                            this.hasError('formAddAssignment', 'points', 'required')
-                                            || this.hasError('formAddAssignment', 'points', 'number')
+                                        invalid={!this.state.ungraded &&
+                                            (this.hasError('formAddAssignment', 'points', 'required')
+                                                || this.hasError('formAddAssignment', 'points', 'integer'))
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate={!this.state.ungraded ? '["required", "number"]' : null}
+                                        data-validate={!this.state.ungraded ? '["required", "integer"]' : null}
                                         disabled={this.state.ungraded}
                                         value={this.state.formAddAssignment.points || ''} />
                                     <div className="input-group-append">
@@ -372,11 +388,13 @@ class AddAssignmentForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
-                                    {!this.state.ungraded ? this.hasError('formAddAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span> : null}
-                                    {!this.state.ungraded ? this.hasError('formAddAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span> : null}
-                                    <div className="input-group mt-2">
-                                        <input className="mr-2" type="checkbox" onClick={this.toggleUngraded} />
-                                        <label className="text-muted pt-2"> Ungraded</label>
+                                    {!this.state.ungraded && this.hasError('formAddAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span>}
+                                    {!this.state.ungraded && this.hasError('formAddAssignment', 'points', 'integer') && <span className="invalid-feedback">Points must be an integer</span>}
+                                    <div className="input-group pt-1">
+                                        <label className="text-muted">
+                                            <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleUngraded} />
+                                            <span className="align-middle">Ungraded</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -393,7 +411,7 @@ class AddAssignmentForm extends Component {
                         </ModalFooter>
                     </form>
                 </Modal>
-            </div>
+            </div >
         )
     }
 }

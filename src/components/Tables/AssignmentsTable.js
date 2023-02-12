@@ -131,6 +131,7 @@ class AssignmentsTable extends Component {
     }
 
     render() {
+        console.log(this.state.rolePerms)
         var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (

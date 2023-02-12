@@ -25,6 +25,7 @@ class EditAssignmentForm extends Component {
             type: '',
             instructions: '',
             dueDate: '',
+            timeLimit: 0,
             points: 0,
             referenceRubric: '',
             selector: {
@@ -34,6 +35,7 @@ class EditAssignmentForm extends Component {
                 }
             }
         },
+        timeLimitCheck: false,
         ungraded: false,
         course: this.props.course,
         modal: false,
@@ -42,6 +44,13 @@ class EditAssignmentForm extends Component {
     toggleModal = () => {
         this.populateForm();
         this.props.toggle();
+    }
+
+    toggleTimeLimit = () => {
+        var stateCopy = this.state;
+        stateCopy.timeLimitCheck = !this.state.timeLimitCheck
+        stateCopy.formEditAssignment.timeLimit = 0
+        this.setState(stateCopy)
     }
 
     toggleUngraded = () => {
@@ -127,6 +136,9 @@ class EditAssignmentForm extends Component {
         if (this.state.formEditAssignment.instructions) {
             payload.instructions = this.state.formEditAssignment.instructions
         }
+        if (this.state.formEditAssignment.timeLimit && !this.state.timeLimitCheck && this.state.formEditAssignment.type !== "GENERAL") {
+            payload.minutesToDoAssignment = this.state.formEditAssignment.timeLimit
+        }
         if (this.state.formEditAssignment.points && !this.state.ungraded) {
             payload.points = this.state.formEditAssignment.points
         }
@@ -201,10 +213,12 @@ class EditAssignmentForm extends Component {
             var stateCopy = this.state.formEditAssignment;
             stateCopy.title = res.data.title;
             stateCopy.type = res.data.type;
-            stateCopy.instructions = res.data.instructions
-            stateCopy.dueDate = moment.utc(res.data.dueDateTime).local()
-            if (res.data.points) stateCopy.points = res.data.points
-            else stateCopy.ungraded = true
+            stateCopy.instructions = res.data.instructions;
+            stateCopy.dueDate = moment.utc(res.data.dueDateTime).local();
+            if (res.data.minutesToDoAssignment) stateCopy.timeLimit = res.data.minutesToDoAssignment;
+            else stateCopy.timeLimitCheck = true;
+            if (res.data.points) stateCopy.points = res.data.points;
+            else stateCopy.ungraded = true;
             this.setState(stateCopy)
         }
     }
@@ -318,6 +332,38 @@ class EditAssignmentForm extends Component {
                                 {this.state.formEditAssignment.selector.error.isNullDueDate && <span style={errorMessageStyling()}>Due Date is required</span>}
                             </div>
                             <div className="form-group">
+                                <label className="text-muted">Time Limit</label>
+                                <div className="input-group with-focus">
+                                    <Input
+                                        type="text"
+                                        id="id-assignmentTimeLimit"
+                                        name="timeLimit"
+                                        className="border-right-0 no-resize"
+                                        placeholder="Enter the time limit in minutes"
+                                        invalid={!this.state.timeLimitCheck &&
+                                            (this.hasError('formEditAssignment', 'timeLimit', 'required')
+                                                || this.hasError('formEditAssignment', 'timeLimit', 'integer'))
+                                        }
+                                        onChange={this.validateOnChange}
+                                        data-validate={!this.state.timeLimitCheck ? '["required", "integer"]' : null}
+                                        disabled={this.state.timeLimitCheck}
+                                        value={this.state.formEditAssignment.timeLimit || ''}
+                                    />
+                                    <div className="input-group-append">
+                                        <span className="input-group-text text-muted bg-transparent border-left-0">
+                                            <em className="fa fa-book"></em>
+                                        </span>
+                                    </div>
+                                    {!this.state.timeLimitCheck && this.hasError('formEditAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
+                                    <div className="input-group pt-1">
+                                        <label className="text-muted">
+                                            <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleTimeLimit} />
+                                            <span className="align-middle">Time Limit</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="form-group">
                                 <label className="text-muted" htmlFor="id-points">Points Possible</label>
                                 <div className="input-group with-focus">
                                     <Input
@@ -326,9 +372,9 @@ class EditAssignmentForm extends Component {
                                         name="points"
                                         className="border-right-0"
                                         placeholder="Enter the possible point value"
-                                        invalid={
-                                            this.hasError('formEditAssignment', 'points', 'required')
-                                            || this.hasError('formEditAssignment', 'points', 'number')
+                                        invalid={!this.state.ungraded &&
+                                            (this.hasError('formEditAssignment', 'points', 'required')
+                                                || this.hasError('formEditAssignment', 'points', 'number'))
                                         }
                                         onChange={this.validateOnChange}
                                         data-validate={!this.state.ungraded ? '["required", "number"]' : null}
@@ -339,11 +385,13 @@ class EditAssignmentForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
-                                    {!this.state.ungraded ? this.hasError('formEditAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span> : null}
-                                    {!this.state.ungraded ? this.hasError('formEditAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span> : null}
-                                    <div className="input-group mt-2">
-                                        <input className="mr-2" type="checkbox" checked={this.state.ungraded} onClick={this.toggleUngraded} />
-                                        <label className="text-muted pt-2"> Ungraded</label>
+                                    {!this.state.ungraded && this.hasError('formEditAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span>}
+                                    {!this.state.ungraded && this.hasError('formEditAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span>}
+                                    <div className="input-group pt-1">
+                                        <label className="text-muted">
+                                            <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleUngraded} />
+                                            <span className="align-middle">Ungraded</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
