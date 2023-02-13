@@ -444,7 +444,7 @@ class AssignmentDetail extends Component {
                                                     <span className="text-bold">Time Limit: None</span>
                                                 </div>
                                             }
-                                            {/* {!isStudent(this.state.rolePerms) && !this.state.assignment.published ?
+                                            {!isStudent(this.state.rolePerms) && !this.state.assignment.published ?
                                                 <div className="float-right">
                                                     <button
                                                         className="btn btn-info btn-sm mb-3 mt-2"
@@ -456,7 +456,7 @@ class AssignmentDetail extends Component {
                                                     </button>
                                                 </div>
                                                 : null
-                                            } */}
+                                            }
                                             {!isStudent(this.state.rolePerms) && this.state.assignment.type !== 'GENERAL' ?
                                                 <div className="float-right">
                                                     <button
