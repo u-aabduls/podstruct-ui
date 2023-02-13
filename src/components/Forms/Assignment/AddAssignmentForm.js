@@ -35,7 +35,6 @@ class AddAssignmentForm extends Component {
                 }
             }
         },
-        timeLimitCheck: false,
         ungraded: false,
         course: this.props.course,
         modal: false,
@@ -65,13 +64,6 @@ class AddAssignmentForm extends Component {
         var stateCopy = this.state;
         stateCopy.ungraded = !this.state.ungraded
         stateCopy.formAddAssignment.points = 0
-        this.setState(stateCopy)
-    }
-
-    toggleTimeLimit = () => {
-        var stateCopy = this.state;
-        stateCopy.timeLimitCheck = !this.state.timeLimitCheck
-        stateCopy.formAddAssignment.timeLimit = 0
         this.setState(stateCopy)
     }
 
@@ -152,7 +144,7 @@ class AddAssignmentForm extends Component {
         if (this.state.formAddAssignment.instructions) {
             payload.instructions = this.state.formAddAssignment.instructions
         }
-        if (this.state.formAddAssignment.timeLimit && !this.state.timeLimitCheck && this.state.formAddAssignment.type !== "GENERAL") {
+        if (this.state.formAddAssignment.timeLimit && this.state.formAddAssignment.type !== "GENERAL") {
             payload.minutesToDoAssignment = this.state.formAddAssignment.timeLimit
         }
         if (this.state.formAddAssignment.points && !this.state.ungraded) {
@@ -333,7 +325,7 @@ class AddAssignmentForm extends Component {
                                 {this.state.formAddAssignment.selector.error.isNullDueDate && <span style={errorMessageStyling()}>Due Date is required</span>}
                             </div>
                             {this.state.formAddAssignment.type !== 'GENERAL' ?
-                                < div className="form-group">
+                                <div className="form-group">
                                     <label className="text-muted">Time Limit</label>
                                     <div className="input-group with-focus">
                                         <Input
@@ -342,13 +334,9 @@ class AddAssignmentForm extends Component {
                                             name="timeLimit"
                                             className="border-right-0 no-resize"
                                             placeholder="Enter the time limit in minutes"
-                                            invalid={!this.state.timeLimitCheck &&
-                                                (this.hasError('formAddAssignment', 'timeLimit', 'required')
-                                                    || this.hasError('formAddAssignment', 'timeLimit', 'integer'))
-                                            }
+                                            invalid={this.hasError('formAddAssignment', 'timeLimit', 'integer')}
                                             onChange={this.validateOnChange}
-                                            data-validate={!this.state.timeLimitCheck ? '["required", "integer"]' : null}
-                                            disabled={this.state.timeLimitCheck}
+                                            data-validate={'["integer"]'}
                                             value={this.state.formAddAssignment.timeLimit || ''}
                                         />
                                         <div className="input-group-append">
@@ -356,13 +344,7 @@ class AddAssignmentForm extends Component {
                                                 <em className="fa fa-book"></em>
                                             </span>
                                         </div>
-                                        {!this.state.timeLimitCheck && this.hasError('formAddAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
-                                        <div className="input-group pt-1">
-                                            <label className="text-muted">
-                                                <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleTimeLimit} />
-                                                <span className="align-middle">No Time Limit</span>
-                                            </label>
-                                        </div>
+                                        {this.hasError('formAddAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
                                     </div>
                                 </div>
                                 : null

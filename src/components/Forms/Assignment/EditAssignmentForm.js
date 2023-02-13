@@ -35,7 +35,6 @@ class EditAssignmentForm extends Component {
                 }
             }
         },
-        timeLimitCheck: false,
         ungraded: false,
         course: this.props.course,
         modal: false,
@@ -44,13 +43,6 @@ class EditAssignmentForm extends Component {
     toggleModal = () => {
         this.populateForm();
         this.props.toggle();
-    }
-
-    toggleTimeLimit = () => {
-        var stateCopy = this.state;
-        stateCopy.timeLimitCheck = !this.state.timeLimitCheck
-        stateCopy.formEditAssignment.timeLimit = 0
-        this.setState(stateCopy)
     }
 
     toggleUngraded = () => {
@@ -136,7 +128,7 @@ class EditAssignmentForm extends Component {
         if (this.state.formEditAssignment.instructions) {
             payload.instructions = this.state.formEditAssignment.instructions
         }
-        if (this.state.formEditAssignment.timeLimit && !this.state.timeLimitCheck && this.state.formEditAssignment.type !== "GENERAL") {
+        if (this.state.formEditAssignment.timeLimit && this.state.formEditAssignment.type !== "GENERAL") {
             payload.minutesToDoAssignment = this.state.formEditAssignment.timeLimit
         }
         if (this.state.formEditAssignment.points && !this.state.ungraded) {
@@ -216,7 +208,6 @@ class EditAssignmentForm extends Component {
             stateCopy.instructions = res.data.instructions;
             stateCopy.dueDate = moment.utc(res.data.dueDateTime).local();
             if (res.data.minutesToDoAssignment) stateCopy.timeLimit = res.data.minutesToDoAssignment;
-            else stateCopy.timeLimitCheck = true;
             if (res.data.points) stateCopy.points = res.data.points;
             else stateCopy.ungraded = true;
             this.setState(stateCopy)
@@ -340,13 +331,9 @@ class EditAssignmentForm extends Component {
                                         name="timeLimit"
                                         className="border-right-0 no-resize"
                                         placeholder="Enter the time limit in minutes"
-                                        invalid={!this.state.timeLimitCheck &&
-                                            (this.hasError('formEditAssignment', 'timeLimit', 'required')
-                                                || this.hasError('formEditAssignment', 'timeLimit', 'integer'))
-                                        }
+                                        invalid={this.hasError('formEditAssignment', 'timeLimit', 'integer')}
                                         onChange={this.validateOnChange}
-                                        data-validate={!this.state.timeLimitCheck ? '["required", "integer"]' : null}
-                                        disabled={this.state.timeLimitCheck}
+                                        data-validate={'["integer"]'}
                                         value={this.state.formEditAssignment.timeLimit || ''}
                                     />
                                     <div className="input-group-append">
@@ -354,13 +341,7 @@ class EditAssignmentForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
-                                    {!this.state.timeLimitCheck && this.hasError('formEditAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
-                                    <div className="input-group pt-1">
-                                        <label className="text-muted">
-                                            <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleTimeLimit} />
-                                            <span className="align-middle">No Time Limit</span>
-                                        </label>
-                                    </div>
+                                    {this.hasError('formEditAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
                                 </div>
                             </div>
                             <div className="form-group">

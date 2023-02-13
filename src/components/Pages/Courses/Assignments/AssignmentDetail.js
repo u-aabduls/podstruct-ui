@@ -32,6 +32,7 @@ import EditQuestionForm from '../../../Forms/Assignment/EditQuestionForm';
 import EditAssignmentForm from '../../../Forms/Assignment/EditAssignmentForm';
 import Swal from 'sweetalert2';
 import DocumentsTable from '../../../Tables/DocumentsTable';
+import FileUploadControl from '../../../Common/FileUploadControl';
 import { swalConfirm, errorMessageStyling } from '../../../../utils/Styles';
 
 class AssignmentDetail extends Component {
@@ -204,6 +205,37 @@ class AssignmentDetail extends Component {
             }
         })
     }
+
+    uploadFile = ({ target: { files } }) => {
+        const fileSizeLimit = 10000000; // 10MB limit
+        const loadedFile = files[0];
+
+        if (loadedFile.size > fileSizeLimit) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed to upload document',
+                text: 'File size exceeds limit (10MB)',
+                confirmButtonColor: swalConfirm()
+            })
+        } else {
+            if (this.checkFileExists(loadedFile.name)) {
+                Swal.fire({
+                    title: '\'' + loadedFile.name + '\' already exists. Do you want to replace it?',
+                    icon: 'warning',
+                    text: 'Replacing it will overwrite its current contents',
+                    showCancelButton: true,
+                    confirmButtonColor: swalConfirm(),
+                    confirmButtonText: 'Replace',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.createDocument(loadedFile);
+                    }
+                })
+            } else {
+                this.createDocument(loadedFile);
+            }
+        }
+    };
 
     goBack = () => {
         this.props.history.goBack()
@@ -407,9 +439,12 @@ class AssignmentDetail extends Component {
                                                 <div className="float-left">
                                                     <span className="text-bold">Time Limit: {this.state.assignment.minutesToDoAssignment} minutes</span>
                                                 </div>
-                                                : null
+                                                :
+                                                <div className="float-left">
+                                                    <span className="text-bold">Time Limit: None</span>
+                                                </div>
                                             }
-                                            {!isStudent(this.state.rolePerms) && !this.state.assignment.published ?
+                                            {/* {!isStudent(this.state.rolePerms) && !this.state.assignment.published ?
                                                 <div className="float-right">
                                                     <button
                                                         className="btn btn-info btn-sm mb-3 mt-2"
@@ -421,7 +456,7 @@ class AssignmentDetail extends Component {
                                                     </button>
                                                 </div>
                                                 : null
-                                            }
+                                            } */}
                                             {!isStudent(this.state.rolePerms) && this.state.assignment.type !== 'GENERAL' ?
                                                 <div className="float-right">
                                                     <button
@@ -432,6 +467,25 @@ class AssignmentDetail extends Component {
                                                         <i className="fa fa-plus-circle fa-sm button-create-icon"></i>
                                                         Add Question
                                                     </button>
+                                                </div>
+                                                : null
+                                            }
+                                            {isStudent(this.state.rolePerms) && this.state.assignment.type === 'GENERAL' ?
+                                                <div className="float-right">
+                                                    <button
+                                                        className="btn btn-info btn-sm mb-3 mt-2 ml-1"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                    // onClick={}
+                                                    >
+                                                        <i className="fas fa-upload fa-fw button-create-icon mr-1"></i>
+                                                        Submit Assignment
+                                                    </button>
+                                                </div>
+                                                : null
+                                            }
+                                            {isStudent(this.state.rolePerms) && this.state.assignment.type === 'GENERAL' ?
+                                                <div className="float-right">
+                                                    <FileUploadControl></FileUploadControl>
                                                 </div>
                                                 : null
                                             }
