@@ -96,13 +96,13 @@ class EditAssignmentForm extends Component {
 
     validateSelectorsOnChange = e => {
         var isNullType = this.state.formEditAssignment.selectedPod === '';
-        var isNullDueDate = this.state.formEditAssignment.daysOfWeekInterval === '';
+        var isNullDueDate = this.state.formEditAssignment.dueDate === '';
         var stateCopy = this.state.formEditAssignment;
         switch (e) {
             case "type":
                 stateCopy.selector.error.isNullType = isNullType ? true : false;
                 break;
-            case "day":
+            case "duedate":
                 stateCopy.selector.error.isNullDueDate = isNullDueDate ? true : false;
                 break;
             default:
@@ -317,7 +317,7 @@ class EditAssignmentForm extends Component {
                                     value={moment.utc(this.state.formEditAssignment.dueDate).local()}
                                     onChange={(date) => {
                                         this.setTime(date)
-                                        this.validateSelectorsOnChange("time")
+                                        this.validateSelectorsOnChange("duedate")
                                     }}
                                 />
                                 {this.state.formEditAssignment.selector.error.isNullDueDate && <span style={errorMessageStyling()}>Due Date is required</span>}

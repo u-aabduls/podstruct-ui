@@ -112,7 +112,7 @@ class CourseDetail extends Component {
             stateCopy.rolePerms = res.data.role;
             this.setState(stateCopy);
         }
-        res = getPod(this.state.course.podId);
+        res = getPod(this.props.match.params.podId);
         if (res.isSuccess) {
             stateCopy.pod = res.data;
             this.setState(stateCopy);
@@ -189,7 +189,7 @@ class CourseDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Course Schedule</h4>
-                                <p className="text-primary font-weight-bold">{this.state.course.daysOfWeekInterval.split(',').forEach(function (i, idx, array) {
+                                <p className="text-primary font-weight-bold">{this.state.course.daysOfWeekInterval?.split(',').forEach(function (i, idx, array) {
                                     if (idx === array.length - 1) {
                                         output += days[i]
                                     }

@@ -112,7 +112,7 @@ class PodDetail extends Component {
             if (result.isConfirmed) {
                 var res = deactivatePod(podId);
                 if (res.isSuccess) {
-                    this.props.history.goBack();
+                    this.props.history.push('/pods');
                 }
             }
         })
@@ -172,7 +172,7 @@ class PodDetail extends Component {
                 </div>
                 <div style={{ display: 'flex', justifyContent: `space-between` }}>
                     <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
-                        onClick={() => this.props.history.goBack()}>
+                        onClick={() => this.props.history.push('/pods')}>
                         <i className="fas fa-arrow-left fa-fw btn-icon mr-1"></i>
                         {this.props.location.state?.from}
                     </Button>

@@ -238,7 +238,7 @@ class AssignmentDetail extends Component {
     };
 
     goBack = () => {
-        this.props.history.goBack()
+        this.props.history.push(`/course/details/${this.props.match.params.podId}/${this.props.match.params.courseId}`)
     }
 
     componentWillMount() {

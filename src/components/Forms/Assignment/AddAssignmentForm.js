@@ -111,13 +111,13 @@ class AddAssignmentForm extends Component {
 
     validateSelectorsOnChange = e => {
         var isNullType = this.state.formAddAssignment.selectedPod === '';
-        var isNullDueDate = this.state.formAddAssignment.daysOfWeekInterval === '';
+        var isNullDueDate = this.state.formAddAssignment.dueDate === '';
         var stateCopy = this.state.formAddAssignment;
         switch (e) {
             case "type":
                 stateCopy.selector.error.isNullType = isNullType ? true : false;
                 break;
-            case "day":
+            case "duedate":
                 stateCopy.selector.error.isNullDueDate = isNullDueDate ? true : false;
                 break;
             default:
@@ -226,6 +226,7 @@ class AddAssignmentForm extends Component {
     }
 
     render() {
+        console.log(this.state)
         return (
             <div>
                 <Modal isOpen={this.state.modal}>
@@ -319,7 +320,7 @@ class AddAssignmentForm extends Component {
                                     isValidDate={current => { return current.isAfter(moment().subtract(1, 'day')) }}
                                     onChange={(date) => {
                                         this.setTime(date)
-                                        this.validateSelectorsOnChange("time")
+                                        this.validateSelectorsOnChange("duedate")
                                     }}
                                 />
                                 {this.state.formAddAssignment.selector.error.isNullDueDate && <span style={errorMessageStyling()}>Due Date is required</span>}
