@@ -322,28 +322,30 @@ class EditAssignmentForm extends Component {
                                 />
                                 {this.state.formEditAssignment.selector.error.isNullDueDate && <span style={errorMessageStyling()}>Due Date is required</span>}
                             </div>
-                            <div className="form-group">
-                                <label className="text-muted">Time Limit</label>
-                                <div className="input-group with-focus">
-                                    <Input
-                                        type="text"
-                                        id="id-assignmentTimeLimit"
-                                        name="timeLimit"
-                                        className="border-right-0 no-resize"
-                                        placeholder="Enter the time limit in minutes"
-                                        invalid={this.hasError('formEditAssignment', 'timeLimit', 'integer')}
-                                        onChange={this.validateOnChange}
-                                        data-validate={'["integer"]'}
-                                        value={this.state.formEditAssignment.timeLimit || ''}
-                                    />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text text-muted bg-transparent border-left-0">
-                                            <em className="fa fa-book"></em>
-                                        </span>
+                            {this.state.formEditAssignment.type !== 'GENERAL' ?
+                                <div className="form-group">
+                                    <label className="text-muted">Time Limit</label>
+                                    <div className="input-group with-focus">
+                                        <Input
+                                            type="text"
+                                            id="id-assignmentTimeLimit"
+                                            name="timeLimit"
+                                            className="border-right-0 no-resize"
+                                            placeholder="Enter the time limit in minutes"
+                                            invalid={this.hasError('formEditAssignment', 'timeLimit', 'integer')}
+                                            onChange={this.validateOnChange}
+                                            data-validate={'["integer"]'}
+                                            value={this.state.formEditAssignment.timeLimit || ''}
+                                        />
+                                        <div className="input-group-append">
+                                            <span className="input-group-text text-muted bg-transparent border-left-0">
+                                                <em className="fa fa-book"></em>
+                                            </span>
+                                        </div>
+                                        {this.hasError('formEditAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
                                     </div>
-                                    {this.hasError('formEditAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
                                 </div>
-                            </div>
+                                : null}
                             <div className="form-group">
                                 <label className="text-muted" htmlFor="id-points">Points Possible</label>
                                 <div className="input-group with-focus">
@@ -370,7 +372,7 @@ class EditAssignmentForm extends Component {
                                     {!this.state.ungraded && this.hasError('formEditAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span>}
                                     <div className="input-group pt-1">
                                         <label className="text-muted">
-                                            <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleUngraded} />
+                                            <input className="mr-2 align-middle" type="checkbox" checked={this.state.ungraded} onClick={this.toggleUngraded} />
                                             <span className="align-middle">Ungraded</span>
                                         </label>
                                     </div>
