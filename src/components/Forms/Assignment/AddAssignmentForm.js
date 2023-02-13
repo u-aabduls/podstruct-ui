@@ -161,6 +161,7 @@ class AddAssignmentForm extends Component {
         if (this.state.formAddAssignment.rubric) {
             payload.rubricId = this.state.formAddAssignment.rubric
         }
+        console.log(payload)
         return JSON.stringify(payload);
     }
 
@@ -209,7 +210,7 @@ class AddAssignmentForm extends Component {
                 })
                 var res = getAssignment(this.state.course.podId, this.state.course.id, result.data.id)
                 if (res.isSuccess) {
-                    this.props.history.push(`/course/assignment/details/${this.state.course.podId}/${this.state.course}/${result.data.id}`)
+                    this.props.history.push(`/course/assignment/details/${this.state.course.podId}/${this.state.course.id}/${result.data.id}`)
                 }
             }
             else {
@@ -359,7 +360,7 @@ class AddAssignmentForm extends Component {
                                         <div className="input-group pt-1">
                                             <label className="text-muted">
                                                 <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleTimeLimit} />
-                                                <span className="align-middle">Time Limit</span>
+                                                <span className="align-middle">No Time Limit</span>
                                             </label>
                                         </div>
                                     </div>

@@ -212,7 +212,6 @@ class AssignmentDetail extends Component {
     componentWillMount() {
         var stateCopy = this.state;
         var res = getCourse(this.props.match.params.podId, this.props.match.params.courseId);
-        console.log(res)
         if (res.isSuccess) {
             stateCopy.course = res.data;
             stateCopy.rolePerms = res.data.role;
@@ -404,6 +403,12 @@ class AssignmentDetail extends Component {
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
+                                            {this.state.assignment.minutesToDoAssignment ?
+                                                <div className="float-left">
+                                                    <span className="text-bold">Time Limit: {this.state.assignment.minutesToDoAssignment} minutes</span>
+                                                </div>
+                                                : null
+                                            }
                                             {!isStudent(this.state.rolePerms) && !this.state.assignment.published ?
                                                 <div className="float-right">
                                                     <button
@@ -537,9 +542,11 @@ class AssignmentDetail extends Component {
                                                         </Card>
                                                     )
                                                 }) :
-                                                <div className='text-center mt-5 mb-5'>
-                                                    <h1>No Questions Found</h1>
-                                                </div>
+                                                this.state.assignment.type !== "GENERAL" ?
+                                                    <div className='text-center mt-5 mb-5'>
+                                                        <h1>No Questions Found</h1>
+                                                    </div>
+                                                    : null
                                             }
                                             <div>
                                                 {this.state.nextPage && this.state.questions.length >= this.state.getAnswerKeysParams.size ?

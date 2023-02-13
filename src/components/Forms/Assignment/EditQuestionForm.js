@@ -418,9 +418,9 @@ class editQuestionForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
+                                    {this.hasError('formEditQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                     {this.state.formEditQuestion.choices.error.isNullAnswer &&
                                         this.state.formEditQuestion.questionType !== "TF" && <span style={errorMessageStyling()}>You must select at least 1 correct answer</span>}
-                                    {this.hasError('formEditQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                 </div>
                             </div>
                             {this.state.formEditQuestion.questionType === "MC" ?

@@ -358,7 +358,7 @@ class EditAssignmentForm extends Component {
                                     <div className="input-group pt-1">
                                         <label className="text-muted">
                                             <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleTimeLimit} />
-                                            <span className="align-middle">Time Limit</span>
+                                            <span className="align-middle">No Time Limit</span>
                                         </label>
                                     </div>
                                 </div>
