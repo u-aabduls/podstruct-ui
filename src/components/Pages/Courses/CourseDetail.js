@@ -281,7 +281,7 @@ class CourseDetail extends Component {
                                             }
                                             <AddAssignmentForm
                                                 course={this.state.course}
-                                                modal={this.state.assignmentsModal}
+                                                modal={this.state.assignmentsModal} 
                                                 toggle={this.toggleAssignmentModal}
                                                 updateOnAdd={this.updateOnAssignmentAdd}
                                             />

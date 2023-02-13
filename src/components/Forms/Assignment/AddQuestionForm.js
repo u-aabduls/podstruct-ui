@@ -354,9 +354,9 @@ class AddQuestionForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
+                                    {this.hasError('formAddQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                     {this.state.formAddQuestion.choices.error.isNullAnswer &&
                                         this.state.formAddQuestion.questionType !== "TF" && <span style={errorMessageStyling()}>You must select at least 1 correct answer</span>}
-                                    {this.hasError('formAddQuestion', 'question', 'required') && <span className="invalid-feedback">Question is required</span>}
                                 </div>
                             </div>
                             {this.state.formAddQuestion.questionType === "MC" ?
