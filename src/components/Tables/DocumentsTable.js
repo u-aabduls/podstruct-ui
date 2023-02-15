@@ -20,7 +20,7 @@ import {
     deleteCourseDocument,
     deleteAssignmentDocument
 } from '../../connectors/File';
-import { isAdmin } from '../../utils/PermissionChecker';
+import { isAdmin, isStudent } from '../../utils/PermissionChecker';
 import '../../styles/app/common/pointer.css';
 import { swalConfirm } from '../../utils/Styles';
 
@@ -268,7 +268,7 @@ class DocumentsTable extends Component {
     }
 
     shouldHideBorderTop = (row) => {
-        return !isAdmin(this.state.role) && row === 0 ? { borderTop: 'none' } : null;
+        return isStudent(this.state.role) && row === 0 ? { borderTop: 'none' } : null;
     }
 
     render() {
@@ -276,7 +276,7 @@ class DocumentsTable extends Component {
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <div>
-                {isAdmin(this.state.role) ?
+                {!isStudent(this.state.role) ?
                     <div className="float-right">
                         <FileUploadControl onChange={this.uploadFile}></FileUploadControl>
                     </div>
@@ -313,7 +313,7 @@ class DocumentsTable extends Component {
                                         {document.fileSize}
                                     </td>
                                     <td className="buttons" style={this.shouldHideBorderTop(i)}>
-                                        {isAdmin(this.state.role) ?
+                                        {!isStudent(this.state.role) ?
                                             <div className='button-container'>
                                                 <Button 
                                                     className="btn btn-secondary btn-sm bg-danger float-right"
