@@ -26,7 +26,7 @@ import AddUserForm from '../../Forms/PodUser/AddUserForm';
 import InvitedPodForm from '../../Forms/PodUser/InvitedPodForm';
 import PodUserTable from '../../Tables/PodUserTable';
 import AnnouncementsTable from '../../Tables/AnnouncementsTable';
-import { isAdmin } from '../../../utils/PermissionChecker';
+import { isAdmin, isStudent } from '../../../utils/PermissionChecker';
 import DocumentsTable from '../../Tables/DocumentsTable';
 import { deactivatePod } from "../../../connectors/Pod";
 import Swal from 'sweetalert2';
@@ -298,7 +298,7 @@ class PodDetail extends Component {
                                     {/* Tab panes */}
                                     <TabContent activeTab={this.state.activeTab}>
                                         <TabPane tabId="1">
-                                            {isAdmin(this.state.rolePerms) ?
+                                            {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right">
                                                     <button className="btn btn-success btn-sm mb-3 mt-2"
                                                         onMouseDown={e => e.preventDefault()}
@@ -323,7 +323,7 @@ class PodDetail extends Component {
                                             />
                                         </TabPane>
                                         <TabPane tabId="2">
-                                            {isAdmin(this.state.rolePerms) ?
+                                            {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right">
                                                     <button className="btn btn-success btn-sm mb-3 mt-2"
                                                         onMouseDown={e => e.preventDefault()}
