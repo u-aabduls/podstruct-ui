@@ -93,7 +93,6 @@ class DocumentsTable extends Component {
         Swal.fire({
             icon: 'warning',
             title: 'Delete \'' + fileName + '\'?',
-            text: 'The file will be removed',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
