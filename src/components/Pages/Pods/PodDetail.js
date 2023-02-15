@@ -19,6 +19,7 @@ import {
     NavLink,
 } from 'reactstrap';
 import { getPod } from '../../../connectors/Pod';
+import { deleteUser } from '../../../connectors/PodUser'
 import AddAnnouncementForm from '../../Forms/Announcement/AddAnnouncementForm';
 import EditPodForm from '../../Forms/Pod/EditPodForm';
 import AddUserForm from '../../Forms/PodUser/AddUserForm';
@@ -29,7 +30,7 @@ import { isAdmin } from '../../../utils/PermissionChecker';
 import DocumentsTable from '../../Tables/DocumentsTable';
 import { deactivatePod } from "../../../connectors/Pod";
 import Swal from 'sweetalert2';
-import { swalConfirmDanger } from '../../../utils/Styles';
+import { swalConfirm, swalConfirmDanger } from '../../../utils/Styles';
 
 class PodDetail extends Component {
 
@@ -101,6 +102,31 @@ class PodDetail extends Component {
         }
     }
 
+    leavePod = () => {
+        Swal.fire({
+            title: 'Leave pod?',
+            icon: 'warning',
+            text: 'To rejoin, a new invite will need to be issued',
+            showCancelButton: true,
+            confirmButtonColor: swalConfirmDanger(),
+            confirmButtonText: 'Leave',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var res = deleteUser(this.state.pod.id, localStorage.getItem('username'));
+                if (res.isSuccess) {
+                    this.props.history.push('/pods');
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        icon: "error",
+                        text: res.message,
+                        confirmButtonColor: swalConfirm()
+                    })
+                }
+            }
+        })
+    }
+
     deactivate = (podId) => {
         Swal.fire({
             title: 'Are you sure you want to deactivate this pod?',
@@ -140,35 +166,33 @@ class PodDetail extends Component {
                         {this.state.pod.podName}
                         <small>View and edit your pod</small>
                     </div>
-                    {isAdmin(this.state.rolePerms) ?
-                        <div className="ml-auto">
-                            <Dropdown
-                                isOpen={this.state.ddOpen}
-                                toggle={this.toggleDD}
-                                onMouseDown={e => e.preventDefault()}
-                            >
-                                <DropdownToggle>
-                                    <em className="fas fa-ellipsis-v fa-lg"></em>
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    {isAdmin(this.state.rolePerms) ?
-                                        <DropdownItem onClick={this.toggleEditModal}>Edit Pod</DropdownItem>
-                                        : null
-                                    }
-                                    {isAdmin(this.state.rolePerms) ?
-                                        <DropdownItem onClick={() => this.deactivate(this.state.pod.id)}>Deactivate Pod</DropdownItem>
-                                        : null
-                                    }
-                                </DropdownMenu>
-                            </Dropdown>
-                            <EditPodForm
-                                pod={this.state.pod}
-                                modal={this.state.editModal}
-                                toggle={this.toggleEditModal}
-                                updateOnEdit={this.updateOnPodEdit}
-                            />
-                        </div> : null
-                    }
+                    <div className="ml-auto">
+                        <Dropdown
+                            isOpen={this.state.ddOpen}
+                            toggle={this.toggleDD}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            <DropdownToggle>
+                                <em className="fas fa-ellipsis-v fa-lg"></em>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                {isAdmin(this.state.rolePerms) ?
+                                    <DropdownItem onClick={this.toggleEditModal}>Edit Pod</DropdownItem>
+                                    : <DropdownItem onClick={this.leavePod}>Leave Pod</DropdownItem>
+                                }
+                                {isAdmin(this.state.rolePerms) ?
+                                    <DropdownItem onClick={() => this.deactivate(this.state.pod.id)}>Deactivate Pod</DropdownItem>
+                                    : null
+                                }
+                            </DropdownMenu>
+                        </Dropdown>
+                        <EditPodForm
+                            pod={this.state.pod}
+                            modal={this.state.editModal}
+                            toggle={this.toggleEditModal}
+                            updateOnEdit={this.updateOnPodEdit}
+                        />
+                    </div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: `space-between` }}>
                     <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold"
