@@ -20,7 +20,7 @@ import {
     deleteCourseDocument,
     deleteAssignmentDocument
 } from '../../connectors/File';
-import { isAdmin, isStudent } from '../../utils/PermissionChecker';
+import { isStudent } from '../../utils/PermissionChecker';
 import '../../styles/app/common/pointer.css';
 import { swalConfirm } from '../../utils/Styles';
 
