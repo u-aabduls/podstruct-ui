@@ -164,7 +164,10 @@ class PodDetail extends Component {
                 <div className="content-heading">
                     <div>
                         {this.state.pod.podName}
-                        <small>View and edit your pod</small>
+                        {isAdmin(this.state.rolePerms) ?
+                            <small>View and edit your pod</small>
+                            : <small>View your pod</small>
+                        }
                     </div>
                     <div className="ml-auto">
                         <Dropdown
