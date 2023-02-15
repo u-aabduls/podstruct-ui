@@ -101,7 +101,7 @@ class CourseDetail extends Component {
     }
 
     goBack = () => {
-         this.props.history.push('/courses', { pod: this.state.pod })
+        this.props.history.push('/courses', { pod: this.state.pod })
     }
 
     componentWillMount() {
@@ -130,23 +130,30 @@ class CourseDetail extends Component {
                         <small>{this.state.pod.podName}</small>
                     </div>
                     <div className="ml-auto">
-                        <Dropdown isOpen={this.state.ddOpen} toggle={this.toggleDD}>
+                        <Dropdown
+                            isOpen={this.state.ddOpen}
+                            toggle={this.toggleDD}
+                            onMouseDown={e => e.preventDefault()}
+                        >
                             <DropdownToggle>
                                 <em className="fas fa-ellipsis-v fa-lg"></em>
                             </DropdownToggle>
                             <DropdownMenu>
-                                {isAdmin(this.state.rolePerms) ?
+                                {!isStudent(this.state.rolePerms) ?
                                     <DropdownItem onClick={this.toggleEditModal}>Edit Course</DropdownItem>
                                     : null
                                 }
                             </DropdownMenu>
                         </Dropdown>
-                        <EditCourseForm
-                            course={this.state.course}
-                            modal={this.state.editModal}
-                            toggle={this.toggleEditModal}
-                            updateOnEdit={this.updateOnCourseEdit}
-                        />
+                        {!isStudent(this.state.rolePerms) ?
+                            <EditCourseForm
+                                course={this.state.course}
+                                modal={this.state.editModal}
+                                toggle={this.toggleEditModal}
+                                updateOnEdit={this.updateOnCourseEdit}
+                            />
+                            : null
+                        }
                     </div>
                 </div>
                 <Button className="btn btn-secondary mb-3 mt-2 font-weight-bold" onClick={this.goBack}>
@@ -268,8 +275,8 @@ class CourseDetail extends Component {
                                         <TabPane tabId="2">
                                             {!isStudent(this.state.rolePerms) ?
                                                 <div className="float-right">
-                                                    <button 
-                                                        className="btn btn-success btn-sm mb-3 mt-2" 
+                                                    <button
+                                                        className="btn btn-success btn-sm mb-3 mt-2"
                                                         onMouseDown={e => e.preventDefault()}
                                                         onClick={this.toggleAssignmentModal}
                                                     >
@@ -281,7 +288,7 @@ class CourseDetail extends Component {
                                             }
                                             <AddAssignmentForm
                                                 course={this.state.course}
-                                                modal={this.state.assignmentsModal} 
+                                                modal={this.state.assignmentsModal}
                                                 toggle={this.toggleAssignmentModal}
                                                 updateOnAdd={this.updateOnAssignmentAdd}
                                             />
