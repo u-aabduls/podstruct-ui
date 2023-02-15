@@ -27,7 +27,7 @@ import AnnouncementsTable from '../../Tables/AnnouncementsTable';
 import AssignmentsTable from '../../Tables/AssignmentsTable';
 import { getCourse } from '../../../connectors/Course';
 import { getPod } from '../../../connectors/Pod';
-import { isAdmin, isStudent } from '../../../utils/PermissionChecker';
+import { isStudent } from '../../../utils/PermissionChecker';
 import DocumentsTable from '../../Tables/DocumentsTable';
 
 class CourseDetail extends Component {
