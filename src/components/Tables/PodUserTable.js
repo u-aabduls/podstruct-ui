@@ -385,7 +385,11 @@ class PodUserTable extends Component {
                                         <td className="buttons">
                                             {isAdmin(this.state.rolePerms) && !isAdmin(user.role) ?
                                                 <div className='button-container'>
-                                                    <Button className="btn btn-secondary btn-sm bg-danger" onClick={() => this.deleteUser(user)}>
+                                                    <Button
+                                                        className="btn btn-secondary btn-sm bg-danger"
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={() => this.deleteUser(user)}
+                                                    >
                                                         <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                                     </Button>
                                                 </div>
