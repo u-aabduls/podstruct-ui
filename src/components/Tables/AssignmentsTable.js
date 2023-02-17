@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import moment from 'moment';
 import { getAssignments, deleteAssignment, publishAssignment } from '../../connectors/Assignments';
-import { isAdmin, isStudent } from '../../utils/PermissionChecker';
+import { isStudent } from '../../utils/PermissionChecker';
 import Swal from 'sweetalert2';
 import { buttonLightGreyBorder, swalConfirm } from '../../utils/Styles';
 
@@ -50,7 +50,9 @@ class AssignmentsTable extends Component {
 
     publish = (assignmentId, assignmentTitle) => {
         Swal.fire({
-            title: assignmentTitle + ' will be published and available to all users in this course',
+            title: 'Publish \'' + assignmentTitle + '\'?',
+            text: 'The assignment will be available to all users in this course',
+            icon: 'info',
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Publish',
             showCancelButton: true
@@ -78,7 +80,9 @@ class AssignmentsTable extends Component {
 
     deleteAssignments = (assignmentId) => {
         Swal.fire({
-            title: 'Are you sure you want to delete the assignment?',
+            title: 'Delete assignment?',
+            text: 'Access to this assignment will be removed for all users',
+            icon: 'info',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
@@ -195,7 +199,7 @@ class AssignmentsTable extends Component {
                                         </td>
                                         <td className="buttons" style={this.shouldHideBorderTop(i)}>
                                             <div>
-                                                {isAdmin(this.state.rolePerms) ?
+                                                {!isStudent(this.state.rolePerms) ?
                                                     <Button
                                                         id='buttonDelete'
                                                         className="btn btn-secondary btn-sm bg-danger float-right"
@@ -206,7 +210,7 @@ class AssignmentsTable extends Component {
                                                     </Button>
                                                     : null
                                                 }
-                                                {isAdmin(this.state.rolePerms) ?
+                                                {!isStudent(this.state.rolePerms) ?
                                                     !assignment.published ?
                                                         <button
                                                             id='buttonPublish'

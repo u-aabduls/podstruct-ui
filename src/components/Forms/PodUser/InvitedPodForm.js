@@ -48,12 +48,7 @@ class InvitedPodForm extends Component {
     accept = () => {
         var res = acceptInvite(this.state.pod.id)
         if (res.isSuccess){
-            this.toggleModal()
-            Swal.fire({
-                title: "Accepted pod invite",
-                confirmButtonColor: swalConfirm(),
-                icon: "success",
-            })
+            this.toggleModal();
             window.location.reload(false);
         }
         else {

@@ -91,10 +91,12 @@ class PodUserTable extends Component {
     deleteUser = (user) => {
         if (user.inviteStatus === 'ACCEPTED') {
             Swal.fire({
-                title: 'Are you sure you want to delete ' + user.firstName + ' ' + user.lastName + ' from the pod',
+                title: 'Remove ' + user.firstName + ' ' + user.lastName + ' from pod?',
+                text: 'All of their progress will be lost. This action can\'t be undone',
+                icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: swalConfirm(),
-                confirmButtonText: 'Delete',
+                confirmButtonText: 'Remove',
             }).then((result) => {
                 if (result.isConfirmed) {
                     var stateCopy = this.state
@@ -117,7 +119,9 @@ class PodUserTable extends Component {
         }
         else {
             Swal.fire({
-                title: 'Are you sure you want to revoke the invitation?',
+                title: 'Revoke invitation?',
+                text: 'The user will not be able to join without an invitation',
+                icon: 'info',
                 showCancelButton: true,
                 confirmButtonColor: swalConfirm(),
                 confirmButtonText: 'Revoke',

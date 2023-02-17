@@ -91,8 +91,9 @@ class DocumentsTable extends Component {
 
     deleteDocument = (fileName) => {
         Swal.fire({
-            icon: 'warning',
             title: 'Delete \'' + fileName + '\'?',
+            text: 'Access to this document will be removed for all users in this ' + this.state.parentType,
+            icon: 'info',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',

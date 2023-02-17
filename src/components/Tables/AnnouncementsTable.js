@@ -11,7 +11,7 @@ import {
     deletePodAnnouncement,
     deleteCourseAnnouncement
 } from '../../connectors/Announcement';
-import { isStudent, isAdmin } from '../../utils/PermissionChecker';
+import { isStudent } from '../../utils/PermissionChecker';
 import EditAnnouncementForm from '../Forms/Announcement/EditAnnouncementForm';
 import { swalConfirm } from '../../utils/Styles';
 
@@ -59,7 +59,9 @@ class AnnouncementsTable extends Component {
 
     deleteAnnouncement = (date) => {
         Swal.fire({
-            title: 'Are you sure you want to delete the announcement?',
+            title: 'Delete announcement?',
+            text: 'The announcement will be removed for all users',
+            icon: 'info',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
@@ -141,7 +143,7 @@ class AnnouncementsTable extends Component {
                                         <span>{announcement.message}</span>
                                     </td>
                                     <td className="buttons" style={this.shouldHideBorderTop(i)}>
-                                        {isAdmin(this.state.rolePerms) ?
+                                        {!isStudent(this.state.rolePerms) ?
                                             <Button
                                                 className="btn btn-sm bg-danger float-right"
                                                 onMouseDown={e => e.preventDefault()}
@@ -151,7 +153,7 @@ class AnnouncementsTable extends Component {
                                             </Button>
                                             : null
                                         }
-                                        {isAdmin(this.state.rolePerms) ?
+                                        {!isStudent(this.state.rolePerms) ?
                                             <Button
                                                 className="btn btn-sm bg-info mr-1 float-right"
                                                 onMouseDown={e => e.preventDefault()}

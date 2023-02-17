@@ -129,7 +129,8 @@ class PodDetail extends Component {
 
     deactivate = (podId) => {
         Swal.fire({
-            title: 'Are you sure you want to deactivate this pod?',
+            title: 'Deactivate pod?',
+            text: 'Access to this pod will be removed for all users',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: swalConfirmDanger(),

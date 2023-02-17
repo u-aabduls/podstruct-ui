@@ -26,7 +26,7 @@ import 'react-datetime/css/react-datetime.css';
 import { getCourse } from '../../../../connectors/Course';
 import { getAssignment, publishAssignment, deleteAssignment } from '../../../../connectors/Assignments';
 import { getAnswerKeys, deleteAnswerKey } from '../../../../connectors/AnswerKey';
-import { isAdmin, isStudent } from '../../../../utils/PermissionChecker'
+import { isStudent } from '../../../../utils/PermissionChecker'
 import AddQuestionForm from '../../../Forms/Assignment/AddQuestionForm';
 import EditQuestionForm from '../../../Forms/Assignment/EditQuestionForm';
 import EditAssignmentForm from '../../../Forms/Assignment/EditAssignmentForm';
@@ -141,7 +141,9 @@ class AssignmentDetail extends Component {
 
     publish = () => {
         Swal.fire({
-            title: this.state.assignment.title + ' will be published and available to all users in this course',
+            title: 'Publish \'' + this.state.assignment.title + '\'?',
+            text: 'The assignment will be available to all users in this course',
+            icon: 'info',
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Publish',
             showCancelButton: true
@@ -168,7 +170,9 @@ class AssignmentDetail extends Component {
 
     deleteAssignment = () => {
         Swal.fire({
-            title: 'Are you sure you want to delete the assignment?',
+            title: 'Delete assignment?',
+            text: 'Access to this assignment will be removed for all users',
+            icon: 'info',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
@@ -185,7 +189,8 @@ class AssignmentDetail extends Component {
 
     deleteQuestion = (questionId) => {
         Swal.fire({
-            title: 'Are you sure you want to delete the question?',
+            title: 'Delete question?',
+            icon: 'info',
             showCancelButton: true,
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
@@ -205,37 +210,6 @@ class AssignmentDetail extends Component {
             }
         })
     }
-
-    uploadFile = ({ target: { files } }) => {
-        const fileSizeLimit = 10000000; // 10MB limit
-        const loadedFile = files[0];
-
-        if (loadedFile.size > fileSizeLimit) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Failed to upload document',
-                text: 'File size exceeds limit (10MB)',
-                confirmButtonColor: swalConfirm()
-            })
-        } else {
-            if (this.checkFileExists(loadedFile.name)) {
-                Swal.fire({
-                    title: '\'' + loadedFile.name + '\' already exists. Do you want to replace it?',
-                    icon: 'warning',
-                    text: 'Replacing it will overwrite its current contents',
-                    showCancelButton: true,
-                    confirmButtonColor: swalConfirm(),
-                    confirmButtonText: 'Replace',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        this.createDocument(loadedFile);
-                    }
-                })
-            } else {
-                this.createDocument(loadedFile);
-            }
-        }
-    };
 
     goBack = () => {
         this.props.history.push(`/course/details/${this.props.match.params.podId}/${this.props.match.params.courseId}`)
@@ -284,11 +258,11 @@ class AssignmentDetail extends Component {
                                 <em className="fas fa-ellipsis-v fa-lg"></em>
                             </DropdownToggle>
                             <DropdownMenu>
-                                {isAdmin(this.state.rolePerms) ?
+                                {!isStudent(this.state.rolePerms) ?
                                     <DropdownItem onClick={this.toggleEditAssignmentModal}>Edit Assignment</DropdownItem>
                                     : null
                                 }
-                                {isAdmin(this.state.rolePerms) ?
+                                {!isStudent(this.state.rolePerms) ?
                                     <DropdownItem onClick={this.deleteAssignment}>Delete Assignment</DropdownItem>
                                     : null
                                 }

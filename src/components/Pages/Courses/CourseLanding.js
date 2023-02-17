@@ -6,7 +6,7 @@ import CourseCard from './CourseCard';
 import { getPods } from '../../../connectors/Pod';
 import { getCourses } from '../../../connectors/Course';
 import AddCourseForm from '../../Forms/Course/AddCourseForm';
-import { isAdmin, isStudent } from '../../../utils/PermissionChecker';
+import { isStudent } from '../../../utils/PermissionChecker';
 
 class CourseLanding extends Component {
 
