@@ -110,7 +110,7 @@ class AssignmentsTable extends Component {
     }
 
     shouldHideBorderTop = (row) => {
-        return !isAdmin(this.state.rolePerms) && row === 0 ? { borderTop: 'none' } : null;
+        return isStudent(this.state.rolePerms) && row === 0 ? { borderTop: 'none' } : null;
     }
 
     componentDidMount() {

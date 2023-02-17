@@ -11,7 +11,7 @@ import {
     deletePodAnnouncement,
     deleteCourseAnnouncement
 } from '../../connectors/Announcement';
-import { isAdmin } from '../../utils/PermissionChecker';
+import { isStudent, isAdmin } from '../../utils/PermissionChecker';
 import EditAnnouncementForm from '../Forms/Announcement/EditAnnouncementForm';
 import { swalConfirm } from '../../utils/Styles';
 
@@ -87,7 +87,7 @@ class AnnouncementsTable extends Component {
     }
 
     shouldHideBorderTop = (row) => {
-        return !isAdmin(this.state.rolePerms) && row === 0 ? { borderTop: 'none' } : null;
+        return isStudent(this.state.rolePerms) && row === 0 ? { borderTop: 'none' } : null;
     }
 
     componentDidMount() {

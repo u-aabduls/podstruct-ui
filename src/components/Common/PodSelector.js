@@ -34,7 +34,7 @@ export default function PodSelector(props) {
     modifiers = props;
 
     React.useEffect(() => {
-        modifiers.defaultCall(modifiers.defaultV)
+        if (modifiers.defaultCall) modifiers.defaultCall(modifiers.defaultV)
     }, [props.defaultV]);
 
     return (
