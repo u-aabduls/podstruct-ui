@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16.16.0'
-          cache: 'npm'
+          cache: 'yarn'
       - name: Build React App
         run: npm install --legacy-peer-deps &&  CI=false npm run build
       - name: Deploy app build to S3 bucket
