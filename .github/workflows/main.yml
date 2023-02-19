@@ -16,6 +16,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.16.0'
+          cache: 'npm'
       - name: Build React App
         run: npm install --legacy-peer-deps &&  CI=false npm run build
       - name: Deploy app build to S3 bucket
