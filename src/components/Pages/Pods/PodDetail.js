@@ -327,7 +327,7 @@ class PodDetail extends Component {
                                             />
                                         </TabPane>
                                         <TabPane tabId="2">
-                                            {!isStudent(this.state.rolePerms) ?
+                                            {isAdmin(this.state.rolePerms) ?
                                                 <div className="float-right">
                                                     <button className="btn btn-success btn-sm mb-3 mt-2"
                                                         onMouseDown={e => e.preventDefault()}

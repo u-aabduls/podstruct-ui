@@ -36,18 +36,8 @@ const Menu = [
         }]
     },
     {
-        name: 'Users',
-        icon: 'icon-user',
-        translate: 'sidebar.nav.DASHBOARD',
-    },
-    {
         name: 'Grades',
         icon: 'icon-calculator',
-        translate: 'sidebar.nav.DASHBOARD',
-    },
-    {
-        name: 'Messages',
-        icon: 'icon-speech',
         translate: 'sidebar.nav.DASHBOARD',
     },
     {
