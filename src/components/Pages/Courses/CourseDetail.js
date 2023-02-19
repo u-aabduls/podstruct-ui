@@ -27,7 +27,7 @@ import AnnouncementsTable from '../../Tables/AnnouncementsTable';
 import AssignmentsTable from '../../Tables/AssignmentsTable';
 import { getCourse } from '../../../connectors/Course';
 import { getPod } from '../../../connectors/Pod';
-import { isStudent } from '../../../utils/PermissionChecker';
+import { isAdmin, isStudent } from '../../../utils/PermissionChecker';
 import DocumentsTable from '../../Tables/DocumentsTable';
 
 class CourseDetail extends Component {
@@ -130,22 +130,21 @@ class CourseDetail extends Component {
                         <small>{this.state.pod.podName}</small>
                     </div>
                     <div className="ml-auto">
-                        <Dropdown
-                            isOpen={this.state.ddOpen}
-                            toggle={this.toggleDD}
-                            onMouseDown={e => e.preventDefault()}
-                        >
-                            <DropdownToggle>
-                                <em className="fas fa-ellipsis-v fa-lg"></em>
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                {!isStudent(this.state.rolePerms) ?
+                        {isAdmin(this.state.rolePerms) ?
+                            <Dropdown
+                                isOpen={this.state.ddOpen}
+                                toggle={this.toggleDD}
+                                onMouseDown={e => e.preventDefault()}
+                            >
+                                <DropdownToggle>
+                                    <em className="fas fa-ellipsis-v fa-lg"></em>
+                                </DropdownToggle>
+                                <DropdownMenu>
                                     <DropdownItem onClick={this.toggleEditModal}>Edit Course</DropdownItem>
-                                    : null
-                                }
-                            </DropdownMenu>
-                        </Dropdown>
-                        {!isStudent(this.state.rolePerms) ?
+                                </DropdownMenu>
+                            </Dropdown> : null
+                        }
+                        {isAdmin(this.state.rolePerms) ?
                             <EditCourseForm
                                 course={this.state.course}
                                 modal={this.state.editModal}

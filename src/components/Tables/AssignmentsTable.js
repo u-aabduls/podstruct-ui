@@ -113,10 +113,6 @@ class AssignmentsTable extends Component {
         )
     }
 
-    shouldHideBorderTop = (row) => {
-        return isStudent(this.state.rolePerms) && row === 0 ? { borderTop: 'none' } : null;
-    }
-
     componentDidMount() {
         var stateCopy = this.state
         var params = this.state.getAssignmentsParams
@@ -164,7 +160,7 @@ class AssignmentsTable extends Component {
                             return (
                                     <tr onClick={(event) => this.assignmentDetailRedirect(event, assignment.id)}>
                                         {assignment.publishDateTime ?
-                                            <td style={this.shouldHideBorderTop(i)}>
+                                            <td>
                                                 <span className="text-uppercase text-bold">
                                                     {days[publishDate.getDay()]}
                                                     {' '}
@@ -178,10 +174,10 @@ class AssignmentsTable extends Component {
                                                 </span>
                                             </td>
                                             : <td></td>}
-                                        <td style={this.shouldHideBorderTop(i)}>
+                                        <td>
                                             {assignment.title}
                                         </td>
-                                        <td style={this.shouldHideBorderTop(i)}>
+                                        <td>
                                             <span className="text-uppercase text-bold">
                                                 {days[dueDate.getDay()]}
                                                 {' '}
@@ -194,10 +190,10 @@ class AssignmentsTable extends Component {
                                                 {moment(dueDate).format("h:mm A")}
                                             </span>
                                         </td>
-                                        <td style={this.shouldHideBorderTop(i)}>
+                                        <td>
                                             {assignment.published ? <span>Published</span> : <span>Unpublished</span>}
                                         </td>
-                                        <td className="buttons" style={this.shouldHideBorderTop(i)}>
+                                        <td className="buttons">
                                             <div>
                                                 {!isStudent(this.state.rolePerms) ?
                                                     <Button

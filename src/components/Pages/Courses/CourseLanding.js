@@ -6,7 +6,7 @@ import CourseCard from './CourseCard';
 import { getPods } from '../../../connectors/Pod';
 import { getCourses } from '../../../connectors/Course';
 import AddCourseForm from '../../Forms/Course/AddCourseForm';
-import { isStudent } from '../../../utils/PermissionChecker';
+import { isAdmin } from '../../../utils/PermissionChecker';
 
 class CourseLanding extends Component {
 
@@ -108,7 +108,7 @@ class CourseLanding extends Component {
                         <small>View courses by pod</small>
                     </div>
                     <div className="ml-auto">
-                        {!isStudent(this.state.rolePerms) ?
+                        {isAdmin(this.state.rolePerms) ?
                             <div>
                                 <button className="btn btn-success"
                                     onMouseDown={e => e.preventDefault()}
