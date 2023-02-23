@@ -32,7 +32,7 @@ import EditQuestionForm from '../../../Forms/Assignment/EditQuestionForm';
 import EditAssignmentForm from '../../../Forms/Assignment/EditAssignmentForm';
 import Swal from 'sweetalert2';
 import DocumentsTable from '../../../Tables/DocumentsTable';
-import FileUploadControl from '../../../Common/FileUploadControl';
+import GeneralAssignmentUpload from '../../../Tables/GeneralAssignmentUpload';
 import { swalConfirm, errorMessageStyling } from '../../../../utils/Styles';
 
 class AssignmentDetail extends Component {
@@ -414,9 +414,12 @@ class AssignmentDetail extends Component {
                                                     <span className="text-bold">Time Limit: {this.state.assignment.minutesToDoAssignment} minutes</span>
                                                 </div>
                                                 :
-                                                <div className="float-left">
-                                                    <span className="text-bold">Time Limit: None</span>
-                                                </div>
+                                                this.state.assignment.type !== "GENERAL" ?
+                                                    <div className="float-left">
+                                                        <span className="text-bold">Time Limit: None</span>
+                                                    </div>
+                                                    :
+                                                    null
                                             }
                                             {!isStudent(this.state.rolePerms) && !this.state.assignment.published ?
                                                 <div className="float-right">
@@ -444,32 +447,40 @@ class AssignmentDetail extends Component {
                                                 </div>
                                                 : null
                                             }
-                                            {isStudent(this.state.rolePerms) && this.state.assignment.type === 'GENERAL' ?
-                                                <div className="float-right">
-                                                    <button
-                                                        className="btn btn-info btn-sm mb-3 mt-2 ml-1"
-                                                        onMouseDown={e => e.preventDefault()}
-                                                    // onClick={}
-                                                    >
-                                                        <i className="fas fa-upload fa-fw button-create-icon mr-1"></i>
-                                                        Submit Assignment
-                                                    </button>
-                                                </div>
+                                            {isStudent(this.state.rolePerms) ?
+                                                this.state.assignment.type === 'GENERAL' ?
+                                                    <GeneralAssignmentUpload
+                                                        role={this.state.rolePerms}
+                                                        assignment={this.state.assignment}
+                                                        podId={this.props.match.params.podId}
+                                                        courseId={this.props.match.params.courseId}
+                                                        passedDue={new Date(moment.utc().local().format('YYYY-MM-DD HH:mm:ss')) > dueDate}
+                                                    />
+                                                    :
+                                                    new Date(moment.utc().local().format('YYYY-MM-DD HH:mm:ss')) < dueDate ?
+                                                        <div className="float-right">
+                                                            <button
+                                                                className="btn btn-primary btn-sm mb-3 mt-2 mr-1"
+                                                                onMouseDown={e => e.preventDefault()}
+                                                            // onClick={this.toggleAddQuestionModal}
+                                                            >
+                                                                <i className="fa fa-play fa-sm button-create-icon"></i>
+                                                                Start
+                                                            </button>
+                                                        </div>
+                                                        : null
                                                 : null
                                             }
-                                            {isStudent(this.state.rolePerms) && this.state.assignment.type === 'GENERAL' ?
-                                                <div className="float-right">
-                                                    <FileUploadControl></FileUploadControl>
-                                                </div>
+                                            {this.state.assignment.type !== "GENERAL" ?
+                                                <Card outline color="dark" className="mt-5 card-default card-fixed-height-assignment" style={{ clear: 'both' }}>
+                                                    <CardHeader><CardTitle tag="h3">Instructions</CardTitle></CardHeader>
+                                                    <CardBody style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+                                                        <p className="ml-3 text-primary font-weight-bold">{this.state.assignment.instructions}</p>
+                                                    </CardBody>
+                                                </Card>
                                                 : null
                                             }
-                                            <Card outline color="dark" className="mt-5 card-default card-fixed-height-assignment" style={{ clear: 'both' }}>
-                                                <CardHeader><CardTitle tag="h3">Instructions</CardTitle></CardHeader>
-                                                <CardBody style={{ overflowY: 'auto', overflowX: 'hidden' }}>
-                                                    <p className="ml-3 text-primary font-weight-bold">{this.state.assignment.instructions}</p>
-                                                </CardBody>
-                                            </Card>
-                                            {this.state.questions.length ?
+                                            {this.state.questions.length && !isStudent(this.state.rolePerms) ?
                                                 this.state.questions.map((question, i) => {
                                                     var choices = [];
                                                     var answers = [];
@@ -570,7 +581,7 @@ class AssignmentDetail extends Component {
                                                         </Card>
                                                     )
                                                 }) :
-                                                this.state.assignment.type !== "GENERAL" ?
+                                                this.state.assignment.type !== "GENERAL" && !isStudent(this.state.rolePerms) ?
                                                     <div className='text-center mt-5 mb-5'>
                                                         <h1>No Questions Found</h1>
                                                     </div>
