@@ -457,18 +457,17 @@ class AssignmentDetail extends Component {
                                                         passedDue={new Date(moment.utc().local().format('YYYY-MM-DD HH:mm:ss')) > dueDate}
                                                     />
                                                     :
-                                                    new Date(moment.utc().local().format('YYYY-MM-DD HH:mm:ss')) < dueDate ?
-                                                        <div className="float-right">
-                                                            <button
-                                                                className="btn btn-primary btn-sm mb-3 mt-2 mr-1"
-                                                                onMouseDown={e => e.preventDefault()}
+                                                    <div className="float-right">
+                                                        <button
+                                                            className="btn btn-primary btn-sm mb-3 mt-2 mr-1"
+                                                            onMouseDown={e => e.preventDefault()}
                                                             // onClick={this.toggleAddQuestionModal}
-                                                            >
-                                                                <i className="fa fa-play fa-sm button-create-icon"></i>
-                                                                Start
-                                                            </button>
-                                                        </div>
-                                                        : null
+                                                            disabled={new Date(moment.utc().local().format('YYYY-MM-DD HH:mm:ss')) > dueDate}
+                                                        >
+                                                            <i className="fa fa-play fa-sm button-create-icon"></i>
+                                                            Start
+                                                        </button>
+                                                    </div>
                                                 : null
                                             }
                                             {this.state.assignment.type !== "GENERAL" ?

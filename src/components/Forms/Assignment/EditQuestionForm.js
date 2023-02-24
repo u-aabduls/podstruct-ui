@@ -165,23 +165,38 @@ class editQuestionForm extends Component {
             "question": this.state.formEditQuestion.question,
             "questionType": this.state.formEditQuestion.questionType,
         };
+        var orderedChoices = null;
         switch (this.state.formEditQuestion.questionType) {
             case "MC":
+                orderedChoices = Object.keys(this.state.formEditQuestion.choiceDict).sort().reduce(
+                    (obj, key) => { 
+                      obj[key] = this.state.formEditQuestion.choiceDict[key]; 
+                      return obj;
+                    }, 
+                    {}
+                  );
                 for (let i = 0; i < Object.keys(this.state.formEditQuestion.choiceDict).length; i++) {
-                    payload['choice' + this.alphabet[i]] = this.state.formEditQuestion.choiceDict[Object.keys(this.state.formEditQuestion.choiceDict)[i]];
-                    if (this.state.formEditQuestion.choiceDict[Object.keys(this.state.formEditQuestion.choiceDict)[i]] === this.state.formEditQuestion.choiceDict[this.state.formEditQuestion.answerDict.answer1])
+                    payload['choice' + this.alphabet[i]] = orderedChoices[Object.keys(orderedChoices)[i]];
+                    if (orderedChoices[Object.keys(orderedChoices)[i]] === orderedChoices[this.state.formEditQuestion.answerDict.answer1])
                         payload.answer1 = this.alphabet[i];
                 }
                 break;
             case "MA":
+                orderedChoices = Object.keys(this.state.formEditQuestion.choiceDict).sort().reduce(
+                    (obj, key) => { 
+                      obj[key] = this.state.formEditQuestion.choiceDict[key]; 
+                      return obj;
+                    }, 
+                    {}
+                  );
                 var answerChoiceValues = [];
                 var numberOfEnteredAnswers = 0;
                 Object.values(this.state.formEditQuestion.answerDict).forEach((element) => {
                     answerChoiceValues.push(this.state.formEditQuestion.choiceDict[element])
                 })
                 for (let i = 0; i < Object.keys(this.state.formEditQuestion.choiceDict).length; i++) {
-                    payload['choice' + this.alphabet[i]] = this.state.formEditQuestion.choiceDict[Object.keys(this.state.formEditQuestion.choiceDict)[i]];
-                    if (answerChoiceValues.includes(this.state.formEditQuestion.choiceDict[Object.keys(this.state.formEditQuestion.choiceDict)[i]])){
+                    payload['choice' + this.alphabet[i]] = orderedChoices[Object.keys(orderedChoices)[i]];
+                    if (answerChoiceValues.includes(orderedChoices[Object.keys(orderedChoices)[i]])){
                         payload['answer' + (numberOfEnteredAnswers + 1)] = this.alphabet[i];
                         numberOfEnteredAnswers++;
                     }     
@@ -195,6 +210,7 @@ class editQuestionForm extends Component {
             default:
                 break;
         }
+        console.log(payload)
         return JSON.stringify(payload);
     }
 
@@ -312,6 +328,7 @@ class editQuestionForm extends Component {
     }
 
     render() {
+        console.log(this.state)
         return (
             <div>
                 <Modal isOpen={this.state.modal}>

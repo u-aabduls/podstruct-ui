@@ -214,9 +214,9 @@ class GeneralAssignmentUpload extends Component {
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <div>
-                {isStudent(this.state.role) && !this.props.passedDue ?
+                {isStudent(this.state.role) ?
                     <div className="float-right">
-                        <FileUploadControl onChange={this.uploadFile}></FileUploadControl>
+                        <FileUploadControl onChange={this.uploadFile} disabled={this.props.passedDue}></FileUploadControl>
                     </div>
                     : null
                 }
@@ -257,12 +257,13 @@ class GeneralAssignmentUpload extends Component {
                                         {document.fileSize}
                                     </td>
                                     <td className="buttons" style={this.shouldHideBorderTop(i)}>
-                                        {isStudent(this.state.role) && !this.props.passedDue ?
+                                        {isStudent(this.state.role) ?
                                             <div className='button-container'>
                                                 <Button
                                                     className="btn btn-secondary btn-sm bg-danger float-right"
                                                     onMouseDown={e => e.preventDefault()}
                                                     onClick={() => this.deleteDocument(document.fileName)}
+                                                    disabled={this.props.passedDue}
                                                 >
                                                     <i className="fas fa-trash-alt fa-fw btn-icon"></i>
                                                 </Button>
