@@ -53,15 +53,21 @@ class GeneralAssignmentUpload extends Component {
             confirmButtonColor: swalConfirm(),
             confirmButtonText: 'Delete',
         }).then((result) => {
+            var stateCopy = this.state;
             if (result.isConfirmed) {
-                var stateCopy = this.state;
-
-                var res = deleteDocumentSubmission(this.state.podId, this.state.courseId, this.state.assignment.id, fileName);
-                if (res.isSuccess) {
-                    res = this.getDocuments();
-                    stateCopy.documents = res.data;
+                if (this.state.documents.some(doc => doc.fileName === fileName && doc.local)) {
+                    stateCopy.documents = this.state.documents.filter(doc => doc.fileName !== fileName)
                     this.setState(stateCopy);
                 }
+                else {
+                    var res = deleteDocumentSubmission(this.state.podId, this.state.courseId, this.state.assignment.id, fileName);
+                    if (res.isSuccess) {
+                        res = this.getDocuments();
+                        stateCopy.documents = res.data;
+                        this.setState(stateCopy);
+                    }
+                }
+
                 Swal.fire({
                     title: 'Successfully deleted document',
                     icon: 'success',
@@ -88,6 +94,11 @@ class GeneralAssignmentUpload extends Component {
 
     checkFileExists(fileName) {
         return this.state.documents.some(document => document['fileName'] === fileName);
+    }
+
+    humanFileSize(size) {
+        var i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+        return (size / Math.pow(1024, i)).toFixed(0) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
     }
 
     updateOnDocumentAdd = (res) => {
@@ -125,25 +136,22 @@ class GeneralAssignmentUpload extends Component {
         }
     }
 
-    createDocument = (loadedFile) => {
+    submitDocuments = () => {
         this.toggleFileUploadButton();
-
-        var reader = new FileReader();
-        reader.readAsDataURL(loadedFile);
-        const create = () => {
+        
+        const documentsToSubmit = this.state.documents.filter(doc => doc.local)
+        documentsToSubmit.forEach(doc => {
             var requestBody = {
-                "fileInBase64String": reader.result.replace(new RegExp('data:[a-z0-9/.;+-]*base64,'), ""),
-                "fileType": this.getFileType(loadedFile.type, loadedFile.name),
-                "fileName": loadedFile.name,
+                "fileInBase64String": doc.fileInBase64String,
+                "fileType": doc.fileType,
+                "fileName": doc.fileName,
             };
 
-            const o = this;
-
-            var result = createDocumentSubmission(o.state.podId, o.state.courseId, o.state.assignment.id, JSON.stringify(requestBody));
+            var result = createDocumentSubmission(this.state.podId, this.state.courseId, this.state.assignment.id, JSON.stringify(requestBody));
 
             this.toggleFileUploadButton();
             if (result.isSuccess) {
-                o.updateOnDocumentAdd(result);
+                this.updateOnDocumentAdd(result);
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -152,6 +160,36 @@ class GeneralAssignmentUpload extends Component {
                     confirmButtonColor: swalConfirm()
                 })
             }
+            
+        })
+    }
+
+    createLocalDocument = (loadedFile) => {
+        this.toggleFileUploadButton();
+
+        var reader = new FileReader();
+        reader.readAsDataURL(loadedFile);
+        const create = () => {
+            var requestBody = {
+                "fileInBase64String": reader.result.replace(new RegExp('data:[a-z0-9/.;+-]*base64,'), ""),
+                "fileType": this.getFileType(loadedFile.type, loadedFile.name),
+                "fileSize": this.humanFileSize(loadedFile.size),
+                "fileName": loadedFile.name,
+                "lastModified": new Date(),
+                "local": true
+            };
+            const o = this;
+            var stateCopy = o.state;
+            if (o.state.documents.some(doc => doc.fileName === requestBody.fileName)){
+                console.log(requestBody)
+                stateCopy.documents.splice(o.state.documents.findIndex(doc => doc.fileName === requestBody.fileName), 1, requestBody)
+            }
+               
+            else stateCopy.documents.push(requestBody)
+
+            this.setState(stateCopy)
+
+            this.toggleFileUploadButton();
         }
 
         reader.addEventListener("load", create);
@@ -183,25 +221,37 @@ class GeneralAssignmentUpload extends Component {
                     confirmButtonText: 'Replace',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.createDocument(loadedFile);
+                        this.createLocalDocument(loadedFile);
                     }
                 })
             } else {
-                this.createDocument(loadedFile);
+                this.createLocalDocument(loadedFile);
             }
         }
     };
 
     downloadFile = (fileName, fileType) => {
-        var result = this.getDocument(fileName);
-        if (result.isSuccess) {
-            const fileContentsBase64Decoded = Buffer.from(result.data.base64String, 'base64');
+        if (this.state.documents.some(doc => doc.fileName === fileName && doc.local)) {
+            const loadedFile = this.state.documents.find(doc => doc.fileName === fileName && doc.local)
+            const fileContentsBase64Decoded = Buffer.from(loadedFile.fileInBase64String, 'base64');
             const link = document.createElement("a");
             const file = new Blob([fileContentsBase64Decoded], { type: fileType });
             link.href = URL.createObjectURL(file);
             link.download = fileName;
             link.click();
             URL.revokeObjectURL(link.href);
+        }
+        else {
+            var result = this.getDocument(fileName);
+            if (result.isSuccess) {
+                const fileContentsBase64Decoded = Buffer.from(result.data.base64String, 'base64');
+                const link = document.createElement("a");
+                const file = new Blob([fileContentsBase64Decoded], { type: fileType });
+                link.href = URL.createObjectURL(file);
+                link.download = fileName;
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }
         }
     }
 
@@ -210,22 +260,44 @@ class GeneralAssignmentUpload extends Component {
     }
 
     render() {
+        console.log(this.state)
         var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
         return (
             <div>
                 {isStudent(this.state.role) ?
                     <div className="float-right">
-                        <FileUploadControl onChange={this.uploadFile} disabled={this.props.passedDue}></FileUploadControl>
+                        <button class="btn btn-success mb-3" onClick={this.submitDocuments} disabled={this.props.passedDue}>
+                            <i class="fa fa-arrow-circle-right fa-lg mr-2"></i>
+                            Submit
+                        </button>
                     </div>
                     : null
                 }
-                <Card outline color="dark" className="mt-5 card-default card-fixed-height-assignment" style={{ clear: 'both' }}>
+                <Card outline color="dark" className="mt-5 mb-5 card-default card-fixed-height-assignment" style={{ clear: 'both' }}>
                     <CardHeader><CardTitle tag="h3">Instructions</CardTitle></CardHeader>
                     <CardBody style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                         <p className="ml-3 text-primary font-weight-bold">{this.props.assignment.instructions}</p>
                     </CardBody>
                 </Card>
+                {isStudent(this.state.role) ?
+                    !this.props.passedDue ?
+                        <div className="button-drop-area mb-5">
+                            <div className="text-center my-auto">
+                                <FileUploadControl onChange={this.uploadFile}></FileUploadControl>
+                            </div>
+                        </div>
+                        :
+                        <div className="button-drop-area mb-5">
+                            <div className="text-center my-auto">
+                                <button className="btn btn-success btn-sm mb-3 mt-2" disabled={this.props.passedDue}>
+                                    <i className="fa fa-plus-circle fa-sm button-create-icon"></i>
+                                    Upload Document
+                                </button>
+                            </div>
+                        </div>
+                    : null
+                }
                 <Table hover responsive>
                     {this.state.documents.length > 0 ?
                         this.state.documents.map((document, i) => {
@@ -249,7 +321,10 @@ class GeneralAssignmentUpload extends Component {
                                         <a
                                             href="/#"
                                             className="h4 text-bold pointer"
-                                            onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                this.downloadFile(document.fileName, document.mimeType);
+                                            }}
                                         >
                                             {document.fileName}
                                         </a>

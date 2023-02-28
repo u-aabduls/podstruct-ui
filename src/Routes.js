@@ -92,7 +92,7 @@ const Routes = ({ location }) => {
                                     <Route path="/course/assignment/details/:podId/:courseId/:assignmentId" component={waitFor(AssignmentDetail)} />
 
                                     {/*Default*/}
-                                    <Redirect to="/login" />
+                                    <Redirect to="/dashboard" />
                                 </Switch>
                             </Suspense>
                         </div>

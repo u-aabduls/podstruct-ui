@@ -352,22 +352,37 @@ class AssignmentDetail extends Component {
                         <div className="card-fixed-height">
                             <div className="card-body" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
                                 <h4 className="mt-1 text-muted">Status</h4>
-                                <span className="text-primary font-weight-bold">{this.state.assignment.published ? "Published on" : 'Unpublished'}</span>
-                                {this.state.assignment.publishDateTime ?
-                                    <div>
-                                        <span className="text-uppercase text-bold text-primary">
-                                            {days[publishDate.getDay()]}
-                                            {' '}
-                                            {months[publishDate.getMonth()]}
-                                            {' '}
-                                            {publishDate.getDate()}
-                                        </span>
-                                        <br />
-                                        <span className="text-primary h2 mt0 text-sm">
-                                            {moment(publishDate).format("h:mm A")}
-                                        </span>
-                                    </div>
-                                    : null}
+                                {!isStudent(this.state.rolePerms) ?
+                                    this.state.assignment.publishDateTime ?
+                                        <div>
+                                            <span className="text-primary font-weight-bold">Published on:</span>
+                                            <div>
+                                                <span className="text-uppercase text-bold text-primary">
+                                                    {days[publishDate.getDay()]}
+                                                    {' '}
+                                                    {months[publishDate.getMonth()]}
+                                                    {' '}
+                                                    {publishDate.getDate()}
+                                                </span>
+                                                <br />
+                                                <span className="text-primary h2 mt0 text-sm">
+                                                    {moment(publishDate).format("h:mm A")}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        :
+                                        <span className="text-primary font-weight-bold">Unpublished</span>
+                                    : null
+                                }
+                                {isStudent(this.state.rolePerms) &&
+                                    !this.state.assignment.assignmentStartTime && <span className="text-primary font-weight-bold">Not started</span>
+                                }
+                                {/* {isStudent(this.state.rolePerms) &&
+                                    this.state.assignment.assignmentStartTime + this.state.assignment.minutesToDoAssignment > time now ? 
+                                    <span className="text-primary font-weight-bold">In Progress</span>
+                                    :
+                                    <span className="text-primary font-weight-bold">Submitted</span>
+                                } */}
                             </div>
                         </div>
                         {/* END card */}
@@ -470,7 +485,7 @@ class AssignmentDetail extends Component {
                                                     </div>
                                                 : null
                                             }
-                                            {this.state.assignment.type !== "GENERAL" ?
+                                            {(!isStudent(this.state.rolePerms) || this.state.assignment.type !== "GENERAL") ?
                                                 <Card outline color="dark" className="mt-5 card-default card-fixed-height-assignment" style={{ clear: 'both' }}>
                                                     <CardHeader><CardTitle tag="h3">Instructions</CardTitle></CardHeader>
                                                     <CardBody style={{ overflowY: 'auto', overflowX: 'hidden' }}>

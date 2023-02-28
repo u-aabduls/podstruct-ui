@@ -303,10 +303,13 @@ class DocumentsTable extends Component {
                                         </span>
                                     </td>
                                     <td className="document" style={this.shouldHideBorderTop(i)}>
-                                        <a 
+                                        <a
                                             href="/#"
-                                            className="h4 text-bold pointer" 
-                                            onClick={() => { this.downloadFile(document.fileName, document.mimeType) }}
+                                            className="h4 text-bold pointer"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                this.downloadFile(document.fileName, document.mimeType);
+                                            }}
                                         >
                                             {document.fileName}
                                         </a>
@@ -316,7 +319,7 @@ class DocumentsTable extends Component {
                                     <td className="buttons" style={this.shouldHideBorderTop(i)}>
                                         {!isStudent(this.state.role) ?
                                             <div className='button-container'>
-                                                <Button 
+                                                <Button
                                                     className="btn btn-secondary btn-sm bg-danger float-right"
                                                     onMouseDown={e => e.preventDefault()}
                                                     onClick={() => this.deleteDocument(document.fileName)}

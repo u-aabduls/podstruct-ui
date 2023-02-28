@@ -192,6 +192,17 @@ const FormValidator = {
     },
 
     /**
+     * Returns true iff:
+     *     1) input is a greater tha min OR is empty
+     */
+    isValidUnrequiredInt(input, min) {
+        if (!input) return true;
+        if (input >= min) return true;
+        return false;
+    },
+
+
+    /**
      * Validate input element
      * @param element Dome element of the input
      * Uses the following attributes
@@ -225,10 +236,10 @@ const FormValidator = {
                     case 'emails':
                         value.replace(/\s/g, "").split(",").forEach((email) => {
                             //allow trailing commas
-                            if (!email){
+                            if (!email) {
                                 return
                             }
-                            if (!validator.isEmail(email)){
+                            if (!validator.isEmail(email)) {
                                 result[m] = true
                                 return
                             }
@@ -295,6 +306,9 @@ const FormValidator = {
                         break;
                     case 'consecutive-spacing':
                         result[m] = this.containsConsecutiveSpaces(value)
+                        break;
+                    case 'unrequiredMin':
+                        result[m] = !this.isValidUnrequiredInt(value, validator.toInt(param))
                         break;
                     default:
                         throw new Error('Unrecognized validator.');

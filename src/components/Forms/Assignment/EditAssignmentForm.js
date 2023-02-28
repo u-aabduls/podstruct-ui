@@ -155,8 +155,9 @@ class EditAssignmentForm extends Component {
 
         const inputsToValidate = [
             'title',
-            'points',
             'instructions',
+            'points',
+            'timeLimit',
         ];
 
         const inputs = [...form.elements].filter(i => inputsToValidate.includes(i.name))
@@ -210,6 +211,7 @@ class EditAssignmentForm extends Component {
             if (res.data.minutesToDoAssignment) stateCopy.timeLimit = res.data.minutesToDoAssignment;
             if (res.data.points) stateCopy.points = res.data.points;
             else stateCopy.ungraded = true;
+            stateCopy.errors = null
             this.setState(stateCopy)
         }
     }
@@ -332,9 +334,10 @@ class EditAssignmentForm extends Component {
                                             name="timeLimit"
                                             className="border-right-0 no-resize"
                                             placeholder="Enter the time limit in minutes"
-                                            invalid={this.hasError('formEditAssignment', 'timeLimit', 'integer')}
+                                            invalid={this.hasError('formEditAssignment', 'timeLimit', 'unrequiredMin')}
                                             onChange={this.validateOnChange}
-                                            data-validate={'["integer"]'}
+                                            data-validate='["unrequiredMin"]'
+                                            data-param='1'
                                             value={this.state.formEditAssignment.timeLimit || ''}
                                         />
                                         <div className="input-group-append">
@@ -342,7 +345,7 @@ class EditAssignmentForm extends Component {
                                                 <em className="fa fa-book"></em>
                                             </span>
                                         </div>
-                                        {this.hasError('formEditAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
+                                        {this.hasError('formEditAssignment', 'timeLimit', 'unrequiredMin') && <span className="invalid-feedback">Time limit must be a positive integer</span>}
                                     </div>
                                 </div>
                                 : null}
@@ -357,10 +360,11 @@ class EditAssignmentForm extends Component {
                                         placeholder="Enter the possible point value"
                                         invalid={!this.state.ungraded &&
                                             (this.hasError('formEditAssignment', 'points', 'required')
-                                                || this.hasError('formEditAssignment', 'points', 'number'))
+                                                || this.hasError('formEditAssignment', 'points', 'min'))
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate={!this.state.ungraded ? '["required", "number"]' : null}
+                                        data-validate={!this.state.ungraded ? '["required", "min"]' : null}
+                                        data-param='1'
                                         disabled={this.state.ungraded}
                                         value={this.state.formEditAssignment.points || ''} />
                                     <div className="input-group-append">
@@ -368,14 +372,14 @@ class EditAssignmentForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
-                                    {!this.state.ungraded && this.hasError('formEditAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span>}
-                                    {!this.state.ungraded && this.hasError('formEditAssignment', 'points', 'number') && <span className="invalid-feedback">Points must be a number</span>}
+                                    {!this.state.ungraded && this.hasError('formEditAssignment', 'points', 'min')  && <span className="invalid-feedback">Points Possible must be a positive integer</span>}
                                     <div className="input-group pt-1">
                                         <label className="text-muted">
                                             <input className="mr-2 align-middle" type="checkbox" checked={this.state.ungraded} onClick={this.toggleUngraded} />
                                             <span className="align-middle">Ungraded</span>
                                         </label>
                                     </div>
+                                    {!this.state.ungraded && this.hasError('formEditAssignment', 'points', 'required') && <span className="invalid-feedback">Points Possible is required</span>}
                                 </div>
                             </div>
                         </ModalBody>
