@@ -25,7 +25,7 @@ class AddAssignmentForm extends Component {
             type: '',
             instructions: '',
             dueDate: '',
-            timeLimit: 0,
+            timeLimit: '',
             points: 0,
             referenceRubric: '',
             selector: {
@@ -47,6 +47,7 @@ class AddAssignmentForm extends Component {
                 type: '',
                 instructions: '',
                 dueDate: '',
+                timeLimit: '',
                 points: 0,
                 referenceRubric: '',
                 selector: {
@@ -56,6 +57,8 @@ class AddAssignmentForm extends Component {
                     }
                 }
             },
+            ungraded: false,
+            course: this.props.course,
         });
         this.props.toggle()
     }
@@ -153,7 +156,6 @@ class AddAssignmentForm extends Component {
         if (this.state.formAddAssignment.rubric) {
             payload.rubricId = this.state.formAddAssignment.rubric
         }
-        console.log(payload)
         return JSON.stringify(payload);
     }
 
@@ -172,8 +174,9 @@ class AddAssignmentForm extends Component {
 
         const inputsToValidate = [
             'title',
-            'points',
             'instructions',
+            'timeLimit',
+            'points',
         ];
 
         const inputs = [...form.elements].filter(i => inputsToValidate.includes(i.name))
@@ -327,7 +330,7 @@ class AddAssignmentForm extends Component {
                             </div>
                             {this.state.formAddAssignment.type !== 'GENERAL' ?
                                 <div className="form-group">
-                                    <label className="text-muted">Time Limit</label>
+                                    <label className="text-muted" htmlFor="id-assignmentTimeLimit">Time Limit</label>
                                     <div className="input-group with-focus">
                                         <Input
                                             type="text"
@@ -335,9 +338,10 @@ class AddAssignmentForm extends Component {
                                             name="timeLimit"
                                             className="border-right-0 no-resize"
                                             placeholder="Enter the time limit in minutes"
-                                            invalid={this.hasError('formAddAssignment', 'timeLimit', 'integer')}
+                                            invalid={this.hasError('formAddAssignment', 'timeLimit', 'unrequiredMin')}
                                             onChange={this.validateOnChange}
-                                            data-validate={'["integer"]'}
+                                            data-validate='["unrequiredMin"]'
+                                            data-param='0'
                                             value={this.state.formAddAssignment.timeLimit || ''}
                                         />
                                         <div className="input-group-append">
@@ -345,7 +349,7 @@ class AddAssignmentForm extends Component {
                                                 <em className="fa fa-book"></em>
                                             </span>
                                         </div>
-                                        {this.hasError('formAddAssignment', 'timeLimit', 'integer') && <span className="invalid-feedback">Time limit must be an integer</span>}
+                                        {this.hasError('formAddAssignment', 'timeLimit', 'unrequiredMin') && <span className="invalid-feedback">Time limit must be an integer</span>}
                                     </div>
                                 </div>
                                 : null
@@ -361,10 +365,11 @@ class AddAssignmentForm extends Component {
                                         placeholder="Enter the possible point value"
                                         invalid={!this.state.ungraded &&
                                             (this.hasError('formAddAssignment', 'points', 'required')
-                                                || this.hasError('formAddAssignment', 'points', 'integer'))
+                                                || this.hasError('formAddAssignment', 'points', 'min'))
                                         }
                                         onChange={this.validateOnChange}
-                                        data-validate={!this.state.ungraded ? '["required", "integer"]' : null}
+                                        data-validate={!this.state.ungraded ? '["required", "min"]' : null}
+                                        data-param='1'
                                         disabled={this.state.ungraded}
                                         value={this.state.formAddAssignment.points || ''} />
                                     <div className="input-group-append">
@@ -372,14 +377,14 @@ class AddAssignmentForm extends Component {
                                             <em className="fa fa-book"></em>
                                         </span>
                                     </div>
-                                    {!this.state.ungraded && this.hasError('formAddAssignment', 'points', 'required') && <span className="invalid-feedback">Points are required</span>}
-                                    {!this.state.ungraded && this.hasError('formAddAssignment', 'points', 'integer') && <span className="invalid-feedback">Points must be an integer</span>}
+                                    {!this.state.ungraded && this.hasError('formAddAssignment', 'points', 'min') && <span className="invalid-feedback">Points must be a positive integer</span>}
                                     <div className="input-group pt-1">
                                         <label className="text-muted">
                                             <input className="mr-2 align-middle" type="checkbox" onClick={this.toggleUngraded} />
                                             <span className="align-middle">Ungraded</span>
                                         </label>
                                     </div>
+                                    {!this.state.ungraded && this.hasError('formAddAssignment', 'points', 'required') && <span className="invalid-feedback">Points Possible is required</span>}
                                 </div>
                             </div>
                         </ModalBody>

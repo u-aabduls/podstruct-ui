@@ -161,3 +161,15 @@
     }
   }
 }
+
+.button-drop-area {
+  position: relative;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 30%;
+  height: 140px;
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+}
