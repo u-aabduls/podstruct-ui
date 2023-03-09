@@ -2,6 +2,8 @@
 
 This project represents the frontend implementation of Podstruct.
 
+Visibility of this repository has temporarily been set to public.
+
 The backend project is hosted at https://github.com/ayeslem/podstruct and is currently set to private visibility.
 
 To run the application locally:
