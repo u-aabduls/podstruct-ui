@@ -2,6 +2,8 @@
 
 This project represents the frontend implementation of Podstruct.
 
+The backend project is hosted at https://github.com/ayeslem/podstruct and is currently set to private visibility.
+
 To run the application locally:
   - Install the latest Node version: https://nodejs.org/en/download/
   - Download the application package from this repository
