@@ -14,3 +14,5 @@ To run the application locally:
 
 To access the current release version deployed to the test environment, access the test environment:
   - http://podstruct-ui-test.s3-website-us-east-1.amazonaws.com
+	
+Authors: Umar Abdulselam, Imran Abdulselam, Abdella Yeslem
